@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E8%A1%8C%E5%A4%84%E7%90%86/">行处理</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E9%97%AE%E9%A2%98/">问题</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,10 +98,12 @@
             </div>
             <div class="post-content">
                 
-                    <p>Ctrl + k：剪切光标位置到行尾的文本。<br>Ctrl + u：剪切光标位置到行首的文本。<br>Ctrl + y：在光标位置粘贴文本</p>
-<p>Ctrl + w：删除光标前面的单词。</p>
-<p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
-<p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
+                    <h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><p>1 ~/.bashrc ~/.profile /etc/bashrc /etc/profile<br>当通过Xshell连接时（SSH）或 <code>ssh ip</code> 时，会依次执行： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 登陆shell？</span></span><br><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /etc/profile</span></span><br><span class="line"><span class="comment"># This is /home/root/.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/root/.profile</span></span><br></pre></td></tr></table></figure>
+
+<p> 当通过 su 切换用户时，会执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/guo/.bashrc</span></span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -109,7 +111,165 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">配置网络与SSH</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>[TOC]</p>
+<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>vmware 桥接模式下：</p>
+<p>各种网络模式参考 <a href="https://www.linuxidc.com/Linux/2016-09/135521.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-09/135521.htm</a></p>
+<p>/etc/sysconfig/network-scripts 下一般会有一个网络配置文件，如：ifcfg-eno16777736</p>
+<p>修改该文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet          </span><br><span class="line">BOOTPROTO=static          <span class="comment">#静态IP地址配置</span></span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_PEERDNS=yes</span><br><span class="line">IPV6_PEERROUTES=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">NAME=eno16777736</span><br><span class="line">UUID=7617ff93-0c8f-4272-a28e-ac8cf0807026</span><br><span class="line">DEVICE=eno16777736</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.2.110        <span class="comment">#虚拟机的话，与主机同一网段</span></span><br><span class="line">NETMASK=255.255.255.0       <span class="comment">#子网掩码</span></span><br><span class="line">GATEWAY=192.168.2.1         <span class="comment">#网关</span></span><br><span class="line">DNS1=192.168.2.1            <span class="comment">#DNS</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/network restart</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h4 id="CentOS中修改主机名"><a href="#CentOS中修改主机名" class="headerlink" title="CentOS中修改主机名"></a>CentOS中修改主机名</h4><h5 id="CentOS-6"><a href="#CentOS-6" class="headerlink" title="CentOS 6"></a>CentOS 6</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos6 ~]$ hostname                                              <span class="comment"># 查看当前的hostnmae</span></span><br><span class="line">centos6.magedu.com</span><br><span class="line">[root@centos6 ~]$ vim /etc/sysconfig/network                            <span class="comment"># 编辑network文件修改hostname行（重启生效）</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/sysconfig/network                            <span class="comment"># 检查修改</span></span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=centos66.magedu.com</span><br><span class="line">[root@centos6 ~]$ hostname centos66.magedu.com                          <span class="comment"># 设置当前的hostname(立即生效）</span></span><br><span class="line">[root@centos6 ~]$ vim /etc/hosts                                        <span class="comment"># 编辑hosts文件，给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/hosts                                        <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4 centos66.magedu.com</span><br><span class="line">::1 localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>centos6以及其他有些发行版本，主机名的配置文件是<code>/etc/sysconfig/network</code>, 用 <code>hostname newname</code> 也只是暂时生效，修改了内核的值，重启丢失。 所以可以结合临时加修改配置文件这种方式修改主机名。</p>
+<h5 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]$ hostnamectl <span class="built_in">set</span>-hostname centos77.magedu.com       <span class="comment"># 使用这个命令会立即生效且重启也生效</span></span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ hostname  <span class="comment"># 查看下</span></span><br><span class="line">centos77.magedu.com</span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ vim /etc/hosts   <span class="comment"># 编辑下hosts文件， 给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos7 ~]$ cat /etc/hosts                                           <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 centos77.magedu.com</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>在centos7中，主机名的配置文件为 /etc/hostname, 在该文件中配置了新的主机名后，不会立即生效，需要重启进行生效；因为系统内核已经中的主机名还没有更新，还是旧的指。 可以使用修改CentOS6的策略，也可以通过 <code>hostnamectl set-hostname newname</code> 来更改主机名，内核和配置文件中的主机名都被更新了，不用重启。</p>
+<p>至于<code>/etc/hosts</code> 文件，同Windows下的hosts文件一样，只是起到本地DNS的作用一样，路由的作用。或者也可以说起别名。</p>
+<h4 id="SSH-服务配置"><a href="#SSH-服务配置" class="headerlink" title="SSH 服务配置"></a>SSH 服务配置</h4><p>首先查看是否有安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list installed | grep openssh-server</span><br></pre></td></tr></table></figure>
+
+<p>没有安装的话，用yum进行安装 <code>yum install openssh-server</code></p>
+<p>SSH 服务的配置文件是 /etc/ssh/sshd_config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">ListenAddress ::</span><br><span class="line"></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<p>重启或开启SSH服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service   <span class="comment">#自启动服务</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum instatll net-tools –y    <span class="comment">#如果没有netstat服务，安装netstat工具</span></span><br><span class="line"></span><br><span class="line">netstat -an | grep 22</span><br></pre></td></tr></table></figure>
+
+
+
+<p>必要时关闭防火墙或开放22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key </p>
+<h4 id="RPM"><a href="#RPM" class="headerlink" title="RPM"></a>RPM</h4><p><a href="https://www.cnblogs.com/zengkefu/p/5666947.html" target="_blank" rel="noopener">https://www.cnblogs.com/zengkefu/p/5666947.html</a></p>
+<p>ntpdate cn.pool.ntp.org</p>
+<p>\1.  安装ntpdate工具</p>
+<p> # yum -y install ntp ntpdate</p>
+<p> \2.  设置系统时间与网络时间同步</p>
+<p> # ntpdate cn.pool.ntp.org</p>
+<p> \3.  将系统时间写入硬件时间</p>
+<p> # hwclock –systohc</p>
+<p> 4.强制系统时间写入CMOS中防止重启失效</p>
+<p> 　　hwclock -w<br> 　　或clock -w</p>
+<p>本文来自 紫漪 的CSDN 博客 ，全文地址请点击：<a href="https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy" target="_blank" rel="noopener">https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy</a> </p>
+<p>sudo passwd root 更改密码，要在root用户下</p>
+<p>sudo su - root</p>
+<p>apt list –installed|grep jdk java</p>
+<p>/opt/zookeeper-3.4.6/bin/zkServer.sh start</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.9.0.1/config/server.properties</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
+<p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">高级文本命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="高级文本命令"><a href="#高级文本命令" class="headerlink" title="高级文本命令"></a>高级文本命令</h1><h4 id="1-sed-命令"><a href="#1-sed-命令" class="headerlink" title="1 sed  命令"></a>1 sed  命令</h4><h5 id="synopsis-基本用法"><a href="#synopsis-基本用法" class="headerlink" title="synopsis - 基本用法"></a><strong>synopsis - 基本用法</strong></h5><p>sed [OPTION]… {script-only-if-no-other-script} [input-file]..</p>
+<h5 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h5><p><a href="https://www.cnblogs.com/theCambrian/p/3606214.html" target="_blank" rel="noopener">博客园  sed 的工作原理</a></p>
+<p><code>man sed</code></p>
+<h5 id="option"><a href="#option" class="headerlink" title="option"></a><strong>option</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># suppress automatic printing of pattern space</span></span><br><span class="line"><span class="comment"># 关闭 pattern space 的自动打印，如果 command 中已经指定了 p, 可能就需要指定该选项</span></span><br><span class="line">-n, --quiet, --silent</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="script-command"><a href="#script-command" class="headerlink" title="script command"></a><strong>script command</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">d      <span class="comment"># Delete pattern space.  Start next cycle.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Copy 即覆盖， append 即追加</span></span><br><span class="line">h H    <span class="comment"># Copy/append pattern space to hold space.</span></span><br><span class="line">g G    <span class="comment"># Copy/append hold space to pattern space.</span></span><br><span class="line">x      <span class="comment"># Exchange the contents of the hold and pattern spaces.</span></span><br><span class="line"></span><br><span class="line">n N    <span class="comment"># Read/append the next line of input into the pattern space.</span></span><br><span class="line">p      <span class="comment"># Print the current pattern space.</span></span><br><span class="line">P      <span class="comment"># Print up to the first embedded newline of the current pattern space.</span></span><br><span class="line"></span><br><span class="line">w filename <span class="comment"># Write the current pattern space to filename.</span></span><br><span class="line">W filename <span class="comment"># Write the first line of the current pattern space to filename.  This is a GNU extension.</span></span><br></pre></td></tr></table></figure>
+<h5 id="examples"><a href="#examples" class="headerlink" title="examples"></a><strong>examples</strong></h5><ul>
+<li>逆序打印文件行，等同于 <code>tac</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一行，只将 pattern space 中的内容 copy 到 hold space，再删除 pattern space，下一轮循环</span></span><br><span class="line"><span class="comment"># 接下来，每一行，将 hold space 的内容 append 到 pattern space，再删除 pattern space，下一轮循环</span></span><br><span class="line">sed <span class="string">'1&#123;h;d&#125;;G;h;$!d'</span> seq.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sed <span class="string">'1!G;h;$!d'</span> t.txt</span><br><span class="line"><span class="comment"># 1!G —— 只有第一行不执行G命令，将hold space中的内容append回到pattern space</span></span><br><span class="line"><span class="comment"># h —— 第一行都执行h命令，将pattern space中的内容拷贝到hold space中</span></span><br><span class="line"><span class="comment"># $!d —— 除了最后一行不执行d命令，其它行都执行d命令，删除当前行</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定要处理的行</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印第一行，1 指定第一行</span></span><br><span class="line">sed  -n <span class="string">'1p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印除了第一行的所有行</span></span><br><span class="line">sed -n <span class="string">'1!p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印奇数行，如第 1 行，第 3 行，第 5 行...， 语义为，从第一行开始，每隔 2 行打印</span></span><br><span class="line">sed -n <span class="string">'1~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印偶数行, 语义为每隔 2 行，打印</span></span><br><span class="line">sed -n <span class="string">'0~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，以及后续连续的 5 行</span></span><br><span class="line">sed -n <span class="string">'1,+5p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，直到第一次遇到行号是 2 的倍数的行，打印</span></span><br><span class="line">sed -n <span class="string">'1,~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印最后一行</span></span><br><span class="line">sed -n <span class="string">'$p'</span> seq.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印</span></span><br><span class="line">sed -n <span class="string">'/regex/p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># &amp; 代表匹配的内容</span></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | xargs -n 1 | sed <span class="string">"s/[a-z]/[&amp;]/g"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>sed表达式通常用单引号来引用。不过也可以使用双引号。 shell会在调用sed前先扩展双引<br>号中的内容。如果想在sed表达式中使用变量，双引号就能派上用场了。</p>
+</blockquote>
+<h4 id="2-cut"><a href="#2-cut" class="headerlink" title="2 cut"></a>2 cut</h4><p>synopsis - 基本用法</p>
+<p>cut OPTION  [FILE]</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-d, --delimiter		<span class="comment"># 指定列分隔符</span></span><br><span class="line">-f, --fields		<span class="comment"># 制定要打印的列（不包含列分隔符的行同样会被打印，除非指定 -s）</span></span><br><span class="line">--complement		<span class="comment"># 打印指定之外的列、字符或字节（相当于取反）</span></span><br><span class="line">-output-delimiter	<span class="comment"># 指定打印时的列分隔符</span></span><br><span class="line">-z 					<span class="comment"># 行分隔符为 NUL， cut 是对一行进行切割的</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cut -d <span class="string">","</span> f 2,5 file		<span class="comment"># 打印第2列，第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 file		<span class="comment"># 打印第2列到第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 --complement file	<span class="comment"># 打印除了2-5列的其他列</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 制定打印第几个字节、字符、列（区间）</span></span><br><span class="line"><span class="comment"># N-M 从第N个字节、字符或字段开始到行尾</span></span><br><span class="line"><span class="comment"># N-  从第N个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"><span class="comment"># -M  从第1个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | cut -d <span class="string">" "</span> -f-4</span><br><span class="line"><span class="comment"># result: a b c d</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"4 3\x001 2"</span> | cut -z -d <span class="string">" "</span> --output-delimiter <span class="string">"#"</span> -f1,2</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="3-awk"><a href="#3-awk" class="headerlink" title="3 awk"></a>3 awk</h4><p>awk BEGIN{} PATTERN {} END{}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk 的 pattern</span></span><br><span class="line">$ awk <span class="string">'NR &lt; 5'</span> <span class="comment"># 行号小于5的行</span></span><br><span class="line">$ awk <span class="string">'NR==1,NR==4'</span> <span class="comment"># 行号在1到5之间的行</span></span><br><span class="line">$ awk <span class="string">'/linux/'</span> <span class="comment"># 包含模式为linux的行（可以用正则表达式来指定模式）</span></span><br><span class="line">$ awk <span class="string">'!/linux/'</span> <span class="comment"># 不包含模式为linux的行</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F":" 'BEGIN&#123;OFS="#"&#125; &#123;print $1,$2&#125;'</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk可以调用命令并读取输出。把命令放入引号中，然后利用管道将命令输出传入getline：</span></span><br><span class="line">awk <span class="string">'BEGIN &#123;FS=":"&#125; &#123; "grep root /etc/passwd" | getline; \</span></span><br><span class="line"><span class="string">print $1,$6 &#125;'</span></span><br><span class="line"></span><br><span class="line">root /root</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-tr"><a href="#4-tr" class="headerlink" title="4 tr"></a>4 tr</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> alnum：字母和数字。</span><br><span class="line"> alpha：字母。</span><br><span class="line"> cntrl：控制（非打印）字符。</span><br><span class="line"> digit：数字。</span><br><span class="line"> graph：图形字符。</span><br><span class="line"> lower：小写字母。</span><br><span class="line"> <span class="built_in">print</span>：可打印字符。</span><br><span class="line"> punct：标点符号。</span><br><span class="line"> space：空白字符。</span><br><span class="line"> upper：大写字母。</span><br><span class="line"> xdigit：十六进制字符。</span><br></pre></td></tr></table></figure>
+
+
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -123,43 +283,14 @@
             </div>
             <div class="post-content">
                 
-                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
-<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
-<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
-<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
-<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
-<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
-<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
-<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
-<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
-<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
-<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
-<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
-<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
-<p>维基百科 - initialization-on-demand holder</p>
-<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
-<p>分为以下几个阶段：</p>
-<ol>
-<li><strong>加载</strong></li>
-</ol>
-<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
-<ol>
-<li><strong>验证</strong></li>
-</ol>
-<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
-<ol>
-<li><strong>准备和解析</strong></li>
-</ol>
-<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
-<ol>
-<li><strong>初始化</strong></li>
-</ol>
-<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
+                    <p>getResourceAsStream</p>
+<p>java.lang.reflect.Proxy</p>
+<p>MySQL for Excel</p>
+<ul>
+<li>Import MySQL data into Excel.</li>
+<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
+<li>Modify MySQL data directly from within Excel.</li>
+</ul>
 
                 
             </div>
@@ -167,7 +298,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Thread%20%E7%BA%BF%E7%A8%8B/">Thread 线程</a></h2>
+                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -181,482 +312,40 @@
             </div>
             <div class="post-content">
                 
-                    <h1 id="Java-中的线程"><a href="#Java-中的线程" class="headerlink" title="Java 中的线程"></a>Java 中的线程</h1><h2 id="Thread-类与-Runnable-接口"><a href="#Thread-类与-Runnable-接口" class="headerlink" title="Thread 类与 Runnable 接口"></a>Thread 类与 Runnable 接口</h2><p>Thread 中部分方法：</p>
+                    <p>事务的隔离级别</p>
+<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
+<blockquote>
+<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
+</blockquote>
+<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
+<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
 <ul>
-<li>join()：调用 join() 方法的 Thread 对象结束以前，当前线程一直处于等待状态，不会继续向前运行；内部是通过循环判断该 Thread 对象的 isAlive 方法返回 true 时，调用该 Thread 对象的 wait() 方法，该方法是属于 Object 的方法，且是由当前线程进行调用的，因此当前线程会处于等待状态；当调用 join() 方法的 Thread 对象结束后，会调用 <em>notifyAll</em> 方法通知处于等待状态的线程</li>
+<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
+<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">joinTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> finalI = i;</span><br><span class="line">        <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; System.out.println(finalI));</span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">                thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>输出： 0，1，2，3，4，5，6，7，8，9</p>
-<ul>
-<li>setDaemon(): 线程的默认行为是，只要线程活着，进程就无法退出（普通的用户线程），守护线程不会阻止进程的退出；当应用程序的所有非守护线程均已经结束时，无论是否存在正在运行的守护线程，Java 程序将结束</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">daemonTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"true = "</span> + <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setName(<span class="string">"local-daemon-thread-20200204"</span>);</span><br><span class="line">    thread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">    thread.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只要主线程的打印执行完毕，不管守护线程有没有在执行，整个执行都将结束</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">"main thread = "</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>setUncaughtExceptionHandler()：线程因异常而退出时，默认的行为是打印线程的名称，异常类型，异常消息、堆栈打印；可以设置一个未捕获异常的处理器</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionHandlerTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"illegal argument"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setUncaughtExceptionHandler((t, e) -&gt; &#123;</span><br><span class="line">        System.out.printf(<span class="string">"thread id: %s, thread name: %s, exception: %s"</span>, t.getId(), t.getName(), e);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>多个 Thread 使用一个 Runnable 对象与每个 Thread 使用独立的 Runnable 对象的区别？</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Linux-常用命令"><a href="#Linux-常用命令" class="headerlink" title="Linux 常用命令"></a>Linux 常用命令</h1><p>[TOC]</p>
-<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><ul>
-<li><code>CTRL</code> + <code>K</code> 光标处剪切文本至本行结束</li>
-<li><code>CTRL</code> + <code>Y</code> 粘贴文本</li>
-<li><code>CTRL</code> + <code>E</code> 将光标移动到本行的末尾</li>
-<li><code>CTRL</code> + <code>A</code> 将光标移动到本行的开头</li>
-<li><code>ALT</code> + <code>F</code> 跳转到下一个空格处</li>
-<li><code>ALT</code> + <code>B</code> 回到前一个空格处</li>
-<li><code>ALT</code> + <code>Backspace</code> 删除前一个词</li>
-<li><code>CTRL</code> + <code>w</code> 剪切光标前一个词 </li>
-</ul>
-<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><p>查找命令</p>
-<ul>
-<li><strong>Usage</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [path...] [expression]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>path  制定查找的目录，默认是当前目录</p>
-</li>
-<li><p>expression 包含 operators， options， tests， and  actions.</p>
-<ul>
-<li><p>tests: </p>
-<ul>
-<li>-name Pattern 指定文件名的模式</li>
-<li>-mmin N 过去N分钟更新过的普通文件</li>
-</ul>
-</li>
-<li><p>actions: </p>
-<ul>
-<li>-delete</li>
-<li>-print 默认</li>
-<li>-ls </li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">"*.txt"</span> -ls</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>同样用来查找文件，是 <code>find -name</code> 的另一种说法，但是它搜索的是包含所有本地文件信息的数据库。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，<strong>先使用updatedb命令，手动更新数据库</strong>。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate ~/m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写，搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate -i ~/m</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><p>只能用来搜索程序名，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis grep</span><br><span class="line"><span class="comment"># 打印： grep: /bin/grep /usr/share/man/man1/grep.1.gz /usr/share/info/grep.info.gz</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="which"><a href="#which" class="headerlink" title="which"></a>which</h4><p>在 <strong>PATH</strong> 变量指定的路径中，搜索某个命令的位置，并返回第一个搜索结果。</p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> grep</span><br><span class="line"><span class="comment"># 打印： /bin/grep</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>用来区分某个命令是 shell 自带的，还是由外部的二进制文件提供的。如果是一个外部命令， -p 显示该命令的路径。</p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br><span class="line"><span class="comment"># cd is a shell builtin</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> wget</span><br><span class="line"><span class="comment"># wget is /usr/bin/wget</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> -p wget</span><br><span class="line">/usr/bin/wget</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h4 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h4><p>wget 是一个通过指定 URL 下载文件的工具，比如下载一些软件或者从远程服务器恢复备份到本地服务器。支持HTTP, HTTPS 和 FTP 协议，可以使用 HTTP 代理。可以在后台执行，支持断点下载</p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><p><strong>wget <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
-<p><strong>下载整个页面</strong>。 </p>
-<p><code>-x</code> 建立服务器上一样的目录</p>
-<p><code>-nd</code>下载的所有内容会出现在本地当前目录</p>
-</li>
-<li><p><strong>wget -r  <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
-<p>递归下载。下载服务器上的所有目录和文件。</p>
-<p><code>-l number</code> 指定下载的层次。</p>
-</li>
-<li><p><strong>wget -c <a href="http://prefix/dir/file" target="_blank" rel="noopener">http://prefix/dir/file</a></strong></p>
-<p>断点续传，服务器必须支持。</p>
-<p><code>-t</code> 表示重试次数 <code>-t 0</code> 表示无穷次重试，直到连接成功。</p>
-<p> <code>-T</code> 表示超时等待时间，超过指定的时间就算超时。</p>
-</li>
-<li><p><strong>wget -i download.txt</strong></p>
-<p>批量下载。多个需要下载的文件的 URL 可以写在一个文件中，每行一个。（URL 指向文件就下载文件，指向网站就下载首页）</p>
-</li>
-<li><p><strong>wget -m -reject=git <a href="http://prefix/dir" target="_blank" rel="noopener">http://prefix/dir</a></strong></p>
-<p>选择性下载</p>
-<p><code>-reject=list</code> 拒绝接受的文件类型</p>
-<p><code>-accept=list</code> 接受的文件类型</p>
-</li>
-<li><p><strong>wget -http-user=USER -http-passwd=PASS URL</strong></p>
-<p>密码和认证。 只能处理利用用户名/密码方式限制访问的网站</p>
-</li>
-<li><p><strong>wget -proxy-user=USER -proxy-passwd=PASS URL</strong></p>
-<p>代理进行下载。需要创建 .wgetrc 文件设置代理服务器：</p>
-<p>http-proxy=11.11.11.11:8080</p>
-<p>ftp-proxy=11.11.11.11:8080</p>
-<p>-proxy=on/off 使用或关闭代理</p>
-</li>
-<li><p><strong>wget -O rename.zip URL</strong></p>
-<p>重命名下载的文件。wget默认会以最后一个符合”/”的后面的字符来命令。</p>
-</li>
-<li><p><strong>wget –limit-rate=300k URL</strong></p>
-<p>限速下载</p>
-</li>
-<li><p><strong>wget -b URL</strong></p>
-<p>后台下载。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在下载的下载进度。</span></span><br><span class="line">tail -f wget-log</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>wget -tries=40 URL</strong></p>
-<p>增加重试次数，默认重试20次？</p>
-</li>
-<li><p><strong>wget -mirror URL</strong></p>
-<p>镜像下载。下载整个网站到本地。</p>
-<p><code>-p</code> 下载所有为了html页面显示正常的文件<br><code>–convert-links</code> 下载后，转换成本地的链接<br><code>-P ./LOCAL</code> 保存所有文件和目录到本地指定目录</p>
-</li>
-<li><p><strong>wget -o download.log URL</strong></p>
-<p>保存下载日志到文件中。</p>
-</li>
-<li><p><strong>wget -Q5m -i files.txt</strong></p>
-<p>限制下载的文件大小，超出后推出下载。</p>
-</li>
-<li><p><strong>wget -r -A.pdf URL</strong></p>
-<p>只下载指定格式的文件。</p>
-</li>
-<li><p><strong>wget FTP-URL</strong> </p>
-</li>
-<li><p><strong>wget –ftp-user=USER –ftp-password=PASS URL</strong></p>
-<p>wget FTP 下载。</p>
-</li>
-</ul>
-<p>下载jdk</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget后需要加参数–no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie;”</span></span><br><span class="line"></span><br><span class="line">wget --no-cookies --header <span class="string">"Cookie: oraclelicense=accept-securebackup-cookie;"</span> http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>用于打包、拆包、压缩、解压<strong>。</strong></p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><p><strong>-c</strong> </p>
-<p>建立一个打包文件</p>
-</li>
-<li><p><strong>-x</strong></p>
-<p>解开一个打包文件</p>
-</li>
-<li><p><strong>-t</strong></p>
-<p>查看 tar 包里的文件</p>
-</li>
-<li><p><strong>-z</strong></p>
-<p>gzip 工具，用于压缩成或解压 .tar.gz 格式的文件 (格式的名字只是为了标记，以免解压时用了错误的压缩工具)</p>
-</li>
-<li><p><strong>-j</strong></p>
-<p>zip2 工具，用于压缩成或解压 .tar.bz2 格式的文件</p>
-</li>
-<li><p><strong>-v</strong></p>
-<p>显示打包、拆包、压缩或解压过程。</p>
-</li>
-<li><p><strong>-f</strong></p>
-<p>使用文件名，后面立即接文件名</p>
-</li>
-<li><p><strong>-p</strong></p>
-<p>保持原文件的属性</p>
-</li>
-<li><p><strong>-P</strong></p>
-<p>使用绝对路径来压缩。</p>
-</li>
-<li><p><strong>-N 2001/03/11</strong></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -N 2017/01/23 -zcvf index.html hello.txt world.txt</span><br></pre></td></tr></table></figure>
-
-<p>  设定日期，后面接的日期还要新的文件才会被打包。</p>
-<ul>
-<li><strong>–exclude file</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude hello.txt -zcvf b.tar.gz index.html hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>  剔除不需要进行打包的文件</p>
-<p>可以作为命令行参数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf - *.txt | tar -xf - -C dir/</span><br><span class="line"></span><br><span class="line"><span class="comment"># tar cvf - files/ | ssh user@example.com "tar xv -C Documents/"</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p>cat 命令用于显示文件的内容</p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><strong>显示整个文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>从键盘创建一个文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; file</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
-
-<p>  只能创建新文件，不能编辑已有文件。 <code>Ctrl</code> + <code>d</code>  结束输入</p>
-<ul>
-<li><strong>合并文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 合并文件输出到另一个文件中</span></span><br><span class="line">cat file1 file2 &gt; file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并文件并输出到屏幕</span></span><br><span class="line">cat file1 file2</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-n 行编号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n|number file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-b 行编号，空白行不编号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -b file</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>Global Search Regular Expression(RE) and Print out the line</p>
-<p>全局正则表达式搜索，用于文本搜索（支持正则表达式），并把匹配的行打印出来。</p>
-<ul>
-<li><strong>常规用法</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep match_pattern file</span><br><span class="line"></span><br><span class="line">grep <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>多文件搜索</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"match_pattern"</span> file_1 file_2 file_3 ...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>-v 反转查找</strong></p>
-<p>即打印不匹配该模式的所有行</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-E 使用正则表达式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">"[1-9]+"</span> file</span><br><span class="line"></span><br><span class="line">egrep <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-o 只输出文件中匹配到的部分</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o -E <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-c 文件中包含匹配模式的行数</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-n 输出包含匹配字符串所在的行号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-b 匹配模式位于的字符或字节偏移</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般与 -o 一起使用，从第一个字符开始计算，起始值为 0 </span></span><br><span class="line">grep -b -o <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-l 搜索匹配模式出现在哪些文件中</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">"text"</span> file1 file2 file3 ...</span><br><span class="line"><span class="comment"># 只输出文件名，不指定 -l, 输出文件名及相应的匹配行</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-r 多级目录中对文本进行递归搜索</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"text"</span> . -r -n</span><br><span class="line"><span class="comment"># . 表示当前目录</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-i 忽略匹配模式中字符的大小写</strong>、</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-e 制定多个匹配模式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">"text1"</span> <span class="string">"text2"</span> file</span><br><span class="line"><span class="comment"># 这个当然也可以直接用正则表达式写</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>搜索结果中包括或者排除指定文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此参数的格式为 Ubuntun 下的格式，搜索文件只包括 txt，html,php 文件 </span></span><br><span class="line">grep --include=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索文件不包括 txt，html,php 文件</span></span><br><span class="line">grep --exclude=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除 fileList 文件列表里的文件</span></span><br><span class="line">grep <span class="string">"text"</span> . -r  --exclude-from=fileList</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>-q 静默输出</strong></p>
-</li>
-<li><p><strong>打印匹配某个结果之后或之前的 n 行</strong></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示匹配某个结果之后的3行，使用 -A 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -A 3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果之前的3行，使用 -B 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -B 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果的前三行和后三行，使用 -C 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -C 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果匹配结果有多个，会用“--”作为各匹配结果之间的分隔符：</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"a\nb\nc\na\nb\nc"</span> | grep a -A 1</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">--</span><br><span class="line">a</span><br><span class="line">b</span><br></pre></td></tr></table></figure>
-
-<h4 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h4><p>  stat 命令用于显示文件的大小、所有者、用户组、索引节点号、权限、修改和访问时间等重要的统计信息。这是一个非常有用的命令，可以显示比 <code>ls -l</code> 更多的细节。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c 用于格式化输出， %n 表示文件的名称 %a 表示数字格式的权限</span></span><br><span class="line"><span class="built_in">stat</span> -c <span class="string">'%n %a'</span> *</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls * <span class="string">""</span></span><br></pre></td></tr></table></figure>
-
-<p>  <a href="https://linux.cn/article-9601-1.html" target="_blank" rel="noopener">https://linux.cn/article-9601-1.html</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/">文本处理</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="让文本飞"><a href="#让文本飞" class="headerlink" title="让文本飞"></a>让文本飞</h1><p>vim 中显示行号</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/vim/vimrc </span><br><span class="line"><span class="built_in">set</span> number</span><br><span class="line"><span class="built_in">set</span> nonumber</span><br></pre></td></tr></table></figure>
-
-
-
-<p>提示符</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">59 <span class="keyword">if</span> [ <span class="string">"<span class="variable">$color_prompt</span>"</span> = yes ]; <span class="keyword">then</span></span><br><span class="line">60     PS1=<span class="string">'$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '</span></span><br><span class="line">61 <span class="keyword">else</span></span><br><span class="line">62     PS1=<span class="string">'$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ '</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">force_color_prompt=yes</span><br></pre></td></tr></table></figure>
-
-
-
-<p>反转字符串</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reverse</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Hello World"</span> | rev</span><br></pre></td></tr></table></figure>
-
-
-
-<p>字符串比较相等</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 等号两边的空格一定不能省略</span></span><br><span class="line">[ <span class="variable">$var1</span> = <span class="variable">$var2</span> ]</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="1-压缩-删除-多余的空行"><a href="#1-压缩-删除-多余的空行" class="headerlink" title="1 压缩(删除)多余的空行"></a>1 压缩(删除)多余的空行</h4><ul>
-<li>使用 <code>tr</code> 转换</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tr -s for --squeeze-repeats</span></span><br><span class="line">cat text.txt | tr -s <span class="string">'\n'</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用 <code>sed</code> 转换</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sed 默认一次只处理一行（涉及sed的处理方式，hold space），是以 \n 作为行分隔符的，但是提供的一个 option -z， 以 NUL 字符作为行分隔符来解析</span></span><br><span class="line"></span><br><span class="line">sed -zr <span class="string">'s/\n&#123;2,&#125;/\n/g'</span> text.txt</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>sed</code> 的另一种用法</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">'/^$/d'</span> text.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="2-计算连续数字的加法"><a href="#2-计算连续数字的加法" class="headerlink" title="2 计算连续数字的加法"></a>2 计算连续数字的加法</h4><ul>
-<li>使用 <code>tr</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seq 1 10 | <span class="built_in">echo</span> $[ $(tr <span class="string">'\n'</span> <span class="string">'+'</span>) 0 ]</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="3-进入指定目录"><a href="#3-进入指定目录" class="headerlink" title="3 进入指定目录"></a>3 进入指定目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 函数 return 为函数的返回，exit 为 shell 的结束</span></span><br><span class="line"><span class="keyword">function</span> to() </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> [ <span class="variable">$#</span> -ne 1 ];</span><br><span class="line">	<span class="keyword">then</span> </span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"Useage is: <span class="variable">$0</span> argument"</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"avaliable arguments can be znrt, zgrt, szrt"</span></span><br><span class="line">		<span class="built_in">return</span> -1</span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line">	target=`<span class="built_in">echo</span> -e <span class="variable">$1</span> | tr <span class="string">'[a-z]'</span> <span class="string">'[A-Z]'</span>`</span><br><span class="line">	basePath=/opt</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="variable">$target</span> <span class="keyword">in</span></span><br><span class="line">		<span class="string">"ZNRT"</span>) <span class="built_in">cd</span> <span class="string">"<span class="variable">$basePath</span>/<span class="variable">$target</span>"</span> &amp;&amp; <span class="built_in">pwd</span>;;</span><br><span class="line">		<span class="string">"ZGRT"</span>) <span class="built_in">cd</span> <span class="string">"<span class="variable">$basePath</span>/<span class="variable">$target</span>"</span> &amp;&amp; <span class="built_in">pwd</span>;;</span><br><span class="line">		<span class="string">"SZRT"</span>) <span class="built_in">cd</span> <span class="string">"<span class="variable">$basePath</span>/<span class="variable">$target</span>"</span> &amp;&amp; <span class="built_in">pwd</span>;;</span><br><span class="line">		*) <span class="built_in">echo</span> <span class="string">"invalid argument"</span>;;</span><br><span class="line">	<span class="keyword">esac</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>查找出最近一个小时目录内有修改过的文件</p>
-<p>modified.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find <span class="string">"/mnt/d/Markdown 文档"</span> -<span class="built_in">type</span> f -mmin -60 |</span><br><span class="line"> awk <span class="string">'BEGIN &#123; "date"| getline; print $0 &#125; &#123; print "modified:"$0 &#125; END &#123; print "\n" &#125;'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>备份：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># copy source to target</span></span><br><span class="line">baseDir=<span class="string">"/mnt/e/SoftConfigBackup"</span></span><br><span class="line">awk -F<span class="string">"="</span> <span class="string">'!/^\s*#/  \</span></span><br><span class="line"><span class="string">&#123; cmd0=bd"/modified.sh "$1" &gt;&gt; modified.log"; \</span></span><br><span class="line"><span class="string">system(cmd0); \</span></span><br><span class="line"><span class="string">targetDir=bd"/"$2; \</span></span><br><span class="line"><span class="string">cmd1="mkdir -p "targetDir; \</span></span><br><span class="line"><span class="string">cmd2="cp -r " $1 " " targetDir; \</span></span><br><span class="line"><span class="string">system(cmd1); \</span></span><br><span class="line"><span class="string">system(cmd2) &#125;'</span> \</span><br><span class="line">bd=<span class="variable">$baseDir</span> <span class="string">"<span class="variable">$baseDir</span>/backup.properties"</span></span><br></pre></td></tr></table></figure>
-
-<p>备份配置文件：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># software-config-dir=target-dit-name</span></span><br><span class="line"><span class="meta">/mnt/c/Users/guo/AppData/Roaming/Typora/themes</span>=<span class="string">Typora</span></span><br><span class="line"><span class="meta">/mnt/c/Users/guo/Desktop</span>=<span class="string">Desktop</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="WSL-服务开机自启"><a href="#WSL-服务开机自启" class="headerlink" title="WSL 服务开机自启"></a>WSL 服务开机自启</h4><p>startup 设置 vbs 脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Set ws = CreateObject(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
-
-
-
-<p> /etc/init.wsl</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
-
-
-
-<p>/etc/sudoers</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%sudo ALL=NOPASSWD: /etc/init.wsl</span><br></pre></td></tr></table></figure>
-
+<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resultType</code></td>
+<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
+</tr>
+</tbody></table>
+<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
+<p>需要试验一下，映射方法有多个参数</p>
+<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
+<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
+</ol>
 
                 
             </div>
