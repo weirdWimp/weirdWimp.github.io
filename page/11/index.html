@@ -84,93 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%208%20Pattern%20Matching/">Chapter 8 Pattern Matching</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Chapter-8-Patter-Matching"><a href="#Chapter-8-Patter-Matching" class="headerlink" title="Chapter 8 Patter Matching"></a>Chapter 8 Patter Matching</h1><p>函数式编程下的模式识别</p>
-<p>主要是为了避免 <code>if/else</code> 结构的维护性差，可读性差。通过匹配对象，以及对对象的成员进行解析（Extract）进行匹配，来观察对象的类型或者执行一定的操作。文中主要用 Scala 进行演示，主要通过 <code>case</code> <code>match</code> 关键字来完成模式匹配。</p>
-<p>例如有一个需求，Customer 对象的成员有 name, state, domain 都是 String 类型的，要求有一个构造方法，若其中任何一个字段为空字符串，返回 NULL。</p>
-<p>最简单直接的方式就是用 if/else</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    name,</span><br><span class="line">    state,</span><br><span class="line">    domain,</span><br><span class="line">    <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">    <span class="type">List</span>()</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在通过 case match 进行重构之前，自认为可以简单的通过卫语句来进行重写，可以让逻辑稍微清晰一点。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br></pre></td></tr></table></figure>
-
-
-
-<p>现在使用 case 和 match 来重构，完成模式匹配。主要做法是将三个属性封装在一个对象或者数据结构里，如 Tuple 元组 （name, state, domain), 然后对这元祖进行匹配。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name:<span class="type">String</span>, state:<span class="type">String</span>, domain:<span class="type">String</span>)</span><br><span class="line">: <span class="type">Customer</span> = &#123;</span><br><span class="line">    (name, state, string) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="string">""</span>, _, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        cae (_, <span class="string">""</span>, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>继续来重构之前用尾递归写的一个方法：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="keyword">if</span>(ids.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(initialIds.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123; <span class="type">List</span>() &#125; <span class="keyword">else</span> &#123; <span class="type">List</span>(cls(precust.get)) &#125;</span><br><span class="line">    cust ::: updateCustomerByIdList(</span><br><span class="line">      initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)),</span><br><span class="line">      ids.tail,</span><br><span class="line">      cls</span><br><span class="line">    )</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>同样使用元祖、case、match 来进行重构</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> _ =&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)), ids.drop(<span class="number">1</span>), cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>但是，能否进一步减少这个方法的复杂程度呢？通过 <code>Extracting Lists</code> 来实现。</p>
-<p><code>x::y</code> 操作符出现在 case 语句中，告诉 Scala, 匹配的对象应该是一个 list， 这个 list 的首元素将被赋值给 x, 剩下的元素 (也是一个list) tail 将赋值给 y</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>上面的代码中，find 方法返回的是一个Option 对象，可以将它转换为 list, 集训进行 <code>Extracting Lists</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id).toList</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">List</span>() =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>None 和 Some 是 Option 接口的两个实现类，None 对象不包含任何对象，Some 包含了实际存在的对象。因此可以对 find 返回的 Option 对象直接进行模式匹配，包含两种模式 <code>case None</code> <code>case Some</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">None</span> =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> <span class="type">Some</span>(cust) ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以让之前的 createCustomer 直接返回一个 Option 对象，更加函数化</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name : <span class="type">String</span>,</span><br><span class="line">                   state : <span class="type">String</span>,</span><br><span class="line">                   domain : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">error</span></span>(message : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    println(message)</span><br><span class="line">    <span class="type">None</span></span><br><span class="line">  &#125;</span><br><span class="line">  (name, state, domain) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="string">""</span>, _, _) =&gt; error(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, <span class="string">""</span>, _) =&gt; error(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; error(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        name,</span><br><span class="line">        state,</span><br><span class="line">        domain,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">        <span class="type">List</span>()</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>用 case 关键字修饰类</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span>(<span class="params">val customer_id : <span class="type">Integer</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val name : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val state : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val domain : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val enabled : <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contract : <span class="type">Contract</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contacts : <span class="type">List</span>[<span class="type">Contact</span>]</span>) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">case</span> cust :: custs =&gt; &#123;</span><br><span class="line">          <span class="keyword">if</span> (cust.enabled &amp;&amp; cust.contacts.exists(&#123; contact =&gt; contact.enabled&#125;))</span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">        <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">              countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">    customers <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,<span class="type">List</span>()) :: custs =&gt;</span><br><span class="line">               countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">           <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">                countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ls%20Invalid%20option/">ls Invalid option</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -184,30 +98,370 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="ls-invalid-option-–-‘j’"><a href="#ls-invalid-option-–-‘j’" class="headerlink" title="ls: invalid option – ‘j’"></a>ls: invalid option – ‘j’</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line"></span><br><span class="line">0n5whdeZ0ow-download.jpg  A-McbCSin6w-download.jpg  G1vKK6L7Ep0-download.jpg .....</span><br><span class="line">-jGGcAqIBms-download.jpg  -pahtnAMuFo-download.jpg </span><br><span class="line"></span><br><span class="line">$ ls *.jpg</span><br><span class="line">ls: invalid option -- <span class="string">'j'</span></span><br><span class="line">Try <span class="string">'ls --help'</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+                    <h1 id="Linux-常用命令"><a href="#Linux-常用命令" class="headerlink" title="Linux 常用命令"></a>Linux 常用命令</h1><p>[TOC]</p>
+<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><ul>
+<li><code>CTRL</code> + <code>K</code> 光标处剪切文本至本行结束</li>
+<li><code>CTRL</code> + <code>Y</code> 粘贴文本</li>
+<li><code>CTRL</code> + <code>E</code> 将光标移动到本行的末尾</li>
+<li><code>CTRL</code> + <code>A</code> 将光标移动到本行的开头</li>
+<li><code>ALT</code> + <code>F</code> 跳转到下一个空格处</li>
+<li><code>ALT</code> + <code>B</code> 回到前一个空格处</li>
+<li><code>ALT</code> + <code>Backspace</code> 删除前一个词</li>
+<li><code>CTRL</code> + <code>w</code> 剪切光标前一个词 </li>
+</ul>
+<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><p>查找命令</p>
+<ul>
+<li><strong>Usage</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [path...] [expression]</span><br></pre></td></tr></table></figure>
 
-<p>这个简单的命令执行失败了，期望 shell 扩展 <code>*</code> 找出所有 jpg 图像，也没有传入 <code>-j</code> 作为 option 选项，很是奇怪，通过 bing 找到了答案，百度真的是不适合程序员…..</p>
-<p>StackExchange <a href="https://superuser.com/questions/1300382/ls-pdf-complains-ls-invalid-option" target="_blank" rel="noopener">ls invalid option</a> 中的问题类似，原因是有个图像文件开头是 <code>-</code> （-jGGcAqIBms-download.jpg），被当作 ls 的 option 选项了….</p>
-<p>man bash</p>
-<blockquote>
-<p>A <code>--</code> signals the end of options and disables further option processing. Any arguments after the – are treated as file‐ names and arguments. An argument of - is equivalent to –.</p>
-</blockquote>
-<p>解决上述问题的办法：</p>
-<ol>
-<li>使用 <code>--</code> </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -- *.jpg</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>path  制定查找的目录，默认是当前目录</p>
+</li>
+<li><p>expression 包含 operators， options， tests， and  actions.</p>
+<ul>
+<li><p>tests: </p>
+<ul>
+<li>-name Pattern 指定文件名的模式</li>
+<li>-mmin N 过去N分钟更新过的普通文件</li>
+</ul>
+</li>
+<li><p>actions: </p>
+<ul>
+<li>-delete</li>
+<li>-print 默认</li>
+<li>-ls </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">"*.txt"</span> -ls</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>生产脚本使用 find + xargs，更保险</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -name选项指定了待查找文件名的模式。这个模式可以是通配符，也可以是正则表达式</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">'*.jpg'</span> -print0 | xargs -0 -n 1 <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
 
-<ol start="3">
-<li>修改文件名，避免此种情况发生</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
 
+
+
+
+
+<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>同样用来查找文件，是 <code>find -name</code> 的另一种说法，但是它搜索的是包含所有本地文件信息的数据库。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，<strong>先使用updatedb命令，手动更新数据库</strong>。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate ~/m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写，搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate -i ~/m</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><p>只能用来搜索程序名，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis grep</span><br><span class="line"><span class="comment"># 打印： grep: /bin/grep /usr/share/man/man1/grep.1.gz /usr/share/info/grep.info.gz</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="which"><a href="#which" class="headerlink" title="which"></a>which</h4><p>在 <strong>PATH</strong> 变量指定的路径中，搜索某个命令的位置，并返回第一个搜索结果。</p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> grep</span><br><span class="line"><span class="comment"># 打印： /bin/grep</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>用来区分某个命令是 shell 自带的，还是由外部的二进制文件提供的。如果是一个外部命令， -p 显示该命令的路径。</p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br><span class="line"><span class="comment"># cd is a shell builtin</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> wget</span><br><span class="line"><span class="comment"># wget is /usr/bin/wget</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> -p wget</span><br><span class="line">/usr/bin/wget</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h4><p>wget 是一个通过指定 URL 下载文件的工具，比如下载一些软件或者从远程服务器恢复备份到本地服务器。支持HTTP, HTTPS 和 FTP 协议，可以使用 HTTP 代理。可以在后台执行，支持断点下载</p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><p><strong>wget <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
+<p><strong>下载整个页面</strong>。 </p>
+<p><code>-x</code> 建立服务器上一样的目录</p>
+<p><code>-nd</code>下载的所有内容会出现在本地当前目录</p>
+</li>
+<li><p><strong>wget -r  <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
+<p>递归下载。下载服务器上的所有目录和文件。</p>
+<p><code>-l number</code> 指定下载的层次。</p>
+</li>
+<li><p><strong>wget -c <a href="http://prefix/dir/file" target="_blank" rel="noopener">http://prefix/dir/file</a></strong></p>
+<p>断点续传，服务器必须支持。</p>
+<p><code>-t</code> 表示重试次数 <code>-t 0</code> 表示无穷次重试，直到连接成功。</p>
+<p> <code>-T</code> 表示超时等待时间，超过指定的时间就算超时。</p>
+</li>
+<li><p><strong>wget -i download.txt</strong></p>
+<p>批量下载。多个需要下载的文件的 URL 可以写在一个文件中，每行一个。（URL 指向文件就下载文件，指向网站就下载首页）</p>
+</li>
+<li><p><strong>wget -m -reject=git <a href="http://prefix/dir" target="_blank" rel="noopener">http://prefix/dir</a></strong></p>
+<p>选择性下载</p>
+<p><code>-reject=list</code> 拒绝接受的文件类型</p>
+<p><code>-accept=list</code> 接受的文件类型</p>
+</li>
+<li><p><strong>wget -http-user=USER -http-passwd=PASS URL</strong></p>
+<p>密码和认证。 只能处理利用用户名/密码方式限制访问的网站</p>
+</li>
+<li><p><strong>wget -proxy-user=USER -proxy-passwd=PASS URL</strong></p>
+<p>代理进行下载。需要创建 .wgetrc 文件设置代理服务器：</p>
+<p>http-proxy=11.11.11.11:8080</p>
+<p>ftp-proxy=11.11.11.11:8080</p>
+<p>-proxy=on/off 使用或关闭代理</p>
+</li>
+<li><p><strong>wget -O rename.zip URL</strong></p>
+<p>重命名下载的文件。wget默认会以最后一个符合”/”的后面的字符来命令。</p>
+</li>
+<li><p><strong>wget –limit-rate=300k URL</strong></p>
+<p>限速下载</p>
+</li>
+<li><p><strong>wget -b URL</strong></p>
+<p>后台下载。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在下载的下载进度。</span></span><br><span class="line">tail -f wget-log</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>wget -tries=40 URL</strong></p>
+<p>增加重试次数，默认重试20次？</p>
+</li>
+<li><p><strong>wget -mirror URL</strong></p>
+<p>镜像下载。下载整个网站到本地。</p>
+<p><code>-p</code> 下载所有为了html页面显示正常的文件<br><code>–convert-links</code> 下载后，转换成本地的链接<br><code>-P ./LOCAL</code> 保存所有文件和目录到本地指定目录</p>
+</li>
+<li><p><strong>wget -o download.log URL</strong></p>
+<p>保存下载日志到文件中。</p>
+</li>
+<li><p><strong>wget -Q5m -i files.txt</strong></p>
+<p>限制下载的文件大小，超出后推出下载。</p>
+</li>
+<li><p><strong>wget -r -A.pdf URL</strong></p>
+<p>只下载指定格式的文件。</p>
+</li>
+<li><p><strong>wget FTP-URL</strong> </p>
+</li>
+<li><p><strong>wget –ftp-user=USER –ftp-password=PASS URL</strong></p>
+<p>wget FTP 下载。</p>
+</li>
+</ul>
+<p>下载jdk</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget后需要加参数–no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie;”</span></span><br><span class="line"></span><br><span class="line">wget --no-cookies --header <span class="string">"Cookie: oraclelicense=accept-securebackup-cookie;"</span> http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>用于打包、拆包、压缩、解压<strong>。</strong></p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><p><strong>-c</strong> </p>
+<p>建立一个打包文件</p>
+</li>
+<li><p><strong>-x</strong></p>
+<p>解开一个打包文件</p>
+</li>
+<li><p><strong>-t</strong></p>
+<p>查看 tar 包里的文件</p>
+</li>
+<li><p><strong>-z</strong></p>
+<p>gzip 工具，用于压缩成或解压 .tar.gz 格式的文件 (格式的名字只是为了标记，以免解压时用了错误的压缩工具)</p>
+</li>
+<li><p><strong>-j</strong></p>
+<p>zip2 工具，用于压缩成或解压 .tar.bz2 格式的文件</p>
+</li>
+<li><p><strong>-v</strong></p>
+<p>显示打包、拆包、压缩或解压过程。</p>
+</li>
+<li><p><strong>-f</strong></p>
+<p>使用文件名，后面立即接文件名</p>
+</li>
+<li><p><strong>-p</strong></p>
+<p>保持原文件的属性</p>
+</li>
+<li><p><strong>-P</strong></p>
+<p>使用绝对路径来压缩。</p>
+</li>
+<li><p><strong>-N 2001/03/11</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -N 2017/01/23 -zcvf index.html hello.txt world.txt</span><br></pre></td></tr></table></figure>
+
+<p>  设定日期，后面接的日期还要新的文件才会被打包。</p>
+<ul>
+<li><strong>–exclude file</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude hello.txt -zcvf b.tar.gz index.html hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>  剔除不需要进行打包的文件</p>
+<p>可以作为命令行参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf - *.txt | tar -xf - -C dir/</span><br><span class="line"></span><br><span class="line"><span class="comment"># tar cvf - files/ | ssh user@example.com "tar xv -C Documents/"</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p>cat 命令用于显示文件的内容</p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><strong>显示整个文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>从键盘创建一个文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; file</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p>  只能创建新文件，不能编辑已有文件。 <code>Ctrl</code> + <code>d</code>  结束输入</p>
+<ul>
+<li><strong>合并文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 合并文件输出到另一个文件中</span></span><br><span class="line">cat file1 file2 &gt; file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并文件并输出到屏幕</span></span><br><span class="line">cat file1 file2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-n 行编号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n|number file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-b 行编号，空白行不编号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -b file</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>Global Search Regular Expression(RE) and Print out the line</p>
+<p>全局正则表达式搜索，用于文本搜索（支持正则表达式），并把匹配的行打印出来。</p>
+<ul>
+<li><strong>常规用法</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep match_pattern file</span><br><span class="line"></span><br><span class="line">grep <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>多文件搜索</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"match_pattern"</span> file_1 file_2 file_3 ...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>-v 反转查找</strong></p>
+<p>即打印不匹配该模式的所有行</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-E 使用正则表达式</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">"[1-9]+"</span> file</span><br><span class="line"></span><br><span class="line">egrep <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-o 只输出文件中匹配到的部分</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o -E <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-c 文件中包含匹配模式的行数</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-n 输出包含匹配字符串所在的行号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-b 匹配模式位于的字符或字节偏移</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般与 -o 一起使用，从第一个字符开始计算，起始值为 0 </span></span><br><span class="line">grep -b -o <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-l 搜索匹配模式出现在哪些文件中</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">"text"</span> file1 file2 file3 ...</span><br><span class="line"><span class="comment"># 只输出文件名，不指定 -l, 输出文件名及相应的匹配行</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-r 多级目录中对文本进行递归搜索</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"text"</span> . -r -n</span><br><span class="line"><span class="comment"># . 表示当前目录</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-i 忽略匹配模式中字符的大小写</strong>、</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-e 制定多个匹配模式</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">"text1"</span> <span class="string">"text2"</span> file</span><br><span class="line"><span class="comment"># 这个当然也可以直接用正则表达式写</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>搜索结果中包括或者排除指定文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此参数的格式为 Ubuntun 下的格式，搜索文件只包括 txt，html,php 文件 </span></span><br><span class="line">grep --include=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索文件不包括 txt，html,php 文件</span></span><br><span class="line">grep --exclude=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除 fileList 文件列表里的文件</span></span><br><span class="line">grep <span class="string">"text"</span> . -r  --exclude-from=fileList</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>-q 静默输出</strong></p>
+</li>
+<li><p><strong>打印匹配某个结果之后或之前的 n 行</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示匹配某个结果之后的3行，使用 -A 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -A 3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果之前的3行，使用 -B 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -B 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果的前三行和后三行，使用 -C 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -C 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果匹配结果有多个，会用“--”作为各匹配结果之间的分隔符：</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"a\nb\nc\na\nb\nc"</span> | grep a -A 1</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">--</span><br><span class="line">a</span><br><span class="line">b</span><br></pre></td></tr></table></figure>
+
+<h4 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h4><p>  stat 命令用于显示文件的大小、所有者、用户组、索引节点号、权限、修改和访问时间等重要的统计信息。这是一个非常有用的命令，可以显示比 <code>ls -l</code> 更多的细节。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c 用于格式化输出， %n 表示文件的名称 %a 表示数字格式的权限</span></span><br><span class="line"><span class="built_in">stat</span> -c <span class="string">'%n %a'</span> *</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls * <span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<p>  <a href="https://linux.cn/article-9601-1.html" target="_blank" rel="noopener">https://linux.cn/article-9601-1.html</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
+<p>allocation table - 分配表</p>
+<p>stack frame - 栈帧</p>
+<p>heap - 堆</p>
+<p>reachable object - 可达对象/活性对象</p>
+<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
+<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
+<p>对象的预期生命周期称为 <code>代</code></p>
+<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
+<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
+<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
+<p> Eden 区 / Nursery 区</p>
+<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
+<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
+<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
+<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
+<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
+<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
 
                 
             </div>
@@ -273,7 +527,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E6%97%A5%E5%BF%97/log4j/">log4j</a></h2>
+                <h2><a class="post-title-link" href="/Java/%E6%B3%9B%E5%9E%8B/">泛型</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -287,59 +541,23 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="log4j"><a href="#log4j" class="headerlink" title="log4j"></a>log4j</h2><p>[TOC]</p>
-<h4 id="1-日志框架的基本组件"><a href="#1-日志框架的基本组件" class="headerlink" title="1. 日志框架的基本组件"></a>1. 日志框架的基本组件</h4><p>无论是JDK还是log4j（版本1）提供的日志框架，都主要包含以下组件：</p>
-<p><img src="C:%5CUsers%5Cguo%5CDesktop%5Clog.jpg" alt="log"></p>
-<p><strong>Logger</strong>：在程序中创建于实例化，负责日志信息的捕获与记录，在log4j中，如 Logger.getLogger(“service”), 会创建一个name为service的logger对象，如果LoggerManager已经发现有了这样一个为service的logger，直接返回在LoggerManager中管理的logger对象。logger对象用于不同级别的日志信息捕获，通过logger.info(), logger.warn()等。</p>
-<p><strong>Appender</strong>: Appender组件负责接收Logger捕获的日志事件，并将这些日志事件输出到不同的目的地，如打印在控制台、输出到文件、邮件、日志服务器等。在Java的日志框架中，称之为Handler。</p>
-<p><strong>Layout</strong>: Layout组件负责在Appender输出到目的地之前对日志进行格式化，如格式化成 Json、XML、HTML、普通文本等形式。在 Java 的日志框架中称之为 Formatter。</p>
-<p><strong>Filter</strong>：对日志事件进行过滤。</p>
-<h4 id="2-常见的Appender"><a href="#2-常见的Appender" class="headerlink" title="2. 常见的Appender"></a>2. 常见的Appender</h4><p>ConsoleAppender</p>
-<p>FileAppender</p>
-<p>RollingFileAppender</p>
-<p>DailyRollingFileAppender</p>
-<p>……</p>
-<h4 id="3-常用的Layout"><a href="#3-常用的Layout" class="headerlink" title="3. 常用的Layout"></a>3. 常用的Layout</h4><p>PatternLayout 通过ConversionPattern以占位符的形式进行格式化日志消息</p>
-<h4 id="4-日志的级别"><a href="#4-日志的级别" class="headerlink" title="4. 日志的级别"></a>4. 日志的级别</h4><h4 id="5-Logger的Hierarchy-层级"><a href="#5-Logger的Hierarchy-层级" class="headerlink" title="5. Logger的Hierarchy(层级)"></a>5. Logger的Hierarchy(层级)</h4><p>Logger是有层级的，在初始化时，log4j就会生成一个根Logger对象，名字为<code>root</code>, 当在程序中调用：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Logger rootLogger1 = Logger.getLogger();</span><br><span class="line"><span class="comment">// 或者是通过名字调用</span></span><br><span class="line">Logger rootLogger2 = Logger.getLoger(<span class="string">"root"</span>)</span><br></pre></td></tr></table></figure>
+                    <p>参考 Comparator 接口的静态方法 comparing</p>
+<blockquote>
+<p>Producer Extends, Consumer Super</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T, E extends Comparable&lt;? <span class="keyword">super</span> E&gt;&gt; <span class="function">Comparator&lt;T&gt; <span class="title">comparing</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends E&gt; keyGenerator)</span> </span>&#123;</span><br><span class="line">    Comparator&lt;T&gt; comparator1 = <span class="keyword">new</span> Comparator&lt;T&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 假设 keyGenerator 的定义接受一个 T 的父类型, 如 FatherT</span></span><br><span class="line">            <span class="comment">// 此时 o1 是 T 类型的，是可以作为 keyGenerator.apply(FatherT fatherT) 的参数的</span></span><br><span class="line">            <span class="comment">// 会进行向上转换，是合理有效的，任何父类引用都可以指向子类对象（父类的方法都会被子类继承，所以是合理的）</span></span><br><span class="line">            <span class="keyword">return</span> keyGenerator.apply(o1).compareTo(keyGenerator.apply(o2));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// lambda 表达式写法</span></span><br><span class="line">    Comparator&lt;T&gt; comparator = (c1, c2) -&gt; keyGenerator.apply(c1).compareTo(keyGenerator.apply(c2));</span><br><span class="line">    <span class="keyword">return</span> comparator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>得到同一个根Logger对象，之后，在程序中定义的所有Logger对象都属于根Logger对象的子Logger，通过 <code>subLogger.getParent（）</code> 可以获取其父Logger对象。但这种层级不仅仅是两层，可能是多层，如下定义的Logger对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Logger logger1 = Logger.getLogger(<span class="string">"com"</span>); </span><br><span class="line">Logger logger2 = Logger.getLogger(<span class="string">"com.candy"</span>);</span><br><span class="line">Logger logger3 = Logger.getLogger(<span class="string">"com.candy.service"</span>);</span><br></pre></td></tr></table></figure>
 
-<p>log4j通过点来定义层级，所以上面的三个Logger对象的层级关系如下图所示：</p>
-<p><img src="E:%5Cmd_pics%5ClogHierarchy.jpg" alt="logHierarchy"></p>
-<p>每一个下层的Logger对象的上层都是它的祖先Logger对象，当调用getParent方法时得到其直接父Logger对象，如 logger2.getParent（）得到logger1对象。</p>
-<h5 id="5-1-Logger日志级别继承"><a href="#5-1-Logger日志级别继承" class="headerlink" title="5.1 Logger日志级别继承"></a>5.1 Logger日志级别继承</h5><p>每一个Logger对象都可以设置一个默认日志信息级别，要打印的日志级别大于这个默认的级别才会被Appender处理。如果没有显示设置这个默认级别（配置文件和程序中都没有设置），那么在进行判断时，会调用其父Logger的日志级别，如果直接父Logger对象也没有设置，继续向上找到某一个祖先Logger对象，并且其默认的日志级别不为空。也就间接起到了继承祖先Logger的日志级别。</p>
-<h5 id="5-2-Appender继承"><a href="#5-2-Appender继承" class="headerlink" title="5.2 Appender继承"></a>5.2 Appender继承</h5><p>默认情况下，每一个处于Logger中间层级的Logger对象，==会继承其所有祖先Logger对象定义的所有Appenders==， 假设上述的4个Logger对象，每一个Logger对象都定义了一个ConsoleAppender（输出到控制台），logger3的默认日志级别设置为INFO时，<code>logger3.info(&quot;message&quot;)</code> 会在控制台打印出4条message，这是因为它继承了每一个祖先Logger对象的Appender（com.candy, com, root）, 再加上原本定义的一个Appender, 一共有4个ConsoleAppender，所以会在控制台打印出4条。</p>
-<p>这就相当于对于这个子Logger对象，为其定义了4个ConsoleAppender, 这些Appender与其祖先的日志默认级别不再有关系，只要是满足子Logger对象的默认级别的，就会交由这4个ConsoleAppender处理。当然，每个Appender也可以通过设置<code>Threshold</code>来指定该Appender要处理的最低日志级别。</p>
-<p><strong>设置不继承其父Logger对象的Appenders</strong></p>
-<p>如果不想继承其祖先Logger对象的Appenders, 可以通过设置配置文件<code>log4j.additivity.loggername=false</code> 或者程序中<code>logger.setAdditivity(false)</code> 来关闭这种继承。这样，这个Logger对象的日志信息只会在它自己定义的Appender中输出了。</p>
-<p><strong>其实，要理解这种继承，直接去看源码会比较清晰的看到具体的处理过程是怎么样的！！！</strong></p>
-<p>log4j 配置文件及相关注释</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义日志目录变量，引用使用 $&#123;logdir&#125;</span></span><br><span class="line"><span class="comment"># logdir=directory.of.log</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### set log levels ###</span></span><br><span class="line"><span class="meta">log4j.rootLogger</span>= <span class="string">DEBUG,stdout,D</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出到控制台 ###</span></span><br><span class="line"><span class="meta">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.Target</span>=<span class="string">System.out</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%c - %m%n</span></span><br><span class="line"><span class="comment">#log4j.appender.stdout.layout.ConversionPattern=%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%X&#123;user&#125;] [%-5p] %c - %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># %X&#123;key&#125; MDC 属性获取</span></span><br><span class="line"><span class="comment"># %c logger name</span></span><br><span class="line"><span class="comment"># %C 类的全路径</span></span><br><span class="line"><span class="comment"># %-5p 长度最小5位，左对齐</span></span><br><span class="line"><span class="comment"># %M method 方法名</span></span><br><span class="line"><span class="comment"># %m message 日志消息</span></span><br><span class="line"><span class="comment"># %n 换行</span></span><br><span class="line"><span class="comment"># %F 所属的文件</span></span><br><span class="line"><span class="comment"># %l 相当于 %C.%M(%F:%L),如 log.demo.basic.BasicLog4JDemo.logForComponents(BasicLog4JDemo.java:78)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出到日志文件 ###</span></span><br><span class="line"><span class="meta">log4j.appender.D</span>=<span class="string">org.apache.log4j.DailyRollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.D.File</span>=<span class="string">logs/log.log</span></span><br><span class="line"><span class="meta">log4j.appender.D.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.D.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.D.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.D.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 控制何时进行日志rolling以及开始新的日志文件</span></span><br><span class="line"><span class="meta">log4j.appender.D.DatePattern</span>=<span class="string">'.' yyyy-MM-dd	</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># RollingFileAppender 配置</span></span><br><span class="line"><span class="comment"># log4j.appender.D.MaxFileSize=1KB</span></span><br><span class="line"><span class="comment"># log4j.appender.D.MaxBackupIndex=2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为name为service的logger设置日志级别及appender</span></span><br><span class="line"><span class="meta">log4j.logger.service</span>=<span class="string">INFO,S</span></span><br><span class="line"><span class="meta">log4j.appender.S</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.S.File</span>=<span class="string">logs/service.log</span></span><br><span class="line"><span class="meta">log4j.appender.S.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.S.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.S.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.S.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.S.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.S.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为name为viewer的logger设置日志级别及appender</span></span><br><span class="line"><span class="meta">log4j.logger.viewer</span>=<span class="string">INFO,V</span></span><br><span class="line"><span class="meta">log4j.appender.V</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.V.File</span>=<span class="string">logs/viewer.log</span></span><br><span class="line"><span class="meta">log4j.appender.V.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.V.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 最终是否在祖先Logger的appender中输出主要取决于祖先Logger对象的某个appender的Threshold设置的日志级别</span></span><br><span class="line"><span class="meta">log4j.appender.V.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.V.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.V.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.V.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br></pre></td></tr></table></figure>
+
+<p>如果要返回一个 T 类型的 Comparator, 也就是 Comparator<T>, 其负载类型为 T，comparing 是可以传入一个 Functinon&lt;? super T, ? extends E&gt; 的实例的，Functinon  的负载类型的第一个参数类型可以为 T 的任何父类型，也就是此 Functinon 的 apply() 方法可以接受任何 T 的父类对象。</p>
+<p>在返回一个 Comparator<T> 对象时，Functinon 函数会接受一个 T 对象实例，此时，会发生向上转换:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法签名接受一个 Father 对象</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printField</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">    System.out.pritln(father.getField());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Son = <span class="keyword">new</span> Son();</span><br><span class="line">    <span class="comment">// 传入一个子类 Son 对象</span></span><br><span class="line">    printField(son);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 
 
-
-
-<h4 id="6-捕获异常日志"><a href="#6-捕获异常日志" class="headerlink" title="6. 捕获异常日志"></a>6. 捕获异常日志</h4><p>在日志打印的过程中，如果程序中发生了异常，并且对异常进行了捕获，在进行异常日志打印的时候，是可以传入一个Throwable对象的, 日志在进行记录的时候也会打印栈跟踪信息：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Log a message object with the ERROR level including</span></span><br><span class="line"><span class="comment">   * the stack trace of the &#123;<span class="doctag">@link</span> Throwable&#125; t passed *    * as parameter.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">error</span><span class="params">(Object message, Throwable t)</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="7-未捕获异常日志"><a href="#7-未捕获异常日志" class="headerlink" title="7. 未捕获异常日志"></a>7. 未捕获异常日志</h4><p>如果没有进行捕获，又想要将异常的堆栈信息保留在日志文件里，Thread类中有两个方法，我们可以用它来为未捕获的异常指定一个处理（<code>ExceptionHandler</code>）, 通过 setDefaultUncaughtExceptionHandler 可以让你在任何线程上处理任何异常。setUncaughtExceptionHandler可以让你针对一个指定的线程设定一个不同的处理方法。而ThreadGroup则允许你设定一个处理方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 为未捕获的异常记录异常信息、栈跟踪信息 */</span></span><br><span class="line">Thread.setDefaultUncaughtExceptionHandler(<span class="keyword">new</span> Thread.UncaughtExceptionHandler() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t, Throwable e)</span> </span>&#123;</span><br><span class="line">                Logger.getLogger(BasicLog4JDemo.class).log(Priority.FATAL, t + "                       An exception occured: ", e);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="8-参考文件"><a href="#8-参考文件" class="headerlink" title="8. 参考文件"></a>8. 参考文件</h4><p>【1】<a href="http://www.importnew.com/16331.html" target="_blank" rel="noopener">http://www.importnew.com/16331.html</a></p>
-<p>【2】<a href="http://www.loggly.com/ultimate-guide/logging/java-logging-basics/" target="_blank" rel="noopener">http://www.loggly.com/ultimate-guide/logging/java-logging-basics/</a></p>
-<p>【3】<a href="http://tutorials.jenkov.com/java-logging/logger-hierarchy.html" target="_blank" rel="noopener">http://tutorials.jenkov.com/java-logging/logger-hierarchy.html</a></p>
-<p>【4】<a href="https://www.tutorialspoint.com/log4j/log4j_useful_resources.htm" target="_blank" rel="noopener">https://www.tutorialspoint.com/log4j/log4j_useful_resources.htm</a></p>
-<p>【5】<a href="https://blog.csdn.net/azheng270/article/details/2173430/" target="_blank" rel="noopener">https://blog.csdn.net/azheng270/article/details/2173430/</a></p>
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dateTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Function&lt;Circle, Integer&gt; circleFunc = circle -&gt; circle.getR().length();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 当左边的类型为 CircleSubClass 时， keyGenerator 的负载类型可以是 CircleSubClass 的任何父类型</span></span><br><span class="line">    <span class="comment">// 当右边 keyGenerator 的负载类型是 Circle 时，左边的 Comparator 负载类型可以是 Circle 的任何子类</span></span><br><span class="line">    Comparator&lt;CircleSubClass&gt; comparing = comparing(circleFunc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                 
             </div>
         </article>
