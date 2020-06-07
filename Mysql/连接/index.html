@@ -229,7 +229,7 @@
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> P1(T1,T2)</span><br><span class="line"><span class="keyword">WHERE</span> P(T1,T2) <span class="keyword">AND</span> R(T2)</span><br></pre></td></tr></table></figure>
 
-<p>  如果此时 <code>R(2)</code> 这个限制条件能够极大的减少 <code>T2</code> 表中匹配的行数，但是还时按照当前的执行顺序，先访问 <code>T1</code>,  再访问 <code>T2</code> 表，就可能会产生一个不够搞笑的执行计划</p>
+<p>  如果此时 <code>R(2)</code> 这个限制条件能够极大的减少 <code>T2</code> 表中匹配的行数，但是还时按照当前的执行顺序，先访问 <code>T1</code>,  再访问 <code>T2</code> 表，就可能会产生一个不够高效的执行计划</p>
 <p>  如果此时，能够将这个外连接转换为内连接，可能会有一个更高效的执行计划。</p>
 <p>  <strong>什么样的情况下，一个外连接可以被转换为一个内连接？</strong></p>
 <blockquote>
@@ -238,8 +238,33 @@
 <p>如果对于外连接操作的补足NULL行（A LEFT JOIN B –&gt; B.COL IS ALL NULL), 这些条件总是 <code>FALSE</code> 或者 <code>UNKNOW</code> 的，这些条件就是 <code>null-rejected</code> 的</p>
 </blockquote>
 <p>  考虑这样一个简单的外连接：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">T1 LEFT JOIN T2 ON T1.A=T2.A</span><br><span class="line"></span><br><span class="line"><span class="comment">-- null-rejected conditions:</span></span><br><span class="line">T2.B IS NOT NULL</span><br><span class="line">T2.B &gt; 3</span><br><span class="line">T2.C &lt;= T1.C</span><br><span class="line">T2.B &lt; 2 OR T2.C &gt; 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">T1 LEFT JOIN T2 ON T1.A=T2.A</span><br><span class="line"></span><br><span class="line"><span class="comment">-- null-rejected conditions: false for `null` rows</span></span><br><span class="line">T2.B IS NOT NULL</span><br><span class="line">T2.B &gt; 3</span><br><span class="line">T2.C &lt;= T1.C</span><br><span class="line">T2.B &lt; 2 OR T2.C &gt; 1</span><br><span class="line"></span><br><span class="line"><span class="comment">-- not null-rejected conditions: mignt be true for `null` rows</span></span><br><span class="line">T2.B IS NULL</span><br><span class="line">T1.B &lt; 3 OR T2.B IS NOT NULL</span><br><span class="line">T1.B &lt; 3 OR T2.B &gt; 3</span><br></pre></td></tr></table></figure>
 
+<p>  <strong>通用的检查规则</strong></p>
+<ul>
+<li><p>A 是左连接内表的一个属性</p>
+</li>
+<li><p>一个谓词(predicate)条件，其中包含了对左连接内表的引用，并且当这个谓词的某一个参数为 NULL 时，谓词返回的值为 <code>UNKNOWN</code></p>
+<p>什么是谓词？谓词就是返回值为真值(<code>TRUE</code>, )的函数，如 <code>= &lt; &gt; &lt;&gt;</code>比较谓词，<code>LIKE</code>谓词，<code>BETWEEN</code> 谓词，<code>IS NULL, IS NOT NULL</code>, <code>IN</code>谓词，<code>EXISTS</code></p>
+</li>
+<li><p>AND 进行连接条件，包含了一个 null-rejected 的条件</p>
+</li>
+<li><p>OR 连接的条件，并且所有条件都是 null-rejected</p>
+</li>
+<li><p><em>示例*</em></p>
+</li>
+</ul>
+<ol>
+<li>简单转换</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- before converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T1.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- after converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T1.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>连续触发</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- before converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T2.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- first convertion</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T2.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- equivalent to the query</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A), T3</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span> <span class="keyword">AND</span> T3.B=T2.B</span><br><span class="line"></span><br><span class="line"><span class="comment">--second convertion: T3.B=T2.B is null-rejected for embeeded outer join</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (T1 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A), T3</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span> <span class="keyword">AND</span> T3.B=T2.B</span><br></pre></td></tr></table></figure>
 
 
 

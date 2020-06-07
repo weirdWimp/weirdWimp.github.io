@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ls%20Invalid%20option/">ls Invalid option</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">配置网络与SSH</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,30 +98,204 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="ls-invalid-option-–-‘j’"><a href="#ls-invalid-option-–-‘j’" class="headerlink" title="ls: invalid option – ‘j’"></a>ls: invalid option – ‘j’</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line"></span><br><span class="line">0n5whdeZ0ow-download.jpg  A-McbCSin6w-download.jpg  G1vKK6L7Ep0-download.jpg .....</span><br><span class="line">-jGGcAqIBms-download.jpg  -pahtnAMuFo-download.jpg </span><br><span class="line"></span><br><span class="line">$ ls *.jpg</span><br><span class="line">ls: invalid option -- <span class="string">'j'</span></span><br><span class="line">Try <span class="string">'ls --help'</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+                    <p>[TOC]</p>
+<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>vmware 桥接模式下：</p>
+<p>各种网络模式参考 <a href="https://www.linuxidc.com/Linux/2016-09/135521.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-09/135521.htm</a></p>
+<p>/etc/sysconfig/network-scripts 下一般会有一个网络配置文件，如：ifcfg-eno16777736</p>
+<p>修改该文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet          </span><br><span class="line">BOOTPROTO=static          <span class="comment">#静态IP地址配置</span></span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_PEERDNS=yes</span><br><span class="line">IPV6_PEERROUTES=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">NAME=eno16777736</span><br><span class="line">UUID=7617ff93-0c8f-4272-a28e-ac8cf0807026</span><br><span class="line">DEVICE=eno16777736</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.2.110        <span class="comment">#虚拟机的话，与主机同一网段</span></span><br><span class="line">NETMASK=255.255.255.0       <span class="comment">#子网掩码</span></span><br><span class="line">GATEWAY=192.168.2.1         <span class="comment">#网关</span></span><br><span class="line">DNS1=192.168.2.1            <span class="comment">#DNS</span></span><br></pre></td></tr></table></figure>
 
-<p>这个简单的命令执行失败了，期望 shell 扩展 <code>*</code> 找出所有 jpg 图像，也没有传入 <code>-j</code> 作为 option 选项，很是奇怪，通过 bing 找到了答案，百度真的是不适合程序员…..</p>
-<p>StackExchange <a href="https://superuser.com/questions/1300382/ls-pdf-complains-ls-invalid-option" target="_blank" rel="noopener">ls invalid option</a> 中的问题类似，原因是有个图像文件开头是 <code>-</code> （-jGGcAqIBms-download.jpg），被当作 ls 的 option 选项了….</p>
-<p>man bash</p>
-<blockquote>
-<p>A <code>--</code> signals the end of options and disables further option processing. Any arguments after the – are treated as file‐ names and arguments. An argument of - is equivalent to –.</p>
-</blockquote>
-<p>解决上述问题的办法：</p>
-<ol>
-<li>使用 <code>--</code> </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -- *.jpg</span><br></pre></td></tr></table></figure>
+<p>修改完重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/network restart</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>生产脚本使用 find + xargs，更保险</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -name选项指定了待查找文件名的模式。这个模式可以是通配符，也可以是正则表达式</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">'*.jpg'</span> -print0 | xargs -0 -n 1 <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
 
-<ol start="3">
-<li>修改文件名，避免此种情况发生</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
 
+
+
+
+
+
+
+<h4 id="CentOS中修改主机名"><a href="#CentOS中修改主机名" class="headerlink" title="CentOS中修改主机名"></a>CentOS中修改主机名</h4><h5 id="CentOS-6"><a href="#CentOS-6" class="headerlink" title="CentOS 6"></a>CentOS 6</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos6 ~]$ hostname                                              <span class="comment"># 查看当前的hostnmae</span></span><br><span class="line">centos6.magedu.com</span><br><span class="line">[root@centos6 ~]$ vim /etc/sysconfig/network                            <span class="comment"># 编辑network文件修改hostname行（重启生效）</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/sysconfig/network                            <span class="comment"># 检查修改</span></span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=centos66.magedu.com</span><br><span class="line">[root@centos6 ~]$ hostname centos66.magedu.com                          <span class="comment"># 设置当前的hostname(立即生效）</span></span><br><span class="line">[root@centos6 ~]$ vim /etc/hosts                                        <span class="comment"># 编辑hosts文件，给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/hosts                                        <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4 centos66.magedu.com</span><br><span class="line">::1 localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>centos6以及其他有些发行版本，主机名的配置文件是<code>/etc/sysconfig/network</code>, 用 <code>hostname newname</code> 也只是暂时生效，修改了内核的值，重启丢失。 所以可以结合临时加修改配置文件这种方式修改主机名。</p>
+<h5 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]$ hostnamectl <span class="built_in">set</span>-hostname centos77.magedu.com       <span class="comment"># 使用这个命令会立即生效且重启也生效</span></span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ hostname  <span class="comment"># 查看下</span></span><br><span class="line">centos77.magedu.com</span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ vim /etc/hosts   <span class="comment"># 编辑下hosts文件， 给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos7 ~]$ cat /etc/hosts                                           <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 centos77.magedu.com</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>在centos7中，主机名的配置文件为 /etc/hostname, 在该文件中配置了新的主机名后，不会立即生效，需要重启进行生效；因为系统内核已经中的主机名还没有更新，还是旧的指。 可以使用修改CentOS6的策略，也可以通过 <code>hostnamectl set-hostname newname</code> 来更改主机名，内核和配置文件中的主机名都被更新了，不用重启。</p>
+<p>至于<code>/etc/hosts</code> 文件，同Windows下的hosts文件一样，只是起到本地DNS的作用一样，路由的作用。或者也可以说起别名。</p>
+<h4 id="SSH-服务配置"><a href="#SSH-服务配置" class="headerlink" title="SSH 服务配置"></a>SSH 服务配置</h4><p>首先查看是否有安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list installed | grep openssh-server</span><br></pre></td></tr></table></figure>
+
+<p>没有安装的话，用yum进行安装 <code>yum install openssh-server</code></p>
+<p>SSH 服务的配置文件是 /etc/ssh/sshd_config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">ListenAddress ::</span><br><span class="line"></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<p>重启或开启SSH服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service   <span class="comment">#自启动服务</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum instatll net-tools –y    <span class="comment">#如果没有netstat服务，安装netstat工具</span></span><br><span class="line"></span><br><span class="line">netstat -an | grep 22</span><br></pre></td></tr></table></figure>
+
+
+
+<p>必要时关闭防火墙或开放22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key </p>
+<h4 id="RPM"><a href="#RPM" class="headerlink" title="RPM"></a>RPM</h4><p><a href="https://www.cnblogs.com/zengkefu/p/5666947.html" target="_blank" rel="noopener">https://www.cnblogs.com/zengkefu/p/5666947.html</a></p>
+<p>ntpdate cn.pool.ntp.org</p>
+<p>\1.  安装ntpdate工具</p>
+<p> # yum -y install ntp ntpdate</p>
+<p> \2.  设置系统时间与网络时间同步</p>
+<p> # ntpdate cn.pool.ntp.org</p>
+<p> \3.  将系统时间写入硬件时间</p>
+<p> # hwclock –systohc</p>
+<p> 4.强制系统时间写入CMOS中防止重启失效</p>
+<p> 　　hwclock -w<br> 　　或clock -w</p>
+<p>本文来自 紫漪 的CSDN 博客 ，全文地址请点击：<a href="https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy" target="_blank" rel="noopener">https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy</a> </p>
+<p>sudo passwd root 更改密码，要在root用户下</p>
+<p>sudo su - root</p>
+<p>apt list –installed|grep jdk java</p>
+<p>/opt/zookeeper-3.4.6/bin/zkServer.sh start</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.9.0.1/config/server.properties</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
+<p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>使用 DataSource 对象的优点</p>
+<ul>
+<li><p>便携性，可维护性强</p>
+<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
+</li>
+<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
+</li>
+</ul>
+<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
+<thead>
+<tr>
+<th><strong>Config Property</strong></th>
+<th><strong>Default Value</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>maxIdle</td>
+<td>100</td>
+<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
+</tr>
+<tr>
+<td>minIdle</td>
+<td>10</td>
+<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
+</tr>
+<tr>
+<td>maxActive</td>
+<td>100</td>
+<td>连接池中同一时间可以分配的最大活跃连接数</td>
+</tr>
+<tr>
+<td>timeBetweenEvictionRunsMillis</td>
+<td>5000 (5秒)</td>
+<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
+</tr>
+<tr>
+<td>initialSize</td>
+<td>10</td>
+<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
+</tr>
+<tr>
+<td>testWhileIdle</td>
+<td>false</td>
+<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
+</tr>
+<tr>
+<td>testOnBorrow</td>
+<td>false</td>
+<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
+</tr>
+<tr>
+<td>validationInterval</td>
+<td>3000（3秒）</td>
+<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
+</tr>
+<tr>
+<td>validationQuery</td>
+<td></td>
+<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
+</tr>
+<tr>
+<td>validationQueryTimeout</td>
+<td>-1</td>
+<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
+</tr>
+<tr>
+<td>removeAbandoned</td>
+<td>false</td>
+<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
+</tr>
+<tr>
+<td>removeAbandonedTimeout</td>
+<td>60 s</td>
+<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
+</tr>
+<tr>
+<td>abandonWhenPercentageFull</td>
+<td>0</td>
+<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
+</tr>
+<tr>
+<td>maxWait</td>
+<td>30000（30秒）</td>
+<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
+</tr>
+<tr>
+<td>minEvictableIdleTimeMillis</td>
+<td>60000 （60 秒）</td>
+<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
+<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
+<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
+<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
+<p>return result; </p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
+<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
+<p>**<br>**</p>
+<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
+<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
+<p>**<br>**</p>
+<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
+<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
+<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
+<p>maxIdle </p>
+<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
 
                 
             </div>
@@ -129,59 +303,28 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
+                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
-<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
-<p>– Becoming Functional</p>
-</blockquote>
-<p>一级函数 高阶函数？</p>
-<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
-<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
-<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
-<p>在 Java 中， 比如定义了一个 Function 接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
-</blockquote>
-<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
-<p><strong>匿名函数</strong></p>
-<blockquote>
-<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
-</blockquote>
-<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
-<blockquote>
-<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
-</blockquote>
-<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
-<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
-
-
-
+                    <p>getResourceAsStream</p>
+<p>java.lang.reflect.Proxy</p>
+<p>MySQL for Excel</p>
+<ul>
+<li>Import MySQL data into Excel.</li>
+<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
+<li>Modify MySQL data directly from within Excel.</li>
+</ul>
 
                 
             </div>
@@ -293,7 +436,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">配置网络与SSH</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E8%A1%8C%E5%A4%84%E7%90%86/">行处理</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -307,109 +450,10 @@
             </div>
             <div class="post-content">
                 
-                    <p>[TOC]</p>
-<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>vmware 桥接模式下：</p>
-<p>各种网络模式参考 <a href="https://www.linuxidc.com/Linux/2016-09/135521.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-09/135521.htm</a></p>
-<p>/etc/sysconfig/network-scripts 下一般会有一个网络配置文件，如：ifcfg-eno16777736</p>
-<p>修改该文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet          </span><br><span class="line">BOOTPROTO=static          <span class="comment">#静态IP地址配置</span></span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_PEERDNS=yes</span><br><span class="line">IPV6_PEERROUTES=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">NAME=eno16777736</span><br><span class="line">UUID=7617ff93-0c8f-4272-a28e-ac8cf0807026</span><br><span class="line">DEVICE=eno16777736</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.2.110        <span class="comment">#虚拟机的话，与主机同一网段</span></span><br><span class="line">NETMASK=255.255.255.0       <span class="comment">#子网掩码</span></span><br><span class="line">GATEWAY=192.168.2.1         <span class="comment">#网关</span></span><br><span class="line">DNS1=192.168.2.1            <span class="comment">#DNS</span></span><br></pre></td></tr></table></figure>
-
-<p>修改完重启</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/network restart</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<h4 id="CentOS中修改主机名"><a href="#CentOS中修改主机名" class="headerlink" title="CentOS中修改主机名"></a>CentOS中修改主机名</h4><h5 id="CentOS-6"><a href="#CentOS-6" class="headerlink" title="CentOS 6"></a>CentOS 6</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos6 ~]$ hostname                                              <span class="comment"># 查看当前的hostnmae</span></span><br><span class="line">centos6.magedu.com</span><br><span class="line">[root@centos6 ~]$ vim /etc/sysconfig/network                            <span class="comment"># 编辑network文件修改hostname行（重启生效）</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/sysconfig/network                            <span class="comment"># 检查修改</span></span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=centos66.magedu.com</span><br><span class="line">[root@centos6 ~]$ hostname centos66.magedu.com                          <span class="comment"># 设置当前的hostname(立即生效）</span></span><br><span class="line">[root@centos6 ~]$ vim /etc/hosts                                        <span class="comment"># 编辑hosts文件，给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/hosts                                        <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4 centos66.magedu.com</span><br><span class="line">::1 localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
-
-<p>centos6以及其他有些发行版本，主机名的配置文件是<code>/etc/sysconfig/network</code>, 用 <code>hostname newname</code> 也只是暂时生效，修改了内核的值，重启丢失。 所以可以结合临时加修改配置文件这种方式修改主机名。</p>
-<h5 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]$ hostnamectl <span class="built_in">set</span>-hostname centos77.magedu.com       <span class="comment"># 使用这个命令会立即生效且重启也生效</span></span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ hostname  <span class="comment"># 查看下</span></span><br><span class="line">centos77.magedu.com</span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ vim /etc/hosts   <span class="comment"># 编辑下hosts文件， 给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos7 ~]$ cat /etc/hosts                                           <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 centos77.magedu.com</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
-
-<p>在centos7中，主机名的配置文件为 /etc/hostname, 在该文件中配置了新的主机名后，不会立即生效，需要重启进行生效；因为系统内核已经中的主机名还没有更新，还是旧的指。 可以使用修改CentOS6的策略，也可以通过 <code>hostnamectl set-hostname newname</code> 来更改主机名，内核和配置文件中的主机名都被更新了，不用重启。</p>
-<p>至于<code>/etc/hosts</code> 文件，同Windows下的hosts文件一样，只是起到本地DNS的作用一样，路由的作用。或者也可以说起别名。</p>
-<h4 id="SSH-服务配置"><a href="#SSH-服务配置" class="headerlink" title="SSH 服务配置"></a>SSH 服务配置</h4><p>首先查看是否有安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list installed | grep openssh-server</span><br></pre></td></tr></table></figure>
-
-<p>没有安装的话，用yum进行安装 <code>yum install openssh-server</code></p>
-<p>SSH 服务的配置文件是 /etc/ssh/sshd_config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">ListenAddress ::</span><br><span class="line"></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
-
-<p>重启或开启SSH服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service   <span class="comment">#自启动服务</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>查看22端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum instatll net-tools –y    <span class="comment">#如果没有netstat服务，安装netstat工具</span></span><br><span class="line"></span><br><span class="line">netstat -an | grep 22</span><br></pre></td></tr></table></figure>
-
-
-
-<p>必要时关闭防火墙或开放22端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
-
-<p>ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key </p>
-<h4 id="RPM"><a href="#RPM" class="headerlink" title="RPM"></a>RPM</h4><p><a href="https://www.cnblogs.com/zengkefu/p/5666947.html" target="_blank" rel="noopener">https://www.cnblogs.com/zengkefu/p/5666947.html</a></p>
-<p>ntpdate cn.pool.ntp.org</p>
-<p>\1.  安装ntpdate工具</p>
-<p> # yum -y install ntp ntpdate</p>
-<p> \2.  设置系统时间与网络时间同步</p>
-<p> # ntpdate cn.pool.ntp.org</p>
-<p> \3.  将系统时间写入硬件时间</p>
-<p> # hwclock –systohc</p>
-<p> 4.强制系统时间写入CMOS中防止重启失效</p>
-<p> 　　hwclock -w<br> 　　或clock -w</p>
-<p>本文来自 紫漪 的CSDN 博客 ，全文地址请点击：<a href="https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy" target="_blank" rel="noopener">https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy</a> </p>
-<p>sudo passwd root 更改密码，要在root用户下</p>
-<p>sudo su - root</p>
-<p>apt list –installed|grep jdk java</p>
-<p>/opt/zookeeper-3.4.6/bin/zkServer.sh start</p>
-<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.9.0.1/config/server.properties</p>
-<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
-<p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
-<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>利用 <code>rename</code> 命令</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>清理工作</li>
-</ol>
+                    <p>Ctrl + k：剪切光标位置到行尾的文本。<br>Ctrl + u：剪切光标位置到行首的文本。<br>Ctrl + y：在光标位置粘贴文本</p>
+<p>Ctrl + w：删除光标前面的单词。</p>
+<p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
+<p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
 
                 
             </div>
