@@ -84,206 +84,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E9%80%9F%E6%9F%A5%E8%A1%A8/">速查表</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><a href="https://ihateregex.io/cheatsheet/#" target="_blank" rel="noopener"># cheatsheet</a></p>
-<p>tiny regex cheatsheet</p>
-<table>
-<thead>
-<tr>
-<th>expr</th>
-<th>usage</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>/hello/</td>
-<td>looks for the string between the forward slashes (case-sensitive)</td>
-</tr>
-<tr>
-<td>/hello/i</td>
-<td>looks for the string between the forward slashes (case-insensitive)</td>
-</tr>
-<tr>
-<td>/hello/g</td>
-<td>looks for multiple occurrences of string between the forward slashes</td>
-</tr>
-<tr>
-<td>/h.llo/</td>
-<td>the ‘.’ matches any one character other than a new line character… matches ‘hello’, ‘hallo’ but not ‘h llo’</td>
-</tr>
-<tr>
-<td>/h.*llo/</td>
-<td>the “*” matches any character(s) zero or more times… matches “hello”, “heeeeeello”, “hllo”, “hwarwareallo”</td>
-</tr>
-<tr>
-<td>/\d/</td>
-<td>matches any digit</td>
-</tr>
-<tr>
-<td>/\D/</td>
-<td>matches any non-digit</td>
-</tr>
-<tr>
-<td>/\w/</td>
-<td>matches any word character (a-z, A-Z, 0-9, _)</td>
-</tr>
-<tr>
-<td>/\W/</td>
-<td>matches any non-word character</td>
-</tr>
-<tr>
-<td>/\s/</td>
-<td>matches any white space character (\r (carriage return),\n (new line), \t (tab), \f (form feed))</td>
-</tr>
-<tr>
-<td>/\S/</td>
-<td>matches any non-white space character</td>
-</tr>
-<tr>
-<td>/[abcd]/</td>
-<td>matches any character in square brackets</td>
-</tr>
-<tr>
-<td>/[ch]at/</td>
-<td>matches cat or hat</td>
-</tr>
-<tr>
-<td>/[^abcd]/</td>
-<td>matches anything except the characters in square brackets</td>
-</tr>
-<tr>
-<td>/[a-z]/</td>
-<td>matches all lowercase letters (a to z)</td>
-</tr>
-<tr>
-<td>/[A-Z]/</td>
-<td>matches all uppercase letters (A to Z)</td>
-</tr>
-<tr>
-<td>/[0-9]/</td>
-<td>matches all digits</td>
-</tr>
-<tr>
-<td>/[a-zA-Z]/</td>
-<td>matches all lowercase and uppercase letters</td>
-</tr>
-<tr>
-<td>/[^a-zA-Z]/</td>
-<td>matches non-letters</td>
-</tr>
-<tr>
-<td>/[a-zA-Z0-9]/</td>
-<td>matches all lowercase, uppercase letters and numbers</td>
-</tr>
-<tr>
-<td>/(hello){4}/</td>
-<td>matches “hellohellohellohello”</td>
-</tr>
-<tr>
-<td>/hello{3}/</td>
-<td>matches “hellooo” and “helloooo” but not “helloo”</td>
-</tr>
-<tr>
-<td>/(hello){1,3}/</td>
-<td>matches “hello” that occur between 1 and 3 times (inclusive)</td>
-</tr>
-<tr>
-<td>/(hello){3,}/</td>
-<td>matches “hello” that occur atleast 3 times</td>
-</tr>
-<tr>
-<td>/ab*c/</td>
-<td>matches zero or more repetitions of “b” (matches “abc”, “abbbbc”, “ac”)</td>
-</tr>
-<tr>
-<td>/ab+c/</td>
-<td>matches one or more repetitions of “b” (matches “abc”, “abbbbc”, but not “ac”)</td>
-</tr>
-<tr>
-<td>/^/</td>
-<td>matches beginning of a line</td>
-</tr>
-<tr>
-<td>/$/</td>
-<td>matches end of a line</td>
-</tr>
-<tr>
-<td>/(hard)?work/</td>
-<td>matches “work” or “hardwork”</td>
-</tr>
-<tr>
-<td>/(?:hard)?work/</td>
-<td>matches “work” or “hardwork” but is a non-capturing group</td>
-</tr>
-<tr>
-<td>/i am a (cat|dog|whale) person/</td>
-<td>matches “i am a cat person”, “i am a dog person” and “i am a whale person”</td>
-</tr>
-<tr>
-<td>/z(?=a)/</td>
-<td>positive lookahead… matches the “z” before the “a” in pizza but not the first “z”</td>
-</tr>
-<tr>
-<td>/z(?!a)/</td>
-<td>negative lookahead… matches the first “z” but not the “z” before the “a”</td>
-</tr>
-<tr>
-<td>/(?&lt;=[aeiou])\w/</td>
-<td>positive lookbehind… matches any word character that is preceded by a vowel</td>
-</tr>
-<tr>
-<td>/(?&lt;![aeiou])\w/</td>
-<td>negative lookbehind… matches any word character that is not preceded by a vowel</td>
-</tr>
-</tbody></table>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <ol>
-<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
-<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
-</li>
-<li><p>如果没有推送到远程库呢？</p>
-<p>这时 git commit –amend 应该是可以的</p>
-</li>
-</ol>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Pro-Git-Note/3%20%E5%88%86%E6%94%AF/">3 分支</a></h2>
             </div>
             <div class="post-meta">
@@ -329,423 +129,160 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/2%20%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">2 基础操作</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E8%A3%85%E9%85%8D%20Bean/">Spring 装配 Bean</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <hr>
-<h2 id="typora-copy-images-to-md-pics"><a href="#typora-copy-images-to-md-pics" class="headerlink" title="typora-copy-images-to: ......\md_pics"></a>typora-copy-images-to: ......\md_pics</h2><h1 id="2-基本操作"><a href="#2-基本操作" class="headerlink" title="2 基本操作"></a>2 基本操作</h1><p>Git 的基本操作都要由命令行完成，当然也有 GUI 方式的 Git 工具，是对某些命令的封。</p>
-<p>[TOC]</p>
-<h2 id="2-1-获取-Git-仓库"><a href="#2-1-获取-Git-仓库" class="headerlink" title="2.1 获取 Git 仓库"></a>2.1 获取 Git 仓库</h2><p><strong>在现有目录中初始化仓库</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入该项目，并执行一下命令</span></span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
+                    <h2 id="装配-Bean"><a href="#装配-Bean" class="headerlink" title="装配 Bean"></a>装配 Bean</h2><h3 id="1-Spring-进行装配-Bean-的方式"><a href="#1-Spring-进行装配-Bean-的方式" class="headerlink" title="1 Spring 进行装配 Bean 的方式"></a>1 Spring 进行装配 Bean 的方式</h3><h4 id="1-1-组件扫描和自动装配"><a href="#1-1-组件扫描和自动装配" class="headerlink" title="1.1 组件扫描和自动装配"></a><strong>1.1 组件扫描和自动装配</strong></h4><p>通过在 Bean 的定义类上加上注解 <code>@Component</code> 向 Spring 表明这是一个 Bean 组件；接着在 Spring 的配置类中用注解 <code>@ComponentScan</code> 让 Spring在启动的时候自动扫面有 @Component 注解的 Bean, 并在 Spring 上下文中创建他们的实例。Spring会根据类名为其指定一个ID，将类名的第一个字母变为小写，也可以传一个 bean id 给 <code>@Component</code>。</p>
+<p>Bean 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(<span class="string">"enyaAlbum"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EnyaAlbum</span> <span class="keyword">implements</span> <span class="title">CompactDisk</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Playing..."</span> + <span class="string">"\nTitle: May It Be"</span> + <span class="string">"\nSinger: Enya"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>该命令将创建一个名为 <code>.git</code> 的子目录，包含了初始化的 Git 仓库中所有的必须文件，是 Git 仓库的骨干。</p>
-<p>接着通过 <code>git add</code> 命令来对指定文件进行跟踪，并将其放入暂存区域，执行 <code>git commit</code> 进行提交。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add *.md</span><br><span class="line"></span><br><span class="line">git commit -m <span class="string">"description of this commit"</span></span><br></pre></td></tr></table></figure>
+<p>Configuration 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="comment">//指定扫描的基础包</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(basePackages=&#123;<span class="string">"sugar.cdsystem"</span>, <span class="string">"sugar.player"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDConfiguration</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>克隆已有的仓库</strong></p>
-<p>Git 克隆的是该 Git ==仓库服务器上的几乎所有数据==，而不是仅仅复制完成你的工作所需要文件。 当你执行 <code>git clone</code> 命令的时候，默认配置下远程 Git 仓库中的每一个文件的每一个版本都将被拉取下来。 事实上，如果你的服务器的磁盘坏掉了，你通常可以使用任何一个克隆下来的用户端来重建服务器上的仓库。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git clone [url] [local repository name]</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/weirdWimp/gitpro-guide.git</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
-
-<p>支持多种数据传输协议。https://、git:// 或者 SSH 协议。</p>
-<h2 id="2-2-记录每次更新到仓库"><a href="#2-2-记录每次更新到仓库" class="headerlink" title="2.2 记录每次更新到仓库"></a>2.2 记录每次更新到仓库</h2><p><strong>仓库中每个文件的状态</strong></p>
-<p><img src="E:%5Cmd_pics%5Clifecycle.png" alt="Git 下文件生命周期图。"> </p>
-<p>工作目录下的文件不外乎两种状态：已跟踪或未跟踪。已跟踪的文件是指那些被纳入了版本控制的文件，在上一次快照中有它们的记录。工作一段时间后，状态可能处于 <strong>未修改</strong> <strong>已修改</strong> <strong>已暂存</strong>。 新建的文件属于未跟踪文件。初次克隆某个仓库有的时候，工作目录中所有文件都属于以跟踪文件，并处于未修改状态。</p>
-<p><strong>状态简览</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前文件的状态，显示当前所属的分支，反应每个文件是处于 已修改未暂存 还是 已暂存 或者 未追踪状态</span></span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出跟为简单的状态</span></span><br><span class="line"></span><br><span class="line">git status -s</span><br><span class="line">git status --short</span><br></pre></td></tr></table></figure>
-
-<p>新添加的未跟踪文件前面有 <code>??</code> 标记</p>
-<p>新添加到暂存区中的文件前面有 <code>A</code> 标记</p>
-<p>修改过的文件前面有 <code>M</code> 标记</p>
-<p> <code>M</code> 有两个可以出现的位置，出现在右边的 <code>M</code> 表示该文件被修改了但是还没放入暂存区，出现在靠左边的 <code>M</code> 表示该文件被修改了并放入了暂存区。 </p>
-<p>例如，上面的状态报告显示： <code>README</code> 文件在工作区被修改了但是还没有将修改后的文件放入暂存区, <code>lib/simplegit.rb</code>  文件被修改了并将修改后的文件放入了暂存区。 而 <code>Rakefile</code> 在工作区被修改并提交到暂存区后又在工作区中被修改了，所以在暂存区和工作区都有该文件被修改了的记录。 </p>
-<p><strong>追踪文件或将已修改文件放入暂存区</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git add 不仅可以用于追踪文件，还用于暂存文件</span></span><br><span class="line"></span><br><span class="line">git add newFile <span class="comment">#追踪文件并将其加入暂存区</span></span><br><span class="line"></span><br><span class="line">git add modifiedFile <span class="comment">#将已经修改的文件加入暂存区</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 还可以用于修改冲突，其实最好的解释是 git add 操作的是下次要提交的文件（保存文件快照，并生成索引？）</span></span><br></pre></td></tr></table></figure>
+<p><code>basePackages</code> 指定组件扫描的基础包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(basePackages=&#123;<span class="string">"sugar.cdsystem"</span>, <span class="string">"sugar.player"</span>&#125;)</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>查看已暂存和未暂存的修改</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看已修改文件和暂存区域文件的差异</span></span><br><span class="line">git diff</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看暂存区域文件与最近的上一次提交的文件的差异</span></span><br><span class="line">git diff --cached</span><br><span class="line">git diff --staged</span><br></pre></td></tr></table></figure>
+<p><code>basePackageClasses</code>属性所设置的数组中包含了类。这些类所在的包将会作为组件扫描的基础包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(basePackageClasses = &#123;CompateDisc<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>提交更新</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将暂存区域的更新提交只版本库</span></span><br><span class="line">git commit -m <span class="string">"description of commit"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 给 git commit 加上 -a 选项，Git 就会自动把所有已经跟踪过的文件暂存起来一并提交，从而跳过 git add 步骤</span></span><br><span class="line">git commit -a -m <span class="string">"description of commit"</span></span><br></pre></td></tr></table></figure>
+<p>在依赖此对象的 Class 中，通过  <code>@Autowired</code> （Spring 特有的注解）或者 <code>@Inject</code> （Java 依赖注入规范） 注解用于构造器、setter 方法或任意方法，进行注入。</p>
+<h4 id="1-2-Java-配置类中配置"><a href="#1-2-Java-配置类中配置" class="headerlink" title="1.2 Java 配置类中配置"></a><strong>1.2 Java 配置类中配置</strong></h4><p><code>@Configuration</code>注解表明这个类是一个配置类，该类应该包含在Spring应用上下文中如何创建bean的细节。</p>
+<p>所有 Bean 的声明都可以在配置类中进行，而 Bean 的代码中无需添加任何代码，每一个 Bean 的声明都通过一个 ==Bean== 进行注解的方法返回一个实例。</p>
+<p>带有<code>@Bean</code>注解的方法可以采用任何必要的Java功能来产生bean实例。构造器和Setter方法只是<code>@Bean</code>方法的两个简单样例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//默认 bean id 为方法名</span></span><br><span class="line">    <span class="comment">//也可以用 name 指定</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> CompactDisk <span class="title">enyaAlbum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> EnyaAlbum();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Player <span class="title">cdPlayer</span><span class="params">(CompactDisk compactDisk)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(compactDisk);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>移除文件</strong></p>
+<h4 id="1-3-XML-文件装配"><a href="#1-3-XML-文件装配" class="headerlink" title="1.3 XML 文件装配"></a>1.3 XML 文件装配</h4><p>XML时，需要在配置文件的顶部声明多个XML模式（XSD）文件，这些文件定义了配置Spring的XML元素。用来装配bean的最基本的XML元素包含在<code>spring-beans</code>模式之中</p>
+<p>在XML中声明 DI 时，会有多种可选的配置方案和风格。具体到构造器注入，有两种基本的配置方案可供选择：</p>
 <ul>
-<li>先将文件从工作目录中删除，然后运行 <code>git rm</code> 记录此次移除文件的操作，也就是不在追踪此文件。之后再提交后，版本库里的文件也被移除掉了。</li>
-<li>如果要保留工作目录中的文件，即需要移除暂存区的文件，需要通过 <code>git rm --cached READEME.md</code>, 提交后，Git 就不再跟踪此文件，但工作目录中依然保留。</li>
+<li><code>&lt;constructor-arg&gt;</code>元素</li>
+<li>使用Spring 3.0所引入的c-命名空间</li>
 </ul>
-<p><code>git rm</code> 命令后面可以列出文件或者目录的名字，也可以使用 glob 模式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached <span class="built_in">log</span>/\*.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">git rm \*~</span><br><span class="line"></span><br><span class="line"><span class="comment"># * 号之前添加反斜杠，是因为 Git 有自己的文件模式扩展匹配方式。</span></span><br></pre></td></tr></table></figure>
+<p>在装配集合方面，<code>&lt;constructor-arg&gt;</code>比c-命名空间的属性更有优势。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xmlns:c="http://www.springframework.org/schema/c"</span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"electricalPlayer"</span> <span class="attr">class</span>=<span class="string">"com.something.learn.bean.ElectricalPlayer"</span> <span class="attr">c:_0-ref</span>=<span class="string">"mp3Song"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>移动文件</strong></p>
-<p>移动文件和文件的重命名是一样的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git mv fileFrom fileTo</span><br></pre></td></tr></table></figure>
-
-<p>相当于运行了下面的三条命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv README.md README</span><br><span class="line">git rm README.md</span><br><span class="line">git add README</span><br></pre></td></tr></table></figure>
+<p>属性注入时，既可以使用 <code>&lt;property&gt;</code> 元素，也可以使用 p-命名空间</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xmlns:p="http://www.springframework.org/schema/p"</span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"blankCD"</span> <span class="attr">class</span>=<span class="string">"com.something.learn.bean.BlankCD"</span> <span class="attr">p:remark</span>=<span class="string">"音乐启迪人生"</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
+<p>无论是构造器注入还是属性注入， c-命名空间与 p-命名空间都不支持列表等数据结构，只支持引用及字面常量，但是可以使用 util-命名空间，声明 List、Set、Map 等结构，并且像 bean 一样可以在 c-命名空间或 p-命名空间中使用其引用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:util</span>=<span class="string">"http://www.springframework.org/schema/util"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:c</span>=<span class="string">"http://www.springframework.org/schema/c"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:p</span>=<span class="string">"http://www.springframework.org/schema/p"</span>	</span></span><br><span class="line"><span class="tag">  <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/util</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/util/spring-util.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/context/spring-context.xsd"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">   <span class="tag">&lt;<span class="name">util:list</span> <span class="attr">id</span>=<span class="string">"trackList"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>突然的自我<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>晚风<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>浪人情歌<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">util:list</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"blankCD"</span> <span class="attr">class</span>=<span class="string">"com.something.learn.bean.BlankCD"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">c:artist</span>=<span class="string">"伍佰"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">c:albumName</span>=<span class="string">"冬之火 九重天演唱会特选录音专辑"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">c:tracks-ref</span>=<span class="string">"trackList"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">p:remark</span>=<span class="string">"音乐启迪人生"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-Java-配置与-XML-配置的引用"><a href="#2-Java-配置与-XML-配置的引用" class="headerlink" title="2 Java 配置与 XML 配置的引用"></a>2 Java 配置与 XML 配置的引用</h3><h4 id="2-1-在-JavaConfig-引用-xml-中声明的-bean"><a href="#2-1-在-JavaConfig-引用-xml-中声明的-bean" class="headerlink" title="2.1 在 JavaConfig 引用 xml 中声明的 bean"></a>2.1 在 JavaConfig 引用 xml 中声明的 bean</h4><ol>
+<li><p>Java 配置文件之间的引用</p>
+<p>使用 <strong>@Import</strong> 注解导入到另一个配置文件中</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDConfiguration</span> </span>&#123;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompactDisk <span class="title">enyaAlbum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> EnyaAlbum();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(CDConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">PlayerConfiguration</span> </span>&#123;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Player <span class="title">cdPlayer</span><span class="params">(CompactDisk compactDisk)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(compactDisk);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<ol start="2">
+<li>创建一个总的配置类，根配置类，将所有 Java 配置类导入</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;CDConfiguration<span class="class">.<span class="keyword">class</span>, <span class="title">PlayerConfiguration</span>.<span class="title">class</span>&#125;)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">Configuration</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在 Java 配置文件中引用 XML 的配置</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 假设Player配置在Java文件中</span></span><br><span class="line"><span class="comment">* CD配置在XML文件中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(PlayerConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line">@ImportResource("classpath:CDConfiguration.xml")</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Configuration</span> </span>&#123;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-2-在-xml-中引用-JavaConfig-声明的-bean"><a href="#2-2-在-xml-中引用-JavaConfig-声明的-bean" class="headerlink" title="2.2 在  xml 中引用 JavaConfig 声明的 bean"></a>2.2 在  xml 中引用 JavaConfig 声明的 bean</h4><ol start="2">
+<li>在 XML 文件中引用另一个 XML 配置文件</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"CDConfiguration.xml"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>在 XML 文件中引用 Java 的配置</p>
+<p>为了将 JavaConfig 类导入到 XML 配置中，我们可以这样声明bean：</p>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">&lt;!--CDConfiguration是Java中的配置类--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"sugar.configuration.CDConfiguration"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--cdPlayer是在XML文件中配置的--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cdPlayer"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">"sugar.player.CDPlayer"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">c:cd-ref</span>=<span class="string">"compactDisc"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使用第三个配置文件组合, 也称之为==根配置==</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"sugar.configuration.CDConfiguration"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"playerConfiguration.xml"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
 
-<p><strong>忽略文件</strong></p>
-<p>有些文件不需要被 Git 管理，比如编译后生成的文件、日志文件、临时生成的文件。这时就可以创建一个名为 <code>.gitignore</code>  的文件。列出要忽略的文件模式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个 .gitignore 文件 </span></span><br><span class="line">cat &gt; .gitignore</span><br><span class="line"><span class="comment"># 忽略txt格式的文件</span></span><br><span class="line">*.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略以~结尾的文件</span></span><br><span class="line">*~</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>.gitignore 文件的格式规范如下：</strong></p>
+<p>根配置类或根配置文件中启用组件扫描，通过<code>&lt;context:component-scan&gt;</code>或<code>@ComponentScan</code></p>
+<p>@Autowired 可以使用在构造器上（构造器注入），也可以使用在 setter 方法上（方法注入）</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><p>Spring 中多种装配方式、多个配置文件可能看起来很是杂乱无章，因此最好有一个根配置，将所有的配置导入进来，进行声明。</p>
+<p>尽量选择自动化配置，接着是 Java 配置（类型安全、易于重构、自定义Bean的实例化方式），最后采用 xml 方式的配置。 显示配置越少越好。</p>
+<p>JNDI</p>
+<h2 id="二-高级装配"><a href="#二-高级装配" class="headerlink" title="二 高级装配"></a>二 高级装配</h2><h4 id="2-1-为环境相关的-Bean-启用-profile-配置"><a href="#2-1-为环境相关的-Bean-启用-profile-配置" class="headerlink" title="2.1 为环境相关的 Bean 启用 profile 配置"></a>2.1 为环境相关的 Bean 启用 profile 配置</h4><p><strong>有连个参数可以设置激活 active 的 profile：</strong></p>
 <ul>
-<li><p>所有空行或者以 <code>＃</code> 开头的行都会被 Git 忽略。</p>
+<li><p>spring.profiles.active</p>
 </li>
-<li><p>可以使用标准的 glob 模式匹配。</p>
-</li>
-<li><p>匹配模式可以以（<code>/</code>）开头防止递归。</p>
-</li>
-<li><p>匹配模式可以以（<code>/</code>）结尾指定目录。</p>
-</li>
-<li><p>要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（<code>!</code>）取反。</p>
-</li>
-</ul>
-<p>glob 模式是指使用简化了的正则表达式</p>
-<p>* 表示匹配零个或多个任意字符</p>
-<p>[abc ] 匹配方括号中的任意一个字符</p>
-<p>[0-9] 范围</p>
-<p>？匹配一个任意字符</p>
-<p>使用两个星号 ** 匹配任意中间目录，比如 a/**/z 可以匹配 a/z a/b/z  或 a/b/c/z</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># no .a files</span></span><br><span class="line">*.a</span><br><span class="line"></span><br><span class="line"><span class="comment"># but do track lib.a, even though you're ignoring .a files above</span></span><br><span class="line">!lib.a</span><br><span class="line"></span><br><span class="line"><span class="comment"># only ignore the TODO file in the current directory, not subdir/TODO</span></span><br><span class="line">/TODO</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore all files in the build/ directory</span></span><br><span class="line">build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore doc/notes.txt, but not doc/server/arch.txt</span></span><br><span class="line">doc/*.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore all .pdf files in the doc/ directory</span></span><br><span class="line">doc/**/*.pdf</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="2-3-查看提交历史"><a href="#2-3-查看提交历史" class="headerlink" title="2.3 查看提交历史"></a>2.3 查看提交历史</h2><p>在提交了若干更新，又或者克隆了某个项目之后，你也许想回顾下提交历史。 完成这个任务最简单而又有效的工具是 <code>git log</code> 命令。</p>
-<p>默认不用任何参数的话，<code>git log</code> 会按提交时间列出所有的更新，最近的更新排在最上面。这个命令会列出每个提交的 SHA-1 校验和、作者的名字和电子邮件地址、提交时间以及提交说明。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只显示提交的作者、时间信息和提交的注释说明</span></span><br><span class="line">git <span class="built_in">log</span> -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 参数，显示此次提交的具体信息，包括具体的行删除、增加、改动信息。</span></span><br><span class="line">git <span class="built_in">log</span> -p -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line">diff --git a/revoke.md b/revoke.md</span><br><span class="line">index 14df9a5..72b1f8d 100644</span><br><span class="line">--- a/revoke.md</span><br><span class="line">+++ b/revoke.md</span><br><span class="line">@@ -1,3 +1,4 @@</span><br><span class="line"> revoke</span><br><span class="line"> <span class="comment">## I am falling in love with you. My stunning girl.</span></span><br><span class="line"> ** I [ Hate You! **</span><br><span class="line">+I love you and I hate I love you.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># --stat 总结性参数选项，显示简略的统计信息。具体为哪个文件被修改，插入了几行，删除了几行，改动了几行</span></span><br><span class="line">git <span class="built_in">log</span> --<span class="built_in">stat</span> -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line"> revoke.md | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>默认内置格式显示</strong></p>
-<p>另外一个常用的选项是 <code>--pretty</code>。 这个选项可以指定使用不同于默认格式的方式展示提交历史。 这个选项有一些内建的子选项供你使用。 比如用 <code>oneline</code> 将每个提交放在一行显示，查看的提交数很大时非常有用。 另外还有 <code>short</code>，<code>full</code> 和 <code>fuller</code> 可以用，展示的信息或多或少有些不同，请自己动手实践一下看看效果如何。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line">ca82a6dff817ec66f44342007202690a93763949 changed the version number</span><br><span class="line">085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7 removed unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef06a3f659402fe7563abf99ad00de2209e6 first commit</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>格式化显示</strong></p>
-<p>可以定制显示的记录格式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%h - %an, %ar : %s"</span></span><br><span class="line">ca82a6d - Scott Chacon, 6 years ago : changed the version number</span><br><span class="line">085bb3b - Scott Chacon, 6 years ago : removed unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef0 - Scott Chacon, 6 years ago : first commit</span><br></pre></td></tr></table></figure>
-
-<p>下表列出了常用的格式占位符写法及其代表的意义。</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>%H</code></td>
-<td>提交对象（commit）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%h</code></td>
-<td>提交对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%T</code></td>
-<td>树对象（tree）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%t</code></td>
-<td>树对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%P</code></td>
-<td>父对象（parent）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%p</code></td>
-<td>父对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%an</code></td>
-<td>作者（author）的名字</td>
-</tr>
-<tr>
-<td><code>%ae</code></td>
-<td>作者的电子邮件地址</td>
-</tr>
-<tr>
-<td><code>%ad</code></td>
-<td>作者修订日期（可以用 –date= 选项定制格式）</td>
-</tr>
-<tr>
-<td><code>%ar</code></td>
-<td>作者修订日期，按多久以前的方式显示</td>
-</tr>
-<tr>
-<td><code>%cn</code></td>
-<td>提交者（committer）的名字</td>
-</tr>
-<tr>
-<td><code>%ce</code></td>
-<td>提交者的电子邮件地址</td>
-</tr>
-<tr>
-<td><code>%cd</code></td>
-<td>提交日期</td>
-</tr>
-<tr>
-<td><code>%cr</code></td>
-<td>提交日期，按多久以前的方式显示</td>
-</tr>
-<tr>
-<td><code>%s</code></td>
-<td>提交说明</td>
-</tr>
-</tbody></table>
-<p>作者指的是实际作出修改的人，提交者指的是最后将此工作成果提交到仓库的人。 所以，当你为某个项目发布补丁，然后某个核心成员将你的补丁并入项目时，你就是作者，而那个核心成员就是提交者。</p>
-<p>当 oneline 或 format 与另一个 <code>log</code> 选项 <code>--graph</code> 结合使用时尤其有用。 这个选项添加了一些ASCII字符串来形象地展示你的分支、合并历史：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%h %s"</span> --graph</span><br></pre></td></tr></table></figure>
-
-<p>以上只是简单介绍了一些 <code>git log</code> 命令支持的选项。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%ad ar - %s"</span> --date=format:%Y-%m-%d </span><br><span class="line"><span class="comment"># 指定日志打印的时间的格式，git log --help 获取多种预定义好的格式，如 --date=short</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">%a        Abbreviated weekday name</span><br><span class="line">%A        Full weekday name</span><br><span class="line">%b        Abbreviated month name</span><br><span class="line">%B        Full month name</span><br><span class="line">%c        Date and time representation appropriate <span class="keyword">for</span> locale</span><br><span class="line">%d        Day of month as decimal number (01 – 31)</span><br><span class="line">%H        Hour <span class="keyword">in</span> 24-hour format (00 – 23)</span><br><span class="line">%I        Hour <span class="keyword">in</span> 12-hour format (01 – 12)</span><br><span class="line">%j        Day of year as decimal number (001 – 366)</span><br><span class="line">%m        Month as decimal number (01 – 12)</span><br><span class="line">%M        Minute as decimal number (00 – 59)</span><br><span class="line">%p        Current locale<span class="string">'s A.M./P.M. indicator for 12-hour clock</span></span><br><span class="line"><span class="string">%S        Second as decimal number (00 – 59)</span></span><br><span class="line"><span class="string">%U        Week of year as decimal number, with Sunday as first day of week (00 – 53)</span></span><br><span class="line"><span class="string">%w        Weekday as decimal number (0 – 6; Sunday is 0)</span></span><br><span class="line"><span class="string">%W        Week of year as decimal number, with Monday as first day of week (00 – 53)</span></span><br><span class="line"><span class="string">%x        Date representation for current locale</span></span><br><span class="line"><span class="string">%X        Time representation for current locale</span></span><br><span class="line"><span class="string">%y        Year without century, as decimal number (00 – 99)</span></span><br><span class="line"><span class="string">%Y        Year with century, as decimal number</span></span><br><span class="line"><span class="string">%z, %Z        Either the time-zone name or time zone abbreviation, depending on registry settings; no characters if time zone is unknown</span></span><br><span class="line"><span class="string">%%        Percent sign</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://cloud.tencent.com/developer/ask/77373" target="_blank" rel="noopener">Git strftime 占位符原表出处</a></p>
-<p>下面列出了我们目前涉及到的和没涉及到的选项，以及它们是如何影响 log 命令的输出的：</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-p</code></td>
-<td>按补丁格式显示每个更新之间的差异。</td>
-</tr>
-<tr>
-<td><code>--stat</code></td>
-<td>显示每次更新的文件修改统计信息。</td>
-</tr>
-<tr>
-<td><code>--shortstat</code></td>
-<td>只显示 –stat 中最后的行数修改添加移除统计。</td>
-</tr>
-<tr>
-<td><code>--name-only</code></td>
-<td>仅在提交信息后显示已修改的文件清单。</td>
-</tr>
-<tr>
-<td><code>--name-status</code></td>
-<td>显示新增、修改、删除的文件清单。</td>
-</tr>
-<tr>
-<td><code>--abbrev-commit</code></td>
-<td>仅显示 SHA-1 的前几个字符，而非所有的 40 个字符。</td>
-</tr>
-<tr>
-<td><code>--relative-date</code></td>
-<td>使用较短的相对时间显示（比如，“2 weeks ago”）。</td>
-</tr>
-<tr>
-<td><code>--graph</code></td>
-<td>显示 ASCII 图形表示的分支合并历史。</td>
-</tr>
-<tr>
-<td><code>--pretty</code></td>
-<td>使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）。</td>
-</tr>
-</tbody></table>
-<p><strong>限制输出长度</strong></p>
-<p>Git 在输出所有提交时会自动调用分页程序，所以你一次只会看到一页的内容。</p>
-<p>按照时间作限制的选项，比如 <code>--since</code> 和 <code>--until</code> 也很有用。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面的命令列出所有最近两周内的提交：</span></span><br><span class="line"></span><br><span class="line">$ git <span class="built_in">log</span> --since=2.weeks</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个命令可以在多种格式下工作，比如说具体的某一天 "2008-01-15"，或者是相对地多久以前 "2 years 1 day 3 minutes ago"。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p> 用 <code>--author</code> 选项显示指定作者的提交，用 <code>--grep</code> 选项搜索提交说明中的关键字。 （请注意，如果要得到同时满足这两个选项搜索条件的提交，就必须用 <code>--all-match</code> 选项。否则，满足任意一个条件的提交都会被匹配出来）</p>
-<p>另一个非常有用的筛选选项是 <code>-S</code>，可以列出那些添加或移除了某些字符串的提交。 比如说，你想找出添加或移除了某一个特定函数的引用的提交，你可以这样使用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> -Sfunction_name</span><br></pre></td></tr></table></figure>
-
-<p>最后一个很实用的 <code>git log</code> 选项是路径（path）， 如果只关心某些文件或者目录的历史提交，可以在 git log 选项的最后指定它们的路径。 因为是放在最后位置上的选项，所以用两个短划线（–）隔开之前的选项和后面限定的路径名。</p>
-<p>常用的选项</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-(n)</code></td>
-<td>仅显示最近的 n 条提交</td>
-</tr>
-<tr>
-<td><code>--since</code>, <code>--after</code></td>
-<td>仅显示指定时间之后的提交。</td>
-</tr>
-<tr>
-<td><code>--until</code>, <code>--before</code></td>
-<td>仅显示指定时间之前的提交。</td>
-</tr>
-<tr>
-<td><code>--author</code></td>
-<td>仅显示指定作者相关的提交。</td>
-</tr>
-<tr>
-<td><code>--committer</code></td>
-<td>仅显示指定提交者相关的提交。</td>
-</tr>
-<tr>
-<td><code>--grep</code></td>
-<td>仅显示含指定关键字的提交</td>
-</tr>
-<tr>
-<td><code>-S</code></td>
-<td>仅显示添加或移除了某个关键字的提交</td>
-</tr>
-</tbody></table>
-<p>来看一个实际的例子，如果要查看 Git 仓库中，2008 年 10 月期间，Junio Hamano 提交的但未合并的测试文件，可以用下面的查询命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=<span class="string">"%h - %s"</span> --author=gitster --since=<span class="string">"2008-10-01"</span> \</span><br><span class="line">   --before=<span class="string">"2008-11-01"</span> --no-merges -- t/</span><br><span class="line">5610e3b - Fix testcase failure when extended attributes are <span class="keyword">in</span> use</span><br><span class="line">acd3b9e - Enhance hold_lock_file_for_&#123;update,append&#125;() API</span><br><span class="line">f563754 - demonstrate breakage of detached checkout with symbolic link HEAD</span><br><span class="line">d1a43f2 - reset --hard/<span class="built_in">read</span>-tree --reset -u: remove unmerged new paths</span><br><span class="line">51a94af - Fix <span class="string">"checkout --track -b newbranch"</span> on detached HEAD</span><br><span class="line">b0ad11e - pull: allow <span class="string">"git pull origin <span class="variable">$something</span>:<span class="variable">$current_branch</span>"</span> into an unborn branch</span><br></pre></td></tr></table></figure>
-
-<p>在近 40000 条提交中，上面的输出仅列出了符合条件的 6 条记录。</p>
-<h2 id="2-4-撤销操作"><a href="#2-4-撤销操作" class="headerlink" title="2.4 撤销操作"></a>2.4 撤销操作</h2><p><strong>补充提交</strong></p>
-<p>如果在一次提交完成之后发现有些文件还没有被添加，或者提交信息写错了。此时可以通过以下命令尝试重新提交：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
-
-<p>这个命令会将添加进暂存区的文件再次提交。如果上次提交后立马执行了此命令，那么修改的只是提交信息。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">"Add files."</span></span><br><span class="line"></span><br><span class="line">git commit --amend -m <span class="string">"Add two files"</span></span><br><span class="line"><span class="comment"># 最终结果将只有一次提交，并且只将提交信息改为 Add two files.</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">'Add files'</span></span><br><span class="line">git add forgotten_file</span><br><span class="line">git commit --amend -m <span class="string">"Add files"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 被忘记提交的文件与上一次提交的文件作为一次提交。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>取消暂存的文件</strong></p>
-<p>如过不想同时暂存两个文件，但又通过命令 <code>git add *</code> 暂存了所有的文件，如何撤销已经暂存的另一个文件。 git 在 git status 中一般有相应的提示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD second.md</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行完该命令后， second.md 文件已经变为未暂存的状态了。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>撤销对文件的修改</strong></p>
-<p>如果对该文件的修改要退回到上次提交后的状态。 git status 中同样有所提示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个命令应该是重新从版本库中重新获取了该文件并进行了替换。</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="2-5-远程仓库"><a href="#2-5-远程仓库" class="headerlink" title="2.5 远程仓库"></a>2.5 远程仓库</h2><p>远程仓库的几个命令</p>
-<p><strong>进行远程仓库的克隆</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> repository_url</span><br></pre></td></tr></table></figure>
-
-<p><strong>从远程仓库中进行抓取，本地库被更新为最新的版本</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch [remote-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>从远程仓库中进行来进行拉取，并尝试合并到当前所在的分支</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull [remote-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>推送到远程仓库中相应的分支中</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push [remote-name] [branch-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>添加远程仓库</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add [remote-name] [remote-url]</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的别名</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的别名与远程库链接</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的具体信息</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git remote show [remote-name]</span><br><span class="line"></span><br><span class="line">$ git remote show origin</span><br><span class="line">* remote origin</span><br><span class="line">  Fetch URL: https://github.com/schacon/ticgit</span><br><span class="line">  Push  URL: https://github.com/schacon/ticgit</span><br><span class="line">  HEAD branch: master</span><br><span class="line">  Remote branches:</span><br><span class="line">    master                               tracked</span><br><span class="line">    dev-branch                           tracked</span><br><span class="line">  Local branch configured <span class="keyword">for</span> <span class="string">'git pull'</span>:</span><br><span class="line">    master merges with remote master</span><br><span class="line">  Local ref configured <span class="keyword">for</span> <span class="string">'git push'</span>:</span><br><span class="line">    master pushes to master (up to date)</span><br></pre></td></tr></table></figure>
-
-
-<p><strong>一般的流程是</strong> </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch ---&gt; git add ---&gt; git commit ---&gt; git push</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="2-6-打标签"><a href="#2-6-打标签" class="headerlink" title="2.6 打标签"></a>2.6 打标签</h2><p>给历史提交打上标签，来标记重要的提交节点或重大的功能完成节点。</p>
-<p><strong>列出已有的标签</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出特定模式的标签</span></span><br><span class="line">git tag -l <span class="string">'v1.8.5*'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>创建标签</strong></p>
-<p>Git 中有两种标签：lightweight - 轻量标签； annotated - 附注标签</p>
-<p>一个轻量标签只是一个特定提交的引用。</p>
-<p>一个附注标签是存储在 Git 数据库中的一个完整对象，包括打标签作者的名字、电子邮件地址、日期时间、标签信息，可以使用 GNU Privacy Guard (GPG) 签名与验证。</p>
-<p>通常建议创建附注标签，这样可以拥有很多信息。</p>
-<ul>
-<li><strong>附注标签</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">'version 1.0'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -m 制定了该标签的详细描述，没有指定的话，Git 会运行编辑器要求你输入信息。</span></span><br><span class="line"></span><br><span class="line">git show v1.0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以看到标签信息与对应的提交信息</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>轻量标签</strong></p>
-<p>轻量标签本质上是提交校验和存储到一个文件中 - 没有保存任何其他信息。只需要提供标签名字就可以创建轻量标签。</p>
+<li><p>spring.profiles.default</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git tag v1.0-lightweight</span><br><span class="line"></span><br><span class="line">git show v1.0-lightweight</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不会看到额外的标签信息。命令之后会显示出提交信息。</span></span><br><span class="line"><span class="comment"># 这个在 git version 2.16.2.windows.1 中为什么还是会显示提交信息？</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>  如果前面的某一次提交忘记打标签了，可以在之后补上标签。需要在命令的末尾指定提交的校验和（部分校验和）。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line"></span><br><span class="line">34874876b494a234ca52790d6e9cd85a47927953 (HEAD -&gt; master, tag: v1.0-lightweight, tag: v1.0, origin/master) Add something to revoke.md</span><br><span class="line">c3176ae309d942cb495257ad457172e244da21d9 Add <span class="built_in">test</span> line to revoke.md</span><br><span class="line">5969cb43806b3a632fe7b3cb6ab0201be49d3801 Add markdown notes.</span><br><span class="line">c4331a9d271ee5516976a54a42ed282d9fb82d42 Initial commit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git tag -a v0.9 5969cb -m <span class="string">"version 0.9"</span></span><br></pre></td></tr></table></figure>
-
-
-
+<p><strong>有多种方式来设置这两个属性：</strong> </p>
 <ul>
-<li><p><strong>共享标签至远程库</strong></p>
-<p>创建完标签，必须显示地推送标签到共享服务器上。</p>
+<li><p>作为<code>DispatcherServlet</code>的初始化参数；</p>
+</li>
+<li><p>作为Web应用的上下文参数；</p>
+</li>
+<li><p>作为JNDI条目；</p>
+</li>
+<li><p>作为环境变量；</p>
+</li>
+<li><p>作为JVM的系统属性；</p>
+</li>
+<li><p>在集成测试类上，使用<code>@ActiveProfiles</code>注解设置。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git push origin [tagname]</span></span><br><span class="line"></span><br><span class="line">git push origin v1.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一次性推送很多标签, 会把所有不在远程仓库服务器上的标签全部传送到那里。当被人从仓库中克隆或拉去，也能得到相应的标签。</span></span><br><span class="line"></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= CDPlayerConfig<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line">@ActiveProfiles("word")</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JunitTest</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Autowired</span> <span class="keyword">private</span> DataSource dataSource;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dataSourceTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    assertNotNull(dataSource);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      DatabaseMetaData metaData = dataSource.getConnection().getMetaData();</span><br><span class="line">      System.out.println(metaData.getDatabaseProductName());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.context.annotation <span class="meta">@Retention</span>(RetentionPolicy.RUNTIME) </span><br><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE,ElementType.METHOD&#125;) </span><br><span class="line"><span class="meta">@Documented</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Profile</span></span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">annotation</span>.<span class="title">Annotation</span></span></span><br><span class="line"><span class="class"><span class="title">Indicates</span> <span class="title">that</span> <span class="title">a</span> <span class="title">component</span> <span class="title">is</span> <span class="title">eligible</span> <span class="title">for</span> <span class="title">registration</span> <span class="title">when</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">specified</span> <span class="title">profiles</span> <span class="title">are</span> <span class="title">active</span>.</span></span><br><span class="line"><span class="class"><span class="title">A</span> <span class="title">profile</span> <span class="title">is</span> <span class="title">a</span> <span class="title">named</span> <span class="title">logical</span> <span class="title">grouping</span> <span class="title">that</span> <span class="title">may</span> <span class="title">be</span> <span class="title">activated</span> <span class="title">programmatically</span> <span class="title">via</span> <span class="title">ConfigurableEnvironment</span>.<span class="title">setActiveProfiles</span> <span class="title">or</span> <span class="title">declaratively</span> <span class="title">through</span> <span class="title">setting</span> <span class="title">the</span> <span class="title">spring</span>.<span class="title">profiles</span>.<span class="title">active</span> <span class="title">property</span>, <span class="title">usually</span> <span class="title">through</span> <span class="title">JVM</span> <span class="title">system</span> <span class="title">properties</span>, <span class="title">as</span> <span class="title">an</span> <span class="title">environment</span> <span class="title">variable</span>, <span class="title">or</span> <span class="title">for</span> <span class="title">web</span> <span class="title">applications</span> <span class="title">as</span> <span class="title">a</span> <span class="title">Servlet</span> <span class="title">context</span> <span class="title">parameter</span> <span class="title">in</span> <span class="title">web</span>.<span class="title">xml</span>.</span></span><br><span class="line">The @Profile annotation may be used in any of the following ways:</span><br><span class="line">as a type-level annotation on any <span class="class"><span class="keyword">class</span> <span class="title">directly</span> <span class="title">or</span> <span class="title">indirectly</span> <span class="title">annotated</span> <span class="title">with</span> @<span class="title">Component</span>, <span class="title">including</span> @<span class="title">Configuration</span> <span class="title">classes</span></span></span><br><span class="line"><span class="class"><span class="title">as</span> <span class="title">a</span> <span class="title">meta</span>-<span class="title">annotation</span>, <span class="title">for</span> <span class="title">the</span> <span class="title">purpose</span> <span class="title">of</span> <span class="title">composing</span> <span class="title">custom</span> <span class="title">stereotype</span> <span class="title">annotations</span></span></span><br><span class="line"><span class="class"><span class="title">as</span> <span class="title">a</span> <span class="title">method</span>-<span class="title">level</span> <span class="title">annotation</span> <span class="title">on</span> <span class="title">any</span> @<span class="title">Bean</span> <span class="title">method</span></span></span><br><span class="line">If a @Configuration class is marked with @Profile, all of the @Bean methods and @Import annotations associated with that class will be bypassed unless one or more of the specified profiles are active. This is very similar to the behavior in Spring XML: if the profile attribute of the beans element is supplied e.g., &lt;beans profile="p1,p2"&gt;, the beans element will not be parsed unless profiles 'p1' and/or 'p2' have been activated. Likewise, if a @Component or @Configuration class is marked with @Profile(&#123;"p1", "p2"&#125;), that class will not be registered/processed unless profiles 'p1' and/or 'p2' have been activated.</span><br><span class="line"><span class="function">If a given profile is prefixed with the NOT <span class="title">operator</span> <span class="params">(!)</span>, the annotated will be registered <span class="keyword">if</span> the profile is not active. e.g., <span class="keyword">for</span> @<span class="title">Profile</span><span class="params">(&#123;<span class="string">"p1"</span>, <span class="string">"!p2"</span>&#125;)</span>, registration will occur <span class="keyword">if</span> profile 'p1' is active or <span class="keyword">if</span> profile 'p2' is not active.</span></span><br><span class="line"><span class="function">If the @Profile annotation is omitted, registration will occur, regardless of <span class="title">which</span> <span class="params">(<span class="keyword">if</span> any)</span> profiles are active.</span></span><br><span class="line"><span class="function">When defining Spring beans via XML, the "profile" attribute of the &lt;beans&gt; element may be used. See the documentation in spring-beans <span class="title">XSD</span> <span class="params">(version <span class="number">3.1</span> or greater)</span> <span class="keyword">for</span> details.</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-2-条件化的-bean"><a href="#2-2-条件化的-bean" class="headerlink" title="2.2 条件化的 bean"></a>2.2 条件化的 bean</h4><h4 id="2-3-歧义性"><a href="#2-3-歧义性" class="headerlink" title="2.3 歧义性"></a>2.3 歧义性</h4><p>当有多个 bean 满足自动装配所需的类型时，如何消除歧义</p>
 <ul>
-<li><p><strong>检出标签</strong></p>
-<p>在 Git 中你并不能真的检出一个标签，因为它们并不能像分支一样来回移动。 如果你想要工作目录与仓库中特定的标签版本完全一样，可以使用 <code>git checkout -b [branchname] [tagname]</code> 在特定的标签上创建一个新分支：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b version2 v2.0.0</span><br><span class="line">Switched to a new branch &#39;version2&#39;</span><br></pre></td></tr></table></figure>
-<p>当然，如果在这之后又进行了一次提交，<code>version2</code> 分支会因为改动向前移动了，那么   <code>version2</code> 分支就会和 <code>v2.0.0</code> 标签稍微有些不同，这时就应该当心了。</p>
+<li><p><code>@primary</code> 注解设置首选 bean</p>
+<p>各种配置方式中都可以指定</p>
+<p>多个类型相同 bean 都指定 <code>@primary</code>， 注入的时候（使用类型）也会带来歧义性</p>
+</li>
+<li><p><code>@qualifier</code> 限定某个 bean</p>
+<p><code>@Component</code> 、JavaConfig 的 <code>@bean</code> 组合使用</p>
+<p>每个 bean 都可以指定一个限定符，如果没有指定，限定符与 bean id 相同，但如果类的名称（组件扫描）或 bean id 变化时，需要修改注入时指定的限定符；为了避免这种不一致性，可以为 bean 通过 <code>@qualifier(&quot;qua1&quot;)</code> 指定限定符，注入的时候，也指定相同的限定符即可，这样类的名字和 bean id 就可以随意修改；</p>
+<p>可以为每个 bean 指定多个限定符，例如，可以按属性、特性等为 bean 指定限定符，多个 bean 可以拥有相同的限定符，这时，注入的时候，也会产生歧义，但是可以指定更多的限定符，将范围缩小至一个，但 Java 不支持同时指定多个相同的注解，可以通过自定义注解实现（创建自定义注解，同时在该注解的定于上使用 <code>@qualifier</code> 注解）。 </p>
 </li>
 </ul>
-<h2 id="2-7-别名"><a href="#2-7-别名" class="headerlink" title="2.7 别名"></a>2.7 别名</h2><p>Git 可以通过别名的方式简化命令，为命令设置一个别名，通过别名就可完成相应的命令。别名一般从字面上就可以看出该命令的执行作用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.co checkout</span><br><span class="line">git config --global alias.ci commit</span><br><span class="line">git config --global alias.st status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当要输入 git commit 时，只需要输入 git ci 就可以了。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git config --global alias.unstage <span class="string">'reset HEAD --'</span></span><br><span class="line"><span class="comment"># 下面两个命令是等价的</span></span><br><span class="line">git unstage file</span><br><span class="line">git reset HEAD -- file</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示最近一次提交的日志信息</span></span><br><span class="line">git config --global alias.last <span class="string">'log -1 HEAD'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.CONSTRUCTOR, ElementType.FIELD,</span><br><span class="line">         ElementType.METHOD, ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Qualifier</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Creamy &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Cold</span></span><br><span class="line"><span class="meta">@Creamy</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IceCream</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
 
 
-
-<p>可以看出，Git 只是简单地将别名替换为对应的命令。 然而，你可能想要执行外部命令，而不是一个 Git 子命令。 如果是那样的话，可以在命令前面加入 <code>!</code> 符号。 如果你自己要写一些与 Git 仓库协作的工具的话，那会很有用。 我们现在演示将 <code>git visual</code> 定义为 <code>gitk</code> 的别名：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.visual <span class="string">'!gitk'</span></span><br></pre></td></tr></table></figure>
 
 
                 
@@ -754,7 +291,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/git%20log%20example/">git log example</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -768,12 +305,65 @@
             </div>
             <div class="post-content">
                 
-                    <h1 id="远程分支"><a href="#远程分支" class="headerlink" title="远程分支"></a><strong>远程分支</strong></h1><p>远程分支 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加远程分支</span></span><br><span class="line">git add origin git@github.com:weirdWimp/log_demo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送本地分支到远程分支</span></span><br><span class="line">git push origin dev:remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在远程分支origin/remoteDev上创建本地分支dev，并且本地分支设置跟踪远程仓库origin的remoteDev分支</span></span><br><span class="line">git checkout -b dev origin/remoteDev</span><br><span class="line"></span><br><span class="line">git checkout --track origin/remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置已有本地分支跟踪远程分支</span></span><br><span class="line">git branch -u origin/serverfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line">git push origin --delete serverfix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git fetch origin</span><br><span class="line">git merge origin/master</span><br><span class="line">git push origin master:master</span><br></pre></td></tr></table></figure>
+                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.ll <span class="string">"log --pretty='%C(yellow)%h %C(cyan)%cd %Creset%s %Cred&lt;%an&gt;' --date=format:'%y/%m/%d %H:%M' --graph"</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p>Rebased dev on refs/heads/dev</p>
+<p><a href="https://www.cnblogs.com/bellkosmos/p/5923439.html" target="_blank" rel="noopener">https://www.cnblogs.com/bellkosmos/p/5923439.html</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Container%20Extention%20Points/">Container Extention Points</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h4 id="1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor"><a href="#1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor" class="headerlink" title="1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor"></a>1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor</h4><p>使用 <code>BeanFactoryPostProcessor</code> 来定制化配置元数据 （包含了 Bean 的定义）</p>
+<p><code>BeanFactoryPostProcessor</code> 操作的是 bean 的配置元数据，而不是 bean 实例对象，Spring IoC 容器允许 <code>BeanFactoryPostProcessor</code> 读取配置元数据并且有可能会在实例化任何 bean （除了它本身）之前改变这些 bean 的定义。</p>
+<p>可以配置多个 <code>BeanFactoryPostProcessor</code> 实例， 并且通过实现 <code>Ordered</code> 接口，设置 <code>order</code> 属性来设置这些实例应用的顺序。</p>
+<blockquote>
+<p> While it is technically possible to work with bean instances within a <code>BeanFactoryPostProcessor</code> (for example, by using <code>BeanFactory.getBean()</code>), doing so causes premature bean instantiation, violating the standard container lifecycle. This may cause negative side effects, such as bypassing bean post processing. </p>
+<p>虽然在 BeanFactoryPostProcessor  中可以通过 <code>BeanFactory.getBean()</code> 获取 bean 实例，然后对其操作，但是这回导致 bean 的<strong>预实例化</strong>，违反了标准的容器生命周期。这可能带来一些副作用，如绕过 bean 的后置处理。</p>
+</blockquote>
+<p>Implementation Example: </p>
+<p><code>PropertySourcesPlaceholderConfigurer</code>  :    实现 bean 属性的值，可以定义在外部 properties 文件中</p>
+<p><code>PropertyOverrideConfigurer</code> ： 事项 bean 的属性如果没有值的话，可以通过外部 properties 文件定义一个默认值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PropertySource</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/">提交历史</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>$ git rebase origin/master<br>First, rewinding head to replay your work on top of it…<br>Applying: second add from local<br>error: Failed to merge in the changes.<br>Using index info to reconstruct a base tree…<br>M       rebase.md<br>Falling back to patching base and 3-way merge…<br>Auto-merging rebase.md<br>CONFLICT (content): Merge conflict in rebase.md<br>Patch failed at 0001 second add from local<br>The copy of the patch that failed is found in: .git/rebase-apply/patch</p>
+<p>Resolve all conflicts manually, mark them as resolved with<br>“git add/rm <conflicted_files>“, then run “git rebase –continue”.<br>You can instead skip this commit: run “git rebase –skip”.<br>To abort and get back to the state before “git rebase”, run “git rebase –abort”.</p>
 
                 
             </div>
