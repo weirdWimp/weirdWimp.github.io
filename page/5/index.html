@@ -84,266 +84,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Java%20Servlet/Cookie/">Cookie</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Java Servlet 支持 HTTP Cookie</p>
-<ol>
-<li><p>Cookie 是 Server 验证 Client 身份的一种机制。 Client 发送请求到 Server 时， Server 会为该客户端生成一些信息，也就是 Cookie，用于标识该 Client，并将这些信息发送 Client （封装在 Response 的 Header 中）；</p>
-</li>
-<li><p>Client 如浏览器（可以选择是否保存 Cookie），接受到相应的 Response，并且将 Cookie 信息保存在本地;</p>
-</li>
-<li><p>Client 下一次请求 Server 时，在请求的 Header 中带着这些 Cookie 信息， Server 验证这些 Cookie 信息，验证通过就可以返回给 Client 想要请求的内容了</p>
-</li>
-</ol>
-<p>Http Request Headers</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Request</span> <span class="string">Header</span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">host </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">localhost:8080 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">connection </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">keep-alive </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">upgrade-insecure-requests </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">1 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">user-agent </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-encoding </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">gzip, deflate, br </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-language </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">zh-CN,zh;q=0.9 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">cookie </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Idea-e3d08f0c=a1cdf13f-3a2b-46e0-bf43-088ffa6cb705; JSESSIONID=AE715BC860E044CA647A2C2D7A10B5E7 </span></span><br><span class="line">========================</span><br></pre></td></tr></table></figure>
-
-
-
-<p>cookies</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Cookie</span> <span class="string">domain:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">name:Idea-e3d08f0c</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">path:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">value:a1cdf13f-3a2b-46e0-bf43-088ffa6cb705</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">max age:-1</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>Servlet Cookie MaxAge - cookie 的有效期，存活时长</strong></p>
-<p>Sets the maximum age in seconds for this Cookie.<br>A positive value indicates that the cookie will expire after that many seconds have passed. Note that the value is the maximum age when the cookie will expire, not the cookie’s current age.<br>A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits. A zero value causes the cookie to be deleted.</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Container%20Extention%20Points/">Container Extention Points</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h4 id="1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor"><a href="#1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor" class="headerlink" title="1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor"></a>1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor</h4><p>使用 <code>BeanFactoryPostProcessor</code> 来定制化配置元数据 （包含了 Bean 的定义）</p>
-<p><code>BeanFactoryPostProcessor</code> 操作的是 bean 的配置元数据，而不是 bean 实例对象，Spring IoC 容器允许 <code>BeanFactoryPostProcessor</code> 读取配置元数据并且有可能会在实例化任何 bean （除了它本身）之前改变这些 bean 的定义。</p>
-<p>可以配置多个 <code>BeanFactoryPostProcessor</code> 实例， 并且通过实现 <code>Ordered</code> 接口，设置 <code>order</code> 属性来设置这些实例应用的顺序。</p>
-<blockquote>
-<p> While it is technically possible to work with bean instances within a <code>BeanFactoryPostProcessor</code> (for example, by using <code>BeanFactory.getBean()</code>), doing so causes premature bean instantiation, violating the standard container lifecycle. This may cause negative side effects, such as bypassing bean post processing. </p>
-<p>虽然在 BeanFactoryPostProcessor  中可以通过 <code>BeanFactory.getBean()</code> 获取 bean 实例，然后对其操作，但是这回导致 bean 的<strong>预实例化</strong>，违反了标准的容器生命周期。这可能带来一些副作用，如绕过 bean 的后置处理。</p>
-</blockquote>
-<p>Implementation Example: </p>
-<p><code>PropertySourcesPlaceholderConfigurer</code>  :    实现 bean 属性的值，可以定义在外部 properties 文件中</p>
-<p><code>PropertyOverrideConfigurer</code> ： 事项 bean 的属性如果没有值的话，可以通过外部 properties 文件定义一个默认值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PropertySource</span><br></pre></td></tr></table></figure>
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/1%20%E8%BF%90%E8%A1%8C%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE/">1 运行前的配置</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="1-运行前的配置"><a href="#1-运行前的配置" class="headerlink" title="1 运行前的配置"></a>1 运行前的配置</h1><h2 id="1-1-用户信息配置"><a href="#1-1-用户信息配置" class="headerlink" title="1.1 用户信息配置"></a>1.1 用户信息配置</h2><p>Git 自带一个 <code>git config</code> 的工具来设置 Git 外观和行为的配置参数。有三个不同级别的设置，分别对应不同的文件夹和作用域。</p>
-<ol>
-<li>如果使用带有<code>--system</code> 选项的 <code>git config</code> 时，他会从文件 <code>/etc/gitconfig</code> 文件中进行配置变量的读写。==包含对系统上每一个用户及他们仓库的通用配置==。</li>
-</ol>
-<ol start="2">
-<li>如果使用带有 <code>--global</code> 选现的 <code>git config</code> 时，他会从文件 <code>~/.gitconfig</code> 或 <code>~/.config/git/config</code> 文件中进行配置变量的读写。==只针对当前用户==。</li>
-</ol>
-<ol start="3">
-<li>当前使用仓库的 Git 目录中的 config 文件（.git/config）: ==只针对该仓库== </li>
-</ol>
-<p>每一个级别覆盖上一个级别的配置。所以 <code>.git/config</code> 的配置变量会覆盖 <code>/etc/gitconfig</code> 中的配置变量。</p>
-<p> 在 Windows 系统中，Git 会查找 <code>$HOME</code> 目录下（一般情况是 <code>C:\Users\$USER</code>）的 <code>.gitconfig</code> 文件。 Git 同样也会寻找 <code>/etc/gitconfig</code> 文件，但只限于 MSys 的根目录下，即安装 Git 时所选的目标位置。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为当前用户配置用户名</span></span><br><span class="line">git config --global user.name Guo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为当前用户配置邮箱</span></span><br><span class="line">git config --global user.email email@company.com</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-2-文本编辑器"><a href="#1-2-文本编辑器" class="headerlink" title="1.2 文本编辑器"></a>1.2 文本编辑器</h2><p>既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，通常是 Vim。 如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-3-检查配置信息"><a href="#1-3-检查配置信息" class="headerlink" title="1.3 检查配置信息"></a>1.3 检查配置信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global user.name</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/%E8%BF%9E%E6%8E%A5/">连接</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="问题还原"><a href="#问题还原" class="headerlink" title="问题还原"></a>问题还原</h2><p>表结构及索引情况</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; desc user_info</span><br><span class="line"></span><br><span class="line">Field	Type	Null	Key	Default	Extra</span><br><span class="line">id	int(11)	NO	PRI	\N	auto_increment</span><br><span class="line">uid	varchar(64)	NO	MUL	\N	</span><br><span class="line">name	varchar(255)	YES		\N	</span><br><span class="line"></span><br><span class="line">&gt; desc user_scode </span><br><span class="line">Field	Type	Null	Key	Default	Extra</span><br><span class="line">id	int(11)	NO	PRI	\N	auto_increment</span><br><span class="line">uid	varchar(64)	NO	MUL	\N	</span><br><span class="line">score	float	YES		\N</span><br></pre></td></tr></table></figure>
-
-<p>表的大小和 user_score 表的数据</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_info</span><br><span class="line"> <span class="comment">-- 22000000</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_score </span><br><span class="line"> <span class="comment">-- 6</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">id</span>	uid			score</span><br><span class="line"><span class="number">9</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">10</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">11</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">12</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span></span><br><span class="line"><span class="number">14</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.254</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_score us <span class="keyword">join</span> user_info ui  <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.id = <span class="number">13</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">id	uid	score	id	uid	name</span><br><span class="line">13	899-99-9904	1.23	20419033	899-99-9904	Julissa Rolfson</span><br><span class="line"></span><br><span class="line">1 row retrieved starting from 1 in 9 s 63 ms (execution: 9 s 31 ms, fetching: 32 ms)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行计划</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	100	\N</span><br><span class="line">1	SIMPLE	ui	\N	ALL	\N	\N	\N	\N	21614208	100	Using where</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_info;</span><br><span class="line"></span><br><span class="line">Table	<span class="keyword">Create</span> <span class="keyword">Table</span></span><br><span class="line">user_info	<span class="string">"CREATE TABLE `user_info` (</span></span><br><span class="line"><span class="string">  `id` int(11) NOT NULL AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">  `uid` varchar(64) NOT NULL,</span></span><br><span class="line"><span class="string">  `name` varchar(255) DEFAULT NULL,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`),</span></span><br><span class="line"><span class="string">  KEY `index_uid` (`uid`) USING BTREE</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB AUTO_INCREMENT=22000001 DEFAULT CHARSET=utf8"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_score;</span><br><span class="line">Table	<span class="keyword">Create</span> <span class="keyword">Table</span></span><br><span class="line">user_score	<span class="string">"CREATE TABLE `user_score` (</span></span><br><span class="line"><span class="string">  `id` int(11) NOT NULL AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">  `uid` varchar(64) NOT NULL,</span></span><br><span class="line"><span class="string">  `score` float DEFAULT NULL,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`),</span></span><br><span class="line"><span class="string">  KEY `index_uid` (`uid`)</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200510120118147.png" alt="image-20200510120118147"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">'13'</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">'899-99-9904'</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">'1.23'</span> <span class="keyword">AS</span> <span class="string">`score`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_score`</span> <span class="string">`us`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_info`</span> <span class="string">`ui`</span> <span class="keyword">where</span> ((<span class="string">'899-99-9904'</span> = <span class="keyword">convert</span>(<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">using</span> utf8mb4)))</span><br></pre></td></tr></table></figure>
-
-
-
-<p>字符集不一致的问题导致索引失效.</p>
-<p>修改字符集：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> user_score <span class="keyword">CONVERT</span> <span class="keyword">TO</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_score us <span class="keyword">join</span> user_info ui  <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.id = <span class="number">13</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">id</span>	uid	score	<span class="keyword">id</span>	uid	<span class="keyword">name</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span>	<span class="number">20419033</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	Julissa Rolfson</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="keyword">row</span> retrieved <span class="keyword">starting</span> <span class="keyword">from</span> <span class="number">1</span> <span class="keyword">in</span> <span class="number">47</span> ms (execution: <span class="number">0</span> ms, fetching: <span class="number">47</span> ms)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行计划：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	100	\N</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br></pre></td></tr></table></figure>
-
-
-
-<ol>
-<li>如果存在 JOIN 连接等操作的表，在建表的时候就应该留心之前系统的规范是什么，建表的默认字符集或者规定的字符集是什么， 而不应该依靠于自己的喜好和认知去建立</li>
-<li>索引列参加计算会导致索引失效，所以非索引常量等值条件的查询，或者较复杂涉及连接的查询，都应该提前分析是否会使用索引，语句的效率，测试执行时间，查看执行计划，看看是否符合预期</li>
-</ol>
-<p>原文地址： <a href="https://mp.weixin.qq.com/s/Cimeyo4cVQsF-MfHBsNgGg?1=a" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Cimeyo4cVQsF-MfHBsNgGg?1=a</a></p>
-<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><p>备注：使用的 Mysql版本为 5.7 ，参考的Mysql官方使用手册也是 5.7 的</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">version()</span>: <span class="string">5.7.29-0ubuntu0.18.04.1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Reference</span> <span class="string">Manual: MySQL 5.7 Reference Manual Including MySQL NDB Cluster 7.5 and NDB Cluster 7.6</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>外连接 Outer Joins 包含 <code>LEFT JOIN</code> 和 <code>RIGHT JOIN</code></p>
-<p>在外连接 <code>A LEFT JOIN B</code> 中将 B 表的筛选条件写在连接条件 （JOIN CONDITION, <code>on A.col = B.col</code>）和写在 WHERE 字句中的结果</p>
-<p>此例中，<code>user_info_temp</code> 表中有一条 <code>uid</code> 为 <code>&#39;899-99-9905&#39;</code> 的行，<code>user_score_temp</code> 中有两条 uid 为 <code>&#39;899-99-9905&#39;</code> 的数据</p>
-<h3 id="B-表的筛选条件写在连接条件中"><a href="#B-表的筛选条件写在连接条件中" class="headerlink" title="B 表的筛选条件写在连接条件中"></a>B 表的筛选条件写在连接条件中</h3><p><strong>sql 语句:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>  user_info_temp ui <span class="keyword">left</span> <span class="keyword">join</span> user_score_temp us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">and</span> us.uid = <span class="string">'899-99-9905'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行计划：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ALL	\N	\N	\N	\N	5	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using where</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 这里应该使用了 Indexed Nested Loop Join 连接算法, 会使用 B 表中连接字段的索引</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">id	uid	name	id	uid	score</span><br><span class="line">5042849	899-99-9926	Leif Streich V	\N	\N	\N</span><br><span class="line">8018366	899-99-9948	Hulda Rodriguez	\N	\N	\N</span><br><span class="line">20107227	899-99-9921	Sarita Kassulke IV	\N	\N	\N</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	12	899-99-9905	1.1</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	13	899-99-9905	1.23</span><br><span class="line">21439863	899-99-9926	Stuart Daugherty	\N	\N	\N</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="B-表的筛选条件写在-WHERE-字句中"><a href="#B-表的筛选条件写在-WHERE-字句中" class="headerlink" title="B 表的筛选条件写在 WHERE 字句中"></a>B 表的筛选条件写在 WHERE 字句中</h3><p><strong>sql 语句:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>  user_info_temp ui <span class="keyword">left</span> <span class="keyword">join</span> user_score_temp us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.uid = <span class="string">'899-99-9905'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行计划：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using index condition</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	uid	name	id	uid	score</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	12	899-99-9905	1.1</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	13	899-99-9905	1.23</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h3><p>出现不同结果的原因是，写在连接条件中，会作为连接前筛选 B 表的条件，B 表中满足条件的有两条, 再做外连接; 而写在 WHERE 字句中，是作为连接后的结果的筛选条件的, 只筛选出结果中 B 表的列满足条件的结果.</p>
-<p>Mysql 手册 - <strong>8.2.1.8 Outer Join Optimization</strong> 节中对外连接的步骤有如下描述：</p>
-<blockquote>
-<p>The LEFT JOIN condition is used to decide how to retrieve rows from table <em>B</em>. (In other words, any<br>condition in the WHERE clause is not used.)</p>
-</blockquote>
-<p>也就是说, 连接条件决定了如何从 B 表中进行检索数据, WHERE 子句中 B 的条件此时是不会使用的. </p>
-<p>还需要注意一点的是,  B 表的筛选条件写在 WHERE 字句中, 此时, Mysql 应该是将其转换为一个 <code>INNER JOIN</code> 了,  执行计划中的两个步骤都是用的索引, 而且在控制台中对应打印出了如下的结果:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[2020-05-04 20:54:03] [HY000][1003] <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`ui`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`us`</span> <span class="keyword">where</span> ((<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span>) <span class="keyword">and</span> (<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> = <span class="string">'899-99-9905'</span>))</span><br></pre></td></tr></table></figure>
-
-
-
-<p>其中并没有出现 <code>left join</code> , 而是被转换成了 <code>join</code>,  大概想下, 这时的外连接其实是等价于内连接的, 如果 B 的常量等值条件要满足, B 表对应的那一行必然和 A 表中的某一行关联的上, 不能关联上, 则都为 <code>NULL</code> (前提是 B 的条件列声明为 <code>NOT NULL</code>),  所以是等价于内连接的.  </p>
-<p><strong>因此, 在这种情况下, 写成内连接更能表达清楚本来的意图</strong>.</p>
-<p>Mysql 手册 - <strong>8.2.1.8 Outer Join Optimization</strong> 中的相关描述:</p>
-<blockquote>
-<p>For a LEFT JOIN, if the WHERE condition is always false for the generated NULL row, the LEFT JOIN<br>is changed to an inner join. </p>
-</blockquote>
-<p>For example, the WHERE clause would be false in the following query if t2.column1 were NULL:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t2 <span class="keyword">ON</span> (column1) <span class="keyword">WHERE</span> t2.column2=<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
-
-<p>Therefore, it is safe to convert the query to an inner join:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1, t2 <span class="keyword">WHERE</span> t2.column2=<span class="number">5</span> <span class="keyword">AND</span> t1.column1=t2.column1;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>所以如果 B 的条件列可以是 <code>NULL</code> ,  而且条件为 <code>B.col is NULL</code> , 这时, 就不能等价于内连接了, 因为满足 <code>B.col is NULL</code> 的情况有两种, 一种是本来就没有关联上,  另一种是关联上了, 这一列的值本来就是 <code>NULL</code>,  就不满足 <code>WHERE condition is always false for the generated NULL row</code></p>
-<h3 id="My-SQL-Optimizer-查询优化器"><a href="#My-SQL-Optimizer-查询优化器" class="headerlink" title="My SQL Optimizer 查询优化器"></a>My SQL Optimizer 查询优化器</h3><p><strong>会根据当前表的信息给出执行计划，所以类似的查询语句可能在不同的情况下执行计划不同：</strong></p>
-<p>user_info 表和 user_score 两张表， user_info 表有 2200 百万数据，表 user_score 有 6 条数据，通过 uid 字段可以关联，且两张表的 uid 字段都设置了索引：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_info</span><br><span class="line"> <span class="comment">-- 22000000</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_score </span><br><span class="line"> <span class="comment">-- 6</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">id</span>	uid			score</span><br><span class="line"><span class="number">9</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">10</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">11</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">12</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span></span><br><span class="line"><span class="number">14</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.254</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ol>
-<li>当连接的筛选条件为 <code>uid = &#39;899-99-9904&#39;</code> 时，user_score 表中有两条可以关联的上，执行计划：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">join</span> user_score us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> ui.uid = <span class="string">'899-99-9904'</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using index condition</span><br></pre></td></tr></table></figure>
-
-<p>   <strong>可以看出，此时给出的执行计划， 驱动表 ui, 被驱动表 us 都是索引查询，使用的应该是 <code>Indexed Nested Loop Join</code> 连接算法。</strong></p>
-<ol start="2">
-<li>当连接的筛选条件为 <code>uid = &#39;899-99-9905&#39;</code> 时，user_score 表中有四条可以关联的上，执行计划：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">join</span> user_score us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> ui.uid = <span class="string">'899-99-9905'</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ALL	index_uid	\N	\N	\N	6	66.67	Using where; Using join buffer (Block Nested Loop)</span><br></pre></td></tr></table></figure>
-
-<p>   此时的执行计划， 连接算法使用的时 <code>Block Nested Loop Join</code> 连接算法 （参考 Mysql 使用手册 - <strong>8.2.1.6 Nested-Loop Join Algorithms</strong>），且 user_info 使用了索引；这时，会扫描 user_score  表一次，将 user_score 表中的每一条记录同 <code>Join Buffer</code> 连接缓冲区中的 user_info 表筛选出来的记录进行匹配，如果满足关联条件，返回。</p>
-<p>   猜想：此时，查询优化器可能是从 uid 的索引的情况来看，user_score  表中 <code>uid = &#39;899-99-9905&#39;</code> 的记录占据了整个表的大部分，而且表本身比较小，此时，做一次全表扫描的性能可能是会更好。</p>
-<p><strong>Mysql 查询优化器的工作是一个很复杂的工作流程、会考虑各种因素，参考表的统计信息，给出当前较优的执行计划。</strong></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Mysql/MySQL%208.0.16%20JDBC%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98/">MySQL 8.0.16 JDBC 数据库连接问题</a></h2>
             </div>
             <div class="post-meta">
@@ -389,6 +129,254 @@
 
 
 
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20JSP/">Spring JSP</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Spring-提供的-JSP-标签库"><a href="#Spring-提供的-JSP-标签库" class="headerlink" title="Spring 提供的 JSP 标签库"></a>Spring 提供的 JSP 标签库</h1><h3 id="1-表单绑定标签库"><a href="#1-表单绑定标签库" class="headerlink" title="1 表单绑定标签库"></a>1 表单绑定标签库</h3><ul>
+<li>可以绑定一个模型的对象到注册表单，表单中的某些标签可以通过这个模型对象的属性进行填充。</li>
+<li>提供一个展现错误的标签</li>
+</ul>
+<h4 id="使用声明"><a href="#使用声明" class="headerlink" title="使用声明"></a>使用声明</h4><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%-- tags/form, 并且声明前缀为 sf，即 Spring Form--%&gt;</span><br><span class="line">&lt;%@ taglib uri=<span class="string">"http://www.springframework.org/tags/form"</span> prefix=<span class="string">"sf"</span> %&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>具体的 JSP 表单</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;sf:form method=<span class="string">"POST"</span> commandName=<span class="string">"user"</span>&gt;</span><br><span class="line">    First Name: &lt;sf:input path=<span class="string">"firstName"</span> /&gt;&lt;br/&gt;</span><br><span class="line">    ......</span><br><span class="line">    Password: &lt;sf:password path=<span class="string">"password"</span> /&gt;&lt;br/&gt;</span><br><span class="line">&lt;/sf:form&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>sf:form</code> 标签会渲染一个 HTML <code>&lt;form&gt;</code> 标签， 通过 <code>commandName</code> 绑定模型中的一个对象，key 为 <code>user</code>, 这个对象的属性会被其他标签引用</p>
+<p><code>&lt;sf:input&gt;</code> 标签会渲染一个 HTML <code>&lt;input&gt;</code> 标签 ，<code>type</code> 为 text，<code>path</code> 的值，会被渲染成该 <code>&lt;input&gt;</code> 标签的 <code>value</code> 属性的值</p>
+<p>当然也可以在 <code>&lt;sf:input&gt;</code> 标签中指定 <code>type</code> 属性 </p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Email: &lt;sf:input path=<span class="string">"email"</span> type=<span class="string">"email"</span> /&gt;&lt;br/&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>控制器方法 — 注册 GET 方法， 模型中必须添加一个 User 对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/register"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">showRegistration</span><span class="params">(Model model)</span> </span>&#123;</span><br><span class="line">    model.addAttribute(<span class="keyword">new</span> User());</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"registerFormSpringForm"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在校验失败后，表单中会预先填充之前输入的值。是在 POST 方法，是直接返回的注册视图实现的， GET 方法中添加 User 对象，只是为了初始展示注册试图 JSP不报错</p>
+<h4 id="展现错误"><a href="#展现错误" class="headerlink" title="展现错误"></a>展现错误</h4><blockquote>
+<p>如果存在校验错误的话，请求中会包含错误的详细信息，这些信息是与模型数据放到一起的。我们所需要做的就是到模型中将这些数据抽取出来，并展现给用户。</p>
+</blockquote>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;%-- path 属性指定要显示模型对象属性 firstName 的错误信息 --%&gt;</span><br><span class="line">&lt;%-- cssClass 属性设置了 css 属性，将错误显示更加突出 --%&gt;</span><br><span class="line">&lt;sf:errors path=<span class="string">"firstName"</span> cssClass=<span class="string">"error"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果有验证错误的话， 会渲染成一个个HTML <code>&lt;span&gt;</code>标签，显示错误信息。</p>
+<p>为每个输入域设置<code>cssErrorClass</code>属性，着重显示需要修正的输入域, </p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;sf:label path="firstName" cssErrorClass="labelerror"&gt;FirstName:&lt;/sf:label&gt;</span><br><span class="line">&lt;sf:input path=<span class="string">"firstName"</span> cssErrorClass=<span class="string">"inputerror"</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>现在已经为文本标记和输入域设置了样式，在有校验错误的时候， HTML 最终的 <code>&lt;label&gt;</code> <code>&lt;input&gt;</code> 标签的 <code>class</code> 属性会被设置成相应的值，展示 CSS 样式</p>
+<h3 id="2-Spring-通用-JSP-标签库"><a href="#2-Spring-通用-JSP-标签库" class="headerlink" title="2 Spring 通用 JSP 标签库"></a>2 Spring 通用 JSP 标签库</h3><p>使用声明</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%-- tags, 并且声明前缀为 s，即 Spring--%&gt;</span><br><span class="line">&lt;%@ taglib uri=<span class="string">"http://www.springframework.org/tags"</span> prefix=<span class="string">"s"</span> %&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="3-JSTL"><a href="#3-JSTL" class="headerlink" title="3 JSTL"></a>3 JSTL</h4><p>JSTL 依赖</p>
+<p><a href="https://www.cnblogs.com/kouzikaile/p/7094571.html" target="_blank" rel="noopener">https://www.cnblogs.com/kouzikaile/p/7094571.html</a></p>
+<p><a href="https://blog.csdn.net/qq_22860341/article/details/79207665" target="_blank" rel="noopener">https://blog.csdn.net/qq_22860341/article/details/79207665</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">　　　　 <span class="comment">&lt;!-- jstl --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp.jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- jstl-api --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp.jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- jstl-impl --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.glassfish.web<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl-impl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="4-Apache-Tiles"><a href="#4-Apache-Tiles" class="headerlink" title="4 Apache Tiles"></a>4 Apache Tiles</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tiles<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tiles-extras<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>==使用Apache Tiles 需要添加以上依赖及JSTL依赖==</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>如果提示包找不到，可能需要将相应的依赖从右边一刀左边的的lib目录下（Put into Output Root）</p>
+<p>观察制品输出目录 Output directory 是否存在相应的包</p>
+<p><img src="C:%5CUsers%5Cguo%5CPictures%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE(18).png" alt=""></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20JDBC/">Spring JDBC</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Spring 定义的数据访问异常体系相比于 JDBC 的 SQLException 要丰富的多，并且没有与特定的持久化方式相关联。 持久化机制与数据访问层隔离开来。</p>
+<p>DataAccessException 非检查型异常，不强制进行捕获，因为 Spring 认为触发异常的很多问题是不能在 catch 代码块中进行捕获的，如连接信息有误、语法错误等异常（就算捕获了，也不能做任何处理）。是否要捕获异常取决于开发人员。</p>
+<p>模板方法模式</p>
+<p>构造器 @Inject 注解 需要加入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h4><p>Spring JDBC 框架承担了必要的<strong>资源管理</strong>与<strong>异常处理</strong>工作，简化了 JDBC 代码， 只需要关注必要的数据库读写代码即可。</p>
+<p>Spring 将数据访问的样板代码抽象到模板类中。</p>
+<p>Spring 为 JDBC 提供了三个模板类:</p>
+<ul>
+<li>JdbcTemplate：最基本的 Spring JDBC 模板，支持简单的 JDBC 数据库访问功能以及基于索引参数的查询（赋值的顺序与 SQL 语句占位符的顺序要一致） Spring 3.1 开始，支持 Java 5 的自动装箱、泛型以及可变参数列表等特性来简化 JDBC 模板的使用</li>
+<li>NamedParameterJdbcTemplate：可以将值以命名参数的形式绑定到 SQL 中（相对于索引参数）</li>
+</ul>
+<h4 id="Spring-与-Hibernate-的集成"><a href="#Spring-与-Hibernate-的集成" class="headerlink" title="Spring 与 Hibernate 的集成"></a>Spring 与 Hibernate 的集成</h4><p>Spring 提供了与 JDBC 类似的模板类 <code>HibernateTemplate</code>，能够保证每个事务使用同一个 <code>Session</code>, 弊端在于 Repository 的实现与 Spring 耦合。</p>
+<p>可以直接使用 Hibernate 的上下文 Session <code>Contextual Session</code>， 其实 Hibernate 等持久化框架已经达到了和模板类类似的功能，如获取链接，创建语句，管理事务，关闭资源等，因此直接使用也是比较方便的。</p>
+<p>需要声明一个 <code>org.springframework.orm.hibernate4.LocalSessionFactoryBean</code>  bean（对象关系映射既可以通过注解，也可以通过配置文件声明）, 继承自 Spring 的 <code>FactoryBean</code>, 会产生 Hibernate 的 <code>SessionFactory</code>。</p>
+<p>但是不使用 Spring 提供的模板类，问题就是 Repository 实现类会抛出 Hibernate 相关的异常，而不是 Spring 定义的非检查型异常。解决方案是：定义一个 <code>PersistenceExceptionTranslationPostProcessor</code> bean。</p>
+<blockquote>
+<p><code>PersistenceExceptionTranslationPostProcessor</code>是一个bean 后置处理器（bean post-processor），它会在所有拥有<code>@Repository</code>注解的类上添加一个通知器（advisor），这样就会捕获任何平台相关的异常并以Spring非检查型数据访问异常的形式重新抛出。</p>
+</blockquote>
+<p><strong>@Repository 注解</strong></p>
+<p><code>@Repository</code>注解，这会为我们做两件事情。首先，<code>@Repository</code>是Spring的另一种构造性注解，它能够像其他注解一样被Spring的组件扫描所扫描到, 表明在组件扫描的时候会自动创建。这样就不必明确声明<code>HibernateSpitterRepository</code> bean了，只要这个Repository类在组件扫描所涵盖的包中即可。    </p>
+<p>除了帮助减少显式配置以外，<code>@Repository</code>还有另外一个用处。让我们回想一下模板类，它有一项任务就是捕获平台相关的异常，然后使用Spring统一非检查型异常的形式重新抛出。</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
+<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
+<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
+</blockquote>
+<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
+<blockquote>
+<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
+<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
+<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>匹配任何单字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0或者任意数量的字符</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配0或者更多的目录</td>
+</tr>
+</tbody></table>
+<p>Table Example Ant-Style Path Patterns</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/app/*.x</td>
+<td>匹配(Matches)所有在app路径下的.x文件</td>
+</tr>
+<tr>
+<td>/app/p?ttern</td>
+<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
+</tr>
+<tr>
+<td>/**/example</td>
+<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
+</tr>
+<tr>
+<td>/app/**/dir/file.</td>
+<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
+</tr>
+<tr>
+<td>/<em>*/</em>.jsp</td>
+<td>匹配(Matches)任何的.jsp 文件</td>
+</tr>
+</tbody></table>
+<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 注意事项：</p>
+<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
+<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BD%9C%E7%94%A8%E5%9F%9F/">Spring 作用域</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Spring 作用域</p>
 
                 
             </div>
