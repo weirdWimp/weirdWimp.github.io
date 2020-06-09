@@ -84,6 +84,69 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/cUrl%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E9%94%99%E8%AF%AF%E6%80%BB%E7%BB%93/">cUrl命令使用错误总结</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>原本，是想写一个脚本来从 <a href="unsplash.com">Unsplash</a> 下载图片，通过 <code>apt install axel</code> 安装了 <code>axel</code> 来进行下载（相对较快）；使用 <code>jq</code> 来对返回的  json 进行解析，获取下载地址，为了测试命令的有效性，将返回的 json 结果存放在文件中 unsplash.json 中 ：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    <span class="string">"links"</span>: &#123;</span><br><span class="line">      <span class="attr">"self"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"html"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"download"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk/download"</span>,</span><br><span class="line">      <span class="attr">"download_location"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk/download"</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>调用 <code>jq</code> 命令解析，并将 <code>download</code> 的值作为 <code>axel</code> 的命令行参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 axel -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console：</span></span><br><span class="line">axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Initializing download: https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Could not parse URL.</span><br></pre></td></tr></table></figure>
+
+<p>标准输出或者错误显示不能解析 URL,  查看这个 URL 没有问题，直接执行 <code>axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code>  也没有出现异常。 由于没有显示具体的 URL 异常在哪里，换用 <code>cUrl</code> 来执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console:</span></span><br><span class="line">curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">curl: (3) [globbing] bad range <span class="keyword">in</span> column 3</span><br></pre></td></tr></table></figure>
+
+<p>同样，请求失败，同样直接执行 <code>curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code> 也能够成功，显然通过 <code>jq</code> 输出，再通过管道符和 <code>xargs</code> 输出的 url 不正常，但是直接看有没有什么特殊的字符，期间，尝试将 <code>jq</code> 解析的结果保存成变量，url 中添加变量，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o 2.jpg <span class="variable">$varUrl</span></span><br></pre></td></tr></table></figure>
+
+<p>同样执行失败，百思不得其解 :laughing: .</p>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>智商不够，百度来凑，无果，打开 StackOverFlow， 搜索  <code>bad range in column</code> ，从一个类似的问题中找到了线索或者说答案。</p>
+<p>原文 <a href="https://stackoverflow.com/questions/43926914/strange-characters-appearing-in-bash-variable-expansion" target="_blank" rel="noopener">strange-characters-appearing-in-bash-variable-expansion)</a> 中描述的问题是通过 <code>grep</code> 命令 filter json 中的值，并将其作为变量，在 curl 的 url 中引用该变量：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod_in_question=$(curl -u uname:password -k very.cluster.com/api/v1/namespaces/default/pods/ | grep -i '"name": "myapp-' | cut -d '"' -f 4)</span><br><span class="line"></span><br><span class="line">curl -g -u uname:password -k -X DELETE "very.cluster.com/api/v1/namespaces/default/pods/$&#123;pod_in_question&#125;"</span><br></pre></td></tr></table></figure>
+
+<p>结果，请求 url 中出现一些特殊的转义字符，原因是使用的 bash 环境， <code>grep</code> 命令默认使用 <code>--colour=always</code> , 使得过滤的结果中出现了颜色的转义序列 <a href="http://ascii-table.com/ansi-escape-sequences.php" target="_blank" rel="noopener"> ANSI escape sequences</a>, 支持这些转义序列的终端的这些字符不可见，使用 <code>hexdump -C</code> 可以查看，因此针对原文的问题解决方案就是 <code>grep --colour=never</code>. </p>
+<p>再回到我的问题，使用 hexdump 打印：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | hexdump -C</span><br><span class="line"></span><br><span class="line">00000000  1b 5b 30 3b 33 32 6d 22  68 74 74 70 73 3a 2f 2f  |.[0;32m<span class="string">"https://|</span></span><br><span class="line"><span class="string">00000010  75 6e 73 70 6c 61 73 68  2e 63 6f 6d 2f 70 68 6f  |unsplash.com/pho|</span></span><br><span class="line"><span class="string">00000020  74 6f 73 2f 33 41 7a 53  34 7a 41 59 61 58 6b 2f  |tos/3AzS4zAYaXk/|</span></span><br><span class="line"><span class="string">00000030  64 6f 77 6e 6c 6f 61 64  22 1b 5b 30 6d 0a        |download"</span>.[0m.|</span><br><span class="line">0000003e</span><br></pre></td></tr></table></figure>
+
+<p>明显可以看到 url 的首尾出现了特殊的颜色转义字符，32 是绿色的色彩码. 显然, 是由于 <code>jq -C</code> 的选项造成的结果, 去掉或者指定 <code>-M</code> (monochrome (don’t colorize JSON)), 问题解决了.</p>
+<p>stackoverflow 中的问题还有一个答案, 给出了如何找出 <code>cUrl</code> 使用中出现问题如何定位的思路:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -g --libcurl /tmp/libcurl -o 2.jpg	</span><br><span class="line"></span><br><span class="line">cat /tmp/libcurl</span><br><span class="line"></span><br><span class="line"> curl_easy_setopt(hnd, CURLOPT_URL, <span class="string">"\033[0;32mhttps://unsplash.com/photos/3AzS4zAYaXk/download\033[0m"</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
+<li><p>引用 stackoverflow  给出使用 <code>cURL</code> 的最佳实践:</p>
+<p><strong>The best practise for URL syntax in <code>cURL</code>:</strong></p>
+<ul>
+<li>If Variable Expansion is required:<ul>
+<li>Apply the <code>-g</code> switch to disable potential globbing done by <code>cURL</code></li>
+</ul>
+</li>
+<li><strong>Otherwise:</strong><ul>
+<li>Use <code>$variable</code> as part of a “quoted” url string, instead of <code>${variable}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
+</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/%E6%B3%9B%E5%9E%8B/">泛型</a></h2>
             </div>
             <div class="post-meta">
@@ -121,24 +184,104 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E8%A1%8C%E5%A4%84%E7%90%86/">行处理</a></h2>
+                <h2><a class="post-title-link" href="/Java/Thread%20%E7%BA%BF%E7%A8%8B/">Thread 线程</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Linux/">Linux</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>Ctrl + k：剪切光标位置到行尾的文本。<br>Ctrl + u：剪切光标位置到行首的文本。<br>Ctrl + y：在光标位置粘贴文本</p>
-<p>Ctrl + w：删除光标前面的单词。</p>
-<p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
-<p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
+                    <h1 id="Java-中的线程"><a href="#Java-中的线程" class="headerlink" title="Java 中的线程"></a>Java 中的线程</h1><h2 id="Thread-类与-Runnable-接口"><a href="#Thread-类与-Runnable-接口" class="headerlink" title="Thread 类与 Runnable 接口"></a>Thread 类与 Runnable 接口</h2><p>Thread 中部分方法：</p>
+<ul>
+<li>join()：调用 join() 方法的 Thread 对象结束以前，当前线程一直处于等待状态，不会继续向前运行；内部是通过循环判断该 Thread 对象的 isAlive 方法返回 true 时，调用该 Thread 对象的 wait() 方法，该方法是属于 Object 的方法，且是由当前线程进行调用的，因此当前线程会处于等待状态；当调用 join() 方法的 Thread 对象结束后，会调用 <em>notifyAll</em> 方法通知处于等待状态的线程</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">joinTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> finalI = i;</span><br><span class="line">        <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; System.out.println(finalI));</span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">                thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>输出： 0，1，2，3，4，5，6，7，8，9</p>
+<ul>
+<li>setDaemon(): 线程的默认行为是，只要线程活着，进程就无法退出（普通的用户线程），守护线程不会阻止进程的退出；当应用程序的所有非守护线程均已经结束时，无论是否存在正在运行的守护线程，Java 程序将结束</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">daemonTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"true = "</span> + <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setName(<span class="string">"local-daemon-thread-20200204"</span>);</span><br><span class="line">    thread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">    thread.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只要主线程的打印执行完毕，不管守护线程有没有在执行，整个执行都将结束</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">"main thread = "</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>setUncaughtExceptionHandler()：线程因异常而退出时，默认的行为是打印线程的名称，异常类型，异常消息、堆栈打印；可以设置一个未捕获异常的处理器</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionHandlerTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"illegal argument"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setUncaughtExceptionHandler((t, e) -&gt; &#123;</span><br><span class="line">        System.out.printf(<span class="string">"thread id: %s, thread name: %s, exception: %s"</span>, t.getId(), t.getName(), e);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>多个 Thread 使用一个 Runnable 对象与每个 Thread 使用独立的 Runnable 对象的区别？</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
+<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
+<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
+<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
+<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
+<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
+<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
+<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
+<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
+<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
+<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
+<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
+<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
+<p>维基百科 - initialization-on-demand holder</p>
+<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
+<p>分为以下几个阶段：</p>
+<ol>
+<li><strong>加载</strong></li>
+</ol>
+<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
+<ol>
+<li><strong>验证</strong></li>
+</ol>
+<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
+<ol>
+<li><strong>准备和解析</strong></li>
+</ol>
+<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
+<ol>
+<li><strong>初始化</strong></li>
+</ol>
+<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
 
                 
             </div>
@@ -168,124 +311,6 @@
 <li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
 <li>Modify MySQL data directly from within Excel.</li>
 </ul>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ls%20Invalid%20option/">ls Invalid option</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="ls-invalid-option-–-‘j’"><a href="#ls-invalid-option-–-‘j’" class="headerlink" title="ls: invalid option – ‘j’"></a>ls: invalid option – ‘j’</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line"></span><br><span class="line">0n5whdeZ0ow-download.jpg  A-McbCSin6w-download.jpg  G1vKK6L7Ep0-download.jpg .....</span><br><span class="line">-jGGcAqIBms-download.jpg  -pahtnAMuFo-download.jpg </span><br><span class="line"></span><br><span class="line">$ ls *.jpg</span><br><span class="line">ls: invalid option -- <span class="string">'j'</span></span><br><span class="line">Try <span class="string">'ls --help'</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
-
-<p>这个简单的命令执行失败了，期望 shell 扩展 <code>*</code> 找出所有 jpg 图像，也没有传入 <code>-j</code> 作为 option 选项，很是奇怪，通过 bing 找到了答案，百度真的是不适合程序员…..</p>
-<p>StackExchange <a href="https://superuser.com/questions/1300382/ls-pdf-complains-ls-invalid-option" target="_blank" rel="noopener">ls invalid option</a> 中的问题类似，原因是有个图像文件开头是 <code>-</code> （-jGGcAqIBms-download.jpg），被当作 ls 的 option 选项了….</p>
-<p>man bash</p>
-<blockquote>
-<p>A <code>--</code> signals the end of options and disables further option processing. Any arguments after the – are treated as file‐ names and arguments. An argument of - is equivalent to –.</p>
-</blockquote>
-<p>解决上述问题的办法：</p>
-<ol>
-<li>使用 <code>--</code> </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -- *.jpg</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>生产脚本使用 find + xargs，更保险</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -name选项指定了待查找文件名的模式。这个模式可以是通配符，也可以是正则表达式</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">'*.jpg'</span> -print0 | xargs -0 -n 1 <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>修改文件名，避免此种情况发生</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E6%97%A5%E5%BF%97/log4j/">log4j</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="log4j"><a href="#log4j" class="headerlink" title="log4j"></a>log4j</h2><p>[TOC]</p>
-<h4 id="1-日志框架的基本组件"><a href="#1-日志框架的基本组件" class="headerlink" title="1. 日志框架的基本组件"></a>1. 日志框架的基本组件</h4><p>无论是JDK还是log4j（版本1）提供的日志框架，都主要包含以下组件：</p>
-<p><img src="C:%5CUsers%5Cguo%5CDesktop%5Clog.jpg" alt="log"></p>
-<p><strong>Logger</strong>：在程序中创建于实例化，负责日志信息的捕获与记录，在log4j中，如 Logger.getLogger(“service”), 会创建一个name为service的logger对象，如果LoggerManager已经发现有了这样一个为service的logger，直接返回在LoggerManager中管理的logger对象。logger对象用于不同级别的日志信息捕获，通过logger.info(), logger.warn()等。</p>
-<p><strong>Appender</strong>: Appender组件负责接收Logger捕获的日志事件，并将这些日志事件输出到不同的目的地，如打印在控制台、输出到文件、邮件、日志服务器等。在Java的日志框架中，称之为Handler。</p>
-<p><strong>Layout</strong>: Layout组件负责在Appender输出到目的地之前对日志进行格式化，如格式化成 Json、XML、HTML、普通文本等形式。在 Java 的日志框架中称之为 Formatter。</p>
-<p><strong>Filter</strong>：对日志事件进行过滤。</p>
-<h4 id="2-常见的Appender"><a href="#2-常见的Appender" class="headerlink" title="2. 常见的Appender"></a>2. 常见的Appender</h4><p>ConsoleAppender</p>
-<p>FileAppender</p>
-<p>RollingFileAppender</p>
-<p>DailyRollingFileAppender</p>
-<p>……</p>
-<h4 id="3-常用的Layout"><a href="#3-常用的Layout" class="headerlink" title="3. 常用的Layout"></a>3. 常用的Layout</h4><p>PatternLayout 通过ConversionPattern以占位符的形式进行格式化日志消息</p>
-<h4 id="4-日志的级别"><a href="#4-日志的级别" class="headerlink" title="4. 日志的级别"></a>4. 日志的级别</h4><h4 id="5-Logger的Hierarchy-层级"><a href="#5-Logger的Hierarchy-层级" class="headerlink" title="5. Logger的Hierarchy(层级)"></a>5. Logger的Hierarchy(层级)</h4><p>Logger是有层级的，在初始化时，log4j就会生成一个根Logger对象，名字为<code>root</code>, 当在程序中调用：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Logger rootLogger1 = Logger.getLogger();</span><br><span class="line"><span class="comment">// 或者是通过名字调用</span></span><br><span class="line">Logger rootLogger2 = Logger.getLoger(<span class="string">"root"</span>)</span><br></pre></td></tr></table></figure>
-
-<p>得到同一个根Logger对象，之后，在程序中定义的所有Logger对象都属于根Logger对象的子Logger，通过 <code>subLogger.getParent（）</code> 可以获取其父Logger对象。但这种层级不仅仅是两层，可能是多层，如下定义的Logger对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Logger logger1 = Logger.getLogger(<span class="string">"com"</span>); </span><br><span class="line">Logger logger2 = Logger.getLogger(<span class="string">"com.candy"</span>);</span><br><span class="line">Logger logger3 = Logger.getLogger(<span class="string">"com.candy.service"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>log4j通过点来定义层级，所以上面的三个Logger对象的层级关系如下图所示：</p>
-<p><img src="E:%5Cmd_pics%5ClogHierarchy.jpg" alt="logHierarchy"></p>
-<p>每一个下层的Logger对象的上层都是它的祖先Logger对象，当调用getParent方法时得到其直接父Logger对象，如 logger2.getParent（）得到logger1对象。</p>
-<h5 id="5-1-Logger日志级别继承"><a href="#5-1-Logger日志级别继承" class="headerlink" title="5.1 Logger日志级别继承"></a>5.1 Logger日志级别继承</h5><p>每一个Logger对象都可以设置一个默认日志信息级别，要打印的日志级别大于这个默认的级别才会被Appender处理。如果没有显示设置这个默认级别（配置文件和程序中都没有设置），那么在进行判断时，会调用其父Logger的日志级别，如果直接父Logger对象也没有设置，继续向上找到某一个祖先Logger对象，并且其默认的日志级别不为空。也就间接起到了继承祖先Logger的日志级别。</p>
-<h5 id="5-2-Appender继承"><a href="#5-2-Appender继承" class="headerlink" title="5.2 Appender继承"></a>5.2 Appender继承</h5><p>默认情况下，每一个处于Logger中间层级的Logger对象，==会继承其所有祖先Logger对象定义的所有Appenders==， 假设上述的4个Logger对象，每一个Logger对象都定义了一个ConsoleAppender（输出到控制台），logger3的默认日志级别设置为INFO时，<code>logger3.info(&quot;message&quot;)</code> 会在控制台打印出4条message，这是因为它继承了每一个祖先Logger对象的Appender（com.candy, com, root）, 再加上原本定义的一个Appender, 一共有4个ConsoleAppender，所以会在控制台打印出4条。</p>
-<p>这就相当于对于这个子Logger对象，为其定义了4个ConsoleAppender, 这些Appender与其祖先的日志默认级别不再有关系，只要是满足子Logger对象的默认级别的，就会交由这4个ConsoleAppender处理。当然，每个Appender也可以通过设置<code>Threshold</code>来指定该Appender要处理的最低日志级别。</p>
-<p><strong>设置不继承其父Logger对象的Appenders</strong></p>
-<p>如果不想继承其祖先Logger对象的Appenders, 可以通过设置配置文件<code>log4j.additivity.loggername=false</code> 或者程序中<code>logger.setAdditivity(false)</code> 来关闭这种继承。这样，这个Logger对象的日志信息只会在它自己定义的Appender中输出了。</p>
-<p><strong>其实，要理解这种继承，直接去看源码会比较清晰的看到具体的处理过程是怎么样的！！！</strong></p>
-<p>log4j 配置文件及相关注释</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义日志目录变量，引用使用 $&#123;logdir&#125;</span></span><br><span class="line"><span class="comment"># logdir=directory.of.log</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### set log levels ###</span></span><br><span class="line"><span class="meta">log4j.rootLogger</span>= <span class="string">DEBUG,stdout,D</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出到控制台 ###</span></span><br><span class="line"><span class="meta">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.Target</span>=<span class="string">System.out</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%c - %m%n</span></span><br><span class="line"><span class="comment">#log4j.appender.stdout.layout.ConversionPattern=%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%X&#123;user&#125;] [%-5p] %c - %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># %X&#123;key&#125; MDC 属性获取</span></span><br><span class="line"><span class="comment"># %c logger name</span></span><br><span class="line"><span class="comment"># %C 类的全路径</span></span><br><span class="line"><span class="comment"># %-5p 长度最小5位，左对齐</span></span><br><span class="line"><span class="comment"># %M method 方法名</span></span><br><span class="line"><span class="comment"># %m message 日志消息</span></span><br><span class="line"><span class="comment"># %n 换行</span></span><br><span class="line"><span class="comment"># %F 所属的文件</span></span><br><span class="line"><span class="comment"># %l 相当于 %C.%M(%F:%L),如 log.demo.basic.BasicLog4JDemo.logForComponents(BasicLog4JDemo.java:78)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出到日志文件 ###</span></span><br><span class="line"><span class="meta">log4j.appender.D</span>=<span class="string">org.apache.log4j.DailyRollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.D.File</span>=<span class="string">logs/log.log</span></span><br><span class="line"><span class="meta">log4j.appender.D.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.D.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.D.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.D.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 控制何时进行日志rolling以及开始新的日志文件</span></span><br><span class="line"><span class="meta">log4j.appender.D.DatePattern</span>=<span class="string">'.' yyyy-MM-dd	</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># RollingFileAppender 配置</span></span><br><span class="line"><span class="comment"># log4j.appender.D.MaxFileSize=1KB</span></span><br><span class="line"><span class="comment"># log4j.appender.D.MaxBackupIndex=2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为name为service的logger设置日志级别及appender</span></span><br><span class="line"><span class="meta">log4j.logger.service</span>=<span class="string">INFO,S</span></span><br><span class="line"><span class="meta">log4j.appender.S</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.S.File</span>=<span class="string">logs/service.log</span></span><br><span class="line"><span class="meta">log4j.appender.S.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.S.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.S.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.S.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.S.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.S.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为name为viewer的logger设置日志级别及appender</span></span><br><span class="line"><span class="meta">log4j.logger.viewer</span>=<span class="string">INFO,V</span></span><br><span class="line"><span class="meta">log4j.appender.V</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.V.File</span>=<span class="string">logs/viewer.log</span></span><br><span class="line"><span class="meta">log4j.appender.V.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.V.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 最终是否在祖先Logger的appender中输出主要取决于祖先Logger对象的某个appender的Threshold设置的日志级别</span></span><br><span class="line"><span class="meta">log4j.appender.V.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.V.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.V.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.V.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="6-捕获异常日志"><a href="#6-捕获异常日志" class="headerlink" title="6. 捕获异常日志"></a>6. 捕获异常日志</h4><p>在日志打印的过程中，如果程序中发生了异常，并且对异常进行了捕获，在进行异常日志打印的时候，是可以传入一个Throwable对象的, 日志在进行记录的时候也会打印栈跟踪信息：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Log a message object with the ERROR level including</span></span><br><span class="line"><span class="comment">   * the stack trace of the &#123;<span class="doctag">@link</span> Throwable&#125; t passed *    * as parameter.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">error</span><span class="params">(Object message, Throwable t)</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="7-未捕获异常日志"><a href="#7-未捕获异常日志" class="headerlink" title="7. 未捕获异常日志"></a>7. 未捕获异常日志</h4><p>如果没有进行捕获，又想要将异常的堆栈信息保留在日志文件里，Thread类中有两个方法，我们可以用它来为未捕获的异常指定一个处理（<code>ExceptionHandler</code>）, 通过 setDefaultUncaughtExceptionHandler 可以让你在任何线程上处理任何异常。setUncaughtExceptionHandler可以让你针对一个指定的线程设定一个不同的处理方法。而ThreadGroup则允许你设定一个处理方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 为未捕获的异常记录异常信息、栈跟踪信息 */</span></span><br><span class="line">Thread.setDefaultUncaughtExceptionHandler(<span class="keyword">new</span> Thread.UncaughtExceptionHandler() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t, Throwable e)</span> </span>&#123;</span><br><span class="line">                Logger.getLogger(BasicLog4JDemo.class).log(Priority.FATAL, t + "                       An exception occured: ", e);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="8-参考文件"><a href="#8-参考文件" class="headerlink" title="8. 参考文件"></a>8. 参考文件</h4><p>【1】<a href="http://www.importnew.com/16331.html" target="_blank" rel="noopener">http://www.importnew.com/16331.html</a></p>
-<p>【2】<a href="http://www.loggly.com/ultimate-guide/logging/java-logging-basics/" target="_blank" rel="noopener">http://www.loggly.com/ultimate-guide/logging/java-logging-basics/</a></p>
-<p>【3】<a href="http://tutorials.jenkov.com/java-logging/logger-hierarchy.html" target="_blank" rel="noopener">http://tutorials.jenkov.com/java-logging/logger-hierarchy.html</a></p>
-<p>【4】<a href="https://www.tutorialspoint.com/log4j/log4j_useful_resources.htm" target="_blank" rel="noopener">https://www.tutorialspoint.com/log4j/log4j_useful_resources.htm</a></p>
-<p>【5】<a href="https://blog.csdn.net/azheng270/article/details/2173430/" target="_blank" rel="noopener">https://blog.csdn.net/azheng270/article/details/2173430/</a></p>
 
                 
             </div>
