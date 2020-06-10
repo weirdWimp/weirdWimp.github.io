@@ -84,6 +84,91 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">配置网络与SSH</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>[TOC]</p>
+<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>vmware 桥接模式下：</p>
+<p>各种网络模式参考 <a href="https://www.linuxidc.com/Linux/2016-09/135521.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-09/135521.htm</a></p>
+<p>/etc/sysconfig/network-scripts 下一般会有一个网络配置文件，如：ifcfg-eno16777736</p>
+<p>修改该文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet          </span><br><span class="line">BOOTPROTO=static          <span class="comment">#静态IP地址配置</span></span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_PEERDNS=yes</span><br><span class="line">IPV6_PEERROUTES=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">NAME=eno16777736</span><br><span class="line">UUID=7617ff93-0c8f-4272-a28e-ac8cf0807026</span><br><span class="line">DEVICE=eno16777736</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.2.110        <span class="comment">#虚拟机的话，与主机同一网段</span></span><br><span class="line">NETMASK=255.255.255.0       <span class="comment">#子网掩码</span></span><br><span class="line">GATEWAY=192.168.2.1         <span class="comment">#网关</span></span><br><span class="line">DNS1=192.168.2.1            <span class="comment">#DNS</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/network restart</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h4 id="CentOS中修改主机名"><a href="#CentOS中修改主机名" class="headerlink" title="CentOS中修改主机名"></a>CentOS中修改主机名</h4><h5 id="CentOS-6"><a href="#CentOS-6" class="headerlink" title="CentOS 6"></a>CentOS 6</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos6 ~]$ hostname                                              <span class="comment"># 查看当前的hostnmae</span></span><br><span class="line">centos6.magedu.com</span><br><span class="line">[root@centos6 ~]$ vim /etc/sysconfig/network                            <span class="comment"># 编辑network文件修改hostname行（重启生效）</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/sysconfig/network                            <span class="comment"># 检查修改</span></span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=centos66.magedu.com</span><br><span class="line">[root@centos6 ~]$ hostname centos66.magedu.com                          <span class="comment"># 设置当前的hostname(立即生效）</span></span><br><span class="line">[root@centos6 ~]$ vim /etc/hosts                                        <span class="comment"># 编辑hosts文件，给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/hosts                                        <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4 centos66.magedu.com</span><br><span class="line">::1 localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>centos6以及其他有些发行版本，主机名的配置文件是<code>/etc/sysconfig/network</code>, 用 <code>hostname newname</code> 也只是暂时生效，修改了内核的值，重启丢失。 所以可以结合临时加修改配置文件这种方式修改主机名。</p>
+<h5 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]$ hostnamectl <span class="built_in">set</span>-hostname centos77.magedu.com       <span class="comment"># 使用这个命令会立即生效且重启也生效</span></span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ hostname  <span class="comment"># 查看下</span></span><br><span class="line">centos77.magedu.com</span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ vim /etc/hosts   <span class="comment"># 编辑下hosts文件， 给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos7 ~]$ cat /etc/hosts                                           <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 centos77.magedu.com</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>在centos7中，主机名的配置文件为 /etc/hostname, 在该文件中配置了新的主机名后，不会立即生效，需要重启进行生效；因为系统内核已经中的主机名还没有更新，还是旧的指。 可以使用修改CentOS6的策略，也可以通过 <code>hostnamectl set-hostname newname</code> 来更改主机名，内核和配置文件中的主机名都被更新了，不用重启。</p>
+<p>至于<code>/etc/hosts</code> 文件，同Windows下的hosts文件一样，只是起到本地DNS的作用一样，路由的作用。或者也可以说起别名。</p>
+<h4 id="SSH-服务配置"><a href="#SSH-服务配置" class="headerlink" title="SSH 服务配置"></a>SSH 服务配置</h4><p>首先查看是否有安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list installed | grep openssh-server</span><br></pre></td></tr></table></figure>
+
+<p>没有安装的话，用yum进行安装 <code>yum install openssh-server</code></p>
+<p>SSH 服务的配置文件是 /etc/ssh/sshd_config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">ListenAddress ::</span><br><span class="line"></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<p>重启或开启SSH服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service   <span class="comment">#自启动服务</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum instatll net-tools –y    <span class="comment">#如果没有netstat服务，安装netstat工具</span></span><br><span class="line"></span><br><span class="line">netstat -an | grep 22</span><br></pre></td></tr></table></figure>
+
+
+
+<p>必要时关闭防火墙或开放22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key </p>
+<h4 id="RPM"><a href="#RPM" class="headerlink" title="RPM"></a>RPM</h4><p><a href="https://www.cnblogs.com/zengkefu/p/5666947.html" target="_blank" rel="noopener">https://www.cnblogs.com/zengkefu/p/5666947.html</a></p>
+<p>ntpdate cn.pool.ntp.org</p>
+<p>\1.  安装ntpdate工具</p>
+<p> # yum -y install ntp ntpdate</p>
+<p> \2.  设置系统时间与网络时间同步</p>
+<p> # ntpdate cn.pool.ntp.org</p>
+<p> \3.  将系统时间写入硬件时间</p>
+<p> # hwclock –systohc</p>
+<p> 4.强制系统时间写入CMOS中防止重启失效</p>
+<p> 　　hwclock -w<br> 　　或clock -w</p>
+<p>本文来自 紫漪 的CSDN 博客 ，全文地址请点击：<a href="https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy" target="_blank" rel="noopener">https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy</a> </p>
+<p>sudo passwd root 更改密码，要在root用户下</p>
+<p>sudo su - root</p>
+<p>apt list –installed|grep jdk java</p>
+<p>/opt/zookeeper-3.4.6/bin/zkServer.sh start</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.9.0.1/config/server.properties</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
+<p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
             </div>
             <div class="post-meta">
@@ -430,7 +515,80 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
+                <h2><a class="post-title-link" href="/Java/%E6%97%A5%E5%BF%97/log4j/">log4j</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="log4j"><a href="#log4j" class="headerlink" title="log4j"></a>log4j</h2><p>[TOC]</p>
+<h4 id="1-日志框架的基本组件"><a href="#1-日志框架的基本组件" class="headerlink" title="1. 日志框架的基本组件"></a>1. 日志框架的基本组件</h4><p>无论是JDK还是log4j（版本1）提供的日志框架，都主要包含以下组件：</p>
+<p><img src="C:%5CUsers%5Cguo%5CDesktop%5Clog.jpg" alt="log"></p>
+<p><strong>Logger</strong>：在程序中创建于实例化，负责日志信息的捕获与记录，在log4j中，如 Logger.getLogger(“service”), 会创建一个name为service的logger对象，如果LoggerManager已经发现有了这样一个为service的logger，直接返回在LoggerManager中管理的logger对象。logger对象用于不同级别的日志信息捕获，通过logger.info(), logger.warn()等。</p>
+<p><strong>Appender</strong>: Appender组件负责接收Logger捕获的日志事件，并将这些日志事件输出到不同的目的地，如打印在控制台、输出到文件、邮件、日志服务器等。在Java的日志框架中，称之为Handler。</p>
+<p><strong>Layout</strong>: Layout组件负责在Appender输出到目的地之前对日志进行格式化，如格式化成 Json、XML、HTML、普通文本等形式。在 Java 的日志框架中称之为 Formatter。</p>
+<p><strong>Filter</strong>：对日志事件进行过滤。</p>
+<h4 id="2-常见的Appender"><a href="#2-常见的Appender" class="headerlink" title="2. 常见的Appender"></a>2. 常见的Appender</h4><p>ConsoleAppender</p>
+<p>FileAppender</p>
+<p>RollingFileAppender</p>
+<p>DailyRollingFileAppender</p>
+<p>……</p>
+<h4 id="3-常用的Layout"><a href="#3-常用的Layout" class="headerlink" title="3. 常用的Layout"></a>3. 常用的Layout</h4><p>PatternLayout 通过ConversionPattern以占位符的形式进行格式化日志消息</p>
+<h4 id="4-日志的级别"><a href="#4-日志的级别" class="headerlink" title="4. 日志的级别"></a>4. 日志的级别</h4><h4 id="5-Logger的Hierarchy-层级"><a href="#5-Logger的Hierarchy-层级" class="headerlink" title="5. Logger的Hierarchy(层级)"></a>5. Logger的Hierarchy(层级)</h4><p>Logger是有层级的，在初始化时，log4j就会生成一个根Logger对象，名字为<code>root</code>, 当在程序中调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Logger rootLogger1 = Logger.getLogger();</span><br><span class="line"><span class="comment">// 或者是通过名字调用</span></span><br><span class="line">Logger rootLogger2 = Logger.getLoger(<span class="string">"root"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>得到同一个根Logger对象，之后，在程序中定义的所有Logger对象都属于根Logger对象的子Logger，通过 <code>subLogger.getParent（）</code> 可以获取其父Logger对象。但这种层级不仅仅是两层，可能是多层，如下定义的Logger对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Logger logger1 = Logger.getLogger(<span class="string">"com"</span>); </span><br><span class="line">Logger logger2 = Logger.getLogger(<span class="string">"com.candy"</span>);</span><br><span class="line">Logger logger3 = Logger.getLogger(<span class="string">"com.candy.service"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>log4j通过点来定义层级，所以上面的三个Logger对象的层级关系如下图所示：</p>
+<p><img src="E:%5Cmd_pics%5ClogHierarchy.jpg" alt="logHierarchy"></p>
+<p>每一个下层的Logger对象的上层都是它的祖先Logger对象，当调用getParent方法时得到其直接父Logger对象，如 logger2.getParent（）得到logger1对象。</p>
+<h5 id="5-1-Logger日志级别继承"><a href="#5-1-Logger日志级别继承" class="headerlink" title="5.1 Logger日志级别继承"></a>5.1 Logger日志级别继承</h5><p>每一个Logger对象都可以设置一个默认日志信息级别，要打印的日志级别大于这个默认的级别才会被Appender处理。如果没有显示设置这个默认级别（配置文件和程序中都没有设置），那么在进行判断时，会调用其父Logger的日志级别，如果直接父Logger对象也没有设置，继续向上找到某一个祖先Logger对象，并且其默认的日志级别不为空。也就间接起到了继承祖先Logger的日志级别。</p>
+<h5 id="5-2-Appender继承"><a href="#5-2-Appender继承" class="headerlink" title="5.2 Appender继承"></a>5.2 Appender继承</h5><p>默认情况下，每一个处于Logger中间层级的Logger对象，==会继承其所有祖先Logger对象定义的所有Appenders==， 假设上述的4个Logger对象，每一个Logger对象都定义了一个ConsoleAppender（输出到控制台），logger3的默认日志级别设置为INFO时，<code>logger3.info(&quot;message&quot;)</code> 会在控制台打印出4条message，这是因为它继承了每一个祖先Logger对象的Appender（com.candy, com, root）, 再加上原本定义的一个Appender, 一共有4个ConsoleAppender，所以会在控制台打印出4条。</p>
+<p>这就相当于对于这个子Logger对象，为其定义了4个ConsoleAppender, 这些Appender与其祖先的日志默认级别不再有关系，只要是满足子Logger对象的默认级别的，就会交由这4个ConsoleAppender处理。当然，每个Appender也可以通过设置<code>Threshold</code>来指定该Appender要处理的最低日志级别。</p>
+<p><strong>设置不继承其父Logger对象的Appenders</strong></p>
+<p>如果不想继承其祖先Logger对象的Appenders, 可以通过设置配置文件<code>log4j.additivity.loggername=false</code> 或者程序中<code>logger.setAdditivity(false)</code> 来关闭这种继承。这样，这个Logger对象的日志信息只会在它自己定义的Appender中输出了。</p>
+<p><strong>其实，要理解这种继承，直接去看源码会比较清晰的看到具体的处理过程是怎么样的！！！</strong></p>
+<p>log4j 配置文件及相关注释</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义日志目录变量，引用使用 $&#123;logdir&#125;</span></span><br><span class="line"><span class="comment"># logdir=directory.of.log</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### set log levels ###</span></span><br><span class="line"><span class="meta">log4j.rootLogger</span>= <span class="string">DEBUG,stdout,D</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出到控制台 ###</span></span><br><span class="line"><span class="meta">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.Target</span>=<span class="string">System.out</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.Threshold</span>=<span class="string">DEBUG</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%c - %m%n</span></span><br><span class="line"><span class="comment">#log4j.appender.stdout.layout.ConversionPattern=%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%X&#123;user&#125;] [%-5p] %c - %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># %X&#123;key&#125; MDC 属性获取</span></span><br><span class="line"><span class="comment"># %c logger name</span></span><br><span class="line"><span class="comment"># %C 类的全路径</span></span><br><span class="line"><span class="comment"># %-5p 长度最小5位，左对齐</span></span><br><span class="line"><span class="comment"># %M method 方法名</span></span><br><span class="line"><span class="comment"># %m message 日志消息</span></span><br><span class="line"><span class="comment"># %n 换行</span></span><br><span class="line"><span class="comment"># %F 所属的文件</span></span><br><span class="line"><span class="comment"># %l 相当于 %C.%M(%F:%L),如 log.demo.basic.BasicLog4JDemo.logForComponents(BasicLog4JDemo.java:78)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 输出到日志文件 ###</span></span><br><span class="line"><span class="meta">log4j.appender.D</span>=<span class="string">org.apache.log4j.DailyRollingFileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.D.File</span>=<span class="string">logs/log.log</span></span><br><span class="line"><span class="meta">log4j.appender.D.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.D.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.D.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.D.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 控制何时进行日志rolling以及开始新的日志文件</span></span><br><span class="line"><span class="meta">log4j.appender.D.DatePattern</span>=<span class="string">'.' yyyy-MM-dd	</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.D.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># RollingFileAppender 配置</span></span><br><span class="line"><span class="comment"># log4j.appender.D.MaxFileSize=1KB</span></span><br><span class="line"><span class="comment"># log4j.appender.D.MaxBackupIndex=2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为name为service的logger设置日志级别及appender</span></span><br><span class="line"><span class="meta">log4j.logger.service</span>=<span class="string">INFO,S</span></span><br><span class="line"><span class="meta">log4j.appender.S</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.S.File</span>=<span class="string">logs/service.log</span></span><br><span class="line"><span class="meta">log4j.appender.S.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.S.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.S.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.S.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.S.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.S.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为name为viewer的logger设置日志级别及appender</span></span><br><span class="line"><span class="meta">log4j.logger.viewer</span>=<span class="string">INFO,V</span></span><br><span class="line"><span class="meta">log4j.appender.V</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.V.File</span>=<span class="string">logs/viewer.log</span></span><br><span class="line"><span class="meta">log4j.appender.V.Encoding</span>=<span class="string">UTF-8</span></span><br><span class="line"><span class="meta">log4j.appender.V.Append</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 最终是否在祖先Logger的appender中输出主要取决于祖先Logger对象的某个appender的Threshold设置的日志级别</span></span><br><span class="line"><span class="meta">log4j.appender.V.Threshold</span>=<span class="string">INFO</span></span><br><span class="line"><span class="meta">log4j.appender.V.ImmediateFlush</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">log4j.appender.V.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.V.layout.ConversionPattern</span>=<span class="string">%-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%-5p] %m%n</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="6-捕获异常日志"><a href="#6-捕获异常日志" class="headerlink" title="6. 捕获异常日志"></a>6. 捕获异常日志</h4><p>在日志打印的过程中，如果程序中发生了异常，并且对异常进行了捕获，在进行异常日志打印的时候，是可以传入一个Throwable对象的, 日志在进行记录的时候也会打印栈跟踪信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Log a message object with the ERROR level including</span></span><br><span class="line"><span class="comment">   * the stack trace of the &#123;<span class="doctag">@link</span> Throwable&#125; t passed *    * as parameter.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">error</span><span class="params">(Object message, Throwable t)</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-未捕获异常日志"><a href="#7-未捕获异常日志" class="headerlink" title="7. 未捕获异常日志"></a>7. 未捕获异常日志</h4><p>如果没有进行捕获，又想要将异常的堆栈信息保留在日志文件里，Thread类中有两个方法，我们可以用它来为未捕获的异常指定一个处理（<code>ExceptionHandler</code>）, 通过 setDefaultUncaughtExceptionHandler 可以让你在任何线程上处理任何异常。setUncaughtExceptionHandler可以让你针对一个指定的线程设定一个不同的处理方法。而ThreadGroup则允许你设定一个处理方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 为未捕获的异常记录异常信息、栈跟踪信息 */</span></span><br><span class="line">Thread.setDefaultUncaughtExceptionHandler(<span class="keyword">new</span> Thread.UncaughtExceptionHandler() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t, Throwable e)</span> </span>&#123;</span><br><span class="line">                Logger.getLogger(BasicLog4JDemo.class).log(Priority.FATAL, t + "                       An exception occured: ", e);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="8-参考文件"><a href="#8-参考文件" class="headerlink" title="8. 参考文件"></a>8. 参考文件</h4><p>【1】<a href="http://www.importnew.com/16331.html" target="_blank" rel="noopener">http://www.importnew.com/16331.html</a></p>
+<p>【2】<a href="http://www.loggly.com/ultimate-guide/logging/java-logging-basics/" target="_blank" rel="noopener">http://www.loggly.com/ultimate-guide/logging/java-logging-basics/</a></p>
+<p>【3】<a href="http://tutorials.jenkov.com/java-logging/logger-hierarchy.html" target="_blank" rel="noopener">http://tutorials.jenkov.com/java-logging/logger-hierarchy.html</a></p>
+<p>【4】<a href="https://www.tutorialspoint.com/log4j/log4j_useful_resources.htm" target="_blank" rel="noopener">https://www.tutorialspoint.com/log4j/log4j_useful_resources.htm</a></p>
+<p>【5】<a href="https://blog.csdn.net/azheng270/article/details/2173430/" target="_blank" rel="noopener">https://blog.csdn.net/azheng270/article/details/2173430/</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E9%97%AE%E9%A2%98/">问题</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -444,24 +602,12 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
-<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+                    <h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><p>1 ~/.bashrc ~/.profile /etc/bashrc /etc/profile<br>当通过Xshell连接时（SSH）或 <code>ssh ip</code> 时，会依次执行： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 登陆shell？</span></span><br><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /etc/profile</span></span><br><span class="line"><span class="comment"># This is /home/root/.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/root/.profile</span></span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>利用 <code>rename</code> 命令</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
+<p> 当通过 su 切换用户时，会执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/guo/.bashrc</span></span><br></pre></td></tr></table></figure>
 
-<ol start="3">
-<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>清理工作</li>
-</ol>
 
                 
             </div>
@@ -487,155 +633,6 @@
 <p>Ctrl + w：删除光标前面的单词。</p>
 <p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
 <p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/">文本处理</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="让文本飞"><a href="#让文本飞" class="headerlink" title="让文本飞"></a>让文本飞</h1><p>vim 中显示行号</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/vim/vimrc </span><br><span class="line"><span class="built_in">set</span> number</span><br><span class="line"><span class="built_in">set</span> nonumber</span><br></pre></td></tr></table></figure>
-
-
-
-<p>提示符</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">59 <span class="keyword">if</span> [ <span class="string">"<span class="variable">$color_prompt</span>"</span> = yes ]; <span class="keyword">then</span></span><br><span class="line">60     PS1=<span class="string">'$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '</span></span><br><span class="line">61 <span class="keyword">else</span></span><br><span class="line">62     PS1=<span class="string">'$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ '</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">force_color_prompt=yes</span><br></pre></td></tr></table></figure>
-
-
-
-<p>反转字符串</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reverse</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Hello World"</span> | rev</span><br></pre></td></tr></table></figure>
-
-
-
-<p>字符串比较相等</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 等号两边的空格一定不能省略</span></span><br><span class="line">[ <span class="variable">$var1</span> = <span class="variable">$var2</span> ]</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="1-压缩-删除-多余的空行"><a href="#1-压缩-删除-多余的空行" class="headerlink" title="1 压缩(删除)多余的空行"></a>1 压缩(删除)多余的空行</h4><ul>
-<li>使用 <code>tr</code> 转换</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tr -s for --squeeze-repeats</span></span><br><span class="line">cat text.txt | tr -s <span class="string">'\n'</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用 <code>sed</code> 转换</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sed 默认一次只处理一行（涉及sed的处理方式，hold space），是以 \n 作为行分隔符的，但是提供的一个 option -z， 以 NUL 字符作为行分隔符来解析</span></span><br><span class="line"></span><br><span class="line">sed -zr <span class="string">'s/\n&#123;2,&#125;/\n/g'</span> text.txt</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>sed</code> 的另一种用法</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">'/^$/d'</span> text.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="2-计算连续数字的加法"><a href="#2-计算连续数字的加法" class="headerlink" title="2 计算连续数字的加法"></a>2 计算连续数字的加法</h4><ul>
-<li>使用 <code>tr</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seq 1 10 | <span class="built_in">echo</span> $[ $(tr <span class="string">'\n'</span> <span class="string">'+'</span>) 0 ]</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="3-进入指定目录"><a href="#3-进入指定目录" class="headerlink" title="3 进入指定目录"></a>3 进入指定目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 函数 return 为函数的返回，exit 为 shell 的结束</span></span><br><span class="line"><span class="keyword">function</span> to() </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> [ <span class="variable">$#</span> -ne 1 ];</span><br><span class="line">	<span class="keyword">then</span> </span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"Useage is: <span class="variable">$0</span> argument"</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"avaliable arguments can be znrt, zgrt, szrt"</span></span><br><span class="line">		<span class="built_in">return</span> -1</span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line">	target=`<span class="built_in">echo</span> -e <span class="variable">$1</span> | tr <span class="string">'[a-z]'</span> <span class="string">'[A-Z]'</span>`</span><br><span class="line">	basePath=/opt</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="variable">$target</span> <span class="keyword">in</span></span><br><span class="line">		<span class="string">"ZNRT"</span>) <span class="built_in">cd</span> <span class="string">"<span class="variable">$basePath</span>/<span class="variable">$target</span>"</span> &amp;&amp; <span class="built_in">pwd</span>;;</span><br><span class="line">		<span class="string">"ZGRT"</span>) <span class="built_in">cd</span> <span class="string">"<span class="variable">$basePath</span>/<span class="variable">$target</span>"</span> &amp;&amp; <span class="built_in">pwd</span>;;</span><br><span class="line">		<span class="string">"SZRT"</span>) <span class="built_in">cd</span> <span class="string">"<span class="variable">$basePath</span>/<span class="variable">$target</span>"</span> &amp;&amp; <span class="built_in">pwd</span>;;</span><br><span class="line">		*) <span class="built_in">echo</span> <span class="string">"invalid argument"</span>;;</span><br><span class="line">	<span class="keyword">esac</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>查找出最近一个小时目录内有修改过的文件</p>
-<p>modified.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find <span class="string">"/mnt/d/Markdown 文档"</span> -<span class="built_in">type</span> f -mmin -60 |</span><br><span class="line"> awk <span class="string">'BEGIN &#123; "date"| getline; print $0 &#125; &#123; print "modified:"$0 &#125; END &#123; print "\n" &#125;'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>备份：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># copy source to target</span></span><br><span class="line">baseDir=<span class="string">"/mnt/e/SoftConfigBackup"</span></span><br><span class="line">awk -F<span class="string">"="</span> <span class="string">'!/^\s*#/  \</span></span><br><span class="line"><span class="string">&#123; cmd0=bd"/modified.sh "$1" &gt;&gt; modified.log"; \</span></span><br><span class="line"><span class="string">system(cmd0); \</span></span><br><span class="line"><span class="string">targetDir=bd"/"$2; \</span></span><br><span class="line"><span class="string">cmd1="mkdir -p "targetDir; \</span></span><br><span class="line"><span class="string">cmd2="cp -r " $1 " " targetDir; \</span></span><br><span class="line"><span class="string">system(cmd1); \</span></span><br><span class="line"><span class="string">system(cmd2) &#125;'</span> \</span><br><span class="line">bd=<span class="variable">$baseDir</span> <span class="string">"<span class="variable">$baseDir</span>/backup.properties"</span></span><br></pre></td></tr></table></figure>
-
-<p>备份配置文件：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># software-config-dir=target-dit-name</span></span><br><span class="line"><span class="meta">/mnt/c/Users/guo/AppData/Roaming/Typora/themes</span>=<span class="string">Typora</span></span><br><span class="line"><span class="meta">/mnt/c/Users/guo/Desktop</span>=<span class="string">Desktop</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="WSL-服务开机自启"><a href="#WSL-服务开机自启" class="headerlink" title="WSL 服务开机自启"></a>WSL 服务开机自启</h4><p>startup 设置 vbs 脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Set ws = CreateObject(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
-
-
-
-<p> /etc/init.wsl</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
-
-
-
-<p>/etc/sudoers</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%sudo ALL=NOPASSWD: /etc/init.wsl</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ls%20Invalid%20option/">ls Invalid option</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="ls-invalid-option-–-‘j’"><a href="#ls-invalid-option-–-‘j’" class="headerlink" title="ls: invalid option – ‘j’"></a>ls: invalid option – ‘j’</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line"></span><br><span class="line">0n5whdeZ0ow-download.jpg  A-McbCSin6w-download.jpg  G1vKK6L7Ep0-download.jpg .....</span><br><span class="line">-jGGcAqIBms-download.jpg  -pahtnAMuFo-download.jpg </span><br><span class="line"></span><br><span class="line">$ ls *.jpg</span><br><span class="line">ls: invalid option -- <span class="string">'j'</span></span><br><span class="line">Try <span class="string">'ls --help'</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
-
-<p>这个简单的命令执行失败了，期望 shell 扩展 <code>*</code> 找出所有 jpg 图像，也没有传入 <code>-j</code> 作为 option 选项，很是奇怪，通过 bing 找到了答案，百度真的是不适合程序员…..</p>
-<p>StackExchange <a href="https://superuser.com/questions/1300382/ls-pdf-complains-ls-invalid-option" target="_blank" rel="noopener">ls invalid option</a> 中的问题类似，原因是有个图像文件开头是 <code>-</code> （-jGGcAqIBms-download.jpg），被当作 ls 的 option 选项了….</p>
-<p>man bash</p>
-<blockquote>
-<p>A <code>--</code> signals the end of options and disables further option processing. Any arguments after the – are treated as file‐ names and arguments. An argument of - is equivalent to –.</p>
-</blockquote>
-<p>解决上述问题的办法：</p>
-<ol>
-<li>使用 <code>--</code> </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -- *.jpg</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>生产脚本使用 find + xargs，更保险</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -name选项指定了待查找文件名的模式。这个模式可以是通配符，也可以是正则表达式</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">'*.jpg'</span> -print0 | xargs -0 -n 1 <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>修改文件名，避免此种情况发生</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
-
 
                 
             </div>
