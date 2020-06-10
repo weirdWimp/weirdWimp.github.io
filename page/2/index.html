@@ -266,28 +266,100 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <ol>
-<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
-<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
-</li>
-<li><p>如果没有推送到远程库呢？</p>
-<p>这时 git commit –amend 应该是可以的</p>
-</li>
-</ol>
+                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
+<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
+<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
+</blockquote>
+<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
+<blockquote>
+<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
+<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
+<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>匹配任何单字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0或者任意数量的字符</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配0或者更多的目录</td>
+</tr>
+</tbody></table>
+<p>Table Example Ant-Style Path Patterns</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/app/*.x</td>
+<td>匹配(Matches)所有在app路径下的.x文件</td>
+</tr>
+<tr>
+<td>/app/p?ttern</td>
+<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
+</tr>
+<tr>
+<td>/**/example</td>
+<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
+</tr>
+<tr>
+<td>/app/**/dir/file.</td>
+<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
+</tr>
+<tr>
+<td>/<em>*/</em>.jsp</td>
+<td>匹配(Matches)任何的.jsp 文件</td>
+</tr>
+</tbody></table>
+<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 注意事项：</p>
+<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
+<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
