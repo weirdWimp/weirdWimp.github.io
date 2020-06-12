@@ -84,6 +84,101 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E4%B8%8D%E5%90%8C%E5%B7%A5%E5%85%B7%E7%9A%84%E5%85%83%E5%AD%97%E7%AC%A6%E6%94%AF%E6%8C%81/">不同工具的元字符支持</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="grep-P"><a href="#grep-P" class="headerlink" title="grep -P"></a><strong>grep -P</strong></h2><p>pattern is a Perl regular expression. Based on  PRCE. (兼容Perl的正则表达式包)</p>
+<ul>
+<li>八进制</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\012b'</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>十六进制<ul>
+<li><code>\xFF</code> </li>
+<li>\x{…}</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\x&#123;0A&#125;b'</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>元字符 <code>.</code> 不能匹配换行符, 其他 Unicode 换行符等可以匹配</li>
+<li><code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code>， java ， PHP 也是一样的, 但是 Perl 语言的正则引擎室支持 Unicode 字符（未验证）</li>
+</ul>
+<h2 id="grep-E-egrep"><a href="#grep-E-egrep" class="headerlink" title="grep -E / egrep"></a><strong>grep -E / egrep</strong></h2><ul>
+<li><p>不支持八进制、十六进制转义表示</p>
+</li>
+<li><p>元字符 <code>.</code> 可以匹配换行符(\n),  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
+</li>
+<li><p><code>\w</code> 可以匹配汉字</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'a严b'</span> | grep -z -E <span class="string">'a\wb'</span></span><br></pre></td></tr></table></figure>
+
+
+<p>对于字符组， 尤其是排除型字符组，都支持 <code>\n</code>, <code>\r</code>, Unicode 换行符，行分隔符，段分隔符都支持</p>
+<h2 id="Notepad"><a href="#Notepad" class="headerlink" title="Notepad++"></a>Notepad++</h2><p>Notepad++ 的 <code>匹配新行模式</code>， 应该是启用了 <code>点通配符模式 - dotALL（Perl中的单行模式）</code>, 以及 <code>多行模式 - 行锚点可以匹配行内的换行符前后的位置</code></p>
+<p>POSIX 规定，点号不能匹配 NUL (值为0的字符)， 具体工具可有有差异。</p>
+<p>grep: PCRE does not support \L, \l, \N{name}, \U, or \u</p>
+<p>PCRE(包括PHP)， java.util.regex <code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code></p>
+<h2 id="java-util-regex"><a href="#java-util-regex" class="headerlink" title="java.util.regex"></a>java.util.regex</h2><ul>
+<li><p>\w 严格等价于 [a-zA-Z0-9_]</p>
+</li>
+<li><p>\s 不匹配 Unicode 换行符</p>
+</li>
+<li><p>普通模式下 . 不能匹配 \n,  \r,  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
+</li>
+<li><p>字符组可以匹配换行符，包括 Unicode 的上述行终结符</p>
+</li>
+<li><p>支持字符组的计算 [[a-c]&amp;&amp;[a-z]]  [[a-c]OR[d-e]], 当然也可以使用环视来实现</p>
+</li>
+<li><p>多行模式下<code>(?:m)</code>，锚点可以匹配 Unicode 行终结符  Page.370 </p>
+</li>
+<li><p>$ 既可以匹配目标字符串的末尾，也可以匹配整个字符串末尾的换行符之前的位置 (这里的换行符也包括Unicode 的行终结符)</p>
+</li>
+<li><p>\Z 和普通模式下的 $ 的意义一样</p>
+</li>
+<li><p>\z 只匹配文本的末尾的位置</p>
+</li>
+<li><p>\A 总是与普通的 ^ 一样</p>
+</li>
+<li><p>\b 单词分界符 与 \B 非单词分界符对单词字符的定义仅限于 ASCII 字符，如果需要扩展，可以使用环视功能以及 Unicode 属性实现</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（?&lt;!\pL）(?=\pL)......(?&lt;=pL)(?!\pL)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>正则表达式中设定匹配模式，支持</p>
+<ul>
+<li><code>(?i)...(?-i)</code>, <code>(?i)</code> 开启模式，<code>(?-i)</code>关闭模式</li>
+<li><code>(?:(?i)very)</code>, <code>(?i)</code> 的作用范围只限于括号內部，闭括号后就失效</li>
+<li>支持模式修饰范围，<code>(?i:...)</code></li>
+</ul>
+</li>
+<li><p>文字文本模式（消除所有元字符的特殊含义进行匹配）, java.util.regex 的引擎支持 <code>\Q...\E</code> 序列，但是它只会消除除了 <code>\E</code> 之外的所有的元字符的特殊含义，直接在字符串两边加上，会有问题（原始字符串出现 <code>\E</code>， 会截断，只对前面的部分应用该模式）。请直接使用 <code>Pattern.quote</code> 方法或自己写一个处理方法。</p>
+</li>
+</ul>
+<p>Perl 中的锚点都不支持 Unicode 行终结符， 而 Java 的普通模式下的 <code>$</code> 以及多行模式下的 <code>^</code> 以及 <code>$</code> 都支持 Unicode 行终结符。</p>
+<p>基于 PCRE 的 grep -P  测试, 普通模式下，<code>$</code> 只匹配末尾，不匹配换行符之前的位置</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
             </div>
             <div class="post-meta">
@@ -108,78 +203,41 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Java%20Servlet/Cookie/">Cookie</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <ol>
-<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
-<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
+                    <p>Java Servlet 支持 HTTP Cookie</p>
+<ol>
+<li><p>Cookie 是 Server 验证 Client 身份的一种机制。 Client 发送请求到 Server 时， Server 会为该客户端生成一些信息，也就是 Cookie，用于标识该 Client，并将这些信息发送 Client （封装在 Response 的 Header 中）；</p>
 </li>
-<li><p>如果没有推送到远程库呢？</p>
-<p>这时 git commit –amend 应该是可以的</p>
+<li><p>Client 如浏览器（可以选择是否保存 Cookie），接受到相应的 Response，并且将 Cookie 信息保存在本地;</p>
+</li>
+<li><p>Client 下一次请求 Server 时，在请求的 Header 中带着这些 Cookie 信息， Server 验证这些 Cookie 信息，验证通过就可以返回给 Client 想要请求的内容了</p>
 </li>
 </ol>
+<p>Http Request Headers</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Request</span> <span class="string">Header</span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">host </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">localhost:8080 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">connection </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">keep-alive </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">upgrade-insecure-requests </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">1 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">user-agent </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-encoding </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">gzip, deflate, br </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-language </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">zh-CN,zh;q=0.9 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">cookie </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Idea-e3d08f0c=a1cdf13f-3a2b-46e0-bf43-088ffa6cb705; JSESSIONID=AE715BC860E044CA647A2C2D7A10B5E7 </span></span><br><span class="line">========================</span><br></pre></td></tr></table></figure>
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/">提交历史</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>$ git rebase origin/master<br>First, rewinding head to replay your work on top of it…<br>Applying: second add from local<br>error: Failed to merge in the changes.<br>Using index info to reconstruct a base tree…<br>M       rebase.md<br>Falling back to patching base and 3-way merge…<br>Auto-merging rebase.md<br>CONFLICT (content): Merge conflict in rebase.md<br>Patch failed at 0001 second add from local<br>The copy of the patch that failed is found in: .git/rebase-apply/patch</p>
-<p>Resolve all conflicts manually, mark them as resolved with<br>“git add/rm <conflicted_files>“, then run “git rebase –continue”.<br>You can instead skip this commit: run “git rebase –skip”.<br>To abort and get back to the state before “git rebase”, run “git rebase –abort”.</p>
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>org.springframework.boot.SpringApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
-<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
-<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
+<p>cookies</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Cookie</span> <span class="string">domain:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">name:Idea-e3d08f0c</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">path:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">value:a1cdf13f-3a2b-46e0-bf43-088ffa6cb705</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">max age:-1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>Servlet Cookie MaxAge - cookie 的有效期，存活时长</strong></p>
+<p>Sets the maximum age in seconds for this Cookie.<br>A positive value indicates that the cookie will expire after that many seconds have passed. Note that the value is the maximum age when the cookie will expire, not the cookie’s current age.<br>A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits. A zero value causes the cookie to be deleted.</p>
 
                 
             </div>
@@ -291,6 +349,33 @@
 <td>增强的行锚点模式（多行模式）</td>
 </tr>
 </tbody></table>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>org.springframework.boot.SpringApplication</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
+<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
+<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
 
                 
             </div>
