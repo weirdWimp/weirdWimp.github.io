@@ -266,29 +266,31 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Container%20Extention%20Points/">Container Extention Points</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <ol>
-<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
-<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
-</li>
-<li><p>如果没有推送到远程库呢？</p>
-<p>这时 git commit –amend 应该是可以的</p>
-</li>
-</ol>
-
+                    <h4 id="1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor"><a href="#1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor" class="headerlink" title="1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor"></a>1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor</h4><p>使用 <code>BeanFactoryPostProcessor</code> 来定制化配置元数据 （包含了 Bean 的定义）</p>
+<p><code>BeanFactoryPostProcessor</code> 操作的是 bean 的配置元数据，而不是 bean 实例对象，Spring IoC 容器允许 <code>BeanFactoryPostProcessor</code> 读取配置元数据并且有可能会在实例化任何 bean （除了它本身）之前改变这些 bean 的定义。</p>
+<p>可以配置多个 <code>BeanFactoryPostProcessor</code> 实例， 并且通过实现 <code>Ordered</code> 接口，设置 <code>order</code> 属性来设置这些实例应用的顺序。</p>
+<blockquote>
+<p> While it is technically possible to work with bean instances within a <code>BeanFactoryPostProcessor</code> (for example, by using <code>BeanFactory.getBean()</code>), doing so causes premature bean instantiation, violating the standard container lifecycle. This may cause negative side effects, such as bypassing bean post processing. </p>
+<p>虽然在 BeanFactoryPostProcessor  中可以通过 <code>BeanFactory.getBean()</code> 获取 bean 实例，然后对其操作，但是这回导致 bean 的<strong>预实例化</strong>，违反了标准的容器生命周期。这可能带来一些副作用，如绕过 bean 的后置处理。</p>
+</blockquote>
+<p>Implementation Example: </p>
+<p><code>PropertySourcesPlaceholderConfigurer</code>  :    实现 bean 属性的值，可以定义在外部 properties 文件中</p>
+<p><code>PropertyOverrideConfigurer</code> ： 事项 bean 的属性如果没有值的话，可以通过外部 properties 文件定义一个默认值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PropertySource</span><br></pre></td></tr></table></figure>
                 
             </div>
         </article>
