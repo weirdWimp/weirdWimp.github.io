@@ -84,6 +84,30 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BA%8B%E5%8A%A1/">Spring 事务</a></h2>
             </div>
             <div class="post-meta">
@@ -179,178 +203,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20JDBC/">Spring JDBC</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring 定义的数据访问异常体系相比于 JDBC 的 SQLException 要丰富的多，并且没有与特定的持久化方式相关联。 持久化机制与数据访问层隔离开来。</p>
-<p>DataAccessException 非检查型异常，不强制进行捕获，因为 Spring 认为触发异常的很多问题是不能在 catch 代码块中进行捕获的，如连接信息有误、语法错误等异常（就算捕获了，也不能做任何处理）。是否要捕获异常取决于开发人员。</p>
-<p>模板方法模式</p>
-<p>构造器 @Inject 注解 需要加入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h4><p>Spring JDBC 框架承担了必要的<strong>资源管理</strong>与<strong>异常处理</strong>工作，简化了 JDBC 代码， 只需要关注必要的数据库读写代码即可。</p>
-<p>Spring 将数据访问的样板代码抽象到模板类中。</p>
-<p>Spring 为 JDBC 提供了三个模板类:</p>
-<ul>
-<li>JdbcTemplate：最基本的 Spring JDBC 模板，支持简单的 JDBC 数据库访问功能以及基于索引参数的查询（赋值的顺序与 SQL 语句占位符的顺序要一致） Spring 3.1 开始，支持 Java 5 的自动装箱、泛型以及可变参数列表等特性来简化 JDBC 模板的使用</li>
-<li>NamedParameterJdbcTemplate：可以将值以命名参数的形式绑定到 SQL 中（相对于索引参数）</li>
-</ul>
-<h4 id="Spring-与-Hibernate-的集成"><a href="#Spring-与-Hibernate-的集成" class="headerlink" title="Spring 与 Hibernate 的集成"></a>Spring 与 Hibernate 的集成</h4><p>Spring 提供了与 JDBC 类似的模板类 <code>HibernateTemplate</code>，能够保证每个事务使用同一个 <code>Session</code>, 弊端在于 Repository 的实现与 Spring 耦合。</p>
-<p>可以直接使用 Hibernate 的上下文 Session <code>Contextual Session</code>， 其实 Hibernate 等持久化框架已经达到了和模板类类似的功能，如获取链接，创建语句，管理事务，关闭资源等，因此直接使用也是比较方便的。</p>
-<p>需要声明一个 <code>org.springframework.orm.hibernate4.LocalSessionFactoryBean</code>  bean（对象关系映射既可以通过注解，也可以通过配置文件声明）, 继承自 Spring 的 <code>FactoryBean</code>, 会产生 Hibernate 的 <code>SessionFactory</code>。</p>
-<p>但是不使用 Spring 提供的模板类，问题就是 Repository 实现类会抛出 Hibernate 相关的异常，而不是 Spring 定义的非检查型异常。解决方案是：定义一个 <code>PersistenceExceptionTranslationPostProcessor</code> bean。</p>
-<blockquote>
-<p><code>PersistenceExceptionTranslationPostProcessor</code>是一个bean 后置处理器（bean post-processor），它会在所有拥有<code>@Repository</code>注解的类上添加一个通知器（advisor），这样就会捕获任何平台相关的异常并以Spring非检查型数据访问异常的形式重新抛出。</p>
-</blockquote>
-<p><strong>@Repository 注解</strong></p>
-<p><code>@Repository</code>注解，这会为我们做两件事情。首先，<code>@Repository</code>是Spring的另一种构造性注解，它能够像其他注解一样被Spring的组件扫描所扫描到, 表明在组件扫描的时候会自动创建。这样就不必明确声明<code>HibernateSpitterRepository</code> bean了，只要这个Repository类在组件扫描所涵盖的包中即可。    </p>
-<p>除了帮助减少显式配置以外，<code>@Repository</code>还有另外一个用处。让我们回想一下模板类，它有一项任务就是捕获平台相关的异常，然后使用Spring统一非检查型异常的形式重新抛出。</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
-<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>利用 <code>rename</code> 命令</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>清理工作</li>
-</ol>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%208%20Pattern%20Matching/">Chapter 8 Pattern Matching</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Chapter-8-Patter-Matching"><a href="#Chapter-8-Patter-Matching" class="headerlink" title="Chapter 8 Patter Matching"></a>Chapter 8 Patter Matching</h1><p>函数式编程下的模式识别</p>
-<p>主要是为了避免 <code>if/else</code> 结构的维护性差，可读性差。通过匹配对象，以及对对象的成员进行解析（Extract）进行匹配，来观察对象的类型或者执行一定的操作。文中主要用 Scala 进行演示，主要通过 <code>case</code> <code>match</code> 关键字来完成模式匹配。</p>
-<p>例如有一个需求，Customer 对象的成员有 name, state, domain 都是 String 类型的，要求有一个构造方法，若其中任何一个字段为空字符串，返回 NULL。</p>
-<p>最简单直接的方式就是用 if/else</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    name,</span><br><span class="line">    state,</span><br><span class="line">    domain,</span><br><span class="line">    <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">    <span class="type">List</span>()</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在通过 case match 进行重构之前，自认为可以简单的通过卫语句来进行重写，可以让逻辑稍微清晰一点。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br></pre></td></tr></table></figure>
-
-
-
-<p>现在使用 case 和 match 来重构，完成模式匹配。主要做法是将三个属性封装在一个对象或者数据结构里，如 Tuple 元组 （name, state, domain), 然后对这元祖进行匹配。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name:<span class="type">String</span>, state:<span class="type">String</span>, domain:<span class="type">String</span>)</span><br><span class="line">: <span class="type">Customer</span> = &#123;</span><br><span class="line">    (name, state, string) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="string">""</span>, _, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        cae (_, <span class="string">""</span>, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>继续来重构之前用尾递归写的一个方法：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="keyword">if</span>(ids.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(initialIds.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123; <span class="type">List</span>() &#125; <span class="keyword">else</span> &#123; <span class="type">List</span>(cls(precust.get)) &#125;</span><br><span class="line">    cust ::: updateCustomerByIdList(</span><br><span class="line">      initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)),</span><br><span class="line">      ids.tail,</span><br><span class="line">      cls</span><br><span class="line">    )</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>同样使用元祖、case、match 来进行重构</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> _ =&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)), ids.drop(<span class="number">1</span>), cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>但是，能否进一步减少这个方法的复杂程度呢？通过 <code>Extracting Lists</code> 来实现。</p>
-<p><code>x::y</code> 操作符出现在 case 语句中，告诉 Scala, 匹配的对象应该是一个 list， 这个 list 的首元素将被赋值给 x, 剩下的元素 (也是一个list) tail 将赋值给 y</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>上面的代码中，find 方法返回的是一个Option 对象，可以将它转换为 list, 集训进行 <code>Extracting Lists</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id).toList</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">List</span>() =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>None 和 Some 是 Option 接口的两个实现类，None 对象不包含任何对象，Some 包含了实际存在的对象。因此可以对 find 返回的 Option 对象直接进行模式匹配，包含两种模式 <code>case None</code> <code>case Some</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">None</span> =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> <span class="type">Some</span>(cust) ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以让之前的 createCustomer 直接返回一个 Option 对象，更加函数化</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name : <span class="type">String</span>,</span><br><span class="line">                   state : <span class="type">String</span>,</span><br><span class="line">                   domain : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">error</span></span>(message : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    println(message)</span><br><span class="line">    <span class="type">None</span></span><br><span class="line">  &#125;</span><br><span class="line">  (name, state, domain) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="string">""</span>, _, _) =&gt; error(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, <span class="string">""</span>, _) =&gt; error(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; error(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        name,</span><br><span class="line">        state,</span><br><span class="line">        domain,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">        <span class="type">List</span>()</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>用 case 关键字修饰类</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span>(<span class="params">val customer_id : <span class="type">Integer</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val name : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val state : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val domain : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val enabled : <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contract : <span class="type">Contract</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contacts : <span class="type">List</span>[<span class="type">Contact</span>]</span>) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">case</span> cust :: custs =&gt; &#123;</span><br><span class="line">          <span class="keyword">if</span> (cust.enabled &amp;&amp; cust.contacts.exists(&#123; contact =&gt; contact.enabled&#125;))</span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">        <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">              countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">    customers <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,<span class="type">List</span>()) :: custs =&gt;</span><br><span class="line">               countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">           <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">                countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E6%B3%9B%E5%9E%8B/">泛型</a></h2>
+                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -364,23 +217,416 @@
             </div>
             <div class="post-content">
                 
-                    <p>参考 Comparator 接口的静态方法 comparing</p>
+                    <p>getResourceAsStream</p>
+<p>java.lang.reflect.Proxy</p>
+<p>MySQL for Excel</p>
+<ul>
+<li>Import MySQL data into Excel.</li>
+<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
+<li>Modify MySQL data directly from within Excel.</li>
+</ul>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>事务的隔离级别</p>
+<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
 <blockquote>
-<p>Producer Extends, Consumer Super</p>
+<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T, E extends Comparable&lt;? <span class="keyword">super</span> E&gt;&gt; <span class="function">Comparator&lt;T&gt; <span class="title">comparing</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends E&gt; keyGenerator)</span> </span>&#123;</span><br><span class="line">    Comparator&lt;T&gt; comparator1 = <span class="keyword">new</span> Comparator&lt;T&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 假设 keyGenerator 的定义接受一个 T 的父类型, 如 FatherT</span></span><br><span class="line">            <span class="comment">// 此时 o1 是 T 类型的，是可以作为 keyGenerator.apply(FatherT fatherT) 的参数的</span></span><br><span class="line">            <span class="comment">// 会进行向上转换，是合理有效的，任何父类引用都可以指向子类对象（父类的方法都会被子类继承，所以是合理的）</span></span><br><span class="line">            <span class="keyword">return</span> keyGenerator.apply(o1).compareTo(keyGenerator.apply(o2));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// lambda 表达式写法</span></span><br><span class="line">    Comparator&lt;T&gt; comparator = (c1, c2) -&gt; keyGenerator.apply(c1).compareTo(keyGenerator.apply(c2));</span><br><span class="line">    <span class="keyword">return</span> comparator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
+<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
+<ul>
+<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
+<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
+</ul>
+<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resultType</code></td>
+<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
+</tr>
+</tbody></table>
+<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
+<p>需要试验一下，映射方法有多个参数</p>
+<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
+<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Linux-常用命令"><a href="#Linux-常用命令" class="headerlink" title="Linux 常用命令"></a>Linux 常用命令</h1><p>[TOC]</p>
+<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><ul>
+<li><code>CTRL</code> + <code>K</code> 光标处剪切文本至本行结束</li>
+<li><code>CTRL</code> + <code>Y</code> 粘贴文本</li>
+<li><code>CTRL</code> + <code>E</code> 将光标移动到本行的末尾</li>
+<li><code>CTRL</code> + <code>A</code> 将光标移动到本行的开头</li>
+<li><code>ALT</code> + <code>F</code> 跳转到下一个空格处</li>
+<li><code>ALT</code> + <code>B</code> 回到前一个空格处</li>
+<li><code>ALT</code> + <code>Backspace</code> 删除前一个词</li>
+<li><code>CTRL</code> + <code>w</code> 剪切光标前一个词 </li>
+</ul>
+<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><p>查找命令</p>
+<ul>
+<li><strong>Usage</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [path...] [expression]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>path  制定查找的目录，默认是当前目录</p>
+</li>
+<li><p>expression 包含 operators， options， tests， and  actions.</p>
+<ul>
+<li><p>tests: </p>
+<ul>
+<li>-name Pattern 指定文件名的模式</li>
+<li>-mmin N 过去N分钟更新过的普通文件</li>
+</ul>
+</li>
+<li><p>actions: </p>
+<ul>
+<li>-delete</li>
+<li>-print 默认</li>
+<li>-ls </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">"*.txt"</span> -ls</span><br></pre></td></tr></table></figure>
 
 
 
-<p>如果要返回一个 T 类型的 Comparator, 也就是 Comparator<T>, 其负载类型为 T，comparing 是可以传入一个 Functinon&lt;? super T, ? extends E&gt; 的实例的，Functinon  的负载类型的第一个参数类型可以为 T 的任何父类型，也就是此 Functinon 的 apply() 方法可以接受任何 T 的父类对象。</p>
-<p>在返回一个 Comparator<T> 对象时，Functinon 函数会接受一个 T 对象实例，此时，会发生向上转换:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法签名接受一个 Father 对象</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printField</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">    System.out.pritln(father.getField());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Son = <span class="keyword">new</span> Son();</span><br><span class="line">    <span class="comment">// 传入一个子类 Son 对象</span></span><br><span class="line">    printField(son);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>同样用来查找文件，是 <code>find -name</code> 的另一种说法，但是它搜索的是包含所有本地文件信息的数据库。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，<strong>先使用updatedb命令，手动更新数据库</strong>。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate ~/m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写，搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate -i ~/m</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><p>只能用来搜索程序名，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis grep</span><br><span class="line"><span class="comment"># 打印： grep: /bin/grep /usr/share/man/man1/grep.1.gz /usr/share/info/grep.info.gz</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="which"><a href="#which" class="headerlink" title="which"></a>which</h4><p>在 <strong>PATH</strong> 变量指定的路径中，搜索某个命令的位置，并返回第一个搜索结果。</p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> grep</span><br><span class="line"><span class="comment"># 打印： /bin/grep</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>用来区分某个命令是 shell 自带的，还是由外部的二进制文件提供的。如果是一个外部命令， -p 显示该命令的路径。</p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br><span class="line"><span class="comment"># cd is a shell builtin</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> wget</span><br><span class="line"><span class="comment"># wget is /usr/bin/wget</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> -p wget</span><br><span class="line">/usr/bin/wget</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h4><p>wget 是一个通过指定 URL 下载文件的工具，比如下载一些软件或者从远程服务器恢复备份到本地服务器。支持HTTP, HTTPS 和 FTP 协议，可以使用 HTTP 代理。可以在后台执行，支持断点下载</p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><p><strong>wget <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
+<p><strong>下载整个页面</strong>。 </p>
+<p><code>-x</code> 建立服务器上一样的目录</p>
+<p><code>-nd</code>下载的所有内容会出现在本地当前目录</p>
+</li>
+<li><p><strong>wget -r  <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
+<p>递归下载。下载服务器上的所有目录和文件。</p>
+<p><code>-l number</code> 指定下载的层次。</p>
+</li>
+<li><p><strong>wget -c <a href="http://prefix/dir/file" target="_blank" rel="noopener">http://prefix/dir/file</a></strong></p>
+<p>断点续传，服务器必须支持。</p>
+<p><code>-t</code> 表示重试次数 <code>-t 0</code> 表示无穷次重试，直到连接成功。</p>
+<p> <code>-T</code> 表示超时等待时间，超过指定的时间就算超时。</p>
+</li>
+<li><p><strong>wget -i download.txt</strong></p>
+<p>批量下载。多个需要下载的文件的 URL 可以写在一个文件中，每行一个。（URL 指向文件就下载文件，指向网站就下载首页）</p>
+</li>
+<li><p><strong>wget -m -reject=git <a href="http://prefix/dir" target="_blank" rel="noopener">http://prefix/dir</a></strong></p>
+<p>选择性下载</p>
+<p><code>-reject=list</code> 拒绝接受的文件类型</p>
+<p><code>-accept=list</code> 接受的文件类型</p>
+</li>
+<li><p><strong>wget -http-user=USER -http-passwd=PASS URL</strong></p>
+<p>密码和认证。 只能处理利用用户名/密码方式限制访问的网站</p>
+</li>
+<li><p><strong>wget -proxy-user=USER -proxy-passwd=PASS URL</strong></p>
+<p>代理进行下载。需要创建 .wgetrc 文件设置代理服务器：</p>
+<p>http-proxy=11.11.11.11:8080</p>
+<p>ftp-proxy=11.11.11.11:8080</p>
+<p>-proxy=on/off 使用或关闭代理</p>
+</li>
+<li><p><strong>wget -O rename.zip URL</strong></p>
+<p>重命名下载的文件。wget默认会以最后一个符合”/”的后面的字符来命令。</p>
+</li>
+<li><p><strong>wget –limit-rate=300k URL</strong></p>
+<p>限速下载</p>
+</li>
+<li><p><strong>wget -b URL</strong></p>
+<p>后台下载。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在下载的下载进度。</span></span><br><span class="line">tail -f wget-log</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>wget -tries=40 URL</strong></p>
+<p>增加重试次数，默认重试20次？</p>
+</li>
+<li><p><strong>wget -mirror URL</strong></p>
+<p>镜像下载。下载整个网站到本地。</p>
+<p><code>-p</code> 下载所有为了html页面显示正常的文件<br><code>–convert-links</code> 下载后，转换成本地的链接<br><code>-P ./LOCAL</code> 保存所有文件和目录到本地指定目录</p>
+</li>
+<li><p><strong>wget -o download.log URL</strong></p>
+<p>保存下载日志到文件中。</p>
+</li>
+<li><p><strong>wget -Q5m -i files.txt</strong></p>
+<p>限制下载的文件大小，超出后推出下载。</p>
+</li>
+<li><p><strong>wget -r -A.pdf URL</strong></p>
+<p>只下载指定格式的文件。</p>
+</li>
+<li><p><strong>wget FTP-URL</strong> </p>
+</li>
+<li><p><strong>wget –ftp-user=USER –ftp-password=PASS URL</strong></p>
+<p>wget FTP 下载。</p>
+</li>
+</ul>
+<p>下载jdk</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget后需要加参数–no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie;”</span></span><br><span class="line"></span><br><span class="line">wget --no-cookies --header <span class="string">"Cookie: oraclelicense=accept-securebackup-cookie;"</span> http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm</span><br></pre></td></tr></table></figure>
 
 
 
 
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dateTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Function&lt;Circle, Integer&gt; circleFunc = circle -&gt; circle.getR().length();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 当左边的类型为 CircleSubClass 时， keyGenerator 的负载类型可以是 CircleSubClass 的任何父类型</span></span><br><span class="line">    <span class="comment">// 当右边 keyGenerator 的负载类型是 Circle 时，左边的 Comparator 负载类型可以是 Circle 的任何子类</span></span><br><span class="line">    Comparator&lt;CircleSubClass&gt; comparing = comparing(circleFunc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>用于打包、拆包、压缩、解压<strong>。</strong></p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><p><strong>-c</strong> </p>
+<p>建立一个打包文件</p>
+</li>
+<li><p><strong>-x</strong></p>
+<p>解开一个打包文件</p>
+</li>
+<li><p><strong>-t</strong></p>
+<p>查看 tar 包里的文件</p>
+</li>
+<li><p><strong>-z</strong></p>
+<p>gzip 工具，用于压缩成或解压 .tar.gz 格式的文件 (格式的名字只是为了标记，以免解压时用了错误的压缩工具)</p>
+</li>
+<li><p><strong>-j</strong></p>
+<p>zip2 工具，用于压缩成或解压 .tar.bz2 格式的文件</p>
+</li>
+<li><p><strong>-v</strong></p>
+<p>显示打包、拆包、压缩或解压过程。</p>
+</li>
+<li><p><strong>-f</strong></p>
+<p>使用文件名，后面立即接文件名</p>
+</li>
+<li><p><strong>-p</strong></p>
+<p>保持原文件的属性</p>
+</li>
+<li><p><strong>-P</strong></p>
+<p>使用绝对路径来压缩。</p>
+</li>
+<li><p><strong>-N 2001/03/11</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -N 2017/01/23 -zcvf index.html hello.txt world.txt</span><br></pre></td></tr></table></figure>
+
+<p>  设定日期，后面接的日期还要新的文件才会被打包。</p>
+<ul>
+<li><strong>–exclude file</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude hello.txt -zcvf b.tar.gz index.html hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>  剔除不需要进行打包的文件</p>
+<p>可以作为命令行参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf - *.txt | tar -xf - -C dir/</span><br><span class="line"></span><br><span class="line"><span class="comment"># tar cvf - files/ | ssh user@example.com "tar xv -C Documents/"</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p>cat 命令用于显示文件的内容</p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><strong>显示整个文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>从键盘创建一个文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; file</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p>  只能创建新文件，不能编辑已有文件。 <code>Ctrl</code> + <code>d</code>  结束输入</p>
+<ul>
+<li><strong>合并文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 合并文件输出到另一个文件中</span></span><br><span class="line">cat file1 file2 &gt; file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并文件并输出到屏幕</span></span><br><span class="line">cat file1 file2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-n 行编号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n|number file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-b 行编号，空白行不编号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -b file</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>Global Search Regular Expression(RE) and Print out the line</p>
+<p>全局正则表达式搜索，用于文本搜索（支持正则表达式），并把匹配的行打印出来。</p>
+<ul>
+<li><strong>常规用法</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep match_pattern file</span><br><span class="line"></span><br><span class="line">grep <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>多文件搜索</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"match_pattern"</span> file_1 file_2 file_3 ...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>-v 反转查找</strong></p>
+<p>即打印不匹配该模式的所有行</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-E 使用正则表达式</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">"[1-9]+"</span> file</span><br><span class="line"></span><br><span class="line">egrep <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-o 只输出文件中匹配到的部分</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o -E <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-c 文件中包含匹配模式的行数</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-n 输出包含匹配字符串所在的行号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-b 匹配模式位于的字符或字节偏移</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般与 -o 一起使用，从第一个字符开始计算，起始值为 0 </span></span><br><span class="line">grep -b -o <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-l 搜索匹配模式出现在哪些文件中</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">"text"</span> file1 file2 file3 ...</span><br><span class="line"><span class="comment"># 只输出文件名，不指定 -l, 输出文件名及相应的匹配行</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-r 多级目录中对文本进行递归搜索</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"text"</span> . -r -n</span><br><span class="line"><span class="comment"># . 表示当前目录</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-i 忽略匹配模式中字符的大小写</strong>、</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-e 制定多个匹配模式</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">"text1"</span> <span class="string">"text2"</span> file</span><br><span class="line"><span class="comment"># 这个当然也可以直接用正则表达式写</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>搜索结果中包括或者排除指定文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此参数的格式为 Ubuntun 下的格式，搜索文件只包括 txt，html,php 文件 </span></span><br><span class="line">grep --include=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索文件不包括 txt，html,php 文件</span></span><br><span class="line">grep --exclude=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除 fileList 文件列表里的文件</span></span><br><span class="line">grep <span class="string">"text"</span> . -r  --exclude-from=fileList</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>-q 静默输出</strong></p>
+</li>
+<li><p><strong>打印匹配某个结果之后或之前的 n 行</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示匹配某个结果之后的3行，使用 -A 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -A 3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果之前的3行，使用 -B 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -B 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果的前三行和后三行，使用 -C 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -C 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果匹配结果有多个，会用“--”作为各匹配结果之间的分隔符：</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"a\nb\nc\na\nb\nc"</span> | grep a -A 1</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">--</span><br><span class="line">a</span><br><span class="line">b</span><br></pre></td></tr></table></figure>
+
+<h4 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h4><p>  stat 命令用于显示文件的大小、所有者、用户组、索引节点号、权限、修改和访问时间等重要的统计信息。这是一个非常有用的命令，可以显示比 <code>ls -l</code> 更多的细节。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c 用于格式化输出， %n 表示文件的名称 %a 表示数字格式的权限</span></span><br><span class="line"><span class="built_in">stat</span> -c <span class="string">'%n %a'</span> *</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls * <span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<p>  <a href="https://linux.cn/article-9601-1.html" target="_blank" rel="noopener">https://linux.cn/article-9601-1.html</a></p>
+
                 
             </div>
         </article>
