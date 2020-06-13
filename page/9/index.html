@@ -84,26 +84,26 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>org.springframework.boot.SpringApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <h1 id="远程分支"><a href="#远程分支" class="headerlink" title="远程分支"></a><strong>远程分支</strong></h1><p>远程分支 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加远程分支</span></span><br><span class="line">git add origin git@github.com:weirdWimp/log_demo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送本地分支到远程分支</span></span><br><span class="line">git push origin dev:remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在远程分支origin/remoteDev上创建本地分支dev，并且本地分支设置跟踪远程仓库origin的remoteDev分支</span></span><br><span class="line">git checkout -b dev origin/remoteDev</span><br><span class="line"></span><br><span class="line">git checkout --track origin/remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置已有本地分支跟踪远程分支</span></span><br><span class="line">git branch -u origin/serverfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line">git push origin --delete serverfix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git fetch origin</span><br><span class="line">git merge origin/master</span><br><span class="line">git push origin master:master</span><br></pre></td></tr></table></figure>
 
-<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
-<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
-<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
+
+
+<p>Rebased dev on refs/heads/dev</p>
 
                 
             </div>
@@ -111,62 +111,76 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20MVC%20Restful/">Spring MVC Restful</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
+                    <p>Spring 提供的将资源的 Java 表述形式转换为发送给客户端的形式</p>
+<ul>
+<li>内容协商 - Content Negotiation： 选择一个视图，将模型渲染为呈现给客户端的表述形式</li>
+</ul>
+<ul>
+<li>消息转换器 - Message Conversion: 通过一个消息转换器将控制器所返回的的的对象转换为呈现给客户端的表述形式</li>
+</ul>
+<h3 id="内容协商-Content-Negotiation"><a href="#内容协商-Content-Negotiation" class="headerlink" title="内容协商 - Content Negotiation"></a>内容协商 - Content Negotiation</h3><p>内容协商的步骤：</p>
+<ol>
+<li>确定请求的媒体类型<ul>
+<li>先根据请求 URI 的文件扩展名，如 .json 确定请求的类型是 Json</li>
+<li>文件扩展名不能得到任何媒体类型的话，考虑请求 Accept 头部信息。Accept 头部接受的类型就表明了客户端的想要的 <code>MIME</code> 类型 </li>
+<li>没有头部信息，默认接受 <code>/</code> 作为默认的内容类型，也就是可以接受各种形式的资源表述</li>
+</ul>
+</li>
+<li>找到适合请求媒体类型的最佳视图</li>
+</ol>
+<p>为此，提供了一个 <code>ContentNegotiatingViewResolver</code> 内容协商视图解析器</p>
+<blockquote>
+<p><code>ContentNegotiatingViewResolver</code>要求其他的视图解析器将逻辑视图名解析为视图。解析得到的每个视图都会放到一个列表中。这个列表装配完成后，<code>ContentNegotiatingViewResolver</code>会循环客户端请求的所有媒体类型，在候选的视图中查找能够产生对应内容类型的视图。第一个匹配的视图会用来渲染模型。</p>
+</blockquote>
+<p>假设控制器方法返回了一个 <code>spittles</code> 逻辑视图名称， 程序中定义了两个试图解析器，对应的视图渲染的表述形式不一样，如 HTML 和 Json， 如果都存在对应的视图，这时，会根据请求要求的类型，找到第一个匹配其类型的视图，渲染模型数据。</p>
+<h3 id="消息转换器-Message-Conversion"><a href="#消息转换器-Message-Conversion" class="headerlink" title="消息转换器 - Message Conversion"></a>消息转换器 - Message Conversion</h3><p><code>@ResponseBody</code>注解会告知Spring，我们要将返回的对象作为资源发送给客户端，并将其转换为客户端可接受的表述形式。<code>DispatcherServlet</code>将会考虑到请求中<code>Accept</code>头部信息，并查找能够为客户端提供所需表述形式的消息转换器。</p>
+<p>使用 <code>MappingJackson2XmlHttpMessageConverter</code>， 实现 Json 与 Java 对象转换需要引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
-<p>allocation table - 分配表</p>
-<p>stack frame - 栈帧</p>
-<p>heap - 堆</p>
-<p>reachable object - 可达对象/活性对象</p>
-<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
-<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
-<p>对象的预期生命周期称为 <code>代</code></p>
-<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
-<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
-<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
-<p> Eden 区 / Nursery 区</p>
-<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
-<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
-<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
-<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
-<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
-<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
+
+<p>使用 <code>MappingJackson2XmlHttpMessageConverter</code>， 实现  XML 与 Java 对象转换需要引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.dataformat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-dataformat-xml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>@RestController 注解</p>
+<p>表明该控制器的所有处理方法都应用了消息转换功能，相当于为每个方法添加 @ResponseBody 注解，能将方法返回的 Java 对象转换为合适的资源表述，作为响应返回给客户端。</p>
+<p>FactoryBean</p>
+<h2 id="Restful-Client"><a href="#Restful-Client" class="headerlink" title="Restful Client"></a>Restful Client</h2><p>编写 Restful Client 的代码也同样存在样板式代码，也就是说有很多相同的代码要重复写，如</p>
+<ul>
+<li>创建 HttpClient 客户端</li>
+<li>创建请求，填充头部信息，请求体</li>
+<li>执行请求，对返回的响应进行解析处理</li>
+</ul>
+<p>RestTemplate 解救人民于水火，提供了各种 Http Method 的请求，并且简化了请求的代码，只需要初始化一个 Template， 就可以调用各种 Http Method 对应的方法执行请求， RestTemplate 可以通过注入的方式来使用。</p>
+<p>示例代码：</p>
+<p>Get 请求 （template.getForObject）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate template = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">      String parameterUri = <span class="string">"http://localhost:8080/rest/blog/responseEntity/&#123;name&#125;"</span>;</span><br><span class="line">      MessageEntity messageEntity = template.getForObject(parameterUri, MessageEntity.class, "Guoph");</span><br><span class="line">      System.out.println(messageEntity);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>指定请求头部的 Post 请求 (template.exchange)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String parameterUri = <span class="string">"http://localhost:8080/rest/blog/responseEntity/&#123;name&#125;"</span>;</span><br><span class="line"></span><br><span class="line">HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">headers.set(<span class="string">"Accept"</span>, MediaType.APPLICATION_JSON_VALUE);</span><br><span class="line">HttpEntity&lt;Object&gt; httpEntity = <span class="keyword">new</span> HttpEntity&lt;&gt;(headers);</span><br><span class="line"></span><br><span class="line">ResponseEntity&lt;MessageEntity&gt; responseEntity = template.exchange(parameterUri, HttpMethod.GET, httpEntity,</span><br><span class="line">        MessageEntity.class, "Guoph");</span><br><span class="line"></span><br><span class="line">System.out.println(responseEntity);</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -221,85 +235,178 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%208%20Pattern%20Matching/">Chapter 8 Pattern Matching</a></h2>
+                <h2><a class="post-title-link" href="/Linux/ls%20Invalid%20option/">ls Invalid option</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
+                    <a class="category" href="/categories/Linux/">Linux</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="Chapter-8-Patter-Matching"><a href="#Chapter-8-Patter-Matching" class="headerlink" title="Chapter 8 Patter Matching"></a>Chapter 8 Patter Matching</h1><p>函数式编程下的模式识别</p>
-<p>主要是为了避免 <code>if/else</code> 结构的维护性差，可读性差。通过匹配对象，以及对对象的成员进行解析（Extract）进行匹配，来观察对象的类型或者执行一定的操作。文中主要用 Scala 进行演示，主要通过 <code>case</code> <code>match</code> 关键字来完成模式匹配。</p>
-<p>例如有一个需求，Customer 对象的成员有 name, state, domain 都是 String 类型的，要求有一个构造方法，若其中任何一个字段为空字符串，返回 NULL。</p>
-<p>最简单直接的方式就是用 if/else</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    name,</span><br><span class="line">    state,</span><br><span class="line">    domain,</span><br><span class="line">    <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">    <span class="type">List</span>()</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <h2 id="ls-invalid-option-–-‘j’"><a href="#ls-invalid-option-–-‘j’" class="headerlink" title="ls: invalid option – ‘j’"></a>ls: invalid option – ‘j’</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line"></span><br><span class="line">0n5whdeZ0ow-download.jpg  A-McbCSin6w-download.jpg  G1vKK6L7Ep0-download.jpg .....</span><br><span class="line">-jGGcAqIBms-download.jpg  -pahtnAMuFo-download.jpg </span><br><span class="line"></span><br><span class="line">$ ls *.jpg</span><br><span class="line">ls: invalid option -- <span class="string">'j'</span></span><br><span class="line">Try <span class="string">'ls --help'</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+
+<p>这个简单的命令执行失败了，期望 shell 扩展 <code>*</code> 找出所有 jpg 图像，也没有传入 <code>-j</code> 作为 option 选项，很是奇怪，通过 bing 找到了答案，百度真的是不适合程序员…..</p>
+<p>StackExchange <a href="https://superuser.com/questions/1300382/ls-pdf-complains-ls-invalid-option" target="_blank" rel="noopener">ls invalid option</a> 中的问题类似，原因是有个图像文件开头是 <code>-</code> （-jGGcAqIBms-download.jpg），被当作 ls 的 option 选项了….</p>
+<p>man bash</p>
+<blockquote>
+<p>A <code>--</code> signals the end of options and disables further option processing. Any arguments after the – are treated as file‐ names and arguments. An argument of - is equivalent to –.</p>
+</blockquote>
+<p>解决上述问题的办法：</p>
+<ol>
+<li>使用 <code>--</code> </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -- *.jpg</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>生产脚本使用 find + xargs，更保险</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -name选项指定了待查找文件名的模式。这个模式可以是通配符，也可以是正则表达式</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">'*.jpg'</span> -print0 | xargs -0 -n 1 <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改文件名，避免此种情况发生</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
 
 
-
-<p>在通过 case match 进行重构之前，自认为可以简单的通过卫语句来进行重写，可以让逻辑稍微清晰一点。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br></pre></td></tr></table></figure>
-
-
-
-<p>现在使用 case 和 match 来重构，完成模式匹配。主要做法是将三个属性封装在一个对象或者数据结构里，如 Tuple 元组 （name, state, domain), 然后对这元祖进行匹配。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name:<span class="type">String</span>, state:<span class="type">String</span>, domain:<span class="type">String</span>)</span><br><span class="line">: <span class="type">Customer</span> = &#123;</span><br><span class="line">    (name, state, string) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="string">""</span>, _, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        cae (_, <span class="string">""</span>, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>继续来重构之前用尾递归写的一个方法：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="keyword">if</span>(ids.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(initialIds.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123; <span class="type">List</span>() &#125; <span class="keyword">else</span> &#123; <span class="type">List</span>(cls(precust.get)) &#125;</span><br><span class="line">    cust ::: updateCustomerByIdList(</span><br><span class="line">      initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)),</span><br><span class="line">      ids.tail,</span><br><span class="line">      cls</span><br><span class="line">    )</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>同样使用元祖、case、match 来进行重构</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> _ =&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)), ids.drop(<span class="number">1</span>), cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>但是，能否进一步减少这个方法的复杂程度呢？通过 <code>Extracting Lists</code> 来实现。</p>
-<p><code>x::y</code> 操作符出现在 case 语句中，告诉 Scala, 匹配的对象应该是一个 list， 这个 list 的首元素将被赋值给 x, 剩下的元素 (也是一个list) tail 将赋值给 y</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>上面的代码中，find 方法返回的是一个Option 对象，可以将它转换为 list, 集训进行 <code>Extracting Lists</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id).toList</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">List</span>() =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>None 和 Some 是 Option 接口的两个实现类，None 对象不包含任何对象，Some 包含了实际存在的对象。因此可以对 find 返回的 Option 对象直接进行模式匹配，包含两种模式 <code>case None</code> <code>case Some</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">None</span> =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> <span class="type">Some</span>(cust) ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以让之前的 createCustomer 直接返回一个 Option 对象，更加函数化</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name : <span class="type">String</span>,</span><br><span class="line">                   state : <span class="type">String</span>,</span><br><span class="line">                   domain : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">error</span></span>(message : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    println(message)</span><br><span class="line">    <span class="type">None</span></span><br><span class="line">  &#125;</span><br><span class="line">  (name, state, domain) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="string">""</span>, _, _) =&gt; error(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, <span class="string">""</span>, _) =&gt; error(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; error(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        name,</span><br><span class="line">        state,</span><br><span class="line">        domain,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">        <span class="type">List</span>()</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>用 case 关键字修饰类</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span>(<span class="params">val customer_id : <span class="type">Integer</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val name : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val state : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val domain : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val enabled : <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contract : <span class="type">Contract</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contacts : <span class="type">List</span>[<span class="type">Contact</span>]</span>) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">case</span> cust :: custs =&gt; &#123;</span><br><span class="line">          <span class="keyword">if</span> (cust.enabled &amp;&amp; cust.contacts.exists(&#123; contact =&gt; contact.enabled&#125;))</span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">        <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">              countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">    customers <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,<span class="type">List</span>()) :: custs =&gt;</span><br><span class="line">               countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">           <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">                countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>使用 DataSource 对象的优点</p>
+<ul>
+<li><p>便携性，可维护性强</p>
+<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
+</li>
+<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
+</li>
+</ul>
+<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
+<thead>
+<tr>
+<th><strong>Config Property</strong></th>
+<th><strong>Default Value</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>maxIdle</td>
+<td>100</td>
+<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
+</tr>
+<tr>
+<td>minIdle</td>
+<td>10</td>
+<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
+</tr>
+<tr>
+<td>maxActive</td>
+<td>100</td>
+<td>连接池中同一时间可以分配的最大活跃连接数</td>
+</tr>
+<tr>
+<td>timeBetweenEvictionRunsMillis</td>
+<td>5000 (5秒)</td>
+<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
+</tr>
+<tr>
+<td>initialSize</td>
+<td>10</td>
+<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
+</tr>
+<tr>
+<td>testWhileIdle</td>
+<td>false</td>
+<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
+</tr>
+<tr>
+<td>testOnBorrow</td>
+<td>false</td>
+<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
+</tr>
+<tr>
+<td>validationInterval</td>
+<td>3000（3秒）</td>
+<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
+</tr>
+<tr>
+<td>validationQuery</td>
+<td></td>
+<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
+</tr>
+<tr>
+<td>validationQueryTimeout</td>
+<td>-1</td>
+<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
+</tr>
+<tr>
+<td>removeAbandoned</td>
+<td>false</td>
+<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
+</tr>
+<tr>
+<td>removeAbandonedTimeout</td>
+<td>60 s</td>
+<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
+</tr>
+<tr>
+<td>abandonWhenPercentageFull</td>
+<td>0</td>
+<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
+</tr>
+<tr>
+<td>maxWait</td>
+<td>30000（30秒）</td>
+<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
+</tr>
+<tr>
+<td>minEvictableIdleTimeMillis</td>
+<td>60000 （60 秒）</td>
+<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
+<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
+<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
+<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
+<p>return result; </p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
+<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
+<p>**<br>**</p>
+<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
+<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
+<p>**<br>**</p>
+<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
+<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
+<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
+<p>maxIdle </p>
+<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
 
                 
             </div>
