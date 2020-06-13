@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%B2%BE%E9%80%9A%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">精通正则表达式</a></h2>
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,291 +98,8 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="第六章-打造高效正则表达式"><a href="#第六章-打造高效正则表达式" class="headerlink" title="第六章 打造高效正则表达式"></a>第六章 打造高效正则表达式</h2><h3 id="多选结构的代价很高"><a href="#多选结构的代价很高" class="headerlink" title="多选结构的代价很高"></a>多选结构的代价很高</h3><p>Page.231</p>
-<blockquote>
-<p>多选结构或许是回溯的主要原因，字符组一般只是进行简单的测试，所以效率要比对应的多选结构高。</p>
-</blockquote>
-<p>  \cx 匹配control + <a href="https://www.baidu.com/s?wd=%E6%8E%A7%E5%88%B6%E5%AD%97%E7%AC%A6&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">控制字符</a>，就是说 匹配由x指明的<a href="https://www.baidu.com/s?wd=%E6%8E%A7%E5%88%B6%E5%AD%97%E7%AC%A6&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">控制字符</a></p>
-<p>这里的X是一个<a href="https://www.baidu.com/s?wd=%E6%8E%A7%E5%88%B6%E5%AD%97%E7%AC%A6&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">控制字符</a>。匹配一个字符串的控制字符。</p>
-<p>比如：<br>\cI 匹配 control + I，等价于 \t，<br>\cJ匹配 control + J，等价于 \n,<br>\cM匹配 control + M，等价于 \r\ca \cb \cc … 又分别匹配 control+a, control+b,control+c….，具体他们等价于什么，看运行的程序了  </p>
-<h2 id="Java-中的正则表达式"><a href="#Java-中的正则表达式" class="headerlink" title="Java 中的正则表达式"></a>Java 中的正则表达式</h2><ul>
-<li><p>单词分界符 \b \B 能够识别 Unicode 字符</p>
-</li>
-<li><p>顺序环视中支持任意长度的表达式，逆序环视则不允许（可以出现<code>?</code>, 不能出现 <code>*</code>, <code>+</code> ）</p>
-</li>
-<li><p>\Q…\E 消除之间所有元字符的特殊含义，当作普通字符来看（不包括\E, 所以如果原始字符串中包含\E, 就不能直接在首位加\Q和\E来直接使用，具体参见 Pattern.quote 方法）</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也可以使用此方法，返回 \Q.\E</span></span><br><span class="line">Pattern.quote(<span class="string">"."</span>)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>anchoring bounds</strong> 标志位，如果检索范围不等于整个目标字符串，设定是否将检索范围的边界设置为 “文本起始位置” 和 “文本结束位置”， 影响文本行边界元字符 （\z \Z \A ^ $），<strong>Reset 方法不修改此标志位</strong>。</p>
-</li>
-<li><p><strong>transparent bounds</strong> 标志位， 如果检索范围是整个目标字符串的一段文本，设置为true，<strong>允许 look 结构（环视，单词分界符）</strong>超越检索范围的边界，检查外部的文本，默认为 false， <strong>Reset 方法不修改此标志位</strong>。</p>
-</li>
-<li><p><strong>find 方法，replaceAll, replaceFirst 方法，在内部都会调用  Reset， 即检索范围重置为整个文本， 将匹配的位置指向文本的开头，弃用前一次成功匹配的所有信息</strong></p>
-</li>
-<li><p>匹配结果中的偏移值 (start end) 与 检索范围没有关系, 是在整个文本中的位置</p>
-</li>
-</ul>
-<p>一个值设置为transient，然后初始化，加锁</p>
-<p>如： <code>Files.lines(new File(strPath).toPath, StandardCharsets.UTF_8)</code></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BA%8B%E5%8A%A1/">Spring 事务</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="声明式事务管理"><a href="#声明式事务管理" class="headerlink" title="声明式事务管理"></a>声明式事务管理</h2><p> While the Spring default behavior for declarative transaction management follows EJB convention (roll back is automatic only on unchecked exceptions), it is often useful to customize this behavior.</p>
-<h3 id="Using-Transactional"><a href="#Using-Transactional" class="headerlink" title="Using @Transactional"></a>Using @Transactional</h3><p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations</a></p>
-<blockquote>
-<p>You can apply the <code>@Transactional</code> annotation to an interface definition, a method on an interface, a class definition, or a public method on a class. However, the mere presence of the <code>@Transactional</code> annotation is not enough to activate the transactional behavior. The <code>@Transactional</code> annotation is merely metadata that can be consumed by some runtime infrastructure that is <code>@Transactional</code>-aware and that can use the metadata to configure the appropriate beans with transactional behavior. In the preceding example, the <code>&lt;tx:annotation-driven/&gt;</code> element switches on the transactional behavior.</p>
-</blockquote>
-<p><code>@Transactional</code> 注解只是配置事务行为的元数据，并不会激活这些事务行为，Spring 的事务框架会使用这些元数据为某些 bean 配置它们的事务行为，xml 文件中的 <code>&lt;tx:annotation-driven/&gt;</code> 和配置类（<code>@Configuration</code>）上的 <code>@EnableTransactionManagement</code>注解会激活这些事务行为。</p>
-<blockquote>
-<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> looks for <code>@Transactional</code> only on beans in the same application context in which they are defined. This means that, if you put annotation-driven configuration in a <code>WebApplicationContext</code> for a <code>DispatcherServlet</code>, it checks for <code>@Transactional</code> beans only in your controllers and not your services. See <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-servlet" target="_blank" rel="noopener">MVC</a> for more information.</p>
-</blockquote>
-<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> 只会在定义它们本身的上下文中寻找 <code>@Transactional</code> 注解的 bean， 如果是在 Web 应用的 <code>DispatcherServlet</code> 对应的 <code>WebApplicationContext</code> <code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code>只会在这个上下文中查找，这个上下文一般只会定义控制器以及试图解析器等 web 组件，而不是 service 类。</p>
-<blockquote>
-<p>In proxy mode (which is the default), only external method calls coming in through the proxy are intercepted. This means that self-invocation (in effect, a method within the target object calling another method of the target object) does not lead to an actual transaction at runtime even if the invoked method is marked with <code>@Transactional</code>. Also, the proxy must be fully initialized to provide the expected behavior, so you should not rely on this feature in your initialization code (that is, <code>@PostConstruct</code>).</p>
-</blockquote>
-<p>由于 Spring 事务是基于代理的，只有通过代理的外部方法调用才会被拦截，目标对象内部的方法调用（一个方法调用对象内部的另一个方法）是不会在运行时导致一个实际的事务发生的；另外，必须完全初始化代理以提供预期的行为，因此不应在初始化代码（即@PostConstruct）中依赖此功能。</p>
-<blockquote>
-<p>Consider using of AspectJ mode (see the <code>mode</code> attribute in the following table) if you expect self-invocations to be wrapped with transactions as well. In this case, there no proxy in the first place. Instead, the target class is woven (that is, its byte code is modified) to turn <code>@Transactional</code> into runtime behavior on any kind of method.</p>
-</blockquote>
-<p>如果想要实现内部调用的事务行为，可以考虑基于 AspectJ 的 AOP, 首先，不会有代理，目标类被编织以将 <code>@Transactional</code> 的运行时行为应用于任何方法上</p>
-<p><strong>使用基于代理的事务的 proxy 类型</strong></p>
-<ul>
-<li><p>class-based proxies </p>
-</li>
-<li><p>standard JDK interface-based proxies （default or omitted）</p>
-</li>
-</ul>
-<h4 id="Transactional-settings"><a href="#Transactional-settings" class="headerlink" title="@Transactional settings"></a>@Transactional settings</h4><p>默认的<code>@Transactional</code> 的设置：</p>
-<ul>
-<li><p>The propagation setting is <code>PROPAGATION_REQUIRED.</code> #  默认的传播行为</p>
-</li>
-<li><p>The isolation level is <code>ISOLATION_DEFAULT.</code> # 默认的事务隔离级别</p>
-</li>
-<li><p>The transaction is read-write. # 模式是读-写的事务</p>
-</li>
-<li><p>The transaction timeout defaults to the default timeout of the underlying transaction system, or to none if timeouts are not supported. # 超时时间</p>
-</li>
-<li><p>Any <code>RuntimeException</code> triggers rollback, and any checked <code>Exception</code> does not. # 触发回滚的规则（异常类别）</p>
-<p>fully-qualified class name </p>
-</li>
-</ul>
-<h2 id="编程式事务"><a href="#编程式事务" class="headerlink" title="编程式事务"></a>编程式事务</h2><h3 id="使用-TransactionTemplate"><a href="#使用-TransactionTemplate" class="headerlink" title="使用 TransactionTemplate"></a>使用 TransactionTemplate</h3><p><code>TransactionTemplate</code> 和 Spring 中其他模板类相似（如 <code>JdbcTemplate</code>），目的是为了减少应用代码中获取和释放事务相关资源的样板式代码</p>
-<p>（boilerplate acquisition and release transactional resources），这样应用就可以将关注点放在业务逻辑上。它使用一个回调方法。</p>
-<p>应用代码必须执行在一个事务上下文（transactional context）中,  并且使用 <code>TransactionTemplate</code>，仅需两个步骤：</p>
-<ol>
-<li>应用代码编写  <code>TransactionCallback</code> 实现，这个实现中包含了事务要包含的所有的操作，通常是匿名内部类的形式 。</li>
-<li>回调类实现的实例传入 <code>TransactionTemplate.execute(CallBack)</code> 方法中</li>
-</ol>
-<p>示例代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleService</span> <span class="keyword">implements</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// single TransactionTemplate shared amongst all methods in this instance</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TransactionTemplate transactionTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use constructor-injection to supply the PlatformTransactionManager</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleService</span><span class="params">(PlatformTransactionManager transactionManager)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.transactionTemplate = <span class="keyword">new</span> TransactionTemplate(transactionManager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">someServiceMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> TransactionCallback() &#123;</span><br><span class="line">            <span class="comment">// the code in this method executes in a transactional context</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">doInTransaction</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">                updateOperation1();</span><br><span class="line">                <span class="keyword">return</span> resultOfUpdateOperation2();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>无返回的事务可以实现 <code>TransactionCallbackWithoutResult</code> 接口</p>
-<p>事务的属性，如传播行为、隔离级别等可以通过  <code>TransactionTemplate</code> 提供的方法设置（程序中或XML中） </p>
-<blockquote>
-<p>Code within the callback can roll the transaction back by calling the <code>setRollbackOnly()</code> method on the supplied <code>TransactionStatus</code> object, as follows:</p>
-</blockquote>
-<p>也可以在回调方法中，调用 <code>TransactionStatus.setRollbackOnly()</code> 回滚事务,  这里取决于是否是新事务，来决定是否直接回滚。 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">transactionTemplate.execute(<span class="keyword">new</span> TransactionCallbackWithoutResult() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            updateOperation1();</span><br><span class="line">            updateOperation2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SomeBusinessException ex) &#123;</span><br><span class="line">            status.setRollbackOnly();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="使用-PlatformTransactionManager"><a href="#使用-PlatformTransactionManager" class="headerlink" title="使用 PlatformTransactionManager"></a>使用 PlatformTransactionManager</h3><p>也可以提直接使用 <code>PlatformTransactionManager</code> 来管理事务，需要结合 Spring 事务抽象的其它对象： <code>TransactionDefinition</code>, <code>TransactionStatus</code>。 可以实现事务的初始化、回滚和提交。编程式事务也可以显示设置事务的名称，声明式的事务名称一般都是默认的全限定类名+方法名。</p>
-<p>Java </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DefaultTransactionDefinition def = <span class="keyword">new</span> DefaultTransactionDefinition();</span><br><span class="line"><span class="comment">// explicitly setting the transaction name is something that can be done only programmatically</span></span><br><span class="line">def.setName(<span class="string">"SomeTxName"</span>);</span><br><span class="line">def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line"></span><br><span class="line">TransactionStatus status = txManager.getTransaction(def);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// execute your business logic here</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (MyException ex) &#123;</span><br><span class="line">    txManager.rollback(status);</span><br><span class="line">    <span class="keyword">throw</span> ex;</span><br><span class="line">&#125;</span><br><span class="line">txManager.commit(status);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在 <code>PlatformTransactionManager.rollback(TransactionStatus status)</code> 方法有如下的注释：</p>
-<blockquote>
-<p>Do not call rollback on a transaction if commit threw an exception. The transaction will already have been completed and cleaned up when commit  returns, even in case of a commit exception. Consequently, a rollback call after commit failure will lead to an IllegalTransactionStateException.</p>
-</blockquote>
-<p>不要在commit 时异常后进行回滚，commit 返回时（即使有提交异常），事务已经完成并且已经被清理。所以这时，如果调用 rollback 操作，会导致一个 <code>IllegalTransactionStateException</code>， 这也是上述示例代码中 commit 放在最后的原因</p>
-<blockquote>
-<p>If the transaction wasn’t a new one, omit the commit for proper participation in the surrounding transaction.</p>
-</blockquote>
-<p><strong>当调用了 commit 后，如果该事务不是一个新事务，则会忽略提交以正确参与周围的事务中。</strong></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E8%A3%85%E9%85%8D%20Bean/">Spring 装配 Bean</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="装配-Bean"><a href="#装配-Bean" class="headerlink" title="装配 Bean"></a>装配 Bean</h2><h3 id="1-Spring-进行装配-Bean-的方式"><a href="#1-Spring-进行装配-Bean-的方式" class="headerlink" title="1 Spring 进行装配 Bean 的方式"></a>1 Spring 进行装配 Bean 的方式</h3><h4 id="1-1-组件扫描和自动装配"><a href="#1-1-组件扫描和自动装配" class="headerlink" title="1.1 组件扫描和自动装配"></a><strong>1.1 组件扫描和自动装配</strong></h4><p>通过在 Bean 的定义类上加上注解 <code>@Component</code> 向 Spring 表明这是一个 Bean 组件；接着在 Spring 的配置类中用注解 <code>@ComponentScan</code> 让 Spring在启动的时候自动扫面有 @Component 注解的 Bean, 并在 Spring 上下文中创建他们的实例。Spring会根据类名为其指定一个ID，将类名的第一个字母变为小写，也可以传一个 bean id 给 <code>@Component</code>。</p>
-<p>Bean 类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(<span class="string">"enyaAlbum"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EnyaAlbum</span> <span class="keyword">implements</span> <span class="title">CompactDisk</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Playing..."</span> + <span class="string">"\nTitle: May It Be"</span> + <span class="string">"\nSinger: Enya"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Configuration 类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="comment">//指定扫描的基础包</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(basePackages=&#123;<span class="string">"sugar.cdsystem"</span>, <span class="string">"sugar.player"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDConfiguration</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><code>basePackages</code> 指定组件扫描的基础包</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(basePackages=&#123;<span class="string">"sugar.cdsystem"</span>, <span class="string">"sugar.player"</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
-<p><code>basePackageClasses</code>属性所设置的数组中包含了类。这些类所在的包将会作为组件扫描的基础包</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(basePackageClasses = &#123;CompateDisc<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>在依赖此对象的 Class 中，通过  <code>@Autowired</code> （Spring 特有的注解）或者 <code>@Inject</code> （Java 依赖注入规范） 注解用于构造器、setter 方法或任意方法，进行注入。</p>
-<h4 id="1-2-Java-配置类中配置"><a href="#1-2-Java-配置类中配置" class="headerlink" title="1.2 Java 配置类中配置"></a><strong>1.2 Java 配置类中配置</strong></h4><p><code>@Configuration</code>注解表明这个类是一个配置类，该类应该包含在Spring应用上下文中如何创建bean的细节。</p>
-<p>所有 Bean 的声明都可以在配置类中进行，而 Bean 的代码中无需添加任何代码，每一个 Bean 的声明都通过一个 ==Bean== 进行注解的方法返回一个实例。</p>
-<p>带有<code>@Bean</code>注解的方法可以采用任何必要的Java功能来产生bean实例。构造器和Setter方法只是<code>@Bean</code>方法的两个简单样例。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//默认 bean id 为方法名</span></span><br><span class="line">    <span class="comment">//也可以用 name 指定</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> CompactDisk <span class="title">enyaAlbum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> EnyaAlbum();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Player <span class="title">cdPlayer</span><span class="params">(CompactDisk compactDisk)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(compactDisk);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="1-3-XML-文件装配"><a href="#1-3-XML-文件装配" class="headerlink" title="1.3 XML 文件装配"></a>1.3 XML 文件装配</h4><p>XML时，需要在配置文件的顶部声明多个XML模式（XSD）文件，这些文件定义了配置Spring的XML元素。用来装配bean的最基本的XML元素包含在<code>spring-beans</code>模式之中</p>
-<p>在XML中声明 DI 时，会有多种可选的配置方案和风格。具体到构造器注入，有两种基本的配置方案可供选择：</p>
-<ul>
-<li><code>&lt;constructor-arg&gt;</code>元素</li>
-<li>使用Spring 3.0所引入的c-命名空间</li>
-</ul>
-<p>在装配集合方面，<code>&lt;constructor-arg&gt;</code>比c-命名空间的属性更有优势。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xmlns:c="http://www.springframework.org/schema/c"</span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"electricalPlayer"</span> <span class="attr">class</span>=<span class="string">"com.something.learn.bean.ElectricalPlayer"</span> <span class="attr">c:_0-ref</span>=<span class="string">"mp3Song"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>属性注入时，既可以使用 <code>&lt;property&gt;</code> 元素，也可以使用 p-命名空间</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xmlns:p="http://www.springframework.org/schema/p"</span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"blankCD"</span> <span class="attr">class</span>=<span class="string">"com.something.learn.bean.BlankCD"</span> <span class="attr">p:remark</span>=<span class="string">"音乐启迪人生"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>无论是构造器注入还是属性注入， c-命名空间与 p-命名空间都不支持列表等数据结构，只支持引用及字面常量，但是可以使用 util-命名空间，声明 List、Set、Map 等结构，并且像 bean 一样可以在 c-命名空间或 p-命名空间中使用其引用</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:util</span>=<span class="string">"http://www.springframework.org/schema/util"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:c</span>=<span class="string">"http://www.springframework.org/schema/c"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:p</span>=<span class="string">"http://www.springframework.org/schema/p"</span>	</span></span><br><span class="line"><span class="tag">  <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/util</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/util/spring-util.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/context/spring-context.xsd"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">   <span class="tag">&lt;<span class="name">util:list</span> <span class="attr">id</span>=<span class="string">"trackList"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>突然的自我<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>晚风<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>浪人情歌<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">util:list</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"blankCD"</span> <span class="attr">class</span>=<span class="string">"com.something.learn.bean.BlankCD"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">c:artist</span>=<span class="string">"伍佰"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">c:albumName</span>=<span class="string">"冬之火 九重天演唱会特选录音专辑"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">c:tracks-ref</span>=<span class="string">"trackList"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">p:remark</span>=<span class="string">"音乐启迪人生"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-Java-配置与-XML-配置的引用"><a href="#2-Java-配置与-XML-配置的引用" class="headerlink" title="2 Java 配置与 XML 配置的引用"></a>2 Java 配置与 XML 配置的引用</h3><h4 id="2-1-在-JavaConfig-引用-xml-中声明的-bean"><a href="#2-1-在-JavaConfig-引用-xml-中声明的-bean" class="headerlink" title="2.1 在 JavaConfig 引用 xml 中声明的 bean"></a>2.1 在 JavaConfig 引用 xml 中声明的 bean</h4><ol>
-<li><p>Java 配置文件之间的引用</p>
-<p>使用 <strong>@Import</strong> 注解导入到另一个配置文件中</p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDConfiguration</span> </span>&#123;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompactDisk <span class="title">enyaAlbum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> EnyaAlbum();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(CDConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">PlayerConfiguration</span> </span>&#123;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Player <span class="title">cdPlayer</span><span class="params">(CompactDisk compactDisk)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(compactDisk);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<ol start="2">
-<li>创建一个总的配置类，根配置类，将所有 Java 配置类导入</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;CDConfiguration<span class="class">.<span class="keyword">class</span>, <span class="title">PlayerConfiguration</span>.<span class="title">class</span>&#125;)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">Configuration</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>在 Java 配置文件中引用 XML 的配置</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 假设Player配置在Java文件中</span></span><br><span class="line"><span class="comment">* CD配置在XML文件中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(PlayerConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line">@ImportResource("classpath:CDConfiguration.xml")</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Configuration</span> </span>&#123;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="2-2-在-xml-中引用-JavaConfig-声明的-bean"><a href="#2-2-在-xml-中引用-JavaConfig-声明的-bean" class="headerlink" title="2.2 在  xml 中引用 JavaConfig 声明的 bean"></a>2.2 在  xml 中引用 JavaConfig 声明的 bean</h4><ol start="2">
-<li>在 XML 文件中引用另一个 XML 配置文件</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"CDConfiguration.xml"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li><p>在 XML 文件中引用 Java 的配置</p>
-<p>为了将 JavaConfig 类导入到 XML 配置中，我们可以这样声明bean：</p>
-</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">&lt;!--CDConfiguration是Java中的配置类--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"sugar.configuration.CDConfiguration"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--cdPlayer是在XML文件中配置的--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cdPlayer"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">"sugar.player.CDPlayer"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">c:cd-ref</span>=<span class="string">"compactDisc"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>使用第三个配置文件组合, 也称之为==根配置==</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"sugar.configuration.CDConfiguration"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"playerConfiguration.xml"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>根配置类或根配置文件中启用组件扫描，通过<code>&lt;context:component-scan&gt;</code>或<code>@ComponentScan</code></p>
-<p>@Autowired 可以使用在构造器上（构造器注入），也可以使用在 setter 方法上（方法注入）</p>
-<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><p>Spring 中多种装配方式、多个配置文件可能看起来很是杂乱无章，因此最好有一个根配置，将所有的配置导入进来，进行声明。</p>
-<p>尽量选择自动化配置，接着是 Java 配置（类型安全、易于重构、自定义Bean的实例化方式），最后采用 xml 方式的配置。 显示配置越少越好。</p>
-<p>JNDI</p>
-<h2 id="二-高级装配"><a href="#二-高级装配" class="headerlink" title="二 高级装配"></a>二 高级装配</h2><h4 id="2-1-为环境相关的-Bean-启用-profile-配置"><a href="#2-1-为环境相关的-Bean-启用-profile-配置" class="headerlink" title="2.1 为环境相关的 Bean 启用 profile 配置"></a>2.1 为环境相关的 Bean 启用 profile 配置</h4><p><strong>有连个参数可以设置激活 active 的 profile：</strong></p>
-<ul>
-<li><p>spring.profiles.active</p>
-</li>
-<li><p>spring.profiles.default</p>
-</li>
-</ul>
-<p><strong>有多种方式来设置这两个属性：</strong> </p>
-<ul>
-<li><p>作为<code>DispatcherServlet</code>的初始化参数；</p>
-</li>
-<li><p>作为Web应用的上下文参数；</p>
-</li>
-<li><p>作为JNDI条目；</p>
-</li>
-<li><p>作为环境变量；</p>
-</li>
-<li><p>作为JVM的系统属性；</p>
-</li>
-<li><p>在集成测试类上，使用<code>@ActiveProfiles</code>注解设置。</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= CDPlayerConfig<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line">@ActiveProfiles("word")</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JunitTest</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Autowired</span> <span class="keyword">private</span> DataSource dataSource;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dataSourceTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    assertNotNull(dataSource);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      DatabaseMetaData metaData = dataSource.getConnection().getMetaData();</span><br><span class="line">      System.out.println(metaData.getDatabaseProductName());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.context.annotation <span class="meta">@Retention</span>(RetentionPolicy.RUNTIME) </span><br><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE,ElementType.METHOD&#125;) </span><br><span class="line"><span class="meta">@Documented</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Profile</span></span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">annotation</span>.<span class="title">Annotation</span></span></span><br><span class="line"><span class="class"><span class="title">Indicates</span> <span class="title">that</span> <span class="title">a</span> <span class="title">component</span> <span class="title">is</span> <span class="title">eligible</span> <span class="title">for</span> <span class="title">registration</span> <span class="title">when</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">specified</span> <span class="title">profiles</span> <span class="title">are</span> <span class="title">active</span>.</span></span><br><span class="line"><span class="class"><span class="title">A</span> <span class="title">profile</span> <span class="title">is</span> <span class="title">a</span> <span class="title">named</span> <span class="title">logical</span> <span class="title">grouping</span> <span class="title">that</span> <span class="title">may</span> <span class="title">be</span> <span class="title">activated</span> <span class="title">programmatically</span> <span class="title">via</span> <span class="title">ConfigurableEnvironment</span>.<span class="title">setActiveProfiles</span> <span class="title">or</span> <span class="title">declaratively</span> <span class="title">through</span> <span class="title">setting</span> <span class="title">the</span> <span class="title">spring</span>.<span class="title">profiles</span>.<span class="title">active</span> <span class="title">property</span>, <span class="title">usually</span> <span class="title">through</span> <span class="title">JVM</span> <span class="title">system</span> <span class="title">properties</span>, <span class="title">as</span> <span class="title">an</span> <span class="title">environment</span> <span class="title">variable</span>, <span class="title">or</span> <span class="title">for</span> <span class="title">web</span> <span class="title">applications</span> <span class="title">as</span> <span class="title">a</span> <span class="title">Servlet</span> <span class="title">context</span> <span class="title">parameter</span> <span class="title">in</span> <span class="title">web</span>.<span class="title">xml</span>.</span></span><br><span class="line">The @Profile annotation may be used in any of the following ways:</span><br><span class="line">as a type-level annotation on any <span class="class"><span class="keyword">class</span> <span class="title">directly</span> <span class="title">or</span> <span class="title">indirectly</span> <span class="title">annotated</span> <span class="title">with</span> @<span class="title">Component</span>, <span class="title">including</span> @<span class="title">Configuration</span> <span class="title">classes</span></span></span><br><span class="line"><span class="class"><span class="title">as</span> <span class="title">a</span> <span class="title">meta</span>-<span class="title">annotation</span>, <span class="title">for</span> <span class="title">the</span> <span class="title">purpose</span> <span class="title">of</span> <span class="title">composing</span> <span class="title">custom</span> <span class="title">stereotype</span> <span class="title">annotations</span></span></span><br><span class="line"><span class="class"><span class="title">as</span> <span class="title">a</span> <span class="title">method</span>-<span class="title">level</span> <span class="title">annotation</span> <span class="title">on</span> <span class="title">any</span> @<span class="title">Bean</span> <span class="title">method</span></span></span><br><span class="line">If a @Configuration class is marked with @Profile, all of the @Bean methods and @Import annotations associated with that class will be bypassed unless one or more of the specified profiles are active. This is very similar to the behavior in Spring XML: if the profile attribute of the beans element is supplied e.g., &lt;beans profile="p1,p2"&gt;, the beans element will not be parsed unless profiles 'p1' and/or 'p2' have been activated. Likewise, if a @Component or @Configuration class is marked with @Profile(&#123;"p1", "p2"&#125;), that class will not be registered/processed unless profiles 'p1' and/or 'p2' have been activated.</span><br><span class="line"><span class="function">If a given profile is prefixed with the NOT <span class="title">operator</span> <span class="params">(!)</span>, the annotated will be registered <span class="keyword">if</span> the profile is not active. e.g., <span class="keyword">for</span> @<span class="title">Profile</span><span class="params">(&#123;<span class="string">"p1"</span>, <span class="string">"!p2"</span>&#125;)</span>, registration will occur <span class="keyword">if</span> profile 'p1' is active or <span class="keyword">if</span> profile 'p2' is not active.</span></span><br><span class="line"><span class="function">If the @Profile annotation is omitted, registration will occur, regardless of <span class="title">which</span> <span class="params">(<span class="keyword">if</span> any)</span> profiles are active.</span></span><br><span class="line"><span class="function">When defining Spring beans via XML, the "profile" attribute of the &lt;beans&gt; element may be used. See the documentation in spring-beans <span class="title">XSD</span> <span class="params">(version <span class="number">3.1</span> or greater)</span> <span class="keyword">for</span> details.</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="2-2-条件化的-bean"><a href="#2-2-条件化的-bean" class="headerlink" title="2.2 条件化的 bean"></a>2.2 条件化的 bean</h4><h4 id="2-3-歧义性"><a href="#2-3-歧义性" class="headerlink" title="2.3 歧义性"></a>2.3 歧义性</h4><p>当有多个 bean 满足自动装配所需的类型时，如何消除歧义</p>
-<ul>
-<li><p><code>@primary</code> 注解设置首选 bean</p>
-<p>各种配置方式中都可以指定</p>
-<p>多个类型相同 bean 都指定 <code>@primary</code>， 注入的时候（使用类型）也会带来歧义性</p>
-</li>
-<li><p><code>@qualifier</code> 限定某个 bean</p>
-<p><code>@Component</code> 、JavaConfig 的 <code>@bean</code> 组合使用</p>
-<p>每个 bean 都可以指定一个限定符，如果没有指定，限定符与 bean id 相同，但如果类的名称（组件扫描）或 bean id 变化时，需要修改注入时指定的限定符；为了避免这种不一致性，可以为 bean 通过 <code>@qualifier(&quot;qua1&quot;)</code> 指定限定符，注入的时候，也指定相同的限定符即可，这样类的名字和 bean id 就可以随意修改；</p>
-<p>可以为每个 bean 指定多个限定符，例如，可以按属性、特性等为 bean 指定限定符，多个 bean 可以拥有相同的限定符，这时，注入的时候，也会产生歧义，但是可以指定更多的限定符，将范围缩小至一个，但 Java 不支持同时指定多个相同的注解，可以通过自定义注解实现（创建自定义注解，同时在该注解的定于上使用 <code>@qualifier</code> 注解）。 </p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.CONSTRUCTOR, ElementType.FIELD,</span><br><span class="line">         ElementType.METHOD, ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Qualifier</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Creamy &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Cold</span></span><br><span class="line"><span class="meta">@Creamy</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IceCream</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
-
-
+                    <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -391,83 +108,395 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E9%80%9F%E6%9F%A5%E8%A1%A8/">速查表</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>getResourceAsStream</p>
-<p>java.lang.reflect.Proxy</p>
-<p>MySQL for Excel</p>
-<ul>
-<li>Import MySQL data into Excel.</li>
-<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
-<li>Modify MySQL data directly from within Excel.</li>
-</ul>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>事务的隔离级别</p>
-<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
-<blockquote>
-<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
-</blockquote>
-<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
-<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
-<ul>
-<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
-<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
-</ul>
-<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
+                    <p><a href="https://ihateregex.io/cheatsheet/#" target="_blank" rel="noopener"># cheatsheet</a></p>
+<p>tiny regex cheatsheet</p>
 <table>
 <thead>
 <tr>
-<th></th>
-<th></th>
+<th>expr</th>
+<th>usage</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>resultType</code></td>
-<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
+<td>/hello/</td>
+<td>looks for the string between the forward slashes (case-sensitive)</td>
+</tr>
+<tr>
+<td>/hello/i</td>
+<td>looks for the string between the forward slashes (case-insensitive)</td>
+</tr>
+<tr>
+<td>/hello/g</td>
+<td>looks for multiple occurrences of string between the forward slashes</td>
+</tr>
+<tr>
+<td>/h.llo/</td>
+<td>the ‘.’ matches any one character other than a new line character… matches ‘hello’, ‘hallo’ but not ‘h llo’</td>
+</tr>
+<tr>
+<td>/h.*llo/</td>
+<td>the “*” matches any character(s) zero or more times… matches “hello”, “heeeeeello”, “hllo”, “hwarwareallo”</td>
+</tr>
+<tr>
+<td>/\d/</td>
+<td>matches any digit</td>
+</tr>
+<tr>
+<td>/\D/</td>
+<td>matches any non-digit</td>
+</tr>
+<tr>
+<td>/\w/</td>
+<td>matches any word character (a-z, A-Z, 0-9, _)</td>
+</tr>
+<tr>
+<td>/\W/</td>
+<td>matches any non-word character</td>
+</tr>
+<tr>
+<td>/\s/</td>
+<td>matches any white space character (\r (carriage return),\n (new line), \t (tab), \f (form feed))</td>
+</tr>
+<tr>
+<td>/\S/</td>
+<td>matches any non-white space character</td>
+</tr>
+<tr>
+<td>/[abcd]/</td>
+<td>matches any character in square brackets</td>
+</tr>
+<tr>
+<td>/[ch]at/</td>
+<td>matches cat or hat</td>
+</tr>
+<tr>
+<td>/[^abcd]/</td>
+<td>matches anything except the characters in square brackets</td>
+</tr>
+<tr>
+<td>/[a-z]/</td>
+<td>matches all lowercase letters (a to z)</td>
+</tr>
+<tr>
+<td>/[A-Z]/</td>
+<td>matches all uppercase letters (A to Z)</td>
+</tr>
+<tr>
+<td>/[0-9]/</td>
+<td>matches all digits</td>
+</tr>
+<tr>
+<td>/[a-zA-Z]/</td>
+<td>matches all lowercase and uppercase letters</td>
+</tr>
+<tr>
+<td>/[^a-zA-Z]/</td>
+<td>matches non-letters</td>
+</tr>
+<tr>
+<td>/[a-zA-Z0-9]/</td>
+<td>matches all lowercase, uppercase letters and numbers</td>
+</tr>
+<tr>
+<td>/(hello){4}/</td>
+<td>matches “hellohellohellohello”</td>
+</tr>
+<tr>
+<td>/hello{3}/</td>
+<td>matches “hellooo” and “helloooo” but not “helloo”</td>
+</tr>
+<tr>
+<td>/(hello){1,3}/</td>
+<td>matches “hello” that occur between 1 and 3 times (inclusive)</td>
+</tr>
+<tr>
+<td>/(hello){3,}/</td>
+<td>matches “hello” that occur atleast 3 times</td>
+</tr>
+<tr>
+<td>/ab*c/</td>
+<td>matches zero or more repetitions of “b” (matches “abc”, “abbbbc”, “ac”)</td>
+</tr>
+<tr>
+<td>/ab+c/</td>
+<td>matches one or more repetitions of “b” (matches “abc”, “abbbbc”, but not “ac”)</td>
+</tr>
+<tr>
+<td>/^/</td>
+<td>matches beginning of a line</td>
+</tr>
+<tr>
+<td>/$/</td>
+<td>matches end of a line</td>
+</tr>
+<tr>
+<td>/(hard)?work/</td>
+<td>matches “work” or “hardwork”</td>
+</tr>
+<tr>
+<td>/(?:hard)?work/</td>
+<td>matches “work” or “hardwork” but is a non-capturing group</td>
+</tr>
+<tr>
+<td>/i am a (cat|dog|whale) person/</td>
+<td>matches “i am a cat person”, “i am a dog person” and “i am a whale person”</td>
+</tr>
+<tr>
+<td>/z(?=a)/</td>
+<td>positive lookahead… matches the “z” before the “a” in pizza but not the first “z”</td>
+</tr>
+<tr>
+<td>/z(?!a)/</td>
+<td>negative lookahead… matches the first “z” but not the “z” before the “a”</td>
+</tr>
+<tr>
+<td>/(?&lt;=[aeiou])\w/</td>
+<td>positive lookbehind… matches any word character that is preceded by a vowel</td>
+</tr>
+<tr>
+<td>/(?&lt;![aeiou])\w/</td>
+<td>negative lookbehind… matches any word character that is not preceded by a vowel</td>
 </tr>
 </tbody></table>
-<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
-<p>需要试验一下，映射方法有多个参数</p>
-<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
-<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Mysql/MySQL%208.0.16%20JDBC%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98/">MySQL 8.0.16 JDBC 数据库连接问题</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="MySQL-8-0-16-JDBC-数据库连接问题"><a href="#MySQL-8-0-16-JDBC-数据库连接问题" class="headerlink" title="MySQL 8.0.16 JDBC 数据库连接问题"></a>MySQL 8.0.16 JDBC 数据库连接问题</h3><p>Mysql 版本：mysql  Ver 8.0.16 for Win64 on x86_64 (MySQL Community Server - GPL)， 使用 5.x.x 或较低版本的  JDBC driver for MySQL 会出现连接问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.ClassCastException: java.math.BigInteger cannot be cast to java.lang.Long</span><br><span class="line">	at com.mysql.jdbc.ConnectionImpl.buildCollationMapping(ConnectionImpl.java:<span class="number">1019</span>)</span><br><span class="line">	... <span class="number">16</span> more</span><br></pre></td></tr></table></figure>
+
+<p>需要修改驱动器为对应的版本 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.16<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>InvalidConnectionAttributeException</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.InvalidConnectionAttributeException: </span><br><span class="line"></span><br><span class="line">The server time zone value <span class="string">'�й���׼ʱ��'</span> is unrecognized or represents more than one time zone. <span class="function">You must configure either the server or JDBC <span class="title">driver</span> <span class="params">(via the serverTimezone configuration property)</span> to use a more specifc time zone value <span class="keyword">if</span> you want to utilize time zone support.</span></span><br></pre></td></tr></table></figure>
+
+<p>url 设置 serverTimezone属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//localhost:3306/world?serverTimezone=UTC</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="MySQL-Connector-J-Database-URL"><a href="#MySQL-Connector-J-Database-URL" class="headerlink" title="MySQL Connector/J Database URL"></a>MySQL Connector/J Database URL</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:&#x2F;&#x2F;[host][,failoverhost...]</span><br><span class="line">    [:port]&#x2F;[database]</span><br><span class="line">    [?propertyName1][&#x3D;propertyValue1]</span><br><span class="line">    [&amp;propertyName2][&#x3D;propertyValue2]...</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>left join 与 left outer join 的区别</p>
+<p>事务的隔离级别</p>
+<p>Vector 的使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> java.util.<span class="function">Enumeration&lt;Driver&gt; <span class="title">getDrivers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    java.util.Vector&lt;Driver&gt; result = <span class="keyword">new</span> java.util.Vector&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; callerClass = Reflection.getCallerClass();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Walk through the loaded registeredDrivers.</span></span><br><span class="line">    <span class="keyword">for</span>(DriverInfo aDriver : registeredDrivers) &#123;</span><br><span class="line">        <span class="comment">// If the caller does not have permission to load the driver then</span></span><br><span class="line">        <span class="comment">// skip it.</span></span><br><span class="line">        <span class="keyword">if</span>(isDriverAllowed(aDriver.driver, callerClass)) &#123;</span><br><span class="line">            result.addElement(aDriver.driver);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            println(<span class="string">"    skipping: "</span> + aDriver.getClass().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (result.elements());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
+<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
+<li>利用 <code>rename</code> 命令</li>
 </ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>清理工作</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>使用 DataSource 对象的优点</p>
+<ul>
+<li><p>便携性，可维护性强</p>
+<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
+</li>
+<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
+</li>
+</ul>
+<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
+<thead>
+<tr>
+<th><strong>Config Property</strong></th>
+<th><strong>Default Value</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>maxIdle</td>
+<td>100</td>
+<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
+</tr>
+<tr>
+<td>minIdle</td>
+<td>10</td>
+<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
+</tr>
+<tr>
+<td>maxActive</td>
+<td>100</td>
+<td>连接池中同一时间可以分配的最大活跃连接数</td>
+</tr>
+<tr>
+<td>timeBetweenEvictionRunsMillis</td>
+<td>5000 (5秒)</td>
+<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
+</tr>
+<tr>
+<td>initialSize</td>
+<td>10</td>
+<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
+</tr>
+<tr>
+<td>testWhileIdle</td>
+<td>false</td>
+<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
+</tr>
+<tr>
+<td>testOnBorrow</td>
+<td>false</td>
+<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
+</tr>
+<tr>
+<td>validationInterval</td>
+<td>3000（3秒）</td>
+<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
+</tr>
+<tr>
+<td>validationQuery</td>
+<td></td>
+<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
+</tr>
+<tr>
+<td>validationQueryTimeout</td>
+<td>-1</td>
+<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
+</tr>
+<tr>
+<td>removeAbandoned</td>
+<td>false</td>
+<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
+</tr>
+<tr>
+<td>removeAbandonedTimeout</td>
+<td>60 s</td>
+<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
+</tr>
+<tr>
+<td>abandonWhenPercentageFull</td>
+<td>0</td>
+<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
+</tr>
+<tr>
+<td>maxWait</td>
+<td>30000（30秒）</td>
+<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
+</tr>
+<tr>
+<td>minEvictableIdleTimeMillis</td>
+<td>60000 （60 秒）</td>
+<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
+<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
+<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
+<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
+<p>return result; </p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
+<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
+<p>**<br>**</p>
+<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
+<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
+<p>**<br>**</p>
+<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
+<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
+<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
+<p>maxIdle </p>
+<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
 
                 
             </div>
