@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20MVC%20Restful/">Spring MVC Restful</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,341 +98,330 @@
             </div>
             <div class="post-content">
                 
-                    <p>Spring 提供的将资源的 Java 表述形式转换为发送给客户端的形式</p>
-<ul>
-<li>内容协商 - Content Negotiation： 选择一个视图，将模型渲染为呈现给客户端的表述形式</li>
-</ul>
-<ul>
-<li>消息转换器 - Message Conversion: 通过一个消息转换器将控制器所返回的的的对象转换为呈现给客户端的表述形式</li>
-</ul>
-<h3 id="内容协商-Content-Negotiation"><a href="#内容协商-Content-Negotiation" class="headerlink" title="内容协商 - Content Negotiation"></a>内容协商 - Content Negotiation</h3><p>内容协商的步骤：</p>
-<ol>
-<li>确定请求的媒体类型<ul>
-<li>先根据请求 URI 的文件扩展名，如 .json 确定请求的类型是 Json</li>
-<li>文件扩展名不能得到任何媒体类型的话，考虑请求 Accept 头部信息。Accept 头部接受的类型就表明了客户端的想要的 <code>MIME</code> 类型 </li>
-<li>没有头部信息，默认接受 <code>/</code> 作为默认的内容类型，也就是可以接受各种形式的资源表述</li>
-</ul>
-</li>
-<li>找到适合请求媒体类型的最佳视图</li>
-</ol>
-<p>为此，提供了一个 <code>ContentNegotiatingViewResolver</code> 内容协商视图解析器</p>
+                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
+<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
+<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
+</blockquote>
+<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
 <blockquote>
-<p><code>ContentNegotiatingViewResolver</code>要求其他的视图解析器将逻辑视图名解析为视图。解析得到的每个视图都会放到一个列表中。这个列表装配完成后，<code>ContentNegotiatingViewResolver</code>会循环客户端请求的所有媒体类型，在候选的视图中查找能够产生对应内容类型的视图。第一个匹配的视图会用来渲染模型。</p>
+<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
 </blockquote>
-<p>假设控制器方法返回了一个 <code>spittles</code> 逻辑视图名称， 程序中定义了两个试图解析器，对应的视图渲染的表述形式不一样，如 HTML 和 Json， 如果都存在对应的视图，这时，会根据请求要求的类型，找到第一个匹配其类型的视图，渲染模型数据。</p>
-<h3 id="消息转换器-Message-Conversion"><a href="#消息转换器-Message-Conversion" class="headerlink" title="消息转换器 - Message Conversion"></a>消息转换器 - Message Conversion</h3><p><code>@ResponseBody</code>注解会告知Spring，我们要将返回的对象作为资源发送给客户端，并将其转换为客户端可接受的表述形式。<code>DispatcherServlet</code>将会考虑到请求中<code>Accept</code>头部信息，并查找能够为客户端提供所需表述形式的消息转换器。</p>
-<p>使用 <code>MappingJackson2XmlHttpMessageConverter</code>， 实现 Json 与 Java 对象转换需要引入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>使用 <code>MappingJackson2XmlHttpMessageConverter</code>， 实现  XML 与 Java 对象转换需要引入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.dataformat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-dataformat-xml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
 
 
 
-
-
-
-
-<p>@RestController 注解</p>
-<p>表明该控制器的所有处理方法都应用了消息转换功能，相当于为每个方法添加 @ResponseBody 注解，能将方法返回的 Java 对象转换为合适的资源表述，作为响应返回给客户端。</p>
-<p>FactoryBean</p>
-<h2 id="Restful-Client"><a href="#Restful-Client" class="headerlink" title="Restful Client"></a>Restful Client</h2><p>编写 Restful Client 的代码也同样存在样板式代码，也就是说有很多相同的代码要重复写，如</p>
-<ul>
-<li>创建 HttpClient 客户端</li>
-<li>创建请求，填充头部信息，请求体</li>
-<li>执行请求，对返回的响应进行解析处理</li>
-</ul>
-<p>RestTemplate 解救人民于水火，提供了各种 Http Method 的请求，并且简化了请求的代码，只需要初始化一个 Template， 就可以调用各种 Http Method 对应的方法执行请求， RestTemplate 可以通过注入的方式来使用。</p>
-<p>示例代码：</p>
-<p>Get 请求 （template.getForObject）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate template = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">      String parameterUri = <span class="string">"http://localhost:8080/rest/blog/responseEntity/&#123;name&#125;"</span>;</span><br><span class="line">      MessageEntity messageEntity = template.getForObject(parameterUri, MessageEntity.class, "Guoph");</span><br><span class="line">      System.out.println(messageEntity);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>指定请求头部的 Post 请求 (template.exchange)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String parameterUri = <span class="string">"http://localhost:8080/rest/blog/responseEntity/&#123;name&#125;"</span>;</span><br><span class="line"></span><br><span class="line">HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">headers.set(<span class="string">"Accept"</span>, MediaType.APPLICATION_JSON_VALUE);</span><br><span class="line">HttpEntity&lt;Object&gt; httpEntity = <span class="keyword">new</span> HttpEntity&lt;&gt;(headers);</span><br><span class="line"></span><br><span class="line">ResponseEntity&lt;MessageEntity&gt; responseEntity = template.exchange(parameterUri, HttpMethod.GET, httpEntity,</span><br><span class="line">        MessageEntity.class, "Guoph");</span><br><span class="line"></span><br><span class="line">System.out.println(responseEntity);</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20AOP/">Spring AOP</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring提供了4种类型的AOP支持：</p>
-<ul>
-<li>基于代理的经典Spring AOP；</li>
-<li>纯POJO切面；</li>
-<li><code>@AspectJ</code>注解驱动的切面；</li>
-<li>注入式AspectJ切面（适用于Spring各版本）。</li>
-</ul>
-<p>Spring AOP构建在动态代理基础之上，因此，Spring对AOP的支持局限于方法拦截。</p>
-<p>引入了简单的声明式AOP和基于注解的AOP之后，Spring经典的AOP看起来就显得非常笨重和过于复杂，直接使用 ProxyFactory Bean会让人感觉厌烦</p>
-<p>Spring借鉴了AspectJ的切面，以提供注解驱动的AOP</p>
-<p>方法拦截可以满足绝大部分的需求。如果需要方法拦截之外的连接点拦截功能，那么我们可以利用Aspect来补充Spring AOP的功能。</p>
-<p>在Spring AOP中，要使用AspectJ的切点表达式语言来定义切点</p>
-<p>《AspectJ in Action》第二版（Manning，2009，<a href="http://www.manning.com/laddad2/）。" target="_blank" rel="noopener">www.manning.com/laddad2/）。</a></p>
-<p><code>&lt;aop:aspectj-autoproxy&gt;</code>元素，它能够自动代理AspectJ注解的通知类</p>
-<p>如下的XML代码片段与之前基于AspectJ的引入功能是相同：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">aop:declare-parents</span></span></span><br><span class="line"><span class="tag">    <span class="attr">types-matching</span>=<span class="string">"concert.Performance+"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">implement-interface</span>=<span class="string">"concert.Encoreable"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default-impl</span>=<span class="string">"concert.DefaultEncoreable"</span></span></span><br><span class="line"><span class="tag">    /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p> <code>&lt;aop:declare-parents&gt;</code>声明了此切面所通知的bean要在它的对象层次结构中拥有新的父类型。具体到本例中，类型匹配<code>Performance</code>接口（由<code>types-matching</code>属性指定）的那些bean在父类结构中会增加<code>Encoreable</code>接口（由<code>implement-interface</code>属性指定）</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20JDBC/">Spring JDBC</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring 定义的数据访问异常体系相比于 JDBC 的 SQLException 要丰富的多，并且没有与特定的持久化方式相关联。 持久化机制与数据访问层隔离开来。</p>
-<p>DataAccessException 非检查型异常，不强制进行捕获，因为 Spring 认为触发异常的很多问题是不能在 catch 代码块中进行捕获的，如连接信息有误、语法错误等异常（就算捕获了，也不能做任何处理）。是否要捕获异常取决于开发人员。</p>
-<p>模板方法模式</p>
-<p>构造器 @Inject 注解 需要加入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h4><p>Spring JDBC 框架承担了必要的<strong>资源管理</strong>与<strong>异常处理</strong>工作，简化了 JDBC 代码， 只需要关注必要的数据库读写代码即可。</p>
-<p>Spring 将数据访问的样板代码抽象到模板类中。</p>
-<p>Spring 为 JDBC 提供了三个模板类:</p>
-<ul>
-<li>JdbcTemplate：最基本的 Spring JDBC 模板，支持简单的 JDBC 数据库访问功能以及基于索引参数的查询（赋值的顺序与 SQL 语句占位符的顺序要一致） Spring 3.1 开始，支持 Java 5 的自动装箱、泛型以及可变参数列表等特性来简化 JDBC 模板的使用</li>
-<li>NamedParameterJdbcTemplate：可以将值以命名参数的形式绑定到 SQL 中（相对于索引参数）</li>
-</ul>
-<h4 id="Spring-与-Hibernate-的集成"><a href="#Spring-与-Hibernate-的集成" class="headerlink" title="Spring 与 Hibernate 的集成"></a>Spring 与 Hibernate 的集成</h4><p>Spring 提供了与 JDBC 类似的模板类 <code>HibernateTemplate</code>，能够保证每个事务使用同一个 <code>Session</code>, 弊端在于 Repository 的实现与 Spring 耦合。</p>
-<p>可以直接使用 Hibernate 的上下文 Session <code>Contextual Session</code>， 其实 Hibernate 等持久化框架已经达到了和模板类类似的功能，如获取链接，创建语句，管理事务，关闭资源等，因此直接使用也是比较方便的。</p>
-<p>需要声明一个 <code>org.springframework.orm.hibernate4.LocalSessionFactoryBean</code>  bean（对象关系映射既可以通过注解，也可以通过配置文件声明）, 继承自 Spring 的 <code>FactoryBean</code>, 会产生 Hibernate 的 <code>SessionFactory</code>。</p>
-<p>但是不使用 Spring 提供的模板类，问题就是 Repository 实现类会抛出 Hibernate 相关的异常，而不是 Spring 定义的非检查型异常。解决方案是：定义一个 <code>PersistenceExceptionTranslationPostProcessor</code> bean。</p>
-<blockquote>
-<p><code>PersistenceExceptionTranslationPostProcessor</code>是一个bean 后置处理器（bean post-processor），它会在所有拥有<code>@Repository</code>注解的类上添加一个通知器（advisor），这样就会捕获任何平台相关的异常并以Spring非检查型数据访问异常的形式重新抛出。</p>
-</blockquote>
-<p><strong>@Repository 注解</strong></p>
-<p><code>@Repository</code>注解，这会为我们做两件事情。首先，<code>@Repository</code>是Spring的另一种构造性注解，它能够像其他注解一样被Spring的组件扫描所扫描到, 表明在组件扫描的时候会自动创建。这样就不必明确声明<code>HibernateSpitterRepository</code> bean了，只要这个Repository类在组件扫描所涵盖的包中即可。    </p>
-<p>除了帮助减少显式配置以外，<code>@Repository</code>还有另外一个用处。让我们回想一下模板类，它有一项任务就是捕获平台相关的异常，然后使用Spring统一非检查型异常的形式重新抛出。</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
-<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
-<p>– Becoming Functional</p>
-</blockquote>
-<p>一级函数 高阶函数？</p>
-<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
-<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
-<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
-<p>在 Java 中， 比如定义了一个 Function 接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
-</blockquote>
-<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
-<p><strong>匿名函数</strong></p>
-<blockquote>
-<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
-</blockquote>
-<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
-<blockquote>
-<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
-</blockquote>
-<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
-<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
-
-
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>使用 DataSource 对象的优点</p>
-<ul>
-<li><p>便携性，可维护性强</p>
-<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
-</li>
-<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
-</li>
-</ul>
-<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
+<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
+<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
+<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
+<table>
 <thead>
 <tr>
-<th><strong>Config Property</strong></th>
-<th><strong>Default Value</strong></th>
-<th><strong>Description</strong></th>
+<th>路径</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>maxIdle</td>
-<td>100</td>
-<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
+<td>?</td>
+<td>匹配任何单字符</td>
 </tr>
 <tr>
-<td>minIdle</td>
-<td>10</td>
-<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
+<td>*</td>
+<td>匹配0或者任意数量的字符</td>
 </tr>
 <tr>
-<td>maxActive</td>
-<td>100</td>
-<td>连接池中同一时间可以分配的最大活跃连接数</td>
-</tr>
-<tr>
-<td>timeBetweenEvictionRunsMillis</td>
-<td>5000 (5秒)</td>
-<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
-</tr>
-<tr>
-<td>initialSize</td>
-<td>10</td>
-<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
-</tr>
-<tr>
-<td>testWhileIdle</td>
-<td>false</td>
-<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
-</tr>
-<tr>
-<td>testOnBorrow</td>
-<td>false</td>
-<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
-</tr>
-<tr>
-<td>validationInterval</td>
-<td>3000（3秒）</td>
-<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
-</tr>
-<tr>
-<td>validationQuery</td>
-<td></td>
-<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
-</tr>
-<tr>
-<td>validationQueryTimeout</td>
-<td>-1</td>
-<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
-</tr>
-<tr>
-<td>removeAbandoned</td>
-<td>false</td>
-<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
-</tr>
-<tr>
-<td>removeAbandonedTimeout</td>
-<td>60 s</td>
-<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
-</tr>
-<tr>
-<td>abandonWhenPercentageFull</td>
-<td>0</td>
-<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
-</tr>
-<tr>
-<td>maxWait</td>
-<td>30000（30秒）</td>
-<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
-</tr>
-<tr>
-<td>minEvictableIdleTimeMillis</td>
-<td>60000 （60 秒）</td>
-<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
+<td>**</td>
+<td>匹配0或者更多的目录</td>
 </tr>
 </tbody></table>
-<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
-<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
-<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
-<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
-<p>return result; </p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
-<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
-<p>**<br>**</p>
-<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
-<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
-<p>**<br>**</p>
-<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
-<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
-<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
-<p>maxIdle </p>
-<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
+<p>Table Example Ant-Style Path Patterns</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/app/*.x</td>
+<td>匹配(Matches)所有在app路径下的.x文件</td>
+</tr>
+<tr>
+<td>/app/p?ttern</td>
+<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
+</tr>
+<tr>
+<td>/**/example</td>
+<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
+</tr>
+<tr>
+<td>/app/**/dir/file.</td>
+<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
+</tr>
+<tr>
+<td>/<em>*/</em>.jsp</td>
+<td>匹配(Matches)任何的.jsp 文件</td>
+</tr>
+</tbody></table>
+<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 注意事项：</p>
+<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
+<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
+
+
+
+<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符出啊；查找和替换，字符串的更新</p>
+<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
+<li><p>集成式 （integrated）</p>
+<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
+</li>
+<li><p>程序式 (procedural)</p>
+<p>函数式</p>
+</li>
+<li><p>面向对象式 (object-oriented)</p>
+<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
+</li>
+</ul>
+<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
+<thead>
+<tr>
+<th>表示</th>
+<th>Unicode code point</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LF</td>
+<td>U+000A</td>
+<td>ASCII 换行符</td>
+</tr>
+<tr>
+<td>VT</td>
+<td>U+000B</td>
+<td>ASCII 垂直制表符</td>
+</tr>
+<tr>
+<td>FF</td>
+<td>U+000C</td>
+<td>ASCII 进纸符</td>
+</tr>
+<tr>
+<td>CR</td>
+<td>U+000D</td>
+<td>ASCII 回车</td>
+</tr>
+<tr>
+<td>CR/LF</td>
+<td>U+000D U+000A</td>
+<td>ASCII 回车/换行</td>
+</tr>
+<tr>
+<td>NEL</td>
+<td>U+0085</td>
+<td>Unicode 换行</td>
+</tr>
+<tr>
+<td>LS</td>
+<td>U+2028</td>
+<td>Unicode 行分隔符</td>
+</tr>
+<tr>
+<td>PS</td>
+<td>U+2029</td>
+<td>Unicode 段分隔符</td>
+</tr>
+</tbody></table>
+<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
+<thead>
+<tr>
+<th>字母</th>
+<th>模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>不区分大小写的匹配模式</td>
+</tr>
+<tr>
+<td>x</td>
+<td>宽松排列和注释模式</td>
+</tr>
+<tr>
+<td>s</td>
+<td>点号通配模式（单行模式）</td>
+</tr>
+<tr>
+<td>m</td>
+<td>增强的行锚点模式（多行模式）</td>
+</tr>
+</tbody></table>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/MVC%20Note1/">MVC Note1</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p><strong>Root Application Context</strong><br>As such, it typically contains middle-tier services, data sources, etc.</p>
+<p><strong>Servlet Application Context</strong><br>As such, it typically contains controllers, view resolvers, locale resolvers, and other web-related beans.</p>
+<p>Root Application Context 用来初始化 ContextLoaderListener 对象，并将该对象注册到 Servlet 容器中</p>
+<p>Servlet Application Context 用来初始化 DispatcherServlet 对象，并将该对象注册到 Servlet 容器中，随后添加 Filters, 添加 Mapping 映射， 当然用户还可以通过 customizeRegistration(ServletRegistration.Dynamic registration) 来进行自定义之后的操作，如配置 Multipart 处理的参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Delegate the ServletContext to any WebApplicationInitializer implementations present on the application classpath.</span><br><span class="line">Because <span class="keyword">this</span> <span class="class"><span class="keyword">class</span> <span class="title">declares</span> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>), <span class="title">Servlet</span> 3.0+ <span class="title">containers</span> <span class="title">will</span> <span class="title">automatically</span> <span class="title">scan</span> <span class="title">the</span> <span class="title">classpath</span> <span class="title">for</span> <span class="title">implementations</span> <span class="title">of</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">WebApplicationInitializer</span> <span class="title">interface</span> <span class="title">and</span> <span class="title">provide</span> <span class="title">the</span> <span class="title">set</span> <span class="title">of</span> <span class="title">all</span> <span class="title">such</span> <span class="title">types</span> <span class="title">to</span> <span class="title">the</span> <span class="title">webAppInitializerClasses</span> <span class="title">parameter</span> <span class="title">of</span> <span class="title">this</span> <span class="title">method</span>.</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    <span class="title">Assuming</span> <span class="title">that</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">WebApplicationInitializer</span> <span class="title">types</span> <span class="title">are</span> <span class="title">detected</span>, <span class="title">they</span> <span class="title">will</span> <span class="title">be</span> <span class="title">instantiated</span> (<span class="title">and</span> <span class="title">sorted</span> <span class="title">if</span> <span class="title">the</span> @@<span class="title">Order</span> <span class="title">annotation</span> <span class="title">is</span> <span class="title">present</span> <span class="title">or</span> <span class="title">the</span> <span class="title">Ordered</span> <span class="title">interface</span> <span class="title">has</span> <span class="title">been</span> <span class="title">implemented</span>). <span class="title">Then</span> <span class="title">the</span> <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>) <span class="title">method</span> <span class="title">will</span> <span class="title">be</span> <span class="title">invoked</span> <span class="title">on</span> <span class="title">each</span> <span class="title">instance</span>, <span class="title">delegating</span> <span class="title">the</span> <span class="title">ServletContext</span> <span class="title">such</span> <span class="title">that</span> <span class="title">each</span> <span class="title">instance</span> <span class="title">may</span> <span class="title">register</span> <span class="title">and</span> <span class="title">configure</span> <span class="title">servlets</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">DispatcherServlet</span>, <span class="title">listeners</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">ContextLoaderListener</span>, <span class="title">or</span> <span class="title">any</span> <span class="title">other</span> <span class="title">Servlet</span> <span class="title">API</span> <span class="title">componentry</span> <span class="title">such</span> <span class="title">as</span> <span class="title">filters</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  /* <span class="title">Servlet</span> 3.0+ 会自动在应用的 <span class="title">classpath</span> 中寻找 <span class="title">WebApplicationInitializer</span> 的实现类，并对每一个实现类进行实例化，将 <span class="title">ServletContext</span> 委托给他们，对每一个实例调用 <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>), 加载和注册所有的 <span class="title">Servlet</span>、<span class="title">Listener</span>、<span class="title">Filter</span> */</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"><span class="title">If</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">are</span> <span class="title">found</span> <span class="title">on</span> <span class="title">the</span> <span class="title">classpath</span>, <span class="title">this</span> <span class="title">method</span> <span class="title">is</span> <span class="title">effectively</span> <span class="title">a</span> <span class="title">no</span>-<span class="title">op</span>. <span class="title">An</span> <span class="title">INFO</span>-<span class="title">level</span> <span class="title">log</span> <span class="title">message</span> <span class="title">will</span> <span class="title">be</span> <span class="title">issued</span> <span class="title">notifying</span> <span class="title">the</span> <span class="title">user</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ServletContainerInitializer</span> <span class="title">has</span> <span class="title">indeed</span> <span class="title">been</span> <span class="title">invoked</span> <span class="title">but</span> <span class="title">that</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">were</span> <span class="title">found</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"> // <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">SpringServletContainerInitializer</span> </span></span><br><span class="line"><span class="class"> </span></span><br><span class="line"><span class="class"> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, @NotNull ServletContext servletContext)</span> <span class="keyword">throws</span> 		ServletException </span>&#123;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ServletContainerInitializer</span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer</span><br><span class="line"></span><br><span class="line">WebApplicationInitializer</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
+<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>利用 <code>rename</code> 命令</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>清理工作</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/cUrl%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E9%94%99%E8%AF%AF%E6%80%BB%E7%BB%93/">cUrl命令使用错误总结</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>原本，是想写一个脚本来从 <a href="unsplash.com">Unsplash</a> 下载图片，通过 <code>apt install axel</code> 安装了 <code>axel</code> 来进行下载（相对较快）；使用 <code>jq</code> 来对返回的  json 进行解析，获取下载地址，为了测试命令的有效性，将返回的 json 结果存放在文件中 unsplash.json 中 ：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    <span class="string">"links"</span>: &#123;</span><br><span class="line">      <span class="attr">"self"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"html"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"download"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk/download"</span>,</span><br><span class="line">      <span class="attr">"download_location"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk/download"</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>调用 <code>jq</code> 命令解析，并将 <code>download</code> 的值作为 <code>axel</code> 的命令行参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 axel -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console：</span></span><br><span class="line">axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Initializing download: https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Could not parse URL.</span><br></pre></td></tr></table></figure>
+
+<p>标准输出或者错误显示不能解析 URL,  查看这个 URL 没有问题，直接执行 <code>axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code>  也没有出现异常。 由于没有显示具体的 URL 异常在哪里，换用 <code>cUrl</code> 来执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console:</span></span><br><span class="line">curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">curl: (3) [globbing] bad range <span class="keyword">in</span> column 3</span><br></pre></td></tr></table></figure>
+
+<p>同样，请求失败，同样直接执行 <code>curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code> 也能够成功，显然通过 <code>jq</code> 输出，再通过管道符和 <code>xargs</code> 输出的 url 不正常，但是直接看有没有什么特殊的字符，期间，尝试将 <code>jq</code> 解析的结果保存成变量，url 中添加变量，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o 2.jpg <span class="variable">$varUrl</span></span><br></pre></td></tr></table></figure>
+
+<p>同样执行失败，百思不得其解 :laughing: .</p>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>智商不够，百度来凑，无果，打开 StackOverFlow， 搜索  <code>bad range in column</code> ，从一个类似的问题中找到了线索或者说答案。</p>
+<p>原文 <a href="https://stackoverflow.com/questions/43926914/strange-characters-appearing-in-bash-variable-expansion" target="_blank" rel="noopener">strange-characters-appearing-in-bash-variable-expansion)</a> 中描述的问题是通过 <code>grep</code> 命令 filter json 中的值，并将其作为变量，在 curl 的 url 中引用该变量：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod_in_question=$(curl -u uname:password -k very.cluster.com/api/v1/namespaces/default/pods/ | grep -i '"name": "myapp-' | cut -d '"' -f 4)</span><br><span class="line"></span><br><span class="line">curl -g -u uname:password -k -X DELETE "very.cluster.com/api/v1/namespaces/default/pods/$&#123;pod_in_question&#125;"</span><br></pre></td></tr></table></figure>
+
+<p>结果，请求 url 中出现一些特殊的转义字符，原因是使用的 bash 环境， <code>grep</code> 命令默认使用 <code>--colour=always</code> , 使得过滤的结果中出现了颜色的转义序列 <a href="http://ascii-table.com/ansi-escape-sequences.php" target="_blank" rel="noopener"> ANSI escape sequences</a>, 支持这些转义序列的终端的这些字符不可见，使用 <code>hexdump -C</code> 可以查看，因此针对原文的问题解决方案就是 <code>grep --colour=never</code>. </p>
+<p>再回到我的问题，使用 hexdump 打印：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | hexdump -C</span><br><span class="line"></span><br><span class="line">00000000  1b 5b 30 3b 33 32 6d 22  68 74 74 70 73 3a 2f 2f  |.[0;32m<span class="string">"https://|</span></span><br><span class="line"><span class="string">00000010  75 6e 73 70 6c 61 73 68  2e 63 6f 6d 2f 70 68 6f  |unsplash.com/pho|</span></span><br><span class="line"><span class="string">00000020  74 6f 73 2f 33 41 7a 53  34 7a 41 59 61 58 6b 2f  |tos/3AzS4zAYaXk/|</span></span><br><span class="line"><span class="string">00000030  64 6f 77 6e 6c 6f 61 64  22 1b 5b 30 6d 0a        |download"</span>.[0m.|</span><br><span class="line">0000003e</span><br></pre></td></tr></table></figure>
+
+<p>明显可以看到 url 的首尾出现了特殊的颜色转义字符，32 是绿色的色彩码. 显然, 是由于 <code>jq -C</code> 的选项造成的结果, 去掉或者指定 <code>-M</code> (monochrome (don’t colorize JSON)), 问题解决了.</p>
+<p>stackoverflow 中的问题还有一个答案, 给出了如何找出 <code>cUrl</code> 使用中出现问题如何定位的思路:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -g --libcurl /tmp/libcurl -o 2.jpg	</span><br><span class="line"></span><br><span class="line">cat /tmp/libcurl</span><br><span class="line"></span><br><span class="line"> curl_easy_setopt(hnd, CURLOPT_URL, <span class="string">"\033[0;32mhttps://unsplash.com/photos/3AzS4zAYaXk/download\033[0m"</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
+<li><p>引用 stackoverflow  给出使用 <code>cURL</code> 的最佳实践:</p>
+<p><strong>The best practise for URL syntax in <code>cURL</code>:</strong></p>
+<ul>
+<li>If Variable Expansion is required:<ul>
+<li>Apply the <code>-g</code> switch to disable potential globbing done by <code>cURL</code></li>
+</ul>
+</li>
+<li><strong>Otherwise:</strong><ul>
+<li>Use <code>$variable</code> as part of a “quoted” url string, instead of <code>${variable}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
+</li>
+</ol>
 
                 
             </div>
