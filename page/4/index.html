@@ -111,37 +111,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/MVC%20Note1/">MVC Note1</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><strong>Root Application Context</strong><br>As such, it typically contains middle-tier services, data sources, etc.</p>
-<p><strong>Servlet Application Context</strong><br>As such, it typically contains controllers, view resolvers, locale resolvers, and other web-related beans.</p>
-<p>Root Application Context 用来初始化 ContextLoaderListener 对象，并将该对象注册到 Servlet 容器中</p>
-<p>Servlet Application Context 用来初始化 DispatcherServlet 对象，并将该对象注册到 Servlet 容器中，随后添加 Filters, 添加 Mapping 映射， 当然用户还可以通过 customizeRegistration(ServletRegistration.Dynamic registration) 来进行自定义之后的操作，如配置 Multipart 处理的参数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Delegate the ServletContext to any WebApplicationInitializer implementations present on the application classpath.</span><br><span class="line">Because <span class="keyword">this</span> <span class="class"><span class="keyword">class</span> <span class="title">declares</span> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>), <span class="title">Servlet</span> 3.0+ <span class="title">containers</span> <span class="title">will</span> <span class="title">automatically</span> <span class="title">scan</span> <span class="title">the</span> <span class="title">classpath</span> <span class="title">for</span> <span class="title">implementations</span> <span class="title">of</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">WebApplicationInitializer</span> <span class="title">interface</span> <span class="title">and</span> <span class="title">provide</span> <span class="title">the</span> <span class="title">set</span> <span class="title">of</span> <span class="title">all</span> <span class="title">such</span> <span class="title">types</span> <span class="title">to</span> <span class="title">the</span> <span class="title">webAppInitializerClasses</span> <span class="title">parameter</span> <span class="title">of</span> <span class="title">this</span> <span class="title">method</span>.</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    <span class="title">Assuming</span> <span class="title">that</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">WebApplicationInitializer</span> <span class="title">types</span> <span class="title">are</span> <span class="title">detected</span>, <span class="title">they</span> <span class="title">will</span> <span class="title">be</span> <span class="title">instantiated</span> (<span class="title">and</span> <span class="title">sorted</span> <span class="title">if</span> <span class="title">the</span> @@<span class="title">Order</span> <span class="title">annotation</span> <span class="title">is</span> <span class="title">present</span> <span class="title">or</span> <span class="title">the</span> <span class="title">Ordered</span> <span class="title">interface</span> <span class="title">has</span> <span class="title">been</span> <span class="title">implemented</span>). <span class="title">Then</span> <span class="title">the</span> <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>) <span class="title">method</span> <span class="title">will</span> <span class="title">be</span> <span class="title">invoked</span> <span class="title">on</span> <span class="title">each</span> <span class="title">instance</span>, <span class="title">delegating</span> <span class="title">the</span> <span class="title">ServletContext</span> <span class="title">such</span> <span class="title">that</span> <span class="title">each</span> <span class="title">instance</span> <span class="title">may</span> <span class="title">register</span> <span class="title">and</span> <span class="title">configure</span> <span class="title">servlets</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">DispatcherServlet</span>, <span class="title">listeners</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">ContextLoaderListener</span>, <span class="title">or</span> <span class="title">any</span> <span class="title">other</span> <span class="title">Servlet</span> <span class="title">API</span> <span class="title">componentry</span> <span class="title">such</span> <span class="title">as</span> <span class="title">filters</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  /* <span class="title">Servlet</span> 3.0+ 会自动在应用的 <span class="title">classpath</span> 中寻找 <span class="title">WebApplicationInitializer</span> 的实现类，并对每一个实现类进行实例化，将 <span class="title">ServletContext</span> 委托给他们，对每一个实例调用 <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>), 加载和注册所有的 <span class="title">Servlet</span>、<span class="title">Listener</span>、<span class="title">Filter</span> */</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"><span class="title">If</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">are</span> <span class="title">found</span> <span class="title">on</span> <span class="title">the</span> <span class="title">classpath</span>, <span class="title">this</span> <span class="title">method</span> <span class="title">is</span> <span class="title">effectively</span> <span class="title">a</span> <span class="title">no</span>-<span class="title">op</span>. <span class="title">An</span> <span class="title">INFO</span>-<span class="title">level</span> <span class="title">log</span> <span class="title">message</span> <span class="title">will</span> <span class="title">be</span> <span class="title">issued</span> <span class="title">notifying</span> <span class="title">the</span> <span class="title">user</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ServletContainerInitializer</span> <span class="title">has</span> <span class="title">indeed</span> <span class="title">been</span> <span class="title">invoked</span> <span class="title">but</span> <span class="title">that</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">were</span> <span class="title">found</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"> // <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">SpringServletContainerInitializer</span> </span></span><br><span class="line"><span class="class"> </span></span><br><span class="line"><span class="class"> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, @NotNull ServletContext servletContext)</span> <span class="keyword">throws</span> 		ServletException </span>&#123;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ServletContainerInitializer</span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer</span><br><span class="line"></span><br><span class="line">WebApplicationInitializer</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Pro-Git-Note/git%20log%20example/">git log example</a></h2>
             </div>
             <div class="post-meta">
@@ -168,7 +137,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Scheduling/">Scheduling</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Java%20Servlet/Cookie/">Cookie</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -182,53 +151,27 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="Cron-Expressions"><a href="#Cron-Expressions" class="headerlink" title="Cron Expressions"></a>Cron Expressions</h2><p>Cron expressions are comprised of 6 required fields and one optional field separated by white space. The fields respectively are described as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Field Name</th>
-<th>Allowed Values</th>
-<th>Allowed Special Characters</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Seconds</td>
-<td>0-59</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Minutes</td>
-<td>0-59</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Hours</td>
-<td>0-23</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Day-of-month</td>
-<td>1-31</td>
-<td>, - * ? / L W</td>
-</tr>
-<tr>
-<td>Month</td>
-<td>0-11 or JAN-DEC</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Day-of-Week</td>
-<td>1-7 or SUN-SAT</td>
-<td>, - * ? / L #</td>
-</tr>
-<tr>
-<td>Year (Optional)</td>
-<td>empty, 1970-2199</td>
-<td>, - * /</td>
-</tr>
-</tbody></table>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">The <span class="string">'*'</span> character is used to specify all values. For example, <span class="string">"*"</span> in the minute field means <span class="string">"every minute"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'?'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. It is used to specify <span class="string">'no specific value'</span>. This is useful when you need to specify something in one of the two fields, but not the other.</span><br><span class="line"></span><br><span class="line">The <span class="string">'-'</span> character is used to specify ranges For example <span class="string">"10-12"</span> in the hour field means <span class="string">"the hours 10, 11 and 12"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">','</span> character is used to specify additional values. For example <span class="string">"MON,WED,FRI"</span> in the day-of-week field means <span class="string">"the days Monday, Wednesday, and Friday"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'/'</span> character is used to specify increments. For example <span class="string">"0/15"</span> in the seconds field means <span class="string">"the seconds 0, 15, 30, and 45"</span>. And <span class="string">"5/15"</span> in the seconds field means <span class="string">"the seconds 5, 20, 35, and 50"</span>. Specifying <span class="string">'*'</span> before the <span class="string">'/'</span> is equivalent to specifying <span class="number">0</span> is the value to start with. Essentially, <span class="keyword">for</span> each field in the expression, there is a set of numbers that can be turned on or off. For seconds and minutes, the numbers range from <span class="number">0</span> to <span class="number">59</span>. For hours <span class="number">0</span> to <span class="number">23</span>, <span class="keyword">for</span> days of the month <span class="number">0</span> to <span class="number">31</span>, and <span class="keyword">for</span> months <span class="number">0</span> to <span class="number">11</span> (JAN to DEC). The <span class="string">"/"</span> character simply helps you turn on every <span class="string">"nth"</span> value in the given set. Thus <span class="string">"7/6"</span> in the month field only turns on month <span class="string">"7"</span>, it does NOT mean every <span class="number">6</span>th month, please note that subtlety.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. This character is <span class="keyword">short</span>-hand <span class="keyword">for</span> <span class="string">"last"</span>, but it has different meaning in each of the two fields. For example, the value <span class="string">"L"</span> in the day-of-month field means <span class="string">"the last day of the month"</span> - day <span class="number">31</span> <span class="keyword">for</span> January, day <span class="number">28</span> <span class="keyword">for</span> February on non-leap years. If used in the day-of-week field by itself, it simply means <span class="string">"7"</span> or <span class="string">"SAT"</span>. But <span class="keyword">if</span> used in the day-of-week field after another value, it means <span class="string">"the last xxx day of the month"</span> - <span class="keyword">for</span> example <span class="string">"6L"</span> means <span class="string">"the last friday of the month"</span>. You can also specify an offset from the last day of the month, such as <span class="string">"L-3"</span> which would mean the third-to-last day of the calendar month. When using the <span class="string">'L'</span> option, it is important not to specify lists, or ranges of values, as you<span class="string">'ll get confusing/unexpected results.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The '</span>W<span class="string">' character is allowed for the day-of-month field. This character is used to specify the weekday (Monday-Friday) nearest the given day. As an example, if you were to specify "15W" as the value for the day-of-month field, the meaning is: "the nearest weekday to the 15th of the month". So if the 15th is a Saturday, the trigger will fire on Friday the 14th. If the 15th is a Sunday, the trigger will fire on Monday the 16th. If the 15th is a Tuesday, then it will fire on Tuesday the 15th. However if you specify "1W" as the value for day-of-month, and the 1st is a Saturday, the trigger will fire on Monday the 3rd, as it will not '</span>jump<span class="string">' over the boundary of a month'</span>s days. The <span class="string">'W'</span> character can only be specified when the day-of-month is a single day, not a range or list of days.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> and <span class="string">'W'</span> characters can also be combined <span class="keyword">for</span> the day-of-month expression to yield <span class="string">'LW'</span>, which translates to <span class="string">"last weekday of the month"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'#'</span> character is allowed <span class="keyword">for</span> the day-of-week field. This character is used to specify <span class="string">"the nth"</span> XXX day of the month. For example, the value of <span class="string">"6#3"</span> in the day-of-<span class="function">week field means the third Friday of the <span class="title">month</span> <span class="params">(day <span class="number">6</span> = Friday and <span class="string">"#3"</span> = the <span class="number">3</span>rd one in the month)</span>. Other examples: "2#1" </span>= the first Monday of the month and <span class="string">"4#5"</span> = the fifth Wednesday of the month. Note that <span class="keyword">if</span> you specify <span class="string">"#5"</span> and there is not <span class="number">5</span> of the given day-of-week in the month, then no firing will occur that month. If the <span class="string">'#'</span> character is used, there can only be one expression in the day-of-<span class="function">week <span class="title">field</span> <span class="params">(<span class="string">"3#1,6#3"</span> is not valid, since there are two expressions)</span>.</span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">The legal characters and the names of months and days of the week are not <span class="keyword">case</span> sensitive.</span></span><br><span class="line"><span class="function">NOTES:</span></span><br><span class="line"><span class="function">Support <span class="keyword">for</span> specifying both a day-of-week and a day-of-month value is not <span class="title">complete</span> <span class="params">(you<span class="string">'ll need to use the '</span>?<span class="string">' character in one of these fields).</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">Overflowing ranges is supported - that is, having a larger number on the left hand side than the right. You might do 22-2 to catch 10 o'</span>clock at night until <span class="number">2</span> o<span class="string">'clock in the morning, or you might have NOV-FEB. It is very important to note that overuse of overflowing ranges creates ranges that don'</span>t make sense and no effort has been made to determine which interpretation CronExpression chooses. An example would be <span class="string">"0 0 14-6 ? * FRI-MON"</span>.</span></span></span><br></pre></td></tr></table></figure>
+                    <p>Java Servlet 支持 HTTP Cookie</p>
+<ol>
+<li><p>Cookie 是 Server 验证 Client 身份的一种机制。 Client 发送请求到 Server 时， Server 会为该客户端生成一些信息，也就是 Cookie，用于标识该 Client，并将这些信息发送 Client （封装在 Response 的 Header 中）；</p>
+</li>
+<li><p>Client 如浏览器（可以选择是否保存 Cookie），接受到相应的 Response，并且将 Cookie 信息保存在本地;</p>
+</li>
+<li><p>Client 下一次请求 Server 时，在请求的 Header 中带着这些 Cookie 信息， Server 验证这些 Cookie 信息，验证通过就可以返回给 Client 想要请求的内容了</p>
+</li>
+</ol>
+<p>Http Request Headers</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Request</span> <span class="string">Header</span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">host </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">localhost:8080 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">connection </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">keep-alive </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">upgrade-insecure-requests </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">1 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">user-agent </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-encoding </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">gzip, deflate, br </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-language </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">zh-CN,zh;q=0.9 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">cookie </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Idea-e3d08f0c=a1cdf13f-3a2b-46e0-bf43-088ffa6cb705; JSESSIONID=AE715BC860E044CA647A2C2D7A10B5E7 </span></span><br><span class="line">========================</span><br></pre></td></tr></table></figure>
 
+
+
+<p>cookies</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Cookie</span> <span class="string">domain:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">name:Idea-e3d08f0c</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">path:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">value:a1cdf13f-3a2b-46e0-bf43-088ffa6cb705</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">max age:-1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>Servlet Cookie MaxAge - cookie 的有效期，存活时长</strong></p>
+<p>Sets the maximum age in seconds for this Cookie.<br>A positive value indicates that the cookie will expire after that many seconds have passed. Note that the value is the maximum age when the cookie will expire, not the cookie’s current age.<br>A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits. A zero value causes the cookie to be deleted.</p>
 
                 
             </div>
@@ -236,38 +179,56 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20AOP/">Spring AOP</a></h2>
+                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring/">Spring</a>
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>Spring提供了4种类型的AOP支持：</p>
-<ul>
-<li>基于代理的经典Spring AOP；</li>
-<li>纯POJO切面；</li>
-<li><code>@AspectJ</code>注解驱动的切面；</li>
-<li>注入式AspectJ切面（适用于Spring各版本）。</li>
-</ul>
-<p>Spring AOP构建在动态代理基础之上，因此，Spring对AOP的支持局限于方法拦截。</p>
-<p>引入了简单的声明式AOP和基于注解的AOP之后，Spring经典的AOP看起来就显得非常笨重和过于复杂，直接使用 ProxyFactory Bean会让人感觉厌烦</p>
-<p>Spring借鉴了AspectJ的切面，以提供注解驱动的AOP</p>
-<p>方法拦截可以满足绝大部分的需求。如果需要方法拦截之外的连接点拦截功能，那么我们可以利用Aspect来补充Spring AOP的功能。</p>
-<p>在Spring AOP中，要使用AspectJ的切点表达式语言来定义切点</p>
-<p>《AspectJ in Action》第二版（Manning，2009，<a href="http://www.manning.com/laddad2/）。" target="_blank" rel="noopener">www.manning.com/laddad2/）。</a></p>
-<p><code>&lt;aop:aspectj-autoproxy&gt;</code>元素，它能够自动代理AspectJ注解的通知类</p>
-<p>如下的XML代码片段与之前基于AspectJ的引入功能是相同：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">aop:declare-parents</span></span></span><br><span class="line"><span class="tag">    <span class="attr">types-matching</span>=<span class="string">"concert.Performance+"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">implement-interface</span>=<span class="string">"concert.Encoreable"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default-impl</span>=<span class="string">"concert.DefaultEncoreable"</span></span></span><br><span class="line"><span class="tag">    /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br></pre></td></tr></table></figure>
+                    <p>org.springframework.boot.SpringApplication</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p> <code>&lt;aop:declare-parents&gt;</code>声明了此切面所通知的bean要在它的对象层次结构中拥有新的父类型。具体到本例中，类型匹配<code>Performance</code>接口（由<code>types-matching</code>属性指定）的那些bean在父类结构中会增加<code>Encoreable</code>接口（由<code>implement-interface</code>属性指定）</p>
+<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
+<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
+<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring%20Boot/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE/">自定义配置</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="属性文件外置配置"><a href="#属性文件外置配置" class="headerlink" title="属性文件外置配置"></a>属性文件外置配置</h3><p><code>@ConfigurationProperties</code> </p>
+<p><code>@DataSourceProperties</code></p>
+<p><code>DataSourceAutoConfiguration</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Condition&#125; to detect when an embedded &#123;<span class="doctag">@link</span> DataSource&#125; type can be used.</span></span><br><span class="line"><span class="comment"> * If a pooled &#123;<span class="doctag">@link</span> DataSource&#125; is available, it will always be preferred to an</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> EmbeddedDatabase&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EmbeddedDatabaseCondition</span> <span class="keyword">extends</span> <span class="title">SpringBootCondition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> SpringBootCondition pooledCondition = <span class="keyword">new</span> PooledDataSourceCondition();</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ConditionOutcome <span class="title">getMatchOutcome</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> </span>&#123;</span><br><span class="line">		ConditionMessage.Builder message = ConditionMessage.forCondition(<span class="string">"EmbeddedDataSource"</span>);</span><br><span class="line">		<span class="keyword">if</span> (anyMatches(context, metadata, <span class="keyword">this</span>.pooledCondition)) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.foundExactly(<span class="string">"supported pooled data source"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		EmbeddedDatabaseType type = EmbeddedDatabaseConnection.get(context.getClassLoader()).getType();</span><br><span class="line">		<span class="keyword">if</span> (type == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.didNotFind(<span class="string">"embedded database"</span>).atAll());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ConditionOutcome.match(message.found(<span class="string">"embedded database"</span>).items(type));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 
                 
             </div>
