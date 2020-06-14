@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">Guo's Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">CSV2Table</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-06-14</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">oldIFS=<span class="variable">$IFS</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">printChars</span></span>() &#123;</span><br><span class="line">    <span class="built_in">local</span> start_end_str=<span class="variable">$1</span></span><br><span class="line">    <span class="built_in">local</span> count=<span class="variable">$2</span></span><br><span class="line">    <span class="built_in">local</span> size=<span class="variable">$3</span></span><br><span class="line"></span><br><span class="line">    count=$((count + size * 3 + 1))</span><br><span class="line">    <span class="keyword">for</span> ((i = 0; i &lt; <span class="string">"<span class="variable">$count</span>"</span>; i++)); <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> ((i == 0)); <span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">"<span class="variable">$start_end_str</span>"</span></span><br><span class="line">        <span class="keyword">elif</span> ((i == ((count - 1)))); <span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"<span class="variable">$start_end_str</span>"</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">"-"</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">ExitFunc</span></span>() &#123;</span><br><span class="line">    IFS=<span class="variable">$oldIFS</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">trap</span> <span class="string">'ExitFunc'</span> 2 9 15 20 EXIT</span><br><span class="line"></span><br><span class="line">IFS=,</span><br><span class="line">isMD=0</span><br><span class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">'md:'</span> OPT; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">"<span class="variable">$OPT</span>"</span> <span class="keyword">in</span></span><br><span class="line">    m)</span><br><span class="line">        isMD=1</span><br><span class="line">        ;;</span><br><span class="line">    d)</span><br><span class="line">        IFS=$(<span class="built_in">echo</span> -ne <span class="string">"<span class="variable">$OPTARG</span>"</span>)</span><br><span class="line">        ;;</span><br><span class="line">    ?)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"avaliable options: [-d delimiter]"</span> &gt;&amp;2 <span class="comment">## standard error</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">        ;;</span><br><span class="line">    <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">shift</span> <span class="string">"<span class="variable">$(($OPTIND - 1)</span>)"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"delimiter has been set to [<span class="variable">$IFS</span>]"</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"<span class="variable">$IFS</span>"</span> | hexdump -C</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> <span class="string">"<span class="variable">$@</span>"</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -f <span class="string">"<span class="variable">$item</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"file <span class="variable">$&#123;item&#125;</span> not exists"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">    col_count=0</span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line">        arr=(<span class="variable">$line</span>)</span><br><span class="line">        temp_count=<span class="variable">$&#123;#arr[@]&#125;</span></span><br><span class="line">        <span class="keyword">if</span> ((temp_count &gt; col_count)); <span class="keyword">then</span></span><br><span class="line">            col_count=<span class="variable">$temp_count</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">done</span> &lt;<span class="variable">$item</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"table column size: <span class="variable">$&#123;col_count&#125;</span>"</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">declare</span> -a max_count_arr</span><br><span class="line">    row_count=0</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line">        arr=(<span class="variable">$line</span>)</span><br><span class="line">        <span class="keyword">for</span> ((i = 0; i &lt; <span class="variable">$col_count</span>; i++)); <span class="keyword">do</span></span><br><span class="line">            max_length=<span class="variable">$&#123;max_count_arr[i]&#125;</span></span><br><span class="line">            current_length=<span class="variable">$&#123;#arr[i]&#125;</span></span><br><span class="line">            <span class="keyword">if</span> ((current_length &gt; max_length)); <span class="keyword">then</span></span><br><span class="line">                max_count_arr[i]=<span class="variable">$current_length</span></span><br><span class="line">            <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">done</span> &lt;<span class="variable">$item</span></span><br><span class="line"></span><br><span class="line">    length_sum=0</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;max_count_arr[@]&#125;</span>"</span>; <span class="keyword">do</span></span><br><span class="line">        length_sum=$((length_sum + i))</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"col max length sum:"</span> <span class="variable">$length_sum</span></span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">    row_count=0</span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> [[ <span class="variable">$isMD</span> -eq 1 &amp;&amp; <span class="variable">$row_count</span> -eq 1 ]]; <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">for</span> ((i = 0; i &lt; <span class="variable">$col_count</span>; i++)); <span class="keyword">do</span></span><br><span class="line">                <span class="keyword">if</span> ((i == 0)); <span class="keyword">then</span> <span class="built_in">echo</span> -n <span class="string">"|"</span>; <span class="keyword">fi</span></span><br><span class="line">                <span class="keyword">for</span> ((j = -2; j &lt; <span class="variable">$&#123;max_count_arr[i]&#125;</span>; j++)); <span class="keyword">do</span></span><br><span class="line">                    <span class="built_in">echo</span> -n <span class="string">"-"</span></span><br><span class="line">                <span class="keyword">done</span></span><br><span class="line">                <span class="built_in">echo</span> -n <span class="string">"|"</span></span><br><span class="line">            <span class="keyword">done</span></span><br><span class="line">            <span class="built_in">echo</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$isMD</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">if</span> [[ <span class="variable">$row_count</span> -eq 0 || <span class="variable">$row_count</span> -eq 1 ]]; <span class="keyword">then</span></span><br><span class="line">                <span class="keyword">for</span> ((i = 0; i &lt; <span class="variable">$col_count</span>; i++)); <span class="keyword">do</span></span><br><span class="line">                    <span class="keyword">if</span> ((i == 0)); <span class="keyword">then</span> <span class="built_in">echo</span> -n <span class="string">"+"</span>; <span class="keyword">fi</span></span><br><span class="line">                    <span class="keyword">for</span> ((j = -2; j &lt; <span class="variable">$&#123;max_count_arr[i]&#125;</span>; j++)); <span class="keyword">do</span></span><br><span class="line">                        <span class="built_in">echo</span> -n <span class="string">"-"</span></span><br><span class="line">                    <span class="keyword">done</span></span><br><span class="line">                    <span class="built_in">echo</span> -n <span class="string">"+"</span></span><br><span class="line">                <span class="keyword">done</span></span><br><span class="line">                <span class="built_in">echo</span></span><br><span class="line">            <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">        arr=(<span class="variable">$line</span>)</span><br><span class="line">        <span class="keyword">for</span> ((i = 0; i &lt; <span class="variable">$col_count</span>; i++)); <span class="keyword">do</span></span><br><span class="line">            <span class="keyword">if</span> ((i == 0)); <span class="keyword">then</span> <span class="built_in">echo</span> -n <span class="string">"|"</span>; <span class="keyword">fi</span></span><br><span class="line">            <span class="built_in">printf</span> <span class="string">" %-<span class="variable">$&#123;max_count_arr[i]&#125;</span>s |"</span> <span class="variable">$&#123;arr[i]&#125;</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">echo</span></span><br><span class="line">        ((row_count++))</span><br><span class="line">    <span class="keyword">done</span> &lt;<span class="variable">$item</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [ <span class="variable">$isMD</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">for</span> ((i = 0; i &lt; <span class="variable">$col_count</span>; i++)); <span class="keyword">do</span></span><br><span class="line">            <span class="keyword">if</span> ((i == 0)); <span class="keyword">then</span> <span class="built_in">echo</span> -n <span class="string">"+"</span>; <span class="keyword">fi</span></span><br><span class="line">            <span class="keyword">for</span> ((j = -2; j &lt; <span class="variable">$&#123;max_count_arr[i]&#125;</span>; j++)); <span class="keyword">do</span></span><br><span class="line">                <span class="built_in">echo</span> -n <span class="string">"-"</span></span><br><span class="line">            <span class="keyword">done</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">"+"</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">        <span class="built_in">echo</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">IFS=<span class="variable">$oldIFS</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Linux/" title="Linux">Linux</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+        
+            <a class="next" href="/Linux/ls%20Invalid%20option/">
+                <span class="nav-default">ls Invalid option</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2020
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin">Guo</a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
