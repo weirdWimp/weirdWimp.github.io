@@ -252,7 +252,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/README/">README</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -266,14 +266,7 @@
             </div>
             <div class="post-content">
                 
-                    <ol>
-<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
-<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
-</li>
-<li><p>如果没有推送到远程库呢？</p>
-<p>这时 git commit –amend 应该是可以的</p>
-</li>
-</ol>
+                    <h1 id="Pro-Git-Note"><a href="#Pro-Git-Note" class="headerlink" title="Pro-Git-Note"></a>Pro-Git-Note</h1><p>Markdown notes for <a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener">Pro Git</a><br>Love the life you live.<br>Live the life you love.<br>Find your own thing.</p>
 
                 
             </div>
@@ -281,110 +274,25 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/git%20log%20example/">git log example</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
+                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.ll <span class="string">"log --pretty='%C(yellow)%h %C(cyan)%cd %Creset%s %Cred&lt;%an&gt;' --date=format:'%y/%m/%d %H:%M' --graph"</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符出啊；查找和替换，字符串的更新</p>
-<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
-<li><p>集成式 （integrated）</p>
-<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
-</li>
-<li><p>程序式 (procedural)</p>
-<p>函数式</p>
-</li>
-<li><p>面向对象式 (object-oriented)</p>
-<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
-</li>
-</ul>
-<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
-<thead>
-<tr>
-<th>表示</th>
-<th>Unicode code point</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LF</td>
-<td>U+000A</td>
-<td>ASCII 换行符</td>
-</tr>
-<tr>
-<td>VT</td>
-<td>U+000B</td>
-<td>ASCII 垂直制表符</td>
-</tr>
-<tr>
-<td>FF</td>
-<td>U+000C</td>
-<td>ASCII 进纸符</td>
-</tr>
-<tr>
-<td>CR</td>
-<td>U+000D</td>
-<td>ASCII 回车</td>
-</tr>
-<tr>
-<td>CR/LF</td>
-<td>U+000D U+000A</td>
-<td>ASCII 回车/换行</td>
-</tr>
-<tr>
-<td>NEL</td>
-<td>U+0085</td>
-<td>Unicode 换行</td>
-</tr>
-<tr>
-<td>LS</td>
-<td>U+2028</td>
-<td>Unicode 行分隔符</td>
-</tr>
-<tr>
-<td>PS</td>
-<td>U+2029</td>
-<td>Unicode 段分隔符</td>
-</tr>
-</tbody></table>
-<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
-<thead>
-<tr>
-<th>字母</th>
-<th>模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>不区分大小写的匹配模式</td>
-</tr>
-<tr>
-<td>x</td>
-<td>宽松排列和注释模式</td>
-</tr>
-<tr>
-<td>s</td>
-<td>点号通配模式（单行模式）</td>
-</tr>
-<tr>
-<td>m</td>
-<td>增强的行锚点模式（多行模式）</td>
-</tr>
-</tbody></table>
+<p><a href="https://www.cnblogs.com/bellkosmos/p/5923439.html" target="_blank" rel="noopener">https://www.cnblogs.com/bellkosmos/p/5923439.html</a></p>
 
                 
             </div>
