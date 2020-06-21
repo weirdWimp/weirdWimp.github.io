@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
+                <h2><a class="post-title-link" href="/Java/Thread%20%E7%BA%BF%E7%A8%8B/">Thread 线程</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,40 +98,32 @@
             </div>
             <div class="post-content">
                 
-                    <p>事务的隔离级别</p>
-<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
-<blockquote>
-<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
-</blockquote>
-<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
-<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
+                    <h1 id="Java-中的线程"><a href="#Java-中的线程" class="headerlink" title="Java 中的线程"></a>Java 中的线程</h1><h2 id="Thread-类与-Runnable-接口"><a href="#Thread-类与-Runnable-接口" class="headerlink" title="Thread 类与 Runnable 接口"></a>Thread 类与 Runnable 接口</h2><p>Thread 中部分方法：</p>
 <ul>
-<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
-<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
+<li>join()：调用 join() 方法的 Thread 对象结束以前，当前线程一直处于等待状态，不会继续向前运行；内部是通过循环判断该 Thread 对象的 isAlive 方法返回 true 时，调用该 Thread 对象的 wait() 方法，该方法是属于 Object 的方法，且是由当前线程进行调用的，因此当前线程会处于等待状态；当调用 join() 方法的 Thread 对象结束后，会调用 <em>notifyAll</em> 方法通知处于等待状态的线程</li>
 </ul>
-<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>resultType</code></td>
-<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
-</tr>
-</tbody></table>
-<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
-<p>需要试验一下，映射方法有多个参数</p>
-<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
-<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">joinTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> finalI = i;</span><br><span class="line">        <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; System.out.println(finalI));</span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">                thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
-</ol>
+
+
+<p>输出： 0，1，2，3，4，5，6，7，8，9</p>
+<ul>
+<li>setDaemon(): 线程的默认行为是，只要线程活着，进程就无法退出（普通的用户线程），守护线程不会阻止进程的退出；当应用程序的所有非守护线程均已经结束时，无论是否存在正在运行的守护线程，Java 程序将结束</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">daemonTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"true = "</span> + <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setName(<span class="string">"local-daemon-thread-20200204"</span>);</span><br><span class="line">    thread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">    thread.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只要主线程的打印执行完毕，不管守护线程有没有在执行，整个执行都将结束</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">"main thread = "</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>setUncaughtExceptionHandler()：线程因异常而退出时，默认的行为是打印线程的名称，异常类型，异常消息、堆栈打印；可以设置一个未捕获异常的处理器</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionHandlerTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"illegal argument"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setUncaughtExceptionHandler((t, e) -&gt; &#123;</span><br><span class="line">        System.out.printf(<span class="string">"thread id: %s, thread name: %s, exception: %s"</span>, t.getId(), t.getName(), e);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>多个 Thread 使用一个 Runnable 对象与每个 Thread 使用独立的 Runnable 对象的区别？</p>
 
                 
             </div>

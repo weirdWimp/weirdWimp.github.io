@@ -84,6 +84,99 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>getResourceAsStream</p>
+<p>java.lang.reflect.Proxy</p>
+<p>MySQL for Excel</p>
+<ul>
+<li>Import MySQL data into Excel.</li>
+<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
+<li>Modify MySQL data directly from within Excel.</li>
+</ul>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E8%A1%8C%E5%A4%84%E7%90%86/">行处理</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Ctrl + k：剪切光标位置到行尾的文本。<br>Ctrl + u：剪切光标位置到行首的文本。<br>Ctrl + y：在光标位置粘贴文本</p>
+<p>Ctrl + w：删除光标前面的单词。</p>
+<p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
+<p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
+<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>利用 <code>rename</code> 命令</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>清理工作</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
             </div>
             <div class="post-meta">
@@ -221,135 +314,6 @@
 <p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
 <p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E9%97%AE%E9%A2%98/">问题</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><p>1 ~/.bashrc ~/.profile /etc/bashrc /etc/profile<br>当通过Xshell连接时（SSH）或 <code>ssh ip</code> 时，会依次执行： </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 登陆shell？</span></span><br><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /etc/profile</span></span><br><span class="line"><span class="comment"># This is /home/root/.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/root/.profile</span></span><br></pre></td></tr></table></figure>
-
-<p> 当通过 su 切换用户时，会执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/guo/.bashrc</span></span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/cUrl%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E9%94%99%E8%AF%AF%E6%80%BB%E7%BB%93/">cUrl命令使用错误总结</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>原本，是想写一个脚本来从 <a href="unsplash.com">Unsplash</a> 下载图片，通过 <code>apt install axel</code> 安装了 <code>axel</code> 来进行下载（相对较快）；使用 <code>jq</code> 来对返回的  json 进行解析，获取下载地址，为了测试命令的有效性，将返回的 json 结果存放在文件中 unsplash.json 中 ：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    <span class="string">"links"</span>: &#123;</span><br><span class="line">      <span class="attr">"self"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"html"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"download"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk/download"</span>,</span><br><span class="line">      <span class="attr">"download_location"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk/download"</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>调用 <code>jq</code> 命令解析，并将 <code>download</code> 的值作为 <code>axel</code> 的命令行参数：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 axel -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console：</span></span><br><span class="line">axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Initializing download: https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Could not parse URL.</span><br></pre></td></tr></table></figure>
-
-<p>标准输出或者错误显示不能解析 URL,  查看这个 URL 没有问题，直接执行 <code>axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code>  也没有出现异常。 由于没有显示具体的 URL 异常在哪里，换用 <code>cUrl</code> 来执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console:</span></span><br><span class="line">curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">curl: (3) [globbing] bad range <span class="keyword">in</span> column 3</span><br></pre></td></tr></table></figure>
-
-<p>同样，请求失败，同样直接执行 <code>curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code> 也能够成功，显然通过 <code>jq</code> 输出，再通过管道符和 <code>xargs</code> 输出的 url 不正常，但是直接看有没有什么特殊的字符，期间，尝试将 <code>jq</code> 解析的结果保存成变量，url 中添加变量，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o 2.jpg <span class="variable">$varUrl</span></span><br></pre></td></tr></table></figure>
-
-<p>同样执行失败，百思不得其解 :laughing: .</p>
-<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>智商不够，百度来凑，无果，打开 StackOverFlow， 搜索  <code>bad range in column</code> ，从一个类似的问题中找到了线索或者说答案。</p>
-<p>原文 <a href="https://stackoverflow.com/questions/43926914/strange-characters-appearing-in-bash-variable-expansion" target="_blank" rel="noopener">strange-characters-appearing-in-bash-variable-expansion)</a> 中描述的问题是通过 <code>grep</code> 命令 filter json 中的值，并将其作为变量，在 curl 的 url 中引用该变量：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod_in_question=$(curl -u uname:password -k very.cluster.com/api/v1/namespaces/default/pods/ | grep -i '"name": "myapp-' | cut -d '"' -f 4)</span><br><span class="line"></span><br><span class="line">curl -g -u uname:password -k -X DELETE "very.cluster.com/api/v1/namespaces/default/pods/$&#123;pod_in_question&#125;"</span><br></pre></td></tr></table></figure>
-
-<p>结果，请求 url 中出现一些特殊的转义字符，原因是使用的 bash 环境， <code>grep</code> 命令默认使用 <code>--colour=always</code> , 使得过滤的结果中出现了颜色的转义序列 <a href="http://ascii-table.com/ansi-escape-sequences.php" target="_blank" rel="noopener"> ANSI escape sequences</a>, 支持这些转义序列的终端的这些字符不可见，使用 <code>hexdump -C</code> 可以查看，因此针对原文的问题解决方案就是 <code>grep --colour=never</code>. </p>
-<p>再回到我的问题，使用 hexdump 打印：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | hexdump -C</span><br><span class="line"></span><br><span class="line">00000000  1b 5b 30 3b 33 32 6d 22  68 74 74 70 73 3a 2f 2f  |.[0;32m<span class="string">"https://|</span></span><br><span class="line"><span class="string">00000010  75 6e 73 70 6c 61 73 68  2e 63 6f 6d 2f 70 68 6f  |unsplash.com/pho|</span></span><br><span class="line"><span class="string">00000020  74 6f 73 2f 33 41 7a 53  34 7a 41 59 61 58 6b 2f  |tos/3AzS4zAYaXk/|</span></span><br><span class="line"><span class="string">00000030  64 6f 77 6e 6c 6f 61 64  22 1b 5b 30 6d 0a        |download"</span>.[0m.|</span><br><span class="line">0000003e</span><br></pre></td></tr></table></figure>
-
-<p>明显可以看到 url 的首尾出现了特殊的颜色转义字符，32 是绿色的色彩码. 显然, 是由于 <code>jq -C</code> 的选项造成的结果, 去掉或者指定 <code>-M</code> (monochrome (don’t colorize JSON)), 问题解决了.</p>
-<p>stackoverflow 中的问题还有一个答案, 给出了如何找出 <code>cUrl</code> 使用中出现问题如何定位的思路:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -g --libcurl /tmp/libcurl -o 2.jpg	</span><br><span class="line"></span><br><span class="line">cat /tmp/libcurl</span><br><span class="line"></span><br><span class="line"> curl_easy_setopt(hnd, CURLOPT_URL, <span class="string">"\033[0;32mhttps://unsplash.com/photos/3AzS4zAYaXk/download\033[0m"</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
-<li><p>引用 stackoverflow  给出使用 <code>cURL</code> 的最佳实践:</p>
-<p><strong>The best practise for URL syntax in <code>cURL</code>:</strong></p>
-<ul>
-<li>If Variable Expansion is required:<ul>
-<li>Apply the <code>-g</code> switch to disable potential globbing done by <code>cURL</code></li>
-</ul>
-</li>
-<li><strong>Otherwise:</strong><ul>
-<li>Use <code>$variable</code> as part of a “quoted” url string, instead of <code>${variable}</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
-</li>
-</ol>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
-<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>利用 <code>rename</code> 命令</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>清理工作</li>
-</ol>
-
                 
             </div>
         </article>
