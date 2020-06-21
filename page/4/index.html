@@ -84,7 +84,102 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BA%8B%E5%8A%A1/">Spring 事务</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="声明式事务管理"><a href="#声明式事务管理" class="headerlink" title="声明式事务管理"></a>声明式事务管理</h2><p> While the Spring default behavior for declarative transaction management follows EJB convention (roll back is automatic only on unchecked exceptions), it is often useful to customize this behavior.</p>
+<h3 id="Using-Transactional"><a href="#Using-Transactional" class="headerlink" title="Using @Transactional"></a>Using @Transactional</h3><p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations</a></p>
+<blockquote>
+<p>You can apply the <code>@Transactional</code> annotation to an interface definition, a method on an interface, a class definition, or a public method on a class. However, the mere presence of the <code>@Transactional</code> annotation is not enough to activate the transactional behavior. The <code>@Transactional</code> annotation is merely metadata that can be consumed by some runtime infrastructure that is <code>@Transactional</code>-aware and that can use the metadata to configure the appropriate beans with transactional behavior. In the preceding example, the <code>&lt;tx:annotation-driven/&gt;</code> element switches on the transactional behavior.</p>
+</blockquote>
+<p><code>@Transactional</code> 注解只是配置事务行为的元数据，并不会激活这些事务行为，Spring 的事务框架会使用这些元数据为某些 bean 配置它们的事务行为，xml 文件中的 <code>&lt;tx:annotation-driven/&gt;</code> 和配置类（<code>@Configuration</code>）上的 <code>@EnableTransactionManagement</code>注解会激活这些事务行为。</p>
+<blockquote>
+<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> looks for <code>@Transactional</code> only on beans in the same application context in which they are defined. This means that, if you put annotation-driven configuration in a <code>WebApplicationContext</code> for a <code>DispatcherServlet</code>, it checks for <code>@Transactional</code> beans only in your controllers and not your services. See <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-servlet" target="_blank" rel="noopener">MVC</a> for more information.</p>
+</blockquote>
+<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> 只会在定义它们本身的上下文中寻找 <code>@Transactional</code> 注解的 bean， 如果是在 Web 应用的 <code>DispatcherServlet</code> 对应的 <code>WebApplicationContext</code> <code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code>只会在这个上下文中查找，这个上下文一般只会定义控制器以及试图解析器等 web 组件，而不是 service 类。</p>
+<blockquote>
+<p>In proxy mode (which is the default), only external method calls coming in through the proxy are intercepted. This means that self-invocation (in effect, a method within the target object calling another method of the target object) does not lead to an actual transaction at runtime even if the invoked method is marked with <code>@Transactional</code>. Also, the proxy must be fully initialized to provide the expected behavior, so you should not rely on this feature in your initialization code (that is, <code>@PostConstruct</code>).</p>
+</blockquote>
+<p>由于 Spring 事务是基于代理的，只有通过代理的外部方法调用才会被拦截，目标对象内部的方法调用（一个方法调用对象内部的另一个方法）是不会在运行时导致一个实际的事务发生的；另外，必须完全初始化代理以提供预期的行为，因此不应在初始化代码（即@PostConstruct）中依赖此功能。</p>
+<blockquote>
+<p>Consider using of AspectJ mode (see the <code>mode</code> attribute in the following table) if you expect self-invocations to be wrapped with transactions as well. In this case, there no proxy in the first place. Instead, the target class is woven (that is, its byte code is modified) to turn <code>@Transactional</code> into runtime behavior on any kind of method.</p>
+</blockquote>
+<p>如果想要实现内部调用的事务行为，可以考虑基于 AspectJ 的 AOP, 首先，不会有代理，目标类被编织以将 <code>@Transactional</code> 的运行时行为应用于任何方法上</p>
+<p><strong>使用基于代理的事务的 proxy 类型</strong></p>
+<ul>
+<li><p>class-based proxies </p>
+</li>
+<li><p>standard JDK interface-based proxies （default or omitted）</p>
+</li>
+</ul>
+<h4 id="Transactional-settings"><a href="#Transactional-settings" class="headerlink" title="@Transactional settings"></a>@Transactional settings</h4><p>默认的<code>@Transactional</code> 的设置：</p>
+<ul>
+<li><p>The propagation setting is <code>PROPAGATION_REQUIRED.</code> #  默认的传播行为</p>
+</li>
+<li><p>The isolation level is <code>ISOLATION_DEFAULT.</code> # 默认的事务隔离级别</p>
+</li>
+<li><p>The transaction is read-write. # 模式是读-写的事务</p>
+</li>
+<li><p>The transaction timeout defaults to the default timeout of the underlying transaction system, or to none if timeouts are not supported. # 超时时间</p>
+</li>
+<li><p>Any <code>RuntimeException</code> triggers rollback, and any checked <code>Exception</code> does not. # 触发回滚的规则（异常类别）</p>
+<p>fully-qualified class name </p>
+</li>
+</ul>
+<h2 id="编程式事务"><a href="#编程式事务" class="headerlink" title="编程式事务"></a>编程式事务</h2><h3 id="使用-TransactionTemplate"><a href="#使用-TransactionTemplate" class="headerlink" title="使用 TransactionTemplate"></a>使用 TransactionTemplate</h3><p><code>TransactionTemplate</code> 和 Spring 中其他模板类相似（如 <code>JdbcTemplate</code>），目的是为了减少应用代码中获取和释放事务相关资源的样板式代码</p>
+<p>（boilerplate acquisition and release transactional resources），这样应用就可以将关注点放在业务逻辑上。它使用一个回调方法。</p>
+<p>应用代码必须执行在一个事务上下文（transactional context）中,  并且使用 <code>TransactionTemplate</code>，仅需两个步骤：</p>
+<ol>
+<li>应用代码编写  <code>TransactionCallback</code> 实现，这个实现中包含了事务要包含的所有的操作，通常是匿名内部类的形式 。</li>
+<li>回调类实现的实例传入 <code>TransactionTemplate.execute(CallBack)</code> 方法中</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleService</span> <span class="keyword">implements</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// single TransactionTemplate shared amongst all methods in this instance</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TransactionTemplate transactionTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use constructor-injection to supply the PlatformTransactionManager</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleService</span><span class="params">(PlatformTransactionManager transactionManager)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.transactionTemplate = <span class="keyword">new</span> TransactionTemplate(transactionManager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">someServiceMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> TransactionCallback() &#123;</span><br><span class="line">            <span class="comment">// the code in this method executes in a transactional context</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">doInTransaction</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">                updateOperation1();</span><br><span class="line">                <span class="keyword">return</span> resultOfUpdateOperation2();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>无返回的事务可以实现 <code>TransactionCallbackWithoutResult</code> 接口</p>
+<p>事务的属性，如传播行为、隔离级别等可以通过  <code>TransactionTemplate</code> 提供的方法设置（程序中或XML中） </p>
+<blockquote>
+<p>Code within the callback can roll the transaction back by calling the <code>setRollbackOnly()</code> method on the supplied <code>TransactionStatus</code> object, as follows:</p>
+</blockquote>
+<p>也可以在回调方法中，调用 <code>TransactionStatus.setRollbackOnly()</code> 回滚事务,  这里取决于是否是新事务，来决定是否直接回滚。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">transactionTemplate.execute(<span class="keyword">new</span> TransactionCallbackWithoutResult() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            updateOperation1();</span><br><span class="line">            updateOperation2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SomeBusinessException ex) &#123;</span><br><span class="line">            status.setRollbackOnly();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用-PlatformTransactionManager"><a href="#使用-PlatformTransactionManager" class="headerlink" title="使用 PlatformTransactionManager"></a>使用 PlatformTransactionManager</h3><p>也可以提直接使用 <code>PlatformTransactionManager</code> 来管理事务，需要结合 Spring 事务抽象的其它对象： <code>TransactionDefinition</code>, <code>TransactionStatus</code>。 可以实现事务的初始化、回滚和提交。编程式事务也可以显示设置事务的名称，声明式的事务名称一般都是默认的全限定类名+方法名。</p>
+<p>Java </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DefaultTransactionDefinition def = <span class="keyword">new</span> DefaultTransactionDefinition();</span><br><span class="line"><span class="comment">// explicitly setting the transaction name is something that can be done only programmatically</span></span><br><span class="line">def.setName(<span class="string">"SomeTxName"</span>);</span><br><span class="line">def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line"></span><br><span class="line">TransactionStatus status = txManager.getTransaction(def);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// execute your business logic here</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (MyException ex) &#123;</span><br><span class="line">    txManager.rollback(status);</span><br><span class="line">    <span class="keyword">throw</span> ex;</span><br><span class="line">&#125;</span><br><span class="line">txManager.commit(status);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 <code>PlatformTransactionManager.rollback(TransactionStatus status)</code> 方法有如下的注释：</p>
+<blockquote>
+<p>Do not call rollback on a transaction if commit threw an exception. The transaction will already have been completed and cleaned up when commit  returns, even in case of a commit exception. Consequently, a rollback call after commit failure will lead to an IllegalTransactionStateException.</p>
+</blockquote>
+<p>不要在commit 时异常后进行回滚，commit 返回时（即使有提交异常），事务已经完成并且已经被清理。所以这时，如果调用 rollback 操作，会导致一个 <code>IllegalTransactionStateException</code>， 这也是上述示例代码中 commit 放在最后的原因</p>
+<blockquote>
+<p>If the transaction wasn’t a new one, omit the commit for proper participation in the surrounding transaction.</p>
+</blockquote>
+<p><strong>当调用了 commit 后，如果该事务不是一个新事务，则会忽略提交以正确参与周围的事务中。</strong></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E4%B8%8D%E5%90%8C%E5%B7%A5%E5%85%B7%E7%9A%84%E5%85%83%E5%AD%97%E7%AC%A6%E6%94%AF%E6%8C%81/">不同工具的元字符支持</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,9 +193,80 @@
             </div>
             <div class="post-content">
                 
-                    <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
+                    <h2 id="grep-P"><a href="#grep-P" class="headerlink" title="grep -P"></a><strong>grep -P</strong></h2><p>pattern is a Perl regular expression. Based on  PRCE. (兼容Perl的正则表达式包)</p>
+<ul>
+<li>八进制</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\012b'</span></span><br></pre></td></tr></table></figure>
 
+<ul>
+<li>十六进制<ul>
+<li><code>\xFF</code> </li>
+<li>\x{…}</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\x&#123;0A&#125;b'</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>元字符 <code>.</code> 不能匹配换行符, 其他 Unicode 换行符等可以匹配</li>
+<li><code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code>， java ， PHP 也是一样的, 但是 Perl 语言的正则引擎室支持 Unicode 字符（未验证）</li>
+</ul>
+<h2 id="grep-E-egrep"><a href="#grep-E-egrep" class="headerlink" title="grep -E / egrep"></a><strong>grep -E / egrep</strong></h2><ul>
+<li><p>不支持八进制、十六进制转义表示</p>
+</li>
+<li><p>元字符 <code>.</code> 可以匹配换行符(\n),  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
+</li>
+<li><p><code>\w</code> 可以匹配汉字</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'a严b'</span> | grep -z -E <span class="string">'a\wb'</span></span><br></pre></td></tr></table></figure>
+
+
+<p>对于字符组， 尤其是排除型字符组，都支持 <code>\n</code>, <code>\r</code>, Unicode 换行符，行分隔符，段分隔符都支持</p>
+<h2 id="Notepad"><a href="#Notepad" class="headerlink" title="Notepad++"></a>Notepad++</h2><p>Notepad++ 的 <code>匹配新行模式</code>， 应该是启用了 <code>点通配符模式 - dotALL（Perl中的单行模式）</code>, 以及 <code>多行模式 - 行锚点可以匹配行内的换行符前后的位置</code></p>
+<p>POSIX 规定，点号不能匹配 NUL (值为0的字符)， 具体工具可有有差异。</p>
+<p>grep: PCRE does not support \L, \l, \N{name}, \U, or \u</p>
+<p>PCRE(包括PHP)， java.util.regex <code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code></p>
+<h2 id="java-util-regex"><a href="#java-util-regex" class="headerlink" title="java.util.regex"></a>java.util.regex</h2><ul>
+<li><p>\w 严格等价于 [a-zA-Z0-9_]</p>
+</li>
+<li><p>\s 不匹配 Unicode 换行符</p>
+</li>
+<li><p>普通模式下 . 不能匹配 \n,  \r,  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
+</li>
+<li><p>字符组可以匹配换行符，包括 Unicode 的上述行终结符</p>
+</li>
+<li><p>支持字符组的计算 [[a-c]&amp;&amp;[a-z]]  [[a-c]OR[d-e]], 当然也可以使用环视来实现</p>
+</li>
+<li><p>多行模式下<code>(?:m)</code>，锚点可以匹配 Unicode 行终结符  Page.370 </p>
+</li>
+<li><p>$ 既可以匹配目标字符串的末尾，也可以匹配整个字符串末尾的换行符之前的位置 (这里的换行符也包括Unicode 的行终结符)</p>
+</li>
+<li><p>\Z 和普通模式下的 $ 的意义一样</p>
+</li>
+<li><p>\z 只匹配文本的末尾的位置</p>
+</li>
+<li><p>\A 总是与普通的 ^ 一样</p>
+</li>
+<li><p>\b 单词分界符 与 \B 非单词分界符对单词字符的定义仅限于 ASCII 字符，如果需要扩展，可以使用环视功能以及 Unicode 属性实现</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（?&lt;!\pL）(?=\pL)......(?&lt;=pL)(?!\pL)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>正则表达式中设定匹配模式，支持</p>
+<ul>
+<li><code>(?i)...(?-i)</code>, <code>(?i)</code> 开启模式，<code>(?-i)</code>关闭模式</li>
+<li><code>(?:(?i)very)</code>, <code>(?i)</code> 的作用范围只限于括号內部，闭括号后就失效</li>
+<li>支持模式修饰范围，<code>(?i:...)</code></li>
+</ul>
+</li>
+<li><p>文字文本模式（消除所有元字符的特殊含义进行匹配）, java.util.regex 的引擎支持 <code>\Q...\E</code> 序列，但是它只会消除除了 <code>\E</code> 之外的所有的元字符的特殊含义，直接在字符串两边加上，会有问题（原始字符串出现 <code>\E</code>， 会截断，只对前面的部分应用该模式）。请直接使用 <code>Pattern.quote</code> 方法或自己写一个处理方法。</p>
+</li>
+</ul>
+<p>Perl 中的锚点都不支持 Unicode 行终结符， 而 Java 的普通模式下的 <code>$</code> 以及多行模式下的 <code>^</code> 以及 <code>$</code> 都支持 Unicode 行终结符。</p>
+<p>基于 PCRE 的 grep -P  测试, 普通模式下，<code>$</code> 只匹配末尾，不匹配换行符之前的位置</p>
 
                 
             </div>
@@ -108,7 +274,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20Enviroment/">Spring Enviroment</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E6%BA%90%E7%A0%81/">Spring 源码</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -122,152 +288,82 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="Spring-Environment"><a href="#Spring-Environment" class="headerlink" title="Spring Environment"></a>Spring Environment</h2><p><code>Environment</code> 是对 Spring 应用环境 (Spring Application Environment) 的抽象; 应用于应用环境的两个方面：<code>profiles</code> 以及 <code>properties</code>。 </p>
-<p><code>profiles</code> 属于条件化创建 bean 的一种机制， 不同的 <code>profile</code> 包含了一组 bean 的定义，运行时，可以指定激活哪些 <code>profile</code>(spring.profiles.active), 以及应用哪些默认的 <code>profile</code>(spring.profiles.default)。</p>
-<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p><code>properties</code> 包含了应用用到的所有属性对，可能来源于（不限于）：</p>
-<ul>
-<li>properties 文件</li>
-<li>JVM 系统属性</li>
-<li>系统环境变量</li>
-<li>JNDI</li>
-<li>Servlet Context Parameters</li>
-<li>临时属性对象 ad-hoc <code>Properties</code> object</li>
-<li>Map 对象</li>
-</ul>
-<p><code>PropertySource</code> 是对任何键值对的属性源的一种抽象，Spring 提供的 <code>Environment</code> 都会配置两个 <code>PropertySource</code> 对象，分别代表JVM系统属性的集合（ <code>System.getProperties()</code> ）和系统环境变量  （<code>System.getenv()</code> ）</p>
-<p><code>Environment</code> 对象提供了配置 <code>PropertySource</code> 以及在这些 <code>PropertySource</code> 对象上的检索功能，检索某个属性键是否存在或者对应的值。</p>
-<p>Spring Web 应用中, <code>StandardServletEnvironment</code> 实现，检索的优先级如下：</p>
+                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ConfigurableWebApplicationContext</span> <span class="keyword">extends</span> <span class="title">WebApplicationContext</span>, <span class="title">ConfigurableApplicationContext</span></span></span><br></pre></td></tr></table></figure>
+
+<p>ConfigurableWebApplicationContext 提供了  configLocation 的属性，为 web application context 设置 config 文件的路径</p>
+<p>在 <code>public class ContextLoaderListener extends ContextLoader implements ServletContextListener</code> 中，在监听到 ServletContext 初始化时，会初始化一个 WebApplication 实例（实现了ConfigurableWebApplicationContext接口），会从 web.xml 中 配置的 Servlet Context 参数中寻找  <code>contextConfigLocation</code>， 填充  configLocation .</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring%20Boot/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE/">自定义配置</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="属性文件外置配置"><a href="#属性文件外置配置" class="headerlink" title="属性文件外置配置"></a>属性文件外置配置</h3><p><code>@ConfigurationProperties</code> </p>
+<p><code>@DataSourceProperties</code></p>
+<p><code>DataSourceAutoConfiguration</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Condition&#125; to detect when an embedded &#123;<span class="doctag">@link</span> DataSource&#125; type can be used.</span></span><br><span class="line"><span class="comment"> * If a pooled &#123;<span class="doctag">@link</span> DataSource&#125; is available, it will always be preferred to an</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> EmbeddedDatabase&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EmbeddedDatabaseCondition</span> <span class="keyword">extends</span> <span class="title">SpringBootCondition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> SpringBootCondition pooledCondition = <span class="keyword">new</span> PooledDataSourceCondition();</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ConditionOutcome <span class="title">getMatchOutcome</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> </span>&#123;</span><br><span class="line">		ConditionMessage.Builder message = ConditionMessage.forCondition(<span class="string">"EmbeddedDataSource"</span>);</span><br><span class="line">		<span class="keyword">if</span> (anyMatches(context, metadata, <span class="keyword">this</span>.pooledCondition)) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.foundExactly(<span class="string">"supported pooled data source"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		EmbeddedDatabaseType type = EmbeddedDatabaseConnection.get(context.getClassLoader()).getType();</span><br><span class="line">		<span class="keyword">if</span> (type == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.didNotFind(<span class="string">"embedded database"</span>).atAll());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ConditionOutcome.match(message.found(<span class="string">"embedded database"</span>).items(type));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Java%20Servlet/Cookie/">Cookie</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Java Servlet 支持 HTTP Cookie</p>
 <ol>
-<li>ServletConfig parameters </li>
-<li>ServletContext parameters ( web.xml context-param entries )</li>
-<li>JNDI environment variables  (<code>java:comp/env/</code> entries) </li>
-<li>JVM system properties (<code>-D</code> command-line arguments) </li>
-<li>JVM system environment (operating system environment variables) </li>
+<li><p>Cookie 是 Server 验证 Client 身份的一种机制。 Client 发送请求到 Server 时， Server 会为该客户端生成一些信息，也就是 Cookie，用于标识该 Client，并将这些信息发送 Client （封装在 Response 的 Header 中）；</p>
+</li>
+<li><p>Client 如浏览器（可以选择是否保存 Cookie），接受到相应的 Response，并且将 Cookie 信息保存在本地;</p>
+</li>
+<li><p>Client 下一次请求 Server 时，在请求的 Header 中带着这些 Cookie 信息， Server 验证这些 Cookie 信息，验证通过就可以返回给 Client 想要请求的内容了</p>
+</li>
 </ol>
-<p>整个机制是可配置的, 可以移除某个 <code>PropertySource</code> ，或者改变检索的优先级</p>
-<h4 id="PropertySource-注解"><a href="#PropertySource-注解" class="headerlink" title="@PropertySource 注解"></a><code>@PropertySource</code> 注解</h4><p><code>@PropertySource</code> 注解提供了一种向 <code>Environment</code> 添加属性源的便利方式，使用在 <code>@Configuration</code> 类上，需要提的一点是，任何出现在 <code>@PropertySource</code>属性源路径中的 <code>${..}</code> 占位符会从已经注册的 <code>PropertySource</code> 中检索，也可以提供一个默认值，如 <code>${key:default}</code></p>
-<p>xml 定义中，import 其他bean定义时，可以使用占位符，Spring 会从当前 Environment 中进行解析</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"$&#123;test&#125;.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>但是当定义某个 bean 时，必须配置一个 PropertySourcesPlaceholderConfigurer， 才可以使用占位符</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java.beans.PropertyEditor Spring implementation which can convert String paths to Resource objects.</span><br><span class="line">Classloader.getResource()</span><br></pre></td></tr></table></figure>
+<p>Http Request Headers</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Request</span> <span class="string">Header</span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">host </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">localhost:8080 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">connection </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">keep-alive </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">upgrade-insecure-requests </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">1 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">user-agent </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-encoding </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">gzip, deflate, br </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">accept-language </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">zh-CN,zh;q=0.9 </span></span><br><span class="line">======================== </span><br><span class="line"><span class="attr">HeadName</span>: <span class="string">cookie </span></span><br><span class="line"><span class="attr">HeadValue</span>: <span class="string">Idea-e3d08f0c=a1cdf13f-3a2b-46e0-bf43-088ffa6cb705; JSESSIONID=AE715BC860E044CA647A2C2D7A10B5E7 </span></span><br><span class="line">========================</span><br></pre></td></tr></table></figure>
 
 
 
+<p>cookies</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Cookie</span> <span class="string">domain:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">name:Idea-e3d08f0c</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">path:null</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">value:a1cdf13f-3a2b-46e0-bf43-088ffa6cb705</span></span><br><span class="line"><span class="attr">Cookie</span> <span class="string">max age:-1</span></span><br></pre></td></tr></table></figure>
 
 
 
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">		<span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">		prepareRefresh();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">		prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">			postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">               <span class="comment">/* </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               *  在这里处理 PropertySource </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               */</span></span><br><span class="line">			<span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">			invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">			registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize message source for this context.</span></span><br><span class="line">			initMessageSource();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize event multicaster for this context.</span></span><br><span class="line">			initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">			onRefresh();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Check for listener beans and register them.</span></span><br><span class="line">			registerListeners();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">			finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Last step: publish corresponding event.</span></span><br><span class="line">			finishRefresh();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">			logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt"</span>, ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">			destroyBeans();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Reset 'active' flag.</span></span><br><span class="line">			cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Propagate exception to caller.</span></span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/MVC%20Note1/">MVC Note1</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><strong>Root Application Context</strong><br>As such, it typically contains middle-tier services, data sources, etc.</p>
-<p><strong>Servlet Application Context</strong><br>As such, it typically contains controllers, view resolvers, locale resolvers, and other web-related beans.</p>
-<p>Root Application Context 用来初始化 ContextLoaderListener 对象，并将该对象注册到 Servlet 容器中</p>
-<p>Servlet Application Context 用来初始化 DispatcherServlet 对象，并将该对象注册到 Servlet 容器中，随后添加 Filters, 添加 Mapping 映射， 当然用户还可以通过 customizeRegistration(ServletRegistration.Dynamic registration) 来进行自定义之后的操作，如配置 Multipart 处理的参数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Delegate the ServletContext to any WebApplicationInitializer implementations present on the application classpath.</span><br><span class="line">Because <span class="keyword">this</span> <span class="class"><span class="keyword">class</span> <span class="title">declares</span> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>), <span class="title">Servlet</span> 3.0+ <span class="title">containers</span> <span class="title">will</span> <span class="title">automatically</span> <span class="title">scan</span> <span class="title">the</span> <span class="title">classpath</span> <span class="title">for</span> <span class="title">implementations</span> <span class="title">of</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">WebApplicationInitializer</span> <span class="title">interface</span> <span class="title">and</span> <span class="title">provide</span> <span class="title">the</span> <span class="title">set</span> <span class="title">of</span> <span class="title">all</span> <span class="title">such</span> <span class="title">types</span> <span class="title">to</span> <span class="title">the</span> <span class="title">webAppInitializerClasses</span> <span class="title">parameter</span> <span class="title">of</span> <span class="title">this</span> <span class="title">method</span>.</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    <span class="title">Assuming</span> <span class="title">that</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">WebApplicationInitializer</span> <span class="title">types</span> <span class="title">are</span> <span class="title">detected</span>, <span class="title">they</span> <span class="title">will</span> <span class="title">be</span> <span class="title">instantiated</span> (<span class="title">and</span> <span class="title">sorted</span> <span class="title">if</span> <span class="title">the</span> @@<span class="title">Order</span> <span class="title">annotation</span> <span class="title">is</span> <span class="title">present</span> <span class="title">or</span> <span class="title">the</span> <span class="title">Ordered</span> <span class="title">interface</span> <span class="title">has</span> <span class="title">been</span> <span class="title">implemented</span>). <span class="title">Then</span> <span class="title">the</span> <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>) <span class="title">method</span> <span class="title">will</span> <span class="title">be</span> <span class="title">invoked</span> <span class="title">on</span> <span class="title">each</span> <span class="title">instance</span>, <span class="title">delegating</span> <span class="title">the</span> <span class="title">ServletContext</span> <span class="title">such</span> <span class="title">that</span> <span class="title">each</span> <span class="title">instance</span> <span class="title">may</span> <span class="title">register</span> <span class="title">and</span> <span class="title">configure</span> <span class="title">servlets</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">DispatcherServlet</span>, <span class="title">listeners</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">ContextLoaderListener</span>, <span class="title">or</span> <span class="title">any</span> <span class="title">other</span> <span class="title">Servlet</span> <span class="title">API</span> <span class="title">componentry</span> <span class="title">such</span> <span class="title">as</span> <span class="title">filters</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  /* <span class="title">Servlet</span> 3.0+ 会自动在应用的 <span class="title">classpath</span> 中寻找 <span class="title">WebApplicationInitializer</span> 的实现类，并对每一个实现类进行实例化，将 <span class="title">ServletContext</span> 委托给他们，对每一个实例调用 <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>), 加载和注册所有的 <span class="title">Servlet</span>、<span class="title">Listener</span>、<span class="title">Filter</span> */</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"><span class="title">If</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">are</span> <span class="title">found</span> <span class="title">on</span> <span class="title">the</span> <span class="title">classpath</span>, <span class="title">this</span> <span class="title">method</span> <span class="title">is</span> <span class="title">effectively</span> <span class="title">a</span> <span class="title">no</span>-<span class="title">op</span>. <span class="title">An</span> <span class="title">INFO</span>-<span class="title">level</span> <span class="title">log</span> <span class="title">message</span> <span class="title">will</span> <span class="title">be</span> <span class="title">issued</span> <span class="title">notifying</span> <span class="title">the</span> <span class="title">user</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ServletContainerInitializer</span> <span class="title">has</span> <span class="title">indeed</span> <span class="title">been</span> <span class="title">invoked</span> <span class="title">but</span> <span class="title">that</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">were</span> <span class="title">found</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"> // <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">SpringServletContainerInitializer</span> </span></span><br><span class="line"><span class="class"> </span></span><br><span class="line"><span class="class"> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, @NotNull ServletContext servletContext)</span> <span class="keyword">throws</span> 		ServletException </span>&#123;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ServletContainerInitializer</span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer</span><br><span class="line"></span><br><span class="line">WebApplicationInitializer</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Container%20Extention%20Points/">Container Extention Points</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h4 id="1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor"><a href="#1-8-2-Customizing-Configuration-Metadata-with-a-BeanFactoryPostProcessor" class="headerlink" title="1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor"></a>1.8.2 Customizing Configuration Metadata with a BeanFactoryPostProcessor</h4><p>使用 <code>BeanFactoryPostProcessor</code> 来定制化配置元数据 （包含了 Bean 的定义）</p>
-<p><code>BeanFactoryPostProcessor</code> 操作的是 bean 的配置元数据，而不是 bean 实例对象，Spring IoC 容器允许 <code>BeanFactoryPostProcessor</code> 读取配置元数据并且有可能会在实例化任何 bean （除了它本身）之前改变这些 bean 的定义。</p>
-<p>可以配置多个 <code>BeanFactoryPostProcessor</code> 实例， 并且通过实现 <code>Ordered</code> 接口，设置 <code>order</code> 属性来设置这些实例应用的顺序。</p>
-<blockquote>
-<p> While it is technically possible to work with bean instances within a <code>BeanFactoryPostProcessor</code> (for example, by using <code>BeanFactory.getBean()</code>), doing so causes premature bean instantiation, violating the standard container lifecycle. This may cause negative side effects, such as bypassing bean post processing. </p>
-<p>虽然在 BeanFactoryPostProcessor  中可以通过 <code>BeanFactory.getBean()</code> 获取 bean 实例，然后对其操作，但是这回导致 bean 的<strong>预实例化</strong>，违反了标准的容器生命周期。这可能带来一些副作用，如绕过 bean 的后置处理。</p>
-</blockquote>
-<p>Implementation Example: </p>
-<p><code>PropertySourcesPlaceholderConfigurer</code>  :    实现 bean 属性的值，可以定义在外部 properties 文件中</p>
-<p><code>PropertyOverrideConfigurer</code> ： 事项 bean 的属性如果没有值的话，可以通过外部 properties 文件定义一个默认值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PropertySource</span><br></pre></td></tr></table></figure>
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20JDBC/">Spring JDBC</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring 定义的数据访问异常体系相比于 JDBC 的 SQLException 要丰富的多，并且没有与特定的持久化方式相关联。 持久化机制与数据访问层隔离开来。</p>
-<p>DataAccessException 非检查型异常，不强制进行捕获，因为 Spring 认为触发异常的很多问题是不能在 catch 代码块中进行捕获的，如连接信息有误、语法错误等异常（就算捕获了，也不能做任何处理）。是否要捕获异常取决于开发人员。</p>
-<p>模板方法模式</p>
-<p>构造器 @Inject 注解 需要加入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h4><p>Spring JDBC 框架承担了必要的<strong>资源管理</strong>与<strong>异常处理</strong>工作，简化了 JDBC 代码， 只需要关注必要的数据库读写代码即可。</p>
-<p>Spring 将数据访问的样板代码抽象到模板类中。</p>
-<p>Spring 为 JDBC 提供了三个模板类:</p>
-<ul>
-<li>JdbcTemplate：最基本的 Spring JDBC 模板，支持简单的 JDBC 数据库访问功能以及基于索引参数的查询（赋值的顺序与 SQL 语句占位符的顺序要一致） Spring 3.1 开始，支持 Java 5 的自动装箱、泛型以及可变参数列表等特性来简化 JDBC 模板的使用</li>
-<li>NamedParameterJdbcTemplate：可以将值以命名参数的形式绑定到 SQL 中（相对于索引参数）</li>
-</ul>
-<h4 id="Spring-与-Hibernate-的集成"><a href="#Spring-与-Hibernate-的集成" class="headerlink" title="Spring 与 Hibernate 的集成"></a>Spring 与 Hibernate 的集成</h4><p>Spring 提供了与 JDBC 类似的模板类 <code>HibernateTemplate</code>，能够保证每个事务使用同一个 <code>Session</code>, 弊端在于 Repository 的实现与 Spring 耦合。</p>
-<p>可以直接使用 Hibernate 的上下文 Session <code>Contextual Session</code>， 其实 Hibernate 等持久化框架已经达到了和模板类类似的功能，如获取链接，创建语句，管理事务，关闭资源等，因此直接使用也是比较方便的。</p>
-<p>需要声明一个 <code>org.springframework.orm.hibernate4.LocalSessionFactoryBean</code>  bean（对象关系映射既可以通过注解，也可以通过配置文件声明）, 继承自 Spring 的 <code>FactoryBean</code>, 会产生 Hibernate 的 <code>SessionFactory</code>。</p>
-<p>但是不使用 Spring 提供的模板类，问题就是 Repository 实现类会抛出 Hibernate 相关的异常，而不是 Spring 定义的非检查型异常。解决方案是：定义一个 <code>PersistenceExceptionTranslationPostProcessor</code> bean。</p>
-<blockquote>
-<p><code>PersistenceExceptionTranslationPostProcessor</code>是一个bean 后置处理器（bean post-processor），它会在所有拥有<code>@Repository</code>注解的类上添加一个通知器（advisor），这样就会捕获任何平台相关的异常并以Spring非检查型数据访问异常的形式重新抛出。</p>
-</blockquote>
-<p><strong>@Repository 注解</strong></p>
-<p><code>@Repository</code>注解，这会为我们做两件事情。首先，<code>@Repository</code>是Spring的另一种构造性注解，它能够像其他注解一样被Spring的组件扫描所扫描到, 表明在组件扫描的时候会自动创建。这样就不必明确声明<code>HibernateSpitterRepository</code> bean了，只要这个Repository类在组件扫描所涵盖的包中即可。    </p>
-<p>除了帮助减少显式配置以外，<code>@Repository</code>还有另外一个用处。让我们回想一下模板类，它有一项任务就是捕获平台相关的异常，然后使用Spring统一非检查型异常的形式重新抛出。</p>
+<p><strong>Servlet Cookie MaxAge - cookie 的有效期，存活时长</strong></p>
+<p>Sets the maximum age in seconds for this Cookie.<br>A positive value indicates that the cookie will expire after that many seconds have passed. Note that the value is the maximum age when the cookie will expire, not the cookie’s current age.<br>A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits. A zero value causes the cookie to be deleted.</p>
 
                 
             </div>
