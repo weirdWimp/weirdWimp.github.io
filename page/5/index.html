@@ -84,94 +84,67 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E4%B8%8D%E5%90%8C%E5%B7%A5%E5%85%B7%E7%9A%84%E5%85%83%E5%AD%97%E7%AC%A6%E6%94%AF%E6%8C%81/">不同工具的元字符支持</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Scheduling/">Scheduling</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="grep-P"><a href="#grep-P" class="headerlink" title="grep -P"></a><strong>grep -P</strong></h2><p>pattern is a Perl regular expression. Based on  PRCE. (兼容Perl的正则表达式包)</p>
-<ul>
-<li>八进制</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\012b'</span></span><br></pre></td></tr></table></figure>
+                    <h2 id="Cron-Expressions"><a href="#Cron-Expressions" class="headerlink" title="Cron Expressions"></a>Cron Expressions</h2><p>Cron expressions are comprised of 6 required fields and one optional field separated by white space. The fields respectively are described as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Allowed Values</th>
+<th>Allowed Special Characters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Seconds</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Minutes</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Hours</td>
+<td>0-23</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Day-of-month</td>
+<td>1-31</td>
+<td>, - * ? / L W</td>
+</tr>
+<tr>
+<td>Month</td>
+<td>0-11 or JAN-DEC</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Day-of-Week</td>
+<td>1-7 or SUN-SAT</td>
+<td>, - * ? / L #</td>
+</tr>
+<tr>
+<td>Year (Optional)</td>
+<td>empty, 1970-2199</td>
+<td>, - * /</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">The <span class="string">'*'</span> character is used to specify all values. For example, <span class="string">"*"</span> in the minute field means <span class="string">"every minute"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'?'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. It is used to specify <span class="string">'no specific value'</span>. This is useful when you need to specify something in one of the two fields, but not the other.</span><br><span class="line"></span><br><span class="line">The <span class="string">'-'</span> character is used to specify ranges For example <span class="string">"10-12"</span> in the hour field means <span class="string">"the hours 10, 11 and 12"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">','</span> character is used to specify additional values. For example <span class="string">"MON,WED,FRI"</span> in the day-of-week field means <span class="string">"the days Monday, Wednesday, and Friday"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'/'</span> character is used to specify increments. For example <span class="string">"0/15"</span> in the seconds field means <span class="string">"the seconds 0, 15, 30, and 45"</span>. And <span class="string">"5/15"</span> in the seconds field means <span class="string">"the seconds 5, 20, 35, and 50"</span>. Specifying <span class="string">'*'</span> before the <span class="string">'/'</span> is equivalent to specifying <span class="number">0</span> is the value to start with. Essentially, <span class="keyword">for</span> each field in the expression, there is a set of numbers that can be turned on or off. For seconds and minutes, the numbers range from <span class="number">0</span> to <span class="number">59</span>. For hours <span class="number">0</span> to <span class="number">23</span>, <span class="keyword">for</span> days of the month <span class="number">0</span> to <span class="number">31</span>, and <span class="keyword">for</span> months <span class="number">0</span> to <span class="number">11</span> (JAN to DEC). The <span class="string">"/"</span> character simply helps you turn on every <span class="string">"nth"</span> value in the given set. Thus <span class="string">"7/6"</span> in the month field only turns on month <span class="string">"7"</span>, it does NOT mean every <span class="number">6</span>th month, please note that subtlety.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. This character is <span class="keyword">short</span>-hand <span class="keyword">for</span> <span class="string">"last"</span>, but it has different meaning in each of the two fields. For example, the value <span class="string">"L"</span> in the day-of-month field means <span class="string">"the last day of the month"</span> - day <span class="number">31</span> <span class="keyword">for</span> January, day <span class="number">28</span> <span class="keyword">for</span> February on non-leap years. If used in the day-of-week field by itself, it simply means <span class="string">"7"</span> or <span class="string">"SAT"</span>. But <span class="keyword">if</span> used in the day-of-week field after another value, it means <span class="string">"the last xxx day of the month"</span> - <span class="keyword">for</span> example <span class="string">"6L"</span> means <span class="string">"the last friday of the month"</span>. You can also specify an offset from the last day of the month, such as <span class="string">"L-3"</span> which would mean the third-to-last day of the calendar month. When using the <span class="string">'L'</span> option, it is important not to specify lists, or ranges of values, as you<span class="string">'ll get confusing/unexpected results.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The '</span>W<span class="string">' character is allowed for the day-of-month field. This character is used to specify the weekday (Monday-Friday) nearest the given day. As an example, if you were to specify "15W" as the value for the day-of-month field, the meaning is: "the nearest weekday to the 15th of the month". So if the 15th is a Saturday, the trigger will fire on Friday the 14th. If the 15th is a Sunday, the trigger will fire on Monday the 16th. If the 15th is a Tuesday, then it will fire on Tuesday the 15th. However if you specify "1W" as the value for day-of-month, and the 1st is a Saturday, the trigger will fire on Monday the 3rd, as it will not '</span>jump<span class="string">' over the boundary of a month'</span>s days. The <span class="string">'W'</span> character can only be specified when the day-of-month is a single day, not a range or list of days.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> and <span class="string">'W'</span> characters can also be combined <span class="keyword">for</span> the day-of-month expression to yield <span class="string">'LW'</span>, which translates to <span class="string">"last weekday of the month"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'#'</span> character is allowed <span class="keyword">for</span> the day-of-week field. This character is used to specify <span class="string">"the nth"</span> XXX day of the month. For example, the value of <span class="string">"6#3"</span> in the day-of-<span class="function">week field means the third Friday of the <span class="title">month</span> <span class="params">(day <span class="number">6</span> = Friday and <span class="string">"#3"</span> = the <span class="number">3</span>rd one in the month)</span>. Other examples: "2#1" </span>= the first Monday of the month and <span class="string">"4#5"</span> = the fifth Wednesday of the month. Note that <span class="keyword">if</span> you specify <span class="string">"#5"</span> and there is not <span class="number">5</span> of the given day-of-week in the month, then no firing will occur that month. If the <span class="string">'#'</span> character is used, there can only be one expression in the day-of-<span class="function">week <span class="title">field</span> <span class="params">(<span class="string">"3#1,6#3"</span> is not valid, since there are two expressions)</span>.</span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">The legal characters and the names of months and days of the week are not <span class="keyword">case</span> sensitive.</span></span><br><span class="line"><span class="function">NOTES:</span></span><br><span class="line"><span class="function">Support <span class="keyword">for</span> specifying both a day-of-week and a day-of-month value is not <span class="title">complete</span> <span class="params">(you<span class="string">'ll need to use the '</span>?<span class="string">' character in one of these fields).</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">Overflowing ranges is supported - that is, having a larger number on the left hand side than the right. You might do 22-2 to catch 10 o'</span>clock at night until <span class="number">2</span> o<span class="string">'clock in the morning, or you might have NOV-FEB. It is very important to note that overuse of overflowing ranges creates ranges that don'</span>t make sense and no effort has been made to determine which interpretation CronExpression chooses. An example would be <span class="string">"0 0 14-6 ? * FRI-MON"</span>.</span></span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>十六进制<ul>
-<li><code>\xFF</code> </li>
-<li>\x{…}</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\x&#123;0A&#125;b'</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>元字符 <code>.</code> 不能匹配换行符, 其他 Unicode 换行符等可以匹配</li>
-<li><code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code>， java ， PHP 也是一样的, 但是 Perl 语言的正则引擎室支持 Unicode 字符（未验证）</li>
-</ul>
-<h2 id="grep-E-egrep"><a href="#grep-E-egrep" class="headerlink" title="grep -E / egrep"></a><strong>grep -E / egrep</strong></h2><ul>
-<li><p>不支持八进制、十六进制转义表示</p>
-</li>
-<li><p>元字符 <code>.</code> 可以匹配换行符(\n),  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
-</li>
-<li><p><code>\w</code> 可以匹配汉字</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'a严b'</span> | grep -z -E <span class="string">'a\wb'</span></span><br></pre></td></tr></table></figure>
-
-
-<p>对于字符组， 尤其是排除型字符组，都支持 <code>\n</code>, <code>\r</code>, Unicode 换行符，行分隔符，段分隔符都支持</p>
-<h2 id="Notepad"><a href="#Notepad" class="headerlink" title="Notepad++"></a>Notepad++</h2><p>Notepad++ 的 <code>匹配新行模式</code>， 应该是启用了 <code>点通配符模式 - dotALL（Perl中的单行模式）</code>, 以及 <code>多行模式 - 行锚点可以匹配行内的换行符前后的位置</code></p>
-<p>POSIX 规定，点号不能匹配 NUL (值为0的字符)， 具体工具可有有差异。</p>
-<p>grep: PCRE does not support \L, \l, \N{name}, \U, or \u</p>
-<p>PCRE(包括PHP)， java.util.regex <code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code></p>
-<h2 id="java-util-regex"><a href="#java-util-regex" class="headerlink" title="java.util.regex"></a>java.util.regex</h2><ul>
-<li><p>\w 严格等价于 [a-zA-Z0-9_]</p>
-</li>
-<li><p>\s 不匹配 Unicode 换行符</p>
-</li>
-<li><p>普通模式下 . 不能匹配 \n,  \r,  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
-</li>
-<li><p>字符组可以匹配换行符，包括 Unicode 的上述行终结符</p>
-</li>
-<li><p>支持字符组的计算 [[a-c]&amp;&amp;[a-z]]  [[a-c]OR[d-e]], 当然也可以使用环视来实现</p>
-</li>
-<li><p>多行模式下<code>(?:m)</code>，锚点可以匹配 Unicode 行终结符  Page.370 </p>
-</li>
-<li><p>$ 既可以匹配目标字符串的末尾，也可以匹配整个字符串末尾的换行符之前的位置 (这里的换行符也包括Unicode 的行终结符)</p>
-</li>
-<li><p>\Z 和普通模式下的 $ 的意义一样</p>
-</li>
-<li><p>\z 只匹配文本的末尾的位置</p>
-</li>
-<li><p>\A 总是与普通的 ^ 一样</p>
-</li>
-<li><p>\b 单词分界符 与 \B 非单词分界符对单词字符的定义仅限于 ASCII 字符，如果需要扩展，可以使用环视功能以及 Unicode 属性实现</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（?&lt;!\pL）(?=\pL)......(?&lt;=pL)(?!\pL)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>正则表达式中设定匹配模式，支持</p>
-<ul>
-<li><code>(?i)...(?-i)</code>, <code>(?i)</code> 开启模式，<code>(?-i)</code>关闭模式</li>
-<li><code>(?:(?i)very)</code>, <code>(?i)</code> 的作用范围只限于括号內部，闭括号后就失效</li>
-<li>支持模式修饰范围，<code>(?i:...)</code></li>
-</ul>
-</li>
-<li><p>文字文本模式（消除所有元字符的特殊含义进行匹配）, java.util.regex 的引擎支持 <code>\Q...\E</code> 序列，但是它只会消除除了 <code>\E</code> 之外的所有的元字符的特殊含义，直接在字符串两边加上，会有问题（原始字符串出现 <code>\E</code>， 会截断，只对前面的部分应用该模式）。请直接使用 <code>Pattern.quote</code> 方法或自己写一个处理方法。</p>
-</li>
-</ul>
-<p>Perl 中的锚点都不支持 Unicode 行终结符， 而 Java 的普通模式下的 <code>$</code> 以及多行模式下的 <code>^</code> 以及 <code>$</code> 都支持 Unicode 行终结符。</p>
-<p>基于 PCRE 的 grep -P  测试, 普通模式下，<code>$</code> 只匹配末尾，不匹配换行符之前的位置</p>
 
                 
             </div>
@@ -179,21 +152,45 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/README/">README</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20JDBC/">Spring JDBC</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="Pro-Git-Note"><a href="#Pro-Git-Note" class="headerlink" title="Pro-Git-Note"></a>Pro-Git-Note</h1><p>Markdown notes for <a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener">Pro Git</a><br>Love the life you live.<br>Live the life you love.<br>Find your own thing.</p>
+                    <p>Spring 定义的数据访问异常体系相比于 JDBC 的 SQLException 要丰富的多，并且没有与特定的持久化方式相关联。 持久化机制与数据访问层隔离开来。</p>
+<p>DataAccessException 非检查型异常，不强制进行捕获，因为 Spring 认为触发异常的很多问题是不能在 catch 代码块中进行捕获的，如连接信息有误、语法错误等异常（就算捕获了，也不能做任何处理）。是否要捕获异常取决于开发人员。</p>
+<p>模板方法模式</p>
+<p>构造器 @Inject 注解 需要加入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h4><p>Spring JDBC 框架承担了必要的<strong>资源管理</strong>与<strong>异常处理</strong>工作，简化了 JDBC 代码， 只需要关注必要的数据库读写代码即可。</p>
+<p>Spring 将数据访问的样板代码抽象到模板类中。</p>
+<p>Spring 为 JDBC 提供了三个模板类:</p>
+<ul>
+<li>JdbcTemplate：最基本的 Spring JDBC 模板，支持简单的 JDBC 数据库访问功能以及基于索引参数的查询（赋值的顺序与 SQL 语句占位符的顺序要一致） Spring 3.1 开始，支持 Java 5 的自动装箱、泛型以及可变参数列表等特性来简化 JDBC 模板的使用</li>
+<li>NamedParameterJdbcTemplate：可以将值以命名参数的形式绑定到 SQL 中（相对于索引参数）</li>
+</ul>
+<h4 id="Spring-与-Hibernate-的集成"><a href="#Spring-与-Hibernate-的集成" class="headerlink" title="Spring 与 Hibernate 的集成"></a>Spring 与 Hibernate 的集成</h4><p>Spring 提供了与 JDBC 类似的模板类 <code>HibernateTemplate</code>，能够保证每个事务使用同一个 <code>Session</code>, 弊端在于 Repository 的实现与 Spring 耦合。</p>
+<p>可以直接使用 Hibernate 的上下文 Session <code>Contextual Session</code>， 其实 Hibernate 等持久化框架已经达到了和模板类类似的功能，如获取链接，创建语句，管理事务，关闭资源等，因此直接使用也是比较方便的。</p>
+<p>需要声明一个 <code>org.springframework.orm.hibernate4.LocalSessionFactoryBean</code>  bean（对象关系映射既可以通过注解，也可以通过配置文件声明）, 继承自 Spring 的 <code>FactoryBean</code>, 会产生 Hibernate 的 <code>SessionFactory</code>。</p>
+<p>但是不使用 Spring 提供的模板类，问题就是 Repository 实现类会抛出 Hibernate 相关的异常，而不是 Spring 定义的非检查型异常。解决方案是：定义一个 <code>PersistenceExceptionTranslationPostProcessor</code> bean。</p>
+<blockquote>
+<p><code>PersistenceExceptionTranslationPostProcessor</code>是一个bean 后置处理器（bean post-processor），它会在所有拥有<code>@Repository</code>注解的类上添加一个通知器（advisor），这样就会捕获任何平台相关的异常并以Spring非检查型数据访问异常的形式重新抛出。</p>
+</blockquote>
+<p><strong>@Repository 注解</strong></p>
+<p><code>@Repository</code>注解，这会为我们做两件事情。首先，<code>@Repository</code>是Spring的另一种构造性注解，它能够像其他注解一样被Spring的组件扫描所扫描到, 表明在组件扫描的时候会自动创建。这样就不必明确声明<code>HibernateSpitterRepository</code> bean了，只要这个Repository类在组件扫描所涵盖的包中即可。    </p>
+<p>除了帮助减少显式配置以外，<code>@Repository</code>还有另外一个用处。让我们回想一下模板类，它有一项任务就是捕获平台相关的异常，然后使用Spring统一非检查型异常的形式重新抛出。</p>
 
                 
             </div>
@@ -245,22 +242,99 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>对一个字符串按每x位进行分割</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每8位进行分割，表达式所匹配的含义是：匹配一个位置，左边有字符，右边包含的字符总数是8的倍数</span></span><br><span class="line">(?&lt;=\w)(?=(\w&#123;8&#125;)+\b)</span><br></pre></td></tr></table></figure>
+                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
+<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
+<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
+</blockquote>
+<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
+<blockquote>
+<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
+<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
+<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>匹配任何单字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0或者任意数量的字符</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配0或者更多的目录</td>
+</tr>
+</tbody></table>
+<p>Table Example Ant-Style Path Patterns</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/app/*.x</td>
+<td>匹配(Matches)所有在app路径下的.x文件</td>
+</tr>
+<tr>
+<td>/app/p?ttern</td>
+<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
+</tr>
+<tr>
+<td>/**/example</td>
+<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
+</tr>
+<tr>
+<td>/app/**/dir/file.</td>
+<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
+</tr>
+<tr>
+<td>/<em>*/</em>.jsp</td>
+<td>匹配(Matches)任何的.jsp 文件</td>
+</tr>
+</tbody></table>
+<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 注意事项：</p>
+<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
+<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -269,110 +343,30 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
+                <h2><a class="post-title-link" href="/Spring/MVC%20Note1/">MVC Note1</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
+                    <p><strong>Root Application Context</strong><br>As such, it typically contains middle-tier services, data sources, etc.</p>
+<p><strong>Servlet Application Context</strong><br>As such, it typically contains controllers, view resolvers, locale resolvers, and other web-related beans.</p>
+<p>Root Application Context 用来初始化 ContextLoaderListener 对象，并将该对象注册到 Servlet 容器中</p>
+<p>Servlet Application Context 用来初始化 DispatcherServlet 对象，并将该对象注册到 Servlet 容器中，随后添加 Filters, 添加 Mapping 映射， 当然用户还可以通过 customizeRegistration(ServletRegistration.Dynamic registration) 来进行自定义之后的操作，如配置 Multipart 处理的参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Delegate the ServletContext to any WebApplicationInitializer implementations present on the application classpath.</span><br><span class="line">Because <span class="keyword">this</span> <span class="class"><span class="keyword">class</span> <span class="title">declares</span> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>), <span class="title">Servlet</span> 3.0+ <span class="title">containers</span> <span class="title">will</span> <span class="title">automatically</span> <span class="title">scan</span> <span class="title">the</span> <span class="title">classpath</span> <span class="title">for</span> <span class="title">implementations</span> <span class="title">of</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">WebApplicationInitializer</span> <span class="title">interface</span> <span class="title">and</span> <span class="title">provide</span> <span class="title">the</span> <span class="title">set</span> <span class="title">of</span> <span class="title">all</span> <span class="title">such</span> <span class="title">types</span> <span class="title">to</span> <span class="title">the</span> <span class="title">webAppInitializerClasses</span> <span class="title">parameter</span> <span class="title">of</span> <span class="title">this</span> <span class="title">method</span>.</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    <span class="title">Assuming</span> <span class="title">that</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">WebApplicationInitializer</span> <span class="title">types</span> <span class="title">are</span> <span class="title">detected</span>, <span class="title">they</span> <span class="title">will</span> <span class="title">be</span> <span class="title">instantiated</span> (<span class="title">and</span> <span class="title">sorted</span> <span class="title">if</span> <span class="title">the</span> @@<span class="title">Order</span> <span class="title">annotation</span> <span class="title">is</span> <span class="title">present</span> <span class="title">or</span> <span class="title">the</span> <span class="title">Ordered</span> <span class="title">interface</span> <span class="title">has</span> <span class="title">been</span> <span class="title">implemented</span>). <span class="title">Then</span> <span class="title">the</span> <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>) <span class="title">method</span> <span class="title">will</span> <span class="title">be</span> <span class="title">invoked</span> <span class="title">on</span> <span class="title">each</span> <span class="title">instance</span>, <span class="title">delegating</span> <span class="title">the</span> <span class="title">ServletContext</span> <span class="title">such</span> <span class="title">that</span> <span class="title">each</span> <span class="title">instance</span> <span class="title">may</span> <span class="title">register</span> <span class="title">and</span> <span class="title">configure</span> <span class="title">servlets</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">DispatcherServlet</span>, <span class="title">listeners</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">ContextLoaderListener</span>, <span class="title">or</span> <span class="title">any</span> <span class="title">other</span> <span class="title">Servlet</span> <span class="title">API</span> <span class="title">componentry</span> <span class="title">such</span> <span class="title">as</span> <span class="title">filters</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  /* <span class="title">Servlet</span> 3.0+ 会自动在应用的 <span class="title">classpath</span> 中寻找 <span class="title">WebApplicationInitializer</span> 的实现类，并对每一个实现类进行实例化，将 <span class="title">ServletContext</span> 委托给他们，对每一个实例调用 <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>), 加载和注册所有的 <span class="title">Servlet</span>、<span class="title">Listener</span>、<span class="title">Filter</span> */</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"><span class="title">If</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">are</span> <span class="title">found</span> <span class="title">on</span> <span class="title">the</span> <span class="title">classpath</span>, <span class="title">this</span> <span class="title">method</span> <span class="title">is</span> <span class="title">effectively</span> <span class="title">a</span> <span class="title">no</span>-<span class="title">op</span>. <span class="title">An</span> <span class="title">INFO</span>-<span class="title">level</span> <span class="title">log</span> <span class="title">message</span> <span class="title">will</span> <span class="title">be</span> <span class="title">issued</span> <span class="title">notifying</span> <span class="title">the</span> <span class="title">user</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ServletContainerInitializer</span> <span class="title">has</span> <span class="title">indeed</span> <span class="title">been</span> <span class="title">invoked</span> <span class="title">but</span> <span class="title">that</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">were</span> <span class="title">found</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"> // <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">SpringServletContainerInitializer</span> </span></span><br><span class="line"><span class="class"> </span></span><br><span class="line"><span class="class"> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, @NotNull ServletContext servletContext)</span> <span class="keyword">throws</span> 		ServletException </span>&#123;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符出啊；查找和替换，字符串的更新</p>
-<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
-<li><p>集成式 （integrated）</p>
-<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
-</li>
-<li><p>程序式 (procedural)</p>
-<p>函数式</p>
-</li>
-<li><p>面向对象式 (object-oriented)</p>
-<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
-</li>
-</ul>
-<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
-<thead>
-<tr>
-<th>表示</th>
-<th>Unicode code point</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LF</td>
-<td>U+000A</td>
-<td>ASCII 换行符</td>
-</tr>
-<tr>
-<td>VT</td>
-<td>U+000B</td>
-<td>ASCII 垂直制表符</td>
-</tr>
-<tr>
-<td>FF</td>
-<td>U+000C</td>
-<td>ASCII 进纸符</td>
-</tr>
-<tr>
-<td>CR</td>
-<td>U+000D</td>
-<td>ASCII 回车</td>
-</tr>
-<tr>
-<td>CR/LF</td>
-<td>U+000D U+000A</td>
-<td>ASCII 回车/换行</td>
-</tr>
-<tr>
-<td>NEL</td>
-<td>U+0085</td>
-<td>Unicode 换行</td>
-</tr>
-<tr>
-<td>LS</td>
-<td>U+2028</td>
-<td>Unicode 行分隔符</td>
-</tr>
-<tr>
-<td>PS</td>
-<td>U+2029</td>
-<td>Unicode 段分隔符</td>
-</tr>
-</tbody></table>
-<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
-<thead>
-<tr>
-<th>字母</th>
-<th>模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>不区分大小写的匹配模式</td>
-</tr>
-<tr>
-<td>x</td>
-<td>宽松排列和注释模式</td>
-</tr>
-<tr>
-<td>s</td>
-<td>点号通配模式（单行模式）</td>
-</tr>
-<tr>
-<td>m</td>
-<td>增强的行锚点模式（多行模式）</td>
-</tr>
-</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ServletContainerInitializer</span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer</span><br><span class="line"></span><br><span class="line">WebApplicationInitializer</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
