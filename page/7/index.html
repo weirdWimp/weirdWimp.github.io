@@ -84,6 +84,137 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring%20Boot/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE/">自定义配置</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="属性文件外置配置"><a href="#属性文件外置配置" class="headerlink" title="属性文件外置配置"></a>属性文件外置配置</h3><p><code>@ConfigurationProperties</code> </p>
+<p><code>@DataSourceProperties</code></p>
+<p><code>DataSourceAutoConfiguration</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Condition&#125; to detect when an embedded &#123;<span class="doctag">@link</span> DataSource&#125; type can be used.</span></span><br><span class="line"><span class="comment"> * If a pooled &#123;<span class="doctag">@link</span> DataSource&#125; is available, it will always be preferred to an</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> EmbeddedDatabase&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EmbeddedDatabaseCondition</span> <span class="keyword">extends</span> <span class="title">SpringBootCondition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> SpringBootCondition pooledCondition = <span class="keyword">new</span> PooledDataSourceCondition();</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ConditionOutcome <span class="title">getMatchOutcome</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> </span>&#123;</span><br><span class="line">		ConditionMessage.Builder message = ConditionMessage.forCondition(<span class="string">"EmbeddedDataSource"</span>);</span><br><span class="line">		<span class="keyword">if</span> (anyMatches(context, metadata, <span class="keyword">this</span>.pooledCondition)) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.foundExactly(<span class="string">"supported pooled data source"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		EmbeddedDatabaseType type = EmbeddedDatabaseConnection.get(context.getClassLoader()).getType();</span><br><span class="line">		<span class="keyword">if</span> (type == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.didNotFind(<span class="string">"embedded database"</span>).atAll());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ConditionOutcome.match(message.found(<span class="string">"embedded database"</span>).items(type));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
+<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
+<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
+</blockquote>
+<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
+<blockquote>
+<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
+<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
+<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>匹配任何单字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0或者任意数量的字符</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配0或者更多的目录</td>
+</tr>
+</tbody></table>
+<p>Table Example Ant-Style Path Patterns</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/app/*.x</td>
+<td>匹配(Matches)所有在app路径下的.x文件</td>
+</tr>
+<tr>
+<td>/app/p?ttern</td>
+<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
+</tr>
+<tr>
+<td>/**/example</td>
+<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
+</tr>
+<tr>
+<td>/app/**/dir/file.</td>
+<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
+</tr>
+<tr>
+<td>/<em>*/</em>.jsp</td>
+<td>匹配(Matches)任何的.jsp 文件</td>
+</tr>
+</tbody></table>
+<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 注意事项：</p>
+<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
+<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
             </div>
             <div class="post-meta">
@@ -104,126 +235,6 @@
 
 
 <p>Rebased dev on refs/heads/dev</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E6%BA%90%E7%A0%81/">Spring 源码</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ConfigurableWebApplicationContext</span> <span class="keyword">extends</span> <span class="title">WebApplicationContext</span>, <span class="title">ConfigurableApplicationContext</span></span></span><br></pre></td></tr></table></figure>
-
-<p>ConfigurableWebApplicationContext 提供了  configLocation 的属性，为 web application context 设置 config 文件的路径</p>
-<p>在 <code>public class ContextLoaderListener extends ContextLoader implements ServletContextListener</code> 中，在监听到 ServletContext 初始化时，会初始化一个 WebApplication 实例（实现了ConfigurableWebApplicationContext接口），会从 web.xml 中 配置的 Servlet Context 参数中寻找  <code>contextConfigLocation</code>， 填充  configLocation .</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Scheduling/">Scheduling</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Cron-Expressions"><a href="#Cron-Expressions" class="headerlink" title="Cron Expressions"></a>Cron Expressions</h2><p>Cron expressions are comprised of 6 required fields and one optional field separated by white space. The fields respectively are described as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Field Name</th>
-<th>Allowed Values</th>
-<th>Allowed Special Characters</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Seconds</td>
-<td>0-59</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Minutes</td>
-<td>0-59</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Hours</td>
-<td>0-23</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Day-of-month</td>
-<td>1-31</td>
-<td>, - * ? / L W</td>
-</tr>
-<tr>
-<td>Month</td>
-<td>0-11 or JAN-DEC</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>Day-of-Week</td>
-<td>1-7 or SUN-SAT</td>
-<td>, - * ? / L #</td>
-</tr>
-<tr>
-<td>Year (Optional)</td>
-<td>empty, 1970-2199</td>
-<td>, - * /</td>
-</tr>
-</tbody></table>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">The <span class="string">'*'</span> character is used to specify all values. For example, <span class="string">"*"</span> in the minute field means <span class="string">"every minute"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'?'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. It is used to specify <span class="string">'no specific value'</span>. This is useful when you need to specify something in one of the two fields, but not the other.</span><br><span class="line"></span><br><span class="line">The <span class="string">'-'</span> character is used to specify ranges For example <span class="string">"10-12"</span> in the hour field means <span class="string">"the hours 10, 11 and 12"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">','</span> character is used to specify additional values. For example <span class="string">"MON,WED,FRI"</span> in the day-of-week field means <span class="string">"the days Monday, Wednesday, and Friday"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'/'</span> character is used to specify increments. For example <span class="string">"0/15"</span> in the seconds field means <span class="string">"the seconds 0, 15, 30, and 45"</span>. And <span class="string">"5/15"</span> in the seconds field means <span class="string">"the seconds 5, 20, 35, and 50"</span>. Specifying <span class="string">'*'</span> before the <span class="string">'/'</span> is equivalent to specifying <span class="number">0</span> is the value to start with. Essentially, <span class="keyword">for</span> each field in the expression, there is a set of numbers that can be turned on or off. For seconds and minutes, the numbers range from <span class="number">0</span> to <span class="number">59</span>. For hours <span class="number">0</span> to <span class="number">23</span>, <span class="keyword">for</span> days of the month <span class="number">0</span> to <span class="number">31</span>, and <span class="keyword">for</span> months <span class="number">0</span> to <span class="number">11</span> (JAN to DEC). The <span class="string">"/"</span> character simply helps you turn on every <span class="string">"nth"</span> value in the given set. Thus <span class="string">"7/6"</span> in the month field only turns on month <span class="string">"7"</span>, it does NOT mean every <span class="number">6</span>th month, please note that subtlety.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. This character is <span class="keyword">short</span>-hand <span class="keyword">for</span> <span class="string">"last"</span>, but it has different meaning in each of the two fields. For example, the value <span class="string">"L"</span> in the day-of-month field means <span class="string">"the last day of the month"</span> - day <span class="number">31</span> <span class="keyword">for</span> January, day <span class="number">28</span> <span class="keyword">for</span> February on non-leap years. If used in the day-of-week field by itself, it simply means <span class="string">"7"</span> or <span class="string">"SAT"</span>. But <span class="keyword">if</span> used in the day-of-week field after another value, it means <span class="string">"the last xxx day of the month"</span> - <span class="keyword">for</span> example <span class="string">"6L"</span> means <span class="string">"the last friday of the month"</span>. You can also specify an offset from the last day of the month, such as <span class="string">"L-3"</span> which would mean the third-to-last day of the calendar month. When using the <span class="string">'L'</span> option, it is important not to specify lists, or ranges of values, as you<span class="string">'ll get confusing/unexpected results.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The '</span>W<span class="string">' character is allowed for the day-of-month field. This character is used to specify the weekday (Monday-Friday) nearest the given day. As an example, if you were to specify "15W" as the value for the day-of-month field, the meaning is: "the nearest weekday to the 15th of the month". So if the 15th is a Saturday, the trigger will fire on Friday the 14th. If the 15th is a Sunday, the trigger will fire on Monday the 16th. If the 15th is a Tuesday, then it will fire on Tuesday the 15th. However if you specify "1W" as the value for day-of-month, and the 1st is a Saturday, the trigger will fire on Monday the 3rd, as it will not '</span>jump<span class="string">' over the boundary of a month'</span>s days. The <span class="string">'W'</span> character can only be specified when the day-of-month is a single day, not a range or list of days.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> and <span class="string">'W'</span> characters can also be combined <span class="keyword">for</span> the day-of-month expression to yield <span class="string">'LW'</span>, which translates to <span class="string">"last weekday of the month"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'#'</span> character is allowed <span class="keyword">for</span> the day-of-week field. This character is used to specify <span class="string">"the nth"</span> XXX day of the month. For example, the value of <span class="string">"6#3"</span> in the day-of-<span class="function">week field means the third Friday of the <span class="title">month</span> <span class="params">(day <span class="number">6</span> = Friday and <span class="string">"#3"</span> = the <span class="number">3</span>rd one in the month)</span>. Other examples: "2#1" </span>= the first Monday of the month and <span class="string">"4#5"</span> = the fifth Wednesday of the month. Note that <span class="keyword">if</span> you specify <span class="string">"#5"</span> and there is not <span class="number">5</span> of the given day-of-week in the month, then no firing will occur that month. If the <span class="string">'#'</span> character is used, there can only be one expression in the day-of-<span class="function">week <span class="title">field</span> <span class="params">(<span class="string">"3#1,6#3"</span> is not valid, since there are two expressions)</span>.</span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">The legal characters and the names of months and days of the week are not <span class="keyword">case</span> sensitive.</span></span><br><span class="line"><span class="function">NOTES:</span></span><br><span class="line"><span class="function">Support <span class="keyword">for</span> specifying both a day-of-week and a day-of-month value is not <span class="title">complete</span> <span class="params">(you<span class="string">'ll need to use the '</span>?<span class="string">' character in one of these fields).</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">Overflowing ranges is supported - that is, having a larger number on the left hand side than the right. You might do 22-2 to catch 10 o'</span>clock at night until <span class="number">2</span> o<span class="string">'clock in the morning, or you might have NOV-FEB. It is very important to note that overuse of overflowing ranges creates ranges that don'</span>t make sense and no effort has been made to determine which interpretation CronExpression chooses. An example would be <span class="string">"0 0 14-6 ? * FRI-MON"</span>.</span></span></span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>org.springframework.boot.SpringApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
-<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
-<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
 
                 
             </div>
@@ -254,6 +265,30 @@
 
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ServletContainerInitializer</span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer</span><br><span class="line"></span><br><span class="line">WebApplicationInitializer</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>对一个字符串按每x位进行分割</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每8位进行分割，表达式所匹配的含义是：匹配一个位置，左边有字符，右边包含的字符总数是8的倍数</span></span><br><span class="line">(?&lt;=\w)(?=(\w&#123;8&#125;)+\b)</span><br></pre></td></tr></table></figure>
 
 
                 
