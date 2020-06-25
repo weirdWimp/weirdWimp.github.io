@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">Guo's Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">ANSI Color</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-06-25</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <p>From Wicked Cool Shell Scripts, 2nd Edition</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">initializeANSI</span></span> () &#123;</span><br><span class="line"></span><br><span class="line">    esc=<span class="string">"\033"</span> <span class="comment"># 如果无效，直接敲 ESC 键。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 前景色：</span></span><br><span class="line">    blackf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[30m"</span>; redf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[31m"</span>; greenf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[32m"</span></span><br><span class="line">    yellowf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[33m"</span> bluef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[34m"</span>; purplef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[35m"</span></span><br><span class="line">    cyanf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[36m"</span>; whitef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[37m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 背景色：</span></span><br><span class="line">    blackb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[40m"</span>; redb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[41m"</span>; greenb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[42m"</span></span><br><span class="line">    yellowb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[43m"</span> blueb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[44m"</span>; purpleb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[45m"</span></span><br><span class="line">    cyanb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[46m"</span>; whiteb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[47m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 粗体、斜体、下划线以及样式切换：</span></span><br><span class="line">    boldon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[1m"</span>; boldoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[22m"</span></span><br><span class="line">    italicson=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[3m"</span>; italicsoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[23m"</span></span><br><span class="line">    ulon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[4m"</span>; uloff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[24m"</span></span><br><span class="line">    invon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[7m"</span>; invoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[27m"</span></span><br><span class="line">    reset=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[0m"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">initializeANSI</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span>This is a phrase in yellow<span class="variable">$&#123;redb&#125;</span> and red<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string"><span class="variable">$&#123;boldon&#125;</span>This is bold<span class="variable">$&#123;ulon&#125;</span> this is italics<span class="variable">$&#123;reset&#125;</span> bye-bye</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;italicson&#125;</span>This is italics<span class="variable">$&#123;italicsoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;ulon&#125;</span>This is ul<span class="variable">$&#123;uloff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;invon&#125;</span>This is inv<span class="variable">$&#123;invoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span><span class="variable">$&#123;redb&#125;</span>Warning I <span class="variable">$&#123;yellowb&#125;</span><span class="variable">$&#123;redf&#125;</span>Warning II<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string">"</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Linux/" title="Linux">Linux</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+        
+            <a class="next" href="/Linux/CSV2Table/">
+                <span class="nav-default">CSV2Table</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2020
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin">Guo</a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
