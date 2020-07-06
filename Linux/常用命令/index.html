@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">常用命令</h2>
             <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
+                <span class="post-time">2020-07-05</span>
                 
                 <span class="post-category">
                     
@@ -309,6 +309,11 @@
 
 
 
+<p>虽然 tar 命令提供了排除 VCS 的选项, 但是使用起来却有点问题, 简单点, 可以直接使用排序选项, <code>*</code> 默认应该是排除了 <code>.</code> 开头的文件, 所以 <code>.gitignore .git/</code> 都没有包含在最终的包中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar  --exclude <span class="string">"target"</span> --exclude <span class="string">"*.iml"</span> -cvf spring-boot-demo-source.tar *</span><br></pre></td></tr></table></figure>
+
+
+
 
 
 
@@ -443,15 +448,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Becoming%20Functional/Chapter%208%20Pattern%20Matching/">
+            <a class="prev" href="/Java/OAuth2.0/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Chapter 8 Pattern Matching</span>
+                <span class="nav-default">OAuth2.0</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Java/%E6%97%A5%E5%BF%97/log4j/">
-                <span class="nav-default">log4j</span>
+            <a class="next" href="/Mysql/MRR%20and%20BAK%20Algorithm/">
+                <span class="nav-default">MRR and BAK Algorithm</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>

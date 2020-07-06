@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">Guo's Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">OAuth2.0</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-07-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端"><span class="toc-text">客户端</span></a></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
+<p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
+<p><strong>其它配置：</strong></p>
+<ul>
+<li>重定向 url</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/callback</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>授权端点</p>
+</li>
+<li><p>令牌端点</p>
+</li>
+<li><p>资源服务器， 受保护的资源端点</p>
+</li>
+</ul>
+<p><strong>获取访问令牌步骤：</strong></p>
+<ol>
+<li>将用户重定向至授权服务器的授权端点，并在请求的 URL 中包含适当的查询参数，如请求权限范围，重定向 URL （回调 URL, 即授权服务器返回授权码给客户端的端点），client_id 等。</li>
+</ol>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">response_type</span>: 'code',</span><br><span class="line"><span class="attribute">client_id</span>: client.client_id,</span><br><span class="line"><span class="attribute">redirect_uri</span>: client.redirect_uris[0] // 客户端接收授权码的端点</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>在授权服务器授权端点，用户对客户端进行授权（可能包含必要用户身份认证），授权结束，根据客户端传过来的重定向 URL 重定向至客户端端点, 并且携带了授权服务器生成的授权码</p>
+</li>
+<li><p>客户端拿到授权码，使用 POST 请求，并使用 Http Basic 认证（client_id作为用户名，client_secret 作为密码），将授权码以表单形式放入请求体中，发送至服务器令牌端点</p>
+</li>
+</ol>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">grant_type</span>: 'authorization_code',</span><br><span class="line"><span class="attribute">code</span>: code,</span><br><span class="line"><span class="attribute">redirect_uri</span>: client.redirect_uris[0]	// 这里是 OAuth 规范约定必须指定和请求授权时相同的重定向 url</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>请求成功时，授权服务器返回一个包含访问令牌等信息的 JSON 对象</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>	<span class="comment">// Bearer 令牌，持有该类型的令牌，就可以向受保护资源出示</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>客户端解析 JSON 对象，获取访问令牌值，并将其保存起来，以便以后使用</li>
+</ol>
+<p>为了避免恶意调用客户端重定向 URL 端点 （<code>client.redirect_uris[0]</code>），破解令牌，请求授权端点前，生成一个随机字符串，并添加在请求授权端点的请求参数中 （state），授权端点在返回授权码时，会带着这个字符串，客户端进行比较，如果相同，表明是自己之前发送的授权请求，否则，应向客户提示异常。</p>
+<p><strong>使用令牌访问受保护资源</strong></p>
+<p>使用令牌向受保护资源发出调用请求，令牌的请求形式：</p>
+<ol>
+<li>HTTP Authorization 头部（OAuth 规范推荐）</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">'Authorization': 'Bearer ' + access_token</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>使用表单格式的请求体参数 （必须使得资源提供端点支持 POST 请求和表单）</p>
+</li>
+<li><p>使用 URL 编码的查询参数 （可能使得令牌暴漏在请求日志中）</p>
+</li>
+</ol>
+<p><strong>刷新令牌</strong></p>
+<p>无需用户参与下获取新访问令牌的方法</p>
+<p>1.刷新令牌与访问令牌一起返回被客户端</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.客户端发送访问令牌失效时（使用令牌获取资源失败），使用刷新令牌重新请求访问令牌</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// POST 请求体, 同时头部也要添加 Basic 认证信息</span><br><span class="line"><span class="attribute">grant_type</span>: 'refresh_token',</span><br><span class="line"><span class="attribute">refresh_token</span>: refresh_token</span><br></pre></td></tr></table></figure>
+
+<p>如果刷新令牌有效，返回新的访问令牌和刷新令牌</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"IqTnLQKcSY62klAuNTVevPdyEnbY82PB"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果刷新令牌无效，提示错误</p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Java/" title="Java">Java</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+        
+            <a class="next" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+                <span class="nav-default">常用命令</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2020
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin">Guo</a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
