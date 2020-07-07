@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Java/OAuth2.0/">OAuth2.0</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-07-06</span>
+                <span class="post-time">2020-07-07</span>
                 
                 <span class="post-category">
                     
@@ -98,7 +98,7 @@
             </div>
             <div class="post-content">
                 
-                    <h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
+                    <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
 <p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
 <p><strong>其它配置：</strong></p>
 <ul>
@@ -162,6 +162,31 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"IqTnLQKcSY62klAuNTVevPdyEnbY82PB"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果刷新令牌无效，提示错误</p>
+<h2 id="受保护的资源端"><a href="#受保护的资源端" class="headerlink" title="受保护的资源端"></a>受保护的资源端</h2><p><strong>使用 OAuth 保护 Web API</strong></p>
+<ol>
+<li>从传入的请求中解析出令牌</li>
+<li>通过授权服务器验证令牌</li>
+<li>根据令牌的权限范围做出响应，令牌的权限范围有多种</li>
+</ol>
+<p><strong>资源服务器如何对请求中传过来的令牌进行验证？</strong></p>
+<ol>
+<li>授权服务器与资源服务器共享数据库</li>
+<li>使用令牌内省（token introspection）的 Web 协议，由授权服务器提供接口，让资源服务器能在运行时检查令牌的状态</li>
+<li>令牌内包含资源服务器能直接解析并理解的信息，如 JWT, 使用受加密保护的 JSON 对象携带声明信息</li>
+</ol>
+<p><strong>权限范围 scope</strong></p>
+<ol>
+<li><p>不同的权限范围对应不同的操作，如 GET\POST\DELETE 分别对应的 read write delete 权限</p>
+</li>
+<li><p>不同的权限范围对应不同的数据结果，例如，同一个 API 对权限范围不同的客户端返回不同的子集，如有一个销售统计 API, 每个大区只能请求自己大区的数据</p>
+</li>
+<li><p>不同的用户对应不同的数据结果</p>
+</li>
+</ol>
+<blockquote>
+<p>资源服务器可以根据令牌及其附属信息（如权限范围）直接做出授权决策。资源服务器还可以将访问令牌中的权限范围与其他访问控制信息结合起来，用于决定是否响应 API 调用以及响应什么内容。</p>
+</blockquote>
+<p>资源服务器如何设计权限是比较灵活的，而且可以和其他控制信息结合，也是属于灵活的一种体现。客户端绝不会知道授权的用户与具体的权限范围，令牌本身就代表了资源拥有者的授权与权限范文，在资源服务器端，通过验证令牌以及获取令牌对应的访问权限，用户，以及其它控制信息，做出是否有要相应的决策以及相应什么内容。</p>
 
                 
             </div>
