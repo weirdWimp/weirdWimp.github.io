@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Java/OAuth2.0/">OAuth2.0</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-07-07</span>
+                <span class="post-time">2020-07-11</span>
                 
                 <span class="post-category">
                     
@@ -98,7 +98,8 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
+                    <p>听首歌吧 hungoverheadcrack</p>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
 <p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
 <p><strong>其它配置：</strong></p>
 <ul>
@@ -187,6 +188,67 @@
 <p>资源服务器可以根据令牌及其附属信息（如权限范围）直接做出授权决策。资源服务器还可以将访问令牌中的权限范围与其他访问控制信息结合起来，用于决定是否响应 API 调用以及响应什么内容。</p>
 </blockquote>
 <p>资源服务器如何设计权限是比较灵活的，而且可以和其他控制信息结合，也是属于灵活的一种体现。客户端绝不会知道授权的用户与具体的权限范围，令牌本身就代表了资源拥有者的授权与权限范文，在资源服务器端，通过验证令牌以及获取令牌对应的访问权限，用户，以及其它控制信息，做出是否有要相应的决策以及相应什么内容。</p>
+<h2 id="授权服务器"><a href="#授权服务器" class="headerlink" title="授权服务器"></a>授权服务器</h2><h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ol>
+<li>客户端将用户重定向至授权服务器授权端点 <code>/authorize</code>，并携带了必要的查询参数</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">https://api.weibo.com/oauth2/authorize?</span></span><br><span class="line">client_id=3129654709&amp;													//客户端 id</span><br><span class="line">redirect_uri=https://www.douyu.com/member/oauth/signin/weibo&amp;			//重定向客户端 uri</span><br><span class="line">state=96b2a0b5a31566c5f63b2322f987736a&amp;								//state 防止恶意调用客户端重定向 uri</span><br><span class="line">response_type=code&amp;													//授权码许可类型</span><br><span class="line">approval_prompt=force&amp;													//授权提示？</span><br><span class="line">scope=foo bar															//客户端期望的权限范围</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>授权服务器验证客户端身份（client id），检查传入的 redirect_url 与注册时的是否一致；验证请求的权限范围是否符合要求（提前为每个客户端限定了权限范围），如果都满足要求，生成一个随机字符串 state,  并将其与客户端请求的查询参数保存为一个映射；渲染一个授权表单，提供授权或拒绝授权，以及权限范围的选择, 并将随机字符串 state，嵌入到表单中（表示未完成授权，为授权页面提供了简单的防跨站请求伪造保护，防止对服务器端授权端点的恶意请求）</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 提交的表单数据</span><br><span class="line"><span class="keyword">POST</span> <span class="string">/approve</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost:9001</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)</span><br><span class="line">Gecko/20100101 Firefox/39.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Referer</span>: http://localhost:9001/authorize?response_type=code&amp;scope=foo&amp;client_id=</span><br><span class="line">oauth-client-1&amp;redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&amp;state=</span><br><span class="line"><span class="attribute">GKckoHfwMHIjCpEwXchXvsGFlPOS266u</span></span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"></span><br><span class="line">//reqid 即 生成的 state 值，approve 表示用户的授权许可</span><br><span class="line">reqid=tKVUYQSM&amp;approve=Approve</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>用户同意授权，表单提交到授权码生成端点 <code>/approve</code>，对提交表单的请求验证 （state），权限范围进行验证（表单请求可能会被篡改，所以需要再次验证），生成授权码 code，存储在授权服务器上，并保存与之对应的权限范围（在令牌端点可以取出来，与访问令牌形成对应关系），客户端请求，并将其通过客户端请求授权时的重定向 uri 返回给客户端</li>
+</ol>
+<h3 id="令牌颁发"><a href="#令牌颁发" class="headerlink" title="令牌颁发"></a>令牌颁发</h3><p>客户端身份认证，client_id, client_secret</p>
+<p>授权许可类型 grant_type 检查， 如 <code>authorization_code</code></p>
+<p>如果是授权许可码类型，取出授权许可码 code， 并查询之前保存的 code 与客户端请求信息缓存，验证它确实是为该客户端生成的（对比 client_id）</p>
+<p>客户端匹配成功，生成一个访问令牌，并将其保存</p>
+<p>向客户端返回访问令牌，令牌类型</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">access_token</span>: access_token,</span><br><span class="line"><span class="attribute">token_type</span>: 'Bearer'</span><br></pre></td></tr></table></figure>
+
+<p>支持刷新令牌</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">refresh_token</span>: refresh_token,</span><br><span class="line"><span class="attribute">client_id</span>: clientId</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="授权许可类型"><a href="#授权许可类型" class="headerlink" title="授权许可类型"></a>授权许可类型</h2><p>除了授权码许可类型外的许可类型</p>
+<h3 id="1-隐式许可类型"><a href="#1-隐式许可类型" class="headerlink" title="1 隐式许可类型"></a>1 隐式许可类型</h3><p>直接运行在浏览器内的客户端，此时，客户端没有必要再通过授权码获取访问令牌，因为授权码是通过浏览器（前端信道）发送给客户端的，对于浏览器来说是可见的（如果是 web 应用，是直接发送给客户端服务器的）。直接请求<strong>授权端点</strong>， 而不是令牌端点来获取访问令牌，其它流程与授权码许可类型相似，客户端 id 检查，授权端点检查权限范围，资源拥有者身份认证，并验证对请求的批准，生成令牌，在授权端点响应中，将令牌附在客户端重定向 URI 片段中 。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 隐式许可类型下，客户端访问授权端点时的 response_type</span></span><br><span class="line"><span class="attr">response_type</span>=<span class="string">token</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权端点响应重定向时的 URI, 附件了 access_token 和 token_type</span></span><br><span class="line"><span class="attr">GET</span> <span class="string">/callback#access_token=987tghjkiu6trfghjuytrghj&amp;token_type=Bearer</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>限使用隐式许可类型的限制</strong></p>
+<ul>
+<li>无法持有客户端密钥，无法对浏览器隐藏密钥</li>
+<li>只使用授权端点，而不是用令牌端点 （不要求客户端在授权端点的身份认证），影响安全等级</li>
+<li>不可用于获取刷新令牌，浏览器内的应用运行的特点：短暂，没有必要</li>
+</ul>
+<h3 id="2-客户端凭据许可类型"><a href="#2-客户端凭据许可类型" class="headerlink" title="2 客户端凭据许可类型"></a>2 客户端凭据许可类型</h3><p>后端系统通信的场景，并不代表某个特定用户，没有明确的资源拥有者。这种场景下，相当于没有用户对客户端授权。</p>
+<p>客户端凭据许可类型，只使用后端信道，客户端代表自己从令牌端点获取令牌，此时客户端向授权服务器的<strong>令牌端点</strong>发出令牌请求。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端身份认证 head：客户端 ID 和密钥</span></span><br><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端凭据许可类型的授权类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'client_credientials'</span></span><br><span class="line"><span class="comment"># 也可以使用 scope 指定请求的权限范围，与授权码或隐式许可流程在 授权端点 上使用的 scope 参数一样</span></span><br><span class="line"><span class="attr">scope</span>: <span class="string">foo</span></span><br></pre></td></tr></table></figure>
+
+<p>客户端直接向授权服务器进行身份认证，授权服务器向客户端颁发访问令牌，客户端能随时获取新令牌，无需单独的资源拥有者参与，因此也没有必要使用刷新令牌</p>
+<p><strong>特点</strong></p>
+<ul>
+<li><p>客户端凭据类型没有任何直接的用户交互，是为可信的后端系统直接访问服务准备的</p>
+<p>因此对于交互式与非交互式客户端，最好进行区分，指定不同的权限范围</p>
+</li>
+</ul>
+<h3 id="3-资源拥有者凭据类型"><a href="#3-资源拥有者凭据类型" class="headerlink" title="3 资源拥有者凭据类型"></a>3 资源拥有者凭据类型</h3><p>客户端通过后端信道使用用户名和密码换取访问令牌, 资源拥有者直接与客户端进行交互, 而不是授权服务器, 只使用<strong>令牌端点</strong>. 授权服务器验证客户端的身份, 从收到的请求中取出用户名和密码，并与本地存储的用户信息对比, 验证权限范围, 如果都匹配，则授权服务器向客户端颁发令牌, 刷新访问令牌。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端收集用户的用户名和密码,发送至授权服务器的令牌端点</span></span><br><span class="line"><span class="attr">grant_type</span>=<span class="string">password</span></span><br><span class="line"><span class="attr">scope</span>=<span class="string">foo bar</span></span><br><span class="line"><span class="attr">username</span>=<span class="string">alice</span></span><br><span class="line"><span class="meta">&amp;password</span>=<span class="string">secret</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然这种模式下客户端直接获取了用户的认证信息, 但是后续的请求受保护资源使用的是访问令牌, 比每次请求都直接使用用户凭据要好的多, 但这仍然是一种不不好的许可类型, 请不要在现实中使用.</p>
+<h3 id="4-断言许可类型"><a href="#4-断言许可类型" class="headerlink" title="4 断言许可类型"></a>4 断言许可类型</h3><p>官方扩展许可类型，客户端得到一条结构化的且被加密保护的信息-<strong>断言</strong>， 使用断言向授权服务器换取令牌。断言必须有信任的认证机构提供. 这种许可类型只使用后端信道, 没有明确的资源拥有者参与. 断言一般来自第三方,客户端可以不知道断言本身的含义.客户端向授权服务器的<strong>令牌端点</strong>发送 HTTP POST 请求, 将断言作为参数传递给服务器. 客户端一样要进行身份认证</p>
+<p>两种标准化的断言: 安全断言标记语言 (SAML); JSON Web Token (JWT)</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">urn:ietf:params:oauth:grant-type:jwt-bearer</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例断言</span></span><br><span class="line"><span class="attr">assertion</span>=<span class="string">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0xIn0.eyJpc3MiOiJodHRwOi8vdHJ1c3QuZXhhbXBsZS5uZXQvIiwic3ViIjoib2F1dGgtY2xpZW50LTEiLCJzY29wZSI6ImZvbyBiYXIgYmF6IiwiYXVkIjoiaHR0cDovL2F1dGhzZXJ2ZXIuZXhhbXBsZS5uZXQvdG9rZW4iLCJpYXQiOjE0NjU1ODI5NTYsImV4cCI6MTQ2NTczMzI1NiwianRpIjoiWDQ1cDM1SWZPckRZTmxXOG9BQ29Xb1djMDQ3V2J3djIifQ.HGCeZh79Va-7meazxJEtm07ZyptdLDu_Ocfw82F1zAT2p6Np6Ia_vEZTKzGhI3HdqXsUG3uDILBv337VNweWYE7F9ThNgDVD90UYGzZN5VlLf9bzjnB2CDjUWXBhgepSyaSfKHQhfyjoLnb2uHg2BUb5YDNYk5oqaBT_tyN7k_PSopt1XZyYIAf6-5VTweEcUjdpwrUUXGZ0fla8s6RIFNosqt5e6j0CsZ7Eb_zYEhfWXPo0NbRXUIG3KN6DCA-ES6D1TW0Dm2UuJLb-LfzCWsA1W_sZZz6jxbclnP6c6Pf8upBQIC9EvXqCseoPAykyR48KeW8tcd5ki3_tPtI7vA</span></span><br></pre></td></tr></table></figure>
+
+<p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌.断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些前发方的断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
 
                 
             </div>
