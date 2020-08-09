@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">OAuth2.0</h2>
             <div class="post-meta">
-                <span class="post-time">2020-07-11</span>
+                <span class="post-time">2020-07-25</span>
                 
                 <span class="post-category">
                     
@@ -104,8 +104,7 @@
     </div>
 </div>
         <div class="post-content">
-            <p>听首歌吧 hungoverheadcrack</p>
-<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
+            <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
 <p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
 <p><strong>其它配置：</strong></p>
 <ul>
@@ -177,7 +176,7 @@
 </ol>
 <p><strong>资源服务器如何对请求中传过来的令牌进行验证？</strong></p>
 <ol>
-<li>授权服务器与资源服务器共享数据库</li>
+<li>授权服务器与资源服务器共享令牌数据库</li>
 <li>使用令牌内省（token introspection）的 Web 协议，由授权服务器提供接口，让资源服务器能在运行时检查令牌的状态</li>
 <li>令牌内包含资源服务器能直接解析并理解的信息，如 JWT, 使用受加密保护的 JSON 对象携带声明信息</li>
 </ol>
@@ -250,11 +249,11 @@
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端收集用户的用户名和密码,发送至授权服务器的令牌端点</span></span><br><span class="line"><span class="attr">grant_type</span>=<span class="string">password</span></span><br><span class="line"><span class="attr">scope</span>=<span class="string">foo bar</span></span><br><span class="line"><span class="attr">username</span>=<span class="string">alice</span></span><br><span class="line"><span class="meta">&amp;password</span>=<span class="string">secret</span></span><br></pre></td></tr></table></figure>
 
 <p>虽然这种模式下客户端直接获取了用户的认证信息, 但是后续的请求受保护资源使用的是访问令牌, 比每次请求都直接使用用户凭据要好的多, 但这仍然是一种不不好的许可类型, 请不要在现实中使用.</p>
-<h3 id="4-断言许可类型"><a href="#4-断言许可类型" class="headerlink" title="4 断言许可类型"></a>4 断言许可类型</h3><p>官方扩展许可类型，客户端得到一条结构化的且被加密保护的信息-<strong>断言</strong>， 使用断言向授权服务器换取令牌。断言必须有信任的认证机构提供. 这种许可类型只使用后端信道, 没有明确的资源拥有者参与. 断言一般来自第三方,客户端可以不知道断言本身的含义.客户端向授权服务器的<strong>令牌端点</strong>发送 HTTP POST 请求, 将断言作为参数传递给服务器. 客户端一样要进行身份认证</p>
+<h3 id="4-断言许可类型"><a href="#4-断言许可类型" class="headerlink" title="4 断言许可类型"></a>4 断言许可类型</h3><p>官方扩展许可类型，客户端得到一条结构化的且被加密保护的信息-<strong>断言</strong>， 使用断言向授权服务器换取令牌。断言必须由信任的认证机构提供. 这种许可类型只使用后端信道, 没有明确的资源拥有者参与. 断言一般来自第三方, 客户端可以不知道断言本身的含义. 客户端向授权服务器的<strong>令牌端点</strong>发送 HTTP POST 请求, 将断言作为参数传递给服务器. 客户端一样要进行身份认证</p>
 <p>两种标准化的断言: 安全断言标记语言 (SAML); JSON Web Token (JWT)</p>
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">urn:ietf:params:oauth:grant-type:jwt-bearer</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例断言</span></span><br><span class="line"><span class="attr">assertion</span>=<span class="string">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0xIn0.eyJpc3MiOiJodHRwOi8vdHJ1c3QuZXhhbXBsZS5uZXQvIiwic3ViIjoib2F1dGgtY2xpZW50LTEiLCJzY29wZSI6ImZvbyBiYXIgYmF6IiwiYXVkIjoiaHR0cDovL2F1dGhzZXJ2ZXIuZXhhbXBsZS5uZXQvdG9rZW4iLCJpYXQiOjE0NjU1ODI5NTYsImV4cCI6MTQ2NTczMzI1NiwianRpIjoiWDQ1cDM1SWZPckRZTmxXOG9BQ29Xb1djMDQ3V2J3djIifQ.HGCeZh79Va-7meazxJEtm07ZyptdLDu_Ocfw82F1zAT2p6Np6Ia_vEZTKzGhI3HdqXsUG3uDILBv337VNweWYE7F9ThNgDVD90UYGzZN5VlLf9bzjnB2CDjUWXBhgepSyaSfKHQhfyjoLnb2uHg2BUb5YDNYk5oqaBT_tyN7k_PSopt1XZyYIAf6-5VTweEcUjdpwrUUXGZ0fla8s6RIFNosqt5e6j0CsZ7Eb_zYEhfWXPo0NbRXUIG3KN6DCA-ES6D1TW0Dm2UuJLb-LfzCWsA1W_sZZz6jxbclnP6c6Pf8upBQIC9EvXqCseoPAykyR48KeW8tcd5ki3_tPtI7vA</span></span><br></pre></td></tr></table></figure>
 
-<p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌.断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些前发方的断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
+<p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌. 断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
 
         </div>
         
@@ -268,6 +267,12 @@
 </div>
 <div class="paginator">
     
+        
+            <a class="prev" href="/Mysql/%E8%BF%9E%E6%8E%A5/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">连接</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
         
         
             <a class="next" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">

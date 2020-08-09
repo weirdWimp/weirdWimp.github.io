@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">连接</h2>
             <div class="post-meta">
-                <span class="post-time">2020-07-05</span>
+                <span class="post-time">2020-08-01</span>
                 
                 <span class="post-category">
                     
@@ -306,6 +306,7 @@
 <p>   此时的执行计划， 连接算法使用的时 <code>Block Nested Loop Join</code> 连接算法 （参考 Mysql 使用手册 - <strong>8.2.1.6 Nested-Loop Join Algorithms</strong>），且 user_info 使用了索引；这时，会扫描 user_score  表一次，将 user_score 表中的每一条记录同 <code>Join Buffer</code> 连接缓冲区中的 user_info 表筛选出来的记录进行匹配，如果满足关联条件，返回。</p>
 <p>   猜想：此时，查询优化器可能是从 uid 的索引的情况来看，user_score  表中 <code>uid = &#39;899-99-9905&#39;</code> 的记录占据了整个表的大部分，而且表本身比较小，此时，做一次全表扫描的性能可能是会更好。</p>
 <p><strong>Mysql 查询优化器的工作是一个很复杂的工作流程、会考虑各种因素，参考表的统计信息，给出当前较优的执行计划。</strong></p>
+<p>Using filesort (JSON property: using_filesort)<br>MySQL must do an extra pass to find out how to retrieve the rows in sorted order. The sort is done<br>by going through all rows according to the join type and storing the sort key and pointer to the row for<br>all rows that match the WHERE clause. The keys then are sorted and the rows are retrieved in sorted<br>order. See Section 8.2.1.14, “ORDER BY Optimization”.</p>
 
         </div>
         
@@ -320,15 +321,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Linux/%E5%AE%89%E8%A3%85MacOS/">
+            <a class="prev" href="/Spring/Spring%20Resource/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">安装MacOS</span>
+                <span class="nav-default">Spring Resource</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/ANSI%20Color/">
-                <span class="nav-default">ANSI Color</span>
+            <a class="next" href="/Java/OAuth2.0/">
+                <span class="nav-default">OAuth2.0</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
