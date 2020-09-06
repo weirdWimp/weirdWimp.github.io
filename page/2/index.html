@@ -84,10 +84,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/OAuth2.0/">OAuth2.0</a></h2>
+                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-07-25</span>
+                <span class="post-time">2020-09-01</span>
                 
                 <span class="post-category">
                     
@@ -98,507 +98,40 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
-<p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
-<p><strong>其它配置：</strong></p>
-<ul>
-<li>重定向 url</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/callback</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>授权端点</p>
-</li>
-<li><p>令牌端点</p>
-</li>
-<li><p>资源服务器， 受保护的资源端点</p>
-</li>
-</ul>
-<p><strong>获取访问令牌步骤：</strong></p>
-<ol>
-<li>将用户重定向至授权服务器的授权端点，并在请求的 URL 中包含适当的查询参数，如请求权限范围，重定向 URL （回调 URL, 即授权服务器返回授权码给客户端的端点），client_id 等。</li>
-</ol>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">response_type</span>: 'code',</span><br><span class="line"><span class="attribute">client_id</span>: client.client_id,</span><br><span class="line"><span class="attribute">redirect_uri</span>: client.redirect_uris[0] // 客户端接收授权码的端点</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>在授权服务器授权端点，用户对客户端进行授权（可能包含必要用户身份认证），授权结束，根据客户端传过来的重定向 URL 重定向至客户端端点, 并且携带了授权服务器生成的授权码</p>
-</li>
-<li><p>客户端拿到授权码，使用 POST 请求，并使用 Http Basic 认证（client_id作为用户名，client_secret 作为密码），将授权码以表单形式放入请求体中，发送至服务器令牌端点</p>
-</li>
-</ol>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">grant_type</span>: 'authorization_code',</span><br><span class="line"><span class="attribute">code</span>: code,</span><br><span class="line"><span class="attribute">redirect_uri</span>: client.redirect_uris[0]	// 这里是 OAuth 规范约定必须指定和请求授权时相同的重定向 url</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>请求成功时，授权服务器返回一个包含访问令牌等信息的 JSON 对象</li>
-</ol>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>	<span class="comment">// Bearer 令牌，持有该类型的令牌，就可以向受保护资源出示</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>客户端解析 JSON 对象，获取访问令牌值，并将其保存起来，以便以后使用</li>
-</ol>
-<p>为了避免恶意调用客户端重定向 URL 端点 （<code>client.redirect_uris[0]</code>），破解令牌，请求授权端点前，生成一个随机字符串，并添加在请求授权端点的请求参数中 （state），授权端点在返回授权码时，会带着这个字符串，客户端进行比较，如果相同，表明是自己之前发送的授权请求，否则，应向客户提示异常。</p>
-<p><strong>使用令牌访问受保护资源</strong></p>
-<p>使用令牌向受保护资源发出调用请求，令牌的请求形式：</p>
-<ol>
-<li>HTTP Authorization 头部（OAuth 规范推荐）</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">'Authorization': 'Bearer ' + access_token</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>使用表单格式的请求体参数 （必须使得资源提供端点支持 POST 请求和表单）</p>
-</li>
-<li><p>使用 URL 编码的查询参数 （可能使得令牌暴漏在请求日志中）</p>
-</li>
-</ol>
-<p><strong>刷新令牌</strong></p>
-<p>无需用户参与下获取新访问令牌的方法</p>
-<p>1.刷新令牌与访问令牌一起返回被客户端</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>2.客户端发送访问令牌失效时（使用令牌获取资源失败），使用刷新令牌重新请求访问令牌</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// POST 请求体, 同时头部也要添加 Basic 认证信息</span><br><span class="line"><span class="attribute">grant_type</span>: 'refresh_token',</span><br><span class="line"><span class="attribute">refresh_token</span>: refresh_token</span><br></pre></td></tr></table></figure>
-
-<p>如果刷新令牌有效，返回新的访问令牌和刷新令牌</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"IqTnLQKcSY62klAuNTVevPdyEnbY82PB"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果刷新令牌无效，提示错误</p>
-<h2 id="受保护的资源端"><a href="#受保护的资源端" class="headerlink" title="受保护的资源端"></a>受保护的资源端</h2><p><strong>使用 OAuth 保护 Web API</strong></p>
-<ol>
-<li>从传入的请求中解析出令牌</li>
-<li>通过授权服务器验证令牌</li>
-<li>根据令牌的权限范围做出响应，令牌的权限范围有多种</li>
-</ol>
-<p><strong>资源服务器如何对请求中传过来的令牌进行验证？</strong></p>
-<ol>
-<li>授权服务器与资源服务器共享令牌数据库</li>
-<li>使用令牌内省（token introspection）的 Web 协议，由授权服务器提供接口，让资源服务器能在运行时检查令牌的状态</li>
-<li>令牌内包含资源服务器能直接解析并理解的信息，如 JWT, 使用受加密保护的 JSON 对象携带声明信息</li>
-</ol>
-<p><strong>权限范围 scope</strong></p>
-<ol>
-<li><p>不同的权限范围对应不同的操作，如 GET\POST\DELETE 分别对应的 read write delete 权限</p>
-</li>
-<li><p>不同的权限范围对应不同的数据结果，例如，同一个 API 对权限范围不同的客户端返回不同的子集，如有一个销售统计 API, 每个大区只能请求自己大区的数据</p>
-</li>
-<li><p>不同的用户对应不同的数据结果</p>
-</li>
-</ol>
+                    <p>事务的隔离级别</p>
+<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
 <blockquote>
-<p>资源服务器可以根据令牌及其附属信息（如权限范围）直接做出授权决策。资源服务器还可以将访问令牌中的权限范围与其他访问控制信息结合起来，用于决定是否响应 API 调用以及响应什么内容。</p>
+<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
 </blockquote>
-<p>资源服务器如何设计权限是比较灵活的，而且可以和其他控制信息结合，也是属于灵活的一种体现。客户端绝不会知道授权的用户与具体的权限范围，令牌本身就代表了资源拥有者的授权与权限范文，在资源服务器端，通过验证令牌以及获取令牌对应的访问权限，用户，以及其它控制信息，做出是否有要相应的决策以及相应什么内容。</p>
-<h2 id="授权服务器"><a href="#授权服务器" class="headerlink" title="授权服务器"></a>授权服务器</h2><h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ol>
-<li>客户端将用户重定向至授权服务器授权端点 <code>/authorize</code>，并携带了必要的查询参数</li>
+<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
+<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
+<ul>
+<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
+<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
+</ul>
+<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resultType</code></td>
+<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
+</tr>
+</tbody></table>
+<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
+<p>需要试验一下，映射方法有多个参数</p>
+<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
+<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
 </ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">https://api.weibo.com/oauth2/authorize?</span></span><br><span class="line">client_id=3129654709&amp;													//客户端 id</span><br><span class="line">redirect_uri=https://www.douyu.com/member/oauth/signin/weibo&amp;			//重定向客户端 uri</span><br><span class="line">state=96b2a0b5a31566c5f63b2322f987736a&amp;								//state 防止恶意调用客户端重定向 uri</span><br><span class="line">response_type=code&amp;													//授权码许可类型</span><br><span class="line">approval_prompt=force&amp;													//授权提示？</span><br><span class="line">scope=foo bar															//客户端期望的权限范围</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li>授权服务器验证客户端身份（client id），检查传入的 redirect_url 与注册时的是否一致；验证请求的权限范围是否符合要求（提前为每个客户端限定了权限范围），如果都满足要求，生成一个随机字符串 state,  并将其与客户端请求的查询参数保存为一个映射；渲染一个授权表单，提供授权或拒绝授权，以及权限范围的选择, 并将随机字符串 state，嵌入到表单中（表示未完成授权，为授权页面提供了简单的防跨站请求伪造保护，防止对服务器端授权端点的恶意请求）</li>
+<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
 </ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 提交的表单数据</span><br><span class="line"><span class="keyword">POST</span> <span class="string">/approve</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost:9001</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)</span><br><span class="line">Gecko/20100101 Firefox/39.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Referer</span>: http://localhost:9001/authorize?response_type=code&amp;scope=foo&amp;client_id=</span><br><span class="line">oauth-client-1&amp;redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&amp;state=</span><br><span class="line"><span class="attribute">GKckoHfwMHIjCpEwXchXvsGFlPOS266u</span></span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"></span><br><span class="line">//reqid 即 生成的 state 值，approve 表示用户的授权许可</span><br><span class="line">reqid=tKVUYQSM&amp;approve=Approve</span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="3">
-<li>用户同意授权，表单提交到授权码生成端点 <code>/approve</code>，对提交表单的请求验证 （state），权限范围进行验证（表单请求可能会被篡改，所以需要再次验证），生成授权码 code，存储在授权服务器上，并保存与之对应的权限范围（在令牌端点可以取出来，与访问令牌形成对应关系），客户端请求，并将其通过客户端请求授权时的重定向 uri 返回给客户端</li>
-</ol>
-<h3 id="令牌颁发"><a href="#令牌颁发" class="headerlink" title="令牌颁发"></a>令牌颁发</h3><p>客户端身份认证，client_id, client_secret</p>
-<p>授权许可类型 grant_type 检查， 如 <code>authorization_code</code></p>
-<p>如果是授权许可码类型，取出授权许可码 code， 并查询之前保存的 code 与客户端请求信息缓存，验证它确实是为该客户端生成的（对比 client_id）</p>
-<p>客户端匹配成功，生成一个访问令牌，并将其保存</p>
-<p>向客户端返回访问令牌，令牌类型</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">access_token</span>: access_token,</span><br><span class="line"><span class="attribute">token_type</span>: 'Bearer'</span><br></pre></td></tr></table></figure>
-
-<p>支持刷新令牌</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">refresh_token</span>: refresh_token,</span><br><span class="line"><span class="attribute">client_id</span>: clientId</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="授权许可类型"><a href="#授权许可类型" class="headerlink" title="授权许可类型"></a>授权许可类型</h2><p>除了授权码许可类型外的许可类型</p>
-<h3 id="1-隐式许可类型"><a href="#1-隐式许可类型" class="headerlink" title="1 隐式许可类型"></a>1 隐式许可类型</h3><p>直接运行在浏览器内的客户端，此时，客户端没有必要再通过授权码获取访问令牌，因为授权码是通过浏览器（前端信道）发送给客户端的，对于浏览器来说是可见的（如果是 web 应用，是直接发送给客户端服务器的）。直接请求<strong>授权端点</strong>， 而不是令牌端点来获取访问令牌，其它流程与授权码许可类型相似，客户端 id 检查，授权端点检查权限范围，资源拥有者身份认证，并验证对请求的批准，生成令牌，在授权端点响应中，将令牌附在客户端重定向 URI 片段中 。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 隐式许可类型下，客户端访问授权端点时的 response_type</span></span><br><span class="line"><span class="attr">response_type</span>=<span class="string">token</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权端点响应重定向时的 URI, 附件了 access_token 和 token_type</span></span><br><span class="line"><span class="attr">GET</span> <span class="string">/callback#access_token=987tghjkiu6trfghjuytrghj&amp;token_type=Bearer</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>限使用隐式许可类型的限制</strong></p>
-<ul>
-<li>无法持有客户端密钥，无法对浏览器隐藏密钥</li>
-<li>只使用授权端点，而不是用令牌端点 （不要求客户端在授权端点的身份认证），影响安全等级</li>
-<li>不可用于获取刷新令牌，浏览器内的应用运行的特点：短暂，没有必要</li>
-</ul>
-<h3 id="2-客户端凭据许可类型"><a href="#2-客户端凭据许可类型" class="headerlink" title="2 客户端凭据许可类型"></a>2 客户端凭据许可类型</h3><p>后端系统通信的场景，并不代表某个特定用户，没有明确的资源拥有者。这种场景下，相当于没有用户对客户端授权。</p>
-<p>客户端凭据许可类型，只使用后端信道，客户端代表自己从令牌端点获取令牌，此时客户端向授权服务器的<strong>令牌端点</strong>发出令牌请求。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端身份认证 head：客户端 ID 和密钥</span></span><br><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端凭据许可类型的授权类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'client_credientials'</span></span><br><span class="line"><span class="comment"># 也可以使用 scope 指定请求的权限范围，与授权码或隐式许可流程在 授权端点 上使用的 scope 参数一样</span></span><br><span class="line"><span class="attr">scope</span>: <span class="string">foo</span></span><br></pre></td></tr></table></figure>
-
-<p>客户端直接向授权服务器进行身份认证，授权服务器向客户端颁发访问令牌，客户端能随时获取新令牌，无需单独的资源拥有者参与，因此也没有必要使用刷新令牌</p>
-<p><strong>特点</strong></p>
-<ul>
-<li><p>客户端凭据类型没有任何直接的用户交互，是为可信的后端系统直接访问服务准备的</p>
-<p>因此对于交互式与非交互式客户端，最好进行区分，指定不同的权限范围</p>
-</li>
-</ul>
-<h3 id="3-资源拥有者凭据类型"><a href="#3-资源拥有者凭据类型" class="headerlink" title="3 资源拥有者凭据类型"></a>3 资源拥有者凭据类型</h3><p>客户端通过后端信道使用用户名和密码换取访问令牌, 资源拥有者直接与客户端进行交互, 而不是授权服务器, 只使用<strong>令牌端点</strong>. 授权服务器验证客户端的身份, 从收到的请求中取出用户名和密码，并与本地存储的用户信息对比, 验证权限范围, 如果都匹配，则授权服务器向客户端颁发令牌, 刷新访问令牌。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端收集用户的用户名和密码,发送至授权服务器的令牌端点</span></span><br><span class="line"><span class="attr">grant_type</span>=<span class="string">password</span></span><br><span class="line"><span class="attr">scope</span>=<span class="string">foo bar</span></span><br><span class="line"><span class="attr">username</span>=<span class="string">alice</span></span><br><span class="line"><span class="meta">&amp;password</span>=<span class="string">secret</span></span><br></pre></td></tr></table></figure>
-
-<p>虽然这种模式下客户端直接获取了用户的认证信息, 但是后续的请求受保护资源使用的是访问令牌, 比每次请求都直接使用用户凭据要好的多, 但这仍然是一种不不好的许可类型, 请不要在现实中使用.</p>
-<h3 id="4-断言许可类型"><a href="#4-断言许可类型" class="headerlink" title="4 断言许可类型"></a>4 断言许可类型</h3><p>官方扩展许可类型，客户端得到一条结构化的且被加密保护的信息-<strong>断言</strong>， 使用断言向授权服务器换取令牌。断言必须由信任的认证机构提供. 这种许可类型只使用后端信道, 没有明确的资源拥有者参与. 断言一般来自第三方, 客户端可以不知道断言本身的含义. 客户端向授权服务器的<strong>令牌端点</strong>发送 HTTP POST 请求, 将断言作为参数传递给服务器. 客户端一样要进行身份认证</p>
-<p>两种标准化的断言: 安全断言标记语言 (SAML); JSON Web Token (JWT)</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">urn:ietf:params:oauth:grant-type:jwt-bearer</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例断言</span></span><br><span class="line"><span class="attr">assertion</span>=<span class="string">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0xIn0.eyJpc3MiOiJodHRwOi8vdHJ1c3QuZXhhbXBsZS5uZXQvIiwic3ViIjoib2F1dGgtY2xpZW50LTEiLCJzY29wZSI6ImZvbyBiYXIgYmF6IiwiYXVkIjoiaHR0cDovL2F1dGhzZXJ2ZXIuZXhhbXBsZS5uZXQvdG9rZW4iLCJpYXQiOjE0NjU1ODI5NTYsImV4cCI6MTQ2NTczMzI1NiwianRpIjoiWDQ1cDM1SWZPckRZTmxXOG9BQ29Xb1djMDQ3V2J3djIifQ.HGCeZh79Va-7meazxJEtm07ZyptdLDu_Ocfw82F1zAT2p6Np6Ia_vEZTKzGhI3HdqXsUG3uDILBv337VNweWYE7F9ThNgDVD90UYGzZN5VlLf9bzjnB2CDjUWXBhgepSyaSfKHQhfyjoLnb2uHg2BUb5YDNYk5oqaBT_tyN7k_PSopt1XZyYIAf6-5VTweEcUjdpwrUUXGZ0fla8s6RIFNosqt5e6j0CsZ7Eb_zYEhfWXPo0NbRXUIG3KN6DCA-ES6D1TW0Dm2UuJLb-LfzCWsA1W_sZZz6jxbclnP6c6Pf8upBQIC9EvXqCseoPAykyR48KeW8tcd5ki3_tPtI7vA</span></span><br></pre></td></tr></table></figure>
-
-<p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌. 断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-07-05</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Linux-常用命令"><a href="#Linux-常用命令" class="headerlink" title="Linux 常用命令"></a>Linux 常用命令</h1><p>[TOC]</p>
-<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><ul>
-<li><code>CTRL</code> + <code>K</code> 光标处剪切文本至本行结束</li>
-<li><code>CTRL</code> + <code>Y</code> 粘贴文本</li>
-<li><code>CTRL</code> + <code>E</code> 将光标移动到本行的末尾</li>
-<li><code>CTRL</code> + <code>A</code> 将光标移动到本行的开头</li>
-<li><code>ALT</code> + <code>F</code> 跳转到下一个空格处</li>
-<li><code>ALT</code> + <code>B</code> 回到前一个空格处</li>
-<li><code>ALT</code> + <code>Backspace</code> 删除前一个词</li>
-<li><code>CTRL</code> + <code>w</code> 剪切光标前一个词 </li>
-</ul>
-<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><p>查找命令</p>
-<ul>
-<li><strong>Usage</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [path...] [expression]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>path  制定查找的目录，默认是当前目录</p>
-</li>
-<li><p>expression 包含 operators， options， tests， and  actions.</p>
-<ul>
-<li><p>tests: </p>
-<ul>
-<li>-name Pattern 指定文件名的模式</li>
-<li>-mmin N 过去N分钟更新过的普通文件</li>
-</ul>
-</li>
-<li><p>actions: </p>
-<ul>
-<li>-delete</li>
-<li>-print 默认</li>
-<li>-ls </li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">"*.txt"</span> -ls</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>同样用来查找文件，是 <code>find -name</code> 的另一种说法，但是它搜索的是包含所有本地文件信息的数据库。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，<strong>先使用updatedb命令，手动更新数据库</strong>。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate ~/m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写，搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate -i ~/m</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><p>只能用来搜索程序名，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis grep</span><br><span class="line"><span class="comment"># 打印： grep: /bin/grep /usr/share/man/man1/grep.1.gz /usr/share/info/grep.info.gz</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="which"><a href="#which" class="headerlink" title="which"></a>which</h4><p>在 <strong>PATH</strong> 变量指定的路径中，搜索某个命令的位置，并返回第一个搜索结果。</p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> grep</span><br><span class="line"><span class="comment"># 打印： /bin/grep</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>用来区分某个命令是 shell 自带的，还是由外部的二进制文件提供的。如果是一个外部命令， -p 显示该命令的路径。</p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br><span class="line"><span class="comment"># cd is a shell builtin</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> wget</span><br><span class="line"><span class="comment"># wget is /usr/bin/wget</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> -p wget</span><br><span class="line">/usr/bin/wget</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h4 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h4><p>wget 是一个通过指定 URL 下载文件的工具，比如下载一些软件或者从远程服务器恢复备份到本地服务器。支持HTTP, HTTPS 和 FTP 协议，可以使用 HTTP 代理。可以在后台执行，支持断点下载</p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><p><strong>wget <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
-<p><strong>下载整个页面</strong>。 </p>
-<p><code>-x</code> 建立服务器上一样的目录</p>
-<p><code>-nd</code>下载的所有内容会出现在本地当前目录</p>
-</li>
-<li><p><strong>wget -r  <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
-<p>递归下载。下载服务器上的所有目录和文件。</p>
-<p><code>-l number</code> 指定下载的层次。</p>
-</li>
-<li><p><strong>wget -c <a href="http://prefix/dir/file" target="_blank" rel="noopener">http://prefix/dir/file</a></strong></p>
-<p>断点续传，服务器必须支持。</p>
-<p><code>-t</code> 表示重试次数 <code>-t 0</code> 表示无穷次重试，直到连接成功。</p>
-<p> <code>-T</code> 表示超时等待时间，超过指定的时间就算超时。</p>
-</li>
-<li><p><strong>wget -i download.txt</strong></p>
-<p>批量下载。多个需要下载的文件的 URL 可以写在一个文件中，每行一个。（URL 指向文件就下载文件，指向网站就下载首页）</p>
-</li>
-<li><p><strong>wget -m -reject=git <a href="http://prefix/dir" target="_blank" rel="noopener">http://prefix/dir</a></strong></p>
-<p>选择性下载</p>
-<p><code>-reject=list</code> 拒绝接受的文件类型</p>
-<p><code>-accept=list</code> 接受的文件类型</p>
-</li>
-<li><p><strong>wget -http-user=USER -http-passwd=PASS URL</strong></p>
-<p>密码和认证。 只能处理利用用户名/密码方式限制访问的网站</p>
-</li>
-<li><p><strong>wget -proxy-user=USER -proxy-passwd=PASS URL</strong></p>
-<p>代理进行下载。需要创建 .wgetrc 文件设置代理服务器：</p>
-<p>http-proxy=11.11.11.11:8080</p>
-<p>ftp-proxy=11.11.11.11:8080</p>
-<p>-proxy=on/off 使用或关闭代理</p>
-</li>
-<li><p><strong>wget -O rename.zip URL</strong></p>
-<p>重命名下载的文件。wget默认会以最后一个符合”/”的后面的字符来命令。</p>
-</li>
-<li><p><strong>wget –limit-rate=300k URL</strong></p>
-<p>限速下载</p>
-</li>
-<li><p><strong>wget -b URL</strong></p>
-<p>后台下载。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在下载的下载进度。</span></span><br><span class="line">tail -f wget-log</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>wget -tries=40 URL</strong></p>
-<p>增加重试次数，默认重试20次？</p>
-</li>
-<li><p><strong>wget -mirror URL</strong></p>
-<p>镜像下载。下载整个网站到本地。</p>
-<p><code>-p</code> 下载所有为了html页面显示正常的文件<br><code>–convert-links</code> 下载后，转换成本地的链接<br><code>-P ./LOCAL</code> 保存所有文件和目录到本地指定目录</p>
-</li>
-<li><p><strong>wget -o download.log URL</strong></p>
-<p>保存下载日志到文件中。</p>
-</li>
-<li><p><strong>wget -Q5m -i files.txt</strong></p>
-<p>限制下载的文件大小，超出后推出下载。</p>
-</li>
-<li><p><strong>wget -r -A.pdf URL</strong></p>
-<p>只下载指定格式的文件。</p>
-</li>
-<li><p><strong>wget FTP-URL</strong> </p>
-</li>
-<li><p><strong>wget –ftp-user=USER –ftp-password=PASS URL</strong></p>
-<p>wget FTP 下载。</p>
-</li>
-</ul>
-<p>下载jdk</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget后需要加参数–no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie;”</span></span><br><span class="line"></span><br><span class="line">wget --no-cookies --header <span class="string">"Cookie: oraclelicense=accept-securebackup-cookie;"</span> http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>用于打包、拆包、压缩、解压<strong>。</strong></p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><p><strong>-c</strong> </p>
-<p>建立一个打包文件</p>
-</li>
-<li><p><strong>-x</strong></p>
-<p>解开一个打包文件</p>
-</li>
-<li><p><strong>-t</strong></p>
-<p>查看 tar 包里的文件</p>
-</li>
-<li><p><strong>-z</strong></p>
-<p>gzip 工具，用于压缩成或解压 .tar.gz 格式的文件 (格式的名字只是为了标记，以免解压时用了错误的压缩工具)</p>
-</li>
-<li><p><strong>-j</strong></p>
-<p>zip2 工具，用于压缩成或解压 .tar.bz2 格式的文件</p>
-</li>
-<li><p><strong>-v</strong></p>
-<p>显示打包、拆包、压缩或解压过程。</p>
-</li>
-<li><p><strong>-f</strong></p>
-<p>使用文件名，后面立即接文件名</p>
-</li>
-<li><p><strong>-p</strong></p>
-<p>保持原文件的属性</p>
-</li>
-<li><p><strong>-P</strong></p>
-<p>使用绝对路径来压缩。</p>
-</li>
-<li><p><strong>-N 2001/03/11</strong></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -N 2017/01/23 -zcvf index.html hello.txt world.txt</span><br></pre></td></tr></table></figure>
-
-<p>  设定日期，后面接的日期还要新的文件才会被打包。</p>
-<ul>
-<li><strong>–exclude file</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude hello.txt -zcvf b.tar.gz index.html hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>  剔除不需要进行打包的文件</p>
-<p>可以作为命令行参数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf - *.txt | tar -xf - -C dir/</span><br><span class="line"></span><br><span class="line"><span class="comment"># tar cvf - files/ | ssh user@example.com "tar xv -C Documents/"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>虽然 tar 命令提供了排除 VCS 的选项, 但是使用起来却有点问题, 简单点, 可以直接使用排序选项, <code>*</code> 默认应该是排除了 <code>.</code> 开头的文件, 所以 <code>.gitignore .git/</code> 都没有包含在最终的包中</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar  --exclude <span class="string">"target"</span> --exclude <span class="string">"*.iml"</span> -cvf spring-boot-demo-source.tar *</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p>cat 命令用于显示文件的内容</p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><strong>显示整个文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>从键盘创建一个文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; file</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
-
-<p>  只能创建新文件，不能编辑已有文件。 <code>Ctrl</code> + <code>d</code>  结束输入</p>
-<ul>
-<li><strong>合并文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 合并文件输出到另一个文件中</span></span><br><span class="line">cat file1 file2 &gt; file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并文件并输出到屏幕</span></span><br><span class="line">cat file1 file2</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-n 行编号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n|number file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-b 行编号，空白行不编号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -b file</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>Global Search Regular Expression(RE) and Print out the line</p>
-<p>全局正则表达式搜索，用于文本搜索（支持正则表达式），并把匹配的行打印出来。</p>
-<ul>
-<li><strong>常规用法</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep match_pattern file</span><br><span class="line"></span><br><span class="line">grep <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>多文件搜索</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"match_pattern"</span> file_1 file_2 file_3 ...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>-v 反转查找</strong></p>
-<p>即打印不匹配该模式的所有行</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-E 使用正则表达式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">"[1-9]+"</span> file</span><br><span class="line"></span><br><span class="line">egrep <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-o 只输出文件中匹配到的部分</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o -E <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-c 文件中包含匹配模式的行数</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-n 输出包含匹配字符串所在的行号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-b 匹配模式位于的字符或字节偏移</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般与 -o 一起使用，从第一个字符开始计算，起始值为 0 </span></span><br><span class="line">grep -b -o <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-l 搜索匹配模式出现在哪些文件中</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">"text"</span> file1 file2 file3 ...</span><br><span class="line"><span class="comment"># 只输出文件名，不指定 -l, 输出文件名及相应的匹配行</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-r 多级目录中对文本进行递归搜索</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"text"</span> . -r -n</span><br><span class="line"><span class="comment"># . 表示当前目录</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-i 忽略匹配模式中字符的大小写</strong>、</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-e 制定多个匹配模式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">"text1"</span> <span class="string">"text2"</span> file</span><br><span class="line"><span class="comment"># 这个当然也可以直接用正则表达式写</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>搜索结果中包括或者排除指定文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此参数的格式为 Ubuntun 下的格式，搜索文件只包括 txt，html,php 文件 </span></span><br><span class="line">grep --include=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索文件不包括 txt，html,php 文件</span></span><br><span class="line">grep --exclude=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除 fileList 文件列表里的文件</span></span><br><span class="line">grep <span class="string">"text"</span> . -r  --exclude-from=fileList</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>-q 静默输出</strong></p>
-</li>
-<li><p><strong>打印匹配某个结果之后或之前的 n 行</strong></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示匹配某个结果之后的3行，使用 -A 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -A 3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果之前的3行，使用 -B 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -B 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果的前三行和后三行，使用 -C 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -C 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果匹配结果有多个，会用“--”作为各匹配结果之间的分隔符：</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"a\nb\nc\na\nb\nc"</span> | grep a -A 1</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">--</span><br><span class="line">a</span><br><span class="line">b</span><br></pre></td></tr></table></figure>
-
-<h4 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h4><p>  stat 命令用于显示文件的大小、所有者、用户组、索引节点号、权限、修改和访问时间等重要的统计信息。这是一个非常有用的命令，可以显示比 <code>ls -l</code> 更多的细节。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c 用于格式化输出， %n 表示文件的名称 %a 表示数字格式的权限</span></span><br><span class="line"><span class="built_in">stat</span> -c <span class="string">'%n %a'</span> *</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls * <span class="string">""</span></span><br></pre></td></tr></table></figure>
-
-<p>  <a href="https://linux.cn/article-9601-1.html" target="_blank" rel="noopener">https://linux.cn/article-9601-1.html</a></p>
 
                 
             </div>
@@ -609,7 +142,7 @@
                 <h2><a class="post-title-link" href="/Mysql/MRR%20and%20BAK%20Algorithm/">MRR and BAK Algorithm</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-07-05</span>
+                <span class="post-time">2020-09-01</span>
                 
                 <span class="post-category">
                     
@@ -724,24 +257,102 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E5%AE%89%E8%A3%85MacOS/">安装MacOS</a></h2>
+                <h2><a class="post-title-link" href="/Mysql/TimeStamp/">TimeStamp</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-07-05</span>
+                <span class="post-time">2020-09-01</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Linux/">Linux</a>
+                    <a class="category" href="/categories/Mysql/">Mysql</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># （此命令用来设置禁用 hyper-v)</span></span><br><span class="line">bcdedit /<span class="built_in">set</span> hypervisorlaunchtype off </span><br><span class="line"></span><br><span class="line"><span class="comment">#【 如果想再次启用 hyper-v 的话，请运行此命令。】</span></span><br><span class="line">bcdedit /<span class="built_in">set</span> hypervisorlaunchtype auto</span><br></pre></td></tr></table></figure>
+                    <p>5.1.13 MySQL Server Time Zone Support</p>
+<p>11.2 Date and Time Data Types</p>
+<p>Section 11.2.6, “Automatic Initialization and Updating for TIMESTAMP and DATETIME”.</p>
+<p>格林威治时间 </p>
+<p>UTC</p>
+<p><a href="https://www.liaoxuefeng.com/article/978494994163392" target="_blank" rel="noopener">廖雪峰-如何正确的处理时间</a></p>
+<p><a href="https://stackoverflow.com/questions/7605953/how-to-change-mysql-timezone-in-a-database-connection-using-java?spm=a2c6h.13066369.0.0.4a3d35feS3vSBf" target="_blank" rel="noopener">jdbc url timezone</a></p>
+<p>Server SQL Modes</p>
+<p>ALLOW_INVALID_DATES</p>
+<p>STRICT_MODE</p>
+<p>NO_ZERO_DATE</p>
+<ul>
+<li><p><code>TIMESTAMP</code> 类型的的范围 <code>1970-01-01 00:00:01.000000</code> UTC 到 <code>2038-01-19
+03:14:07.999999</code> UTC，注意是 UTC 时间</p>
+</li>
+<li><p><code>TIMESTAMP</code> 的值存储为自 epoch <code>1970-01-01 00:00:00</code> UTC 的秒数</p>
+</li>
+<li><p><code>TIMESTAMP[(fsp)]</code> fsp (0-6) 表示可以指定小数秒数精度， 默认是 0 ，表示没有用小数部分， 如 ‘2038-01-19 03:14:07.999999’</p>
+</li>
+<li><p>STRICT_MODE, NO_ZERO_DATE 决定是否可以设为 ‘0’ 值 （0000-00-00 00:00:00）</p>
+</li>
+<li><p>Automatic initialization and updating to the current date and time can be specified using DEFAULT CURRENT_TIMESTAMP and ON UPDATE CURRENT_TIMESTAMP column definition clauses. By default, the first TIMESTAMP column has these properties, as previously noted. However, any TIMESTAMP column in a table can be defined to have these properties.</p>
+</li>
+</ul>
+<blockquote>
+<p>MySQL converts <code>TIMESTAMP</code> values from the current time zone to UTC for storage, and back from UTC to the current time zone for retrieval. (This does not occur for other types such as <code>DATETIME</code>) By default, the current time zone for each connection is the server’s time. The time zone can be set on a per-connection basis. As long as the time zone settings remains constant, you get back the same value you store. If you store a <code>TIMESTAM</code> value, and then change the time zone and retrieve the value, the value is different from the value you stored. The current time zone is avaliable as the value of the <code>time_zone</code> system variable.  This occurs because the same time zone was not used for conversion in both directions. The current time zone is available as the value of the <code>time_zone</code> system variable. For more information, see Section 5.1.13, “MySQL Server Time Zone Support”.</p>
+</blockquote>
+<h3 id="MySQL-Server-Time-Zone-Support"><a href="#MySQL-Server-Time-Zone-Support" class="headerlink" title="MySQL Server Time Zone Support"></a>MySQL Server Time Zone Support</h3><ul>
+<li><p>system time zone  系统时区，server 启动时，尝试自动获取所在机器的时区，并设置为 <code>system_time_zone</code> 系统变量（system variable）</p>
+<p>要显示指定 Mysql Server 启动时的系统时区，启动 <code>mysqld</code> 服务前，设置 <code>TZ</code> 环境变量。 如果使用 <code>mysqld_safe</code>, 使用 <code>--timezone</code> 选项也可以设置</p>
+</li>
+<li><p>server time zone 服务器当前时区， 全局 <code>time_zone</code>系统变量表明了 server 当前操作使用的时区. <code>time_zone</code> 的初始化值是 <code>SYSTEM</code>, 表示和系统时区 (system time zone) 相同;  初始的全局 server time zone 也可以通过命令行选项 <code>--default-time-zone</code> 来设置，或者在 option 文件中指定 <code>default-time-zone=&#39;timezone&#39;</code>； 如果拥有权限，也可以在运行时设置：</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> <span class="keyword">time_zone</span> = timezone;</span><br></pre></td></tr></table></figure>
 
-<p><a href="https://jingyan.baidu.com/article/215817f7e68fb81eda14230f.html" target="_blank" rel="noopener">Win 8/8.1 下virtualbox无法开启虚拟化解决方法</a></p>
-<p>Push-button installer of macOS on VirtualBox <a href="https://github.com/myspaghetti/macos-virtualbox" target="_blank" rel="noopener"> macos-virtualbox</a></p>
+<ul>
+<li>per-session time zone 针对每个会话的时区，每一个连接的客户端都有自己的会话时区设置，通过会话范围内的 <code>time_zone</code> 变量来设置；默认会话变量会从全局 <code>time_zone</code> 变量继承，但是客户端也可以修改：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">time_zone</span> = timezone;</span><br></pre></td></tr></table></figure>
+
+<p>  会话时区设置会影响与时区相关（zone-sensitive）的数据类型的展示和存储. 包含 <code>NOW()</code> 或者 <code>CURTIME</code> 函数值的展示，以及 <code>TIMESTAMP</code> 列的值的存储和查询. 存储时，<code>TIMESTAMP</code> 列的值会从当前会话时区转为 UTC 进行存储，查询时，再从 UTC 时间转为当前会话的时区时间</p>
+<p>  <code>UTC_TIMESTAMP</code> 函数和 <code>DATE</code>, <code>TIME</code> 或者 <code>DATETIME</code> 列的值不受会话时区影响，它们也不是转为 UTC 存储</p>
+<h3 id="timezone-时区的设置格式"><a href="#timezone-时区的设置格式" class="headerlink" title="timezone 时区的设置格式"></a>timezone 时区的设置格式</h3><ul>
+<li>指定为 <code>SYSTEM</code>, 表明使用系统时区 system time zone</li>
+<li>指定一个 UTC 偏移量的字符串, <code>+/-[H]H:MM</code>, 如 ‘+10:00’， ‘-6:00’ （前面会自动补 0）. 有效范围 ‘-12:59’  - ‘+13:00’ inclusive</li>
+<li>‘Europe/Helsinki’, ‘US/Eastern’ 类似于这种命名时区，需要 <code>mysql</code> 库中创建的了时区信息表，并且填充了数据</li>
+</ul>
+<h3 id="JDBC-查询-TIMESTAMP"><a href="#JDBC-查询-TIMESTAMP" class="headerlink" title="JDBC 查询 TIMESTAMP"></a>JDBC 查询 TIMESTAMP</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1 </span></span><br><span class="line">com.mysql.jdbc.ResultSetImpl#getTimestamp(int)</span><br><span class="line"></span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line">com.mysql.jdbc.ResultSetImpl#getTimestampInternal</span><br><span class="line"></span><br><span class="line"><span class="comment">// step3</span></span><br><span class="line">com.mysql.jdbc.ByteArrayRow#getTimestampFast</span><br><span class="line"></span><br><span class="line"><span class="comment">// step4</span></span><br><span class="line">com.mysql.jdbc.ResultSetRow#getTimestampFast(int, byte[], int, int, java.util.Calendar, java.util.TimeZone, boolean, com.mysql.jdbc.MySQLConnection, com.mysql.jdbc.ResultSetImpl)   </span><br><span class="line"></span><br><span class="line"><span class="comment">// step5</span></span><br><span class="line">(useLegacyDatetimeCode=false) mysql.jdbc.TimeUtil#fastTimestampCreate(java.util.TimeZone, int, int, int, int, int, int, int)</span><br><span class="line">    或</span><br><span class="line">(useLegacyDatetimeCode=false) com.mysql.jdbc.TimeUtil#changeTimezone(com.mysql.jdbc.MySQLConnection, java.util.Calendar, java.util.Calendar, java.sql.Timestamp, java.util.TimeZone, java.util.TimeZone, boolean)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>INIT</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"net_buffer_length"</span> -&gt; <span class="string">"16384"</span></span><br><span class="line"><span class="string">"interactive_timeout"</span> -&gt; <span class="string">"28800"</span></span><br><span class="line"><span class="string">"query_cache_size"</span> -&gt; <span class="string">"16777216"</span></span><br><span class="line"><span class="string">"character_set_connection"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"max_allowed_packet"</span> -&gt; <span class="string">"16777216"</span></span><br><span class="line"><span class="string">"net_write_timeout"</span> -&gt; <span class="string">"60"</span></span><br><span class="line"><span class="string">"lower_case_table_names"</span> -&gt; <span class="string">"0"</span></span><br><span class="line"><span class="string">"system_time_zone"</span> -&gt; <span class="string">"CST"</span></span><br><span class="line"><span class="string">"tx_isolation"</span> -&gt; <span class="string">"REPEATABLE-READ"</span></span><br><span class="line"><span class="string">"time_zone"</span> -&gt; <span class="string">"SYSTEM"</span></span><br><span class="line"><span class="string">"wait_timeout"</span> -&gt; <span class="string">"28800"</span></span><br><span class="line"><span class="string">"character_set_server"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"auto_increment_increment"</span> -&gt; <span class="string">"1"</span></span><br><span class="line"><span class="string">"license"</span> -&gt; <span class="string">"GPL"</span></span><br><span class="line"><span class="string">"character_set_client"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"sql_mode"</span> -&gt; <span class="string">"ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"</span></span><br><span class="line"><span class="string">"character_set_results"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"query_cache_type"</span> -&gt; <span class="string">"OFF"</span></span><br><span class="line"><span class="string">"init_connect"</span> -&gt; <span class="string">""</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    com.mysql.jdbc.ConnectionImpl#configureTimezone</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//1. configuredTimeZoneOnServer=CST</span></span><br><span class="line">    </span><br><span class="line">    com.mysql.jdbc.ConnectionPropertiesImpl#getServerTimezone</span><br><span class="line">    <span class="comment">// 2. 返回 url 中配置的 serverTimezone： canonicalTimezone = America/New_York</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getServerTimezone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.serverTimezone.getValueAsString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 3. (getUseTimezone() || !getUseLegacyDatetimeCode()) &amp;&amp; configuredTimeZoneOnServer != null)</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 4. this.serverTimezoneTZ = sun.util.calendar.ZoneInfo[id="America/New_York",offset=-18000000,dstSavings=3600000,useDaylight=true,transitions=235,lastRule=java.util.SimpleTimeZone[id=America/New_York,offset=-18000000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=3,startMonth=2,startDay=8,startDayOfWeek=1,startTime=7200000,startTimeMode=0,endMode=3,endMonth=10,endDay=1,endDayOfWeek=1,endTime=7200000,endTimeMode=0]]</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Configures the client's timezone if required.</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> SQLException</span></span><br><span class="line"><span class="comment">     *             if the timezone the server is configured to use can't be</span></span><br><span class="line"><span class="comment">     *             mapped to a Java timezone.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">configureTimezone</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        String configuredTimeZoneOnServer = <span class="keyword">this</span>.serverVariables.get(<span class="string">"timezone"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (configuredTimeZoneOnServer == <span class="keyword">null</span>) &#123;</span><br><span class="line">            configuredTimeZoneOnServer = <span class="keyword">this</span>.serverVariables.get(<span class="string">"time_zone"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="string">"SYSTEM"</span>.equalsIgnoreCase(configuredTimeZoneOnServer)) &#123;</span><br><span class="line">                configuredTimeZoneOnServer = <span class="keyword">this</span>.serverVariables.get(<span class="string">"system_time_zone"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String canonicalTimezone = getServerTimezone();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((getUseTimezone() || !getUseLegacyDatetimeCode()) &amp;&amp; configuredTimeZoneOnServer != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// user can override this with driver properties, so don't detect if that's the case</span></span><br><span class="line">            <span class="keyword">if</span> (canonicalTimezone == <span class="keyword">null</span> || StringUtils.isEmptyOrWhitespaceOnly(canonicalTimezone)) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    canonicalTimezone = TimeUtil.getCanonicalTimezone(configuredTimeZoneOnServer, getExceptionInterceptor());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IllegalArgumentException iae) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> SQLError.createSQLException(iae.getMessage(), SQLError.SQL_STATE_GENERAL_ERROR, getExceptionInterceptor());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (canonicalTimezone != <span class="keyword">null</span> &amp;&amp; canonicalTimezone.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.serverTimezoneTZ = TimeZone.getTimeZone(canonicalTimezone);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            <span class="comment">// The Calendar class has the behavior of mapping unknown timezones to 'GMT' instead of throwing an exception, so we must check for this...</span></span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            <span class="keyword">if</span> (!canonicalTimezone.equalsIgnoreCase(<span class="string">"GMT"</span>) &amp;&amp; <span class="keyword">this</span>.serverTimezoneTZ.getID().equals(<span class="string">"GMT"</span>)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> SQLError.createSQLException(<span class="string">"No timezone mapping entry for '"</span> + canonicalTimezone + <span class="string">"'"</span>, SQLError.SQL_STATE_ILLEGAL_ARGUMENT,</span><br><span class="line">                        getExceptionInterceptor());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">this</span>.isServerTzUTC = !<span class="keyword">this</span>.serverTimezoneTZ.useDaylightTime() &amp;&amp; <span class="keyword">this</span>.serverTimezoneTZ.getRawOffset() == <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Calendar.DST_OFFSET</span><br><span class="line">Calendar.DST_OFFSET</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 相关时区设置和查看命令</span></span><br><span class="line"></span><br><span class="line">SET GLOBAL time_zone = <span class="string">"+5:00"</span>;</span><br><span class="line"></span><br><span class="line">SELECT @@GLOBAL.time_zone, @@SESSION.time_zone;</span><br><span class="line"><span class="comment"># @@GLOBAL.time_zone	@@SESSION.time_zone</span></span><br><span class="line"><span class="comment"># SYSTEM	SYSTEM</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">show variables like <span class="string">'%time_zone%'</span>;</span><br><span class="line"><span class="comment"># Variable_name	Value</span></span><br><span class="line"><span class="comment"># system_time_zone	CST</span></span><br><span class="line"><span class="comment"># time_zone	SYSTEM</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>CST 是个坑，安装的 Mysql 查看系统时区，显示 <code>CST</code>， 其实是东八区 <code>UTC+8</code>, 可以通过改变会话时区查看 <code>TIMESTAMP</code> 列的值进行验证，但是在 Java 中，<code>CST</code> 指的就是 <code>Central Standard Time</code>， 是 <code>UTC-6</code>,  所以如果客户端，如 Java 程序默认的时区就是 <code>Asia/Shanghai (UTC+8)</code>, 不指定任何时区转换设置，操作和显示没有什么问题；Mysql 系统时区变量为 <code>CST</code>, Mysql Server 默认全局时区（System Time Zone - 全局 time_zone 变量） 为 <code>SYSTEM</code> , 继承自系统时区，会话时区默认（Session Time Zone - 局部 time_zone 变量）继承全局时区，最终其实就是 <code>UTC+8</code>。</p>
+<p>如果特意在 jdbc url 中指定 <code>serverTimezone=CST</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//localhost:3306/learning_db?useUnicode=true&amp;characterEncoding=utf8&amp;useLegacyDatetimeCode=true&amp;useTimezone=true&amp;serverTimezone=CST</span></span><br></pre></td></tr></table></figure>
+
+<p>Mysql 查询 <code>TIMESTAMP</code> 列时，将存储的 <code>UTC+0</code> 时间转换为默认的会话时区时间，默认的会话时区是 <code>UTC+8</code>, 在 Mysql 里显示的是 <code>SYSTEM</code>，继承的 <code>CST</code>(这里虽然是 CST, 其实是 UTC+8, 系统时区默认取机器的时区，通过 <code>date -R</code>, 显示 <code>+8:00</code>), 这时候又指定了  <code>serverTimezone=CST</code>, JDBC 获取的系统时区服务器变量 <code>system_time_zone</code>是 <code>CST</code>,  但不是同一个东西，Java 将这个指定的<code>CST</code>转换为时区对象时，转换的就是 <code>UTC-6</code>, 而在 Mysql 服务器一侧是 <code>UTC+8</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Java 中，如果是 CST  TimeZone.getTimeZone("CST"), offset=-21600000， 即 'UTC-6'</span></span><br><span class="line">sun.util.calendar.ZoneInfo[id=<span class="string">"CST"</span>,offset=-<span class="number">21600000</span>,dstSavings=<span class="number">3600000</span>,useDaylight=<span class="keyword">true</span>,transitions=<span class="number">235</span>,lastRule=java.util.SimpleTimeZone[id=CST,offset=-<span class="number">21600000</span>,dstSavings=<span class="number">3600000</span>,useDaylight=<span class="keyword">true</span>,startYear=<span class="number">0</span>,startMode=<span class="number">3</span>,startMonth=<span class="number">2</span>,startDay=<span class="number">8</span>,startDayOfWeek=<span class="number">1</span>,startTime=<span class="number">7200000</span>,startTimeMode=<span class="number">0</span>,endMode=<span class="number">3</span>,endMonth=<span class="number">10</span>,endDay=<span class="number">1</span>,endDayOfWeek=<span class="number">1</span>,endTime=<span class="number">7200000</span>,endTimeMode=<span class="number">0</span>]]</span><br></pre></td></tr></table></figure>
+
+<p>这时，反而会有问题，相当于是 <code>UTC-6</code>（指定的Mysql Server会话时区） 转换为 <code>UTC+8</code> (客户端默认时区)</p>
+<p>​                                        </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># JDBC 查询 TIMESTAMP 列的步骤</span></span><br><span class="line"></span><br><span class="line">1.</span><br><span class="line">默认的会话时区UTC+8</span><br><span class="line">2038-01-19 11:14:07</span><br><span class="line">Mysql服务器  ---------------------------------------------------------------------&gt; JDBC</span><br><span class="line"></span><br><span class="line"><span class="comment">### JDBC 拿到 TIMESTAMP 列的字节数组转为字符串是 ‘2038-01-19 11:14:07’， 所以第一步应该是这样的；而且改变全局 time_zone 变量，获取的字节数组也发送了变化</span></span><br><span class="line"><span class="comment">## SET GLOBAL time_zone = "+5:00";</span></span><br><span class="line"></span><br><span class="line">2.</span><br><span class="line">serverTimezone=CST	client默认时区=Asia/Shanghai</span><br><span class="line">2038-01-19 11:14:07（CST UTC-6）----&gt;  2038-01-20 13:14:07 (Asia/Shanghai UTC+8)</span><br><span class="line">JDBC------------------------------------------------------------------------------&gt; Java TimeStamp</span><br></pre></td></tr></table></figure>
+
+
+
+<p>所以如果真的存在不同客户端时区问题，必要时修改 Mysql 的系统时区为含义明确的时区表示，而不是 <code>CST</code>, 客户端在使用的时候也不用指定 <code>useLegacyDatetimeCode=true&amp;useTimezone=true&amp;serverTimezone=时区</code>， 使用新的 <code>useLegacyDatetimeCode=false</code> 获取时区的方式就可以了，这种会查询 Mysql Server 的时区变量，作为 Server 的时区，因为会话默认也是取的系统时区，所以是一致的，没有什么问题。这时候会将正确的时间转换为客户端时区的时间。</p>
+<p><code>TIMESTAMP</code> 操作真的是很麻烦了，必要时可以采用 <a href="https://www.liaoxuefeng.com/article/978494994163392" target="_blank" rel="noopener">廖雪峰-如何正确的处理时间</a> 中策略，存储成 <code>long</code> 型的时间偏移量就好多了，需要比较的话，直接比较的是整数，显示时，再指定特定时区，就可以了。 </p>
 
                 
             </div>
@@ -749,10 +360,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ANSI%20Color/">ANSI Color</a></h2>
+                <h2><a class="post-title-link" href="/Linux/Ubuntu%20%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">Ubuntu 安装配置</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-06-25</span>
+                <span class="post-time">2020-08-09</span>
                 
                 <span class="post-category">
                     
@@ -763,13 +374,124 @@
             </div>
             <div class="post-content">
                 
-                    <p>From Wicked Cool Shell Scripts, 2nd Edition</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">initializeANSI</span></span> () &#123;</span><br><span class="line"></span><br><span class="line">    esc=<span class="string">"\033"</span> <span class="comment"># 如果无效，直接敲 ESC 键。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 前景色：</span></span><br><span class="line">    blackf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[30m"</span>; redf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[31m"</span>; greenf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[32m"</span></span><br><span class="line">    yellowf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[33m"</span> bluef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[34m"</span>; purplef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[35m"</span></span><br><span class="line">    cyanf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[36m"</span>; whitef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[37m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 背景色：</span></span><br><span class="line">    blackb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[40m"</span>; redb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[41m"</span>; greenb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[42m"</span></span><br><span class="line">    yellowb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[43m"</span> blueb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[44m"</span>; purpleb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[45m"</span></span><br><span class="line">    cyanb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[46m"</span>; whiteb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[47m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 粗体、斜体、下划线以及样式切换：</span></span><br><span class="line">    boldon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[1m"</span>; boldoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[22m"</span></span><br><span class="line">    italicson=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[3m"</span>; italicsoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[23m"</span></span><br><span class="line">    ulon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[4m"</span>; uloff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[24m"</span></span><br><span class="line">    invon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[7m"</span>; invoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[27m"</span></span><br><span class="line">    reset=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[0m"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">initializeANSI</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span>This is a phrase in yellow<span class="variable">$&#123;redb&#125;</span> and red<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string"><span class="variable">$&#123;boldon&#125;</span>This is bold<span class="variable">$&#123;ulon&#125;</span> this is italics<span class="variable">$&#123;reset&#125;</span> bye-bye</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;italicson&#125;</span>This is italics<span class="variable">$&#123;italicsoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;ulon&#125;</span>This is ul<span class="variable">$&#123;uloff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;invon&#125;</span>This is inv<span class="variable">$&#123;invoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span><span class="variable">$&#123;redb&#125;</span>Warning I <span class="variable">$&#123;yellowb&#125;</span><span class="variable">$&#123;redf&#125;</span>Warning II<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string">"</span></span><br></pre></td></tr></table></figure>
+                    <p>Ubuntu 国内镜像下载</p>
+<p><a href="http://mirrors.163.com/ubuntu-releases/" target="_blank" rel="noopener">http://mirrors.163.com/ubuntu-releases/</a></p>
+<p>创建 USB 启动盘</p>
+<p><a href="https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview" target="_blank" rel="noopener">https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview</a></p>
+<p>USB 启动盘工具</p>
+<p><a href="https://rufus.ie/" target="_blank" rel="noopener">https://rufus.ie/</a></p>
+<p>安装教程：</p>
+<p><a href="https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive" target="_blank" rel="noopener">https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive</a></p>
+<p>设置教程：</p>
+<p><a href="https://cloud.tencent.com/developer/article/1626258?fromSource=gwzcw.1293314.1293314.1293314&cps_key=ad1dd5b36e1c498308f7302ab4cdabb7" target="_blank" rel="noopener">写给工程师的 Ubuntu 20.04 最佳配置指南</a></p>
+<p><a href="https://blog.csdn.net/jackghq/article/details/54974141" target="_blank" rel="noopener">开启 SSH</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 ssh-serve</span></span><br><span class="line">sudo apt-get install openssh-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置允许 root 登录</span></span><br><span class="line">sudo vi /etc/ssh/sshd_config</span><br><span class="line">  PermitRootLogin yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 ssh 密钥对</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制到目标机器</span></span><br><span class="line">ssh-copy-id user@domain/ip</span><br></pre></td></tr></table></figure>
 
 
 
-<p>Add snippets for shell common comment</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"Print to shellNote"</span>: &#123;</span><br><span class="line">		<span class="attr">"prefix"</span>: <span class="string">"shell"</span>,</span><br><span class="line">		<span class="attr">"body"</span>: [</span><br><span class="line">			<span class="string">" # Description: $1"</span>,</span><br><span class="line">			<span class="string">" # Author:      Your Name"</span>,</span><br><span class="line">			<span class="string">" # Date:        $&#123;CURRENT_YEAR&#125;-$&#123;CURRENT_MONTH&#125;-$&#123;CURRENT_DATE&#125;"</span></span><br><span class="line">		],</span><br><span class="line">		<span class="attr">"description"</span>: <span class="string">"shel script comment"</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>安装 Vim</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. </span></span><br><span class="line">sudo apt install vim</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 修改 /etc/vim/vimrc.tinyset compatible 设置成set nocompatible . 这是因为有时候系统会默认vim兼容vi，所以使用vi的命令。</span></span><br><span class="line">vi /etc/vim/vimrc.tinyset compatible</span><br><span class="line"><span class="built_in">set</span> nocompatible</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-08-01</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
+<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
+<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
+</blockquote>
+<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
+<blockquote>
+<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
+<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
+<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>匹配任何单字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0或者任意数量的字符</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配0或者更多的目录</td>
+</tr>
+</tbody></table>
+<p>Table Example Ant-Style Path Patterns</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/app/*.x</td>
+<td>匹配(Matches)所有在app路径下的.x文件</td>
+</tr>
+<tr>
+<td>/app/p?ttern</td>
+<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
+</tr>
+<tr>
+<td>/**/example</td>
+<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
+</tr>
+<tr>
+<td>/app/**/dir/file.</td>
+<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
+</tr>
+<tr>
+<td>/<em>*/</em>.jsp</td>
+<td>匹配(Matches)任何的.jsp 文件</td>
+</tr>
+</tbody></table>
+<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 注意事项：</p>
+<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
+<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
 
 
                 

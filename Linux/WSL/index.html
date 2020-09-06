@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">WSL</h2>
             <div class="post-meta">
-                <span class="post-time">2020-08-09</span>
+                <span class="post-time">2020-09-06</span>
                 
                 <span class="post-category">
                     
@@ -112,6 +112,11 @@
 <p>/etc/init.wsl</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
 
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+w <span class="string">"R"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找视频文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -ZP <span class="string">"\.(MP4|mkv|mov|mp4|wmv)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> video/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找图片文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -P <span class="string">"\.(JPG|jpg|png|jpeg|gif|raw)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> ./picture</span><br></pre></td></tr></table></figure>
+
+
         </div>
         
         <div class="post-tag">
@@ -125,15 +130,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Linux/Ubuntu%20%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">
+            <a class="prev" href="/Java/JOSE/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Ubuntu 安装配置</span>
+                <span class="nav-default">Java/JOSE</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Spring/Spring%20Resource/">
-                <span class="nav-default">Spring Resource</span>
+            <a class="next" href="/Linux/Vim/">
+                <span class="nav-default">Vim</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
