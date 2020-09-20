@@ -84,6 +84,58 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/DateAndTime/">DateAndTime</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-06-07</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">java.util public class Date</span><br><span class="line">extends Object</span><br><span class="line">implements java.io.Serializable, Cloneable, Comparable&lt;Date&gt;</span><br><span class="line"></span><br><span class="line">The class Date represents a specific instant in time, with millisecond precision.</span><br><span class="line">Prior to JDK 1.1, the class Date had two additional functions. </span><br><span class="line"></span><br><span class="line">It allowed the interpretation of dates as year, month, day, hour, minute, and second values. It also allowed the formatting and parsing of date strings. Unfortunately, the API for these functions was not amenable to internationalization.</span><br><span class="line"></span><br><span class="line">As of JDK 1.1, the Calendar class should be used to convert between dates and time fields and the DateFormat class should be used to format and parse date strings. The corresponding methods in Date are deprecated.</span><br><span class="line"></span><br><span class="line">Although the Date class is intended to reflect coordinated universal time (UTC), it may not do so exactly, depending on the host environment of the Java Virtual Machine. Nearly all modern operating systems assume that 1 day &#x3D; 24 × 60 × 60 &#x3D; 86400 seconds in all cases. In UTC, however, about once every year or two there is an extra second, called a &quot;leap second.&quot;</span><br><span class="line"></span><br><span class="line">The leap second is always added as the last second of the day, and always on December 31 or June 30. For example, the last minute of the year 1995 was 61 seconds long, thanks to an added leap second. Most computer clocks are not accurate enough to be able to reflect the leap-second distinction.</span><br><span class="line"></span><br><span class="line">Some computer standards are defined in terms of Greenwich mean time (GMT), which is equivalent to universal time (UT). GMT is the &quot;civil&quot; name for the standard; UT is the &quot;scientific&quot; name for the same standard. The distinction between UTC and UT is that UTC is based on an atomic clock and UT is based on astronomical observations, which for all practical purposes is an invisibly fine hair to split. Because the earth&#39;s rotation is not uniform (it slows down and speeds up in complicated ways), UT does not always flow uniformly. Leap seconds are introduced as needed into UTC so as to keep UTC within 0.9 seconds of UT1, which is a version of UT with certain corrections applied. There are other time and date systems as well; for example, the time scale used by the satellite-based global positioning system (GPS) is synchronized to UTC but is not adjusted for leap seconds. An interesting source of further information is the U.S. Naval Observatory, particularly the Directorate of Time at:</span><br><span class="line">       http:&#x2F;&#x2F;tycho.usno.navy.mil</span><br><span class="line">   </span><br><span class="line">and their definitions of &quot;Systems of Time&quot; at:</span><br><span class="line">       http:&#x2F;&#x2F;tycho.usno.navy.mil&#x2F;systime.html</span><br><span class="line">   </span><br><span class="line">In all methods of class Date that accept or return year, month, date, hours, minutes, and seconds values, the following representations are used:</span><br><span class="line">A year y is represented by the integer y - 1900.</span><br><span class="line">A month is represented by an integer from 0 to 11; 0 is January, 1 is February, and so forth; thus 11 is December.</span><br><span class="line">A date (day of month) is represented by an integer from 1 to 31 in the usual manner.</span><br><span class="line">An hour is represented by an integer from 0 to 23. Thus, the hour from midnight to 1 a.m. is hour 0, and the hour from noon to 1 p.m. is hour 12.</span><br><span class="line">A minute is represented by an integer from 0 to 59 in the usual manner.</span><br><span class="line">A second is represented by an integer from 0 to 61; the values 60 and 61 occur only for leap seconds and even then only in Java implementations that actually track leap seconds correctly. Because of the manner in which leap seconds are currently introduced, it is extremely unlikely that two leap seconds will occur in the same minute, but this specification follows the date and time conventions for ISO C.</span><br><span class="line">In all cases, arguments given to methods for these purposes need not fall within the indicated ranges; for example, a date may be specified as January 32 and is interpreted as meaning February 1.</span><br><span class="line">Since:</span><br><span class="line">JDK1.0</span><br><span class="line">See Also:</span><br><span class="line">DateFormat, Calendar, TimeZone</span><br><span class="line">  &lt; 1.8 &gt;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Mysql/TimeZoneMapping/">TimeZoneMapping</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-06-07</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useTimezone</span><br><span class="line"></span><br><span class="line">Convert time&#x2F;date types between client and server time zones (true&#x2F;false, defaults to &#39;false&#39;)? This is part of the legacy date-time code, thus the property has an effect only when &quot;useLegacyDatetimeCode&#x3D;true.&quot;</span><br><span class="line"></span><br><span class="line">Default: false</span><br><span class="line"></span><br><span class="line">Since version: 3.0.2</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useJDBCCompliantTimezoneShift</span><br><span class="line"></span><br><span class="line">Should the driver use JDBC-compliant rules when converting TIME&#x2F;TIMESTAMP&#x2F;DATETIME values&#39; time zone information for those JDBC arguments which take a java.util.Calendar argument? This is part of the legacy date-time code, thus the property has an effect only when &quot;useLegacyDatetimeCode&#x3D;true.&quot;</span><br><span class="line"></span><br><span class="line">Default: false</span><br><span class="line"></span><br><span class="line">Since version: 5.0.0</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">高级文本命令</a></h2>
             </div>
             <div class="post-meta">
@@ -268,72 +320,6 @@
 
 
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/1%20%E8%BF%90%E8%A1%8C%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE/">1 运行前的配置</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="1-运行前的配置"><a href="#1-运行前的配置" class="headerlink" title="1 运行前的配置"></a>1 运行前的配置</h1><h2 id="1-1-用户信息配置"><a href="#1-1-用户信息配置" class="headerlink" title="1.1 用户信息配置"></a>1.1 用户信息配置</h2><p>Git 自带一个 <code>git config</code> 的工具来设置 Git 外观和行为的配置参数。有三个不同级别的设置，分别对应不同的文件夹和作用域。</p>
-<ol>
-<li>如果使用带有<code>--system</code> 选项的 <code>git config</code> 时，他会从文件 <code>/etc/gitconfig</code> 文件中进行配置变量的读写。==包含对系统上每一个用户及他们仓库的通用配置==。</li>
-</ol>
-<ol start="2">
-<li>如果使用带有 <code>--global</code> 选现的 <code>git config</code> 时，他会从文件 <code>~/.gitconfig</code> 或 <code>~/.config/git/config</code> 文件中进行配置变量的读写。==只针对当前用户==。</li>
-</ol>
-<ol start="3">
-<li>当前使用仓库的 Git 目录中的 config 文件（.git/config）: ==只针对该仓库== </li>
-</ol>
-<p>每一个级别覆盖上一个级别的配置。所以 <code>.git/config</code> 的配置变量会覆盖 <code>/etc/gitconfig</code> 中的配置变量。</p>
-<p> 在 Windows 系统中，Git 会查找 <code>$HOME</code> 目录下（一般情况是 <code>C:\Users\$USER</code>）的 <code>.gitconfig</code> 文件。 Git 同样也会寻找 <code>/etc/gitconfig</code> 文件，但只限于 MSys 的根目录下，即安装 Git 时所选的目标位置。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为当前用户配置用户名</span></span><br><span class="line">git config --global user.name Guo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为当前用户配置邮箱</span></span><br><span class="line">git config --global user.email email@company.com</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-2-文本编辑器"><a href="#1-2-文本编辑器" class="headerlink" title="1.2 文本编辑器"></a>1.2 文本编辑器</h2><p>既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，通常是 Vim。 如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-3-检查配置信息"><a href="#1-3-检查配置信息" class="headerlink" title="1.3 检查配置信息"></a>1.3 检查配置信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global user.name</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/README/">README</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Pro-Git-Note"><a href="#Pro-Git-Note" class="headerlink" title="Pro-Git-Note"></a>Pro-Git-Note</h1><p>Markdown notes for <a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener">Pro Git</a><br>Love the life you live.<br>Live the life you love.<br>Find your own thing.</p>
 
                 
             </div>
