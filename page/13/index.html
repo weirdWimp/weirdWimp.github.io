@@ -84,6 +84,45 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
+<p>allocation table - 分配表</p>
+<p>stack frame - 栈帧</p>
+<p>heap - 堆</p>
+<p>reachable object - 可达对象/活性对象</p>
+<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
+<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
+<p>对象的预期生命周期称为 <code>代</code></p>
+<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
+<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
+<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
+<p> Eden 区 / Nursery 区</p>
+<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
+<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
+<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
+<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
+<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
+<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/%E6%B3%9B%E5%9E%8B/">泛型</a></h2>
             </div>
             <div class="post-meta">
@@ -184,64 +223,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
-<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
-<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
-<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
-<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
-<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
-<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
-<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
-<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
-<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
-<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
-<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
-<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
-<p>维基百科 - initialization-on-demand holder</p>
-<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
-<p>分为以下几个阶段：</p>
-<ol>
-<li><strong>加载</strong></li>
-</ol>
-<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
-<ol>
-<li><strong>验证</strong></li>
-</ol>
-<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
-<ol>
-<li><strong>准备和解析</strong></li>
-</ol>
-<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
-<ol>
-<li><strong>初始化</strong></li>
-</ol>
-<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
             </div>
             <div class="post-meta">
@@ -281,7 +262,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E9%97%AE%E9%A2%98/">问题</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E8%A1%8C%E5%A4%84%E7%90%86/">行处理</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -295,12 +276,10 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><p>1 ~/.bashrc ~/.profile /etc/bashrc /etc/profile<br>当通过Xshell连接时（SSH）或 <code>ssh ip</code> 时，会依次执行： </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 登陆shell？</span></span><br><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /etc/profile</span></span><br><span class="line"><span class="comment"># This is /home/root/.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/root/.profile</span></span><br></pre></td></tr></table></figure>
-
-<p> 当通过 su 切换用户时，会执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/guo/.bashrc</span></span><br></pre></td></tr></table></figure>
-
+                    <p>Ctrl + k：剪切光标位置到行尾的文本。<br>Ctrl + u：剪切光标位置到行首的文本。<br>Ctrl + y：在光标位置粘贴文本</p>
+<p>Ctrl + w：删除光标前面的单词。</p>
+<p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
+<p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
 
                 
             </div>

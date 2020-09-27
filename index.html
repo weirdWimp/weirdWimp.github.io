@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Java/JOSE/">Java/JOSE</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-20</span>
+                <span class="post-time">2020-09-27</span>
                 
             </div>
             <div class="post-content">
@@ -99,10 +99,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Terminology/">Terminology</a></h2>
+                <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-19</span>
+                <span class="post-time">2020-09-27</span>
                 
                 <span class="post-category">
                     
@@ -113,45 +113,93 @@
             </div>
             <div class="post-content">
                 
-                    <p>symbolic links</p>
-<p>fork</p>
+                    <h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><ul>
+<li><code>d</code> - delete          cut</li>
+<li><code>y</code> - yank             copy</li>
+<li><code>p</code> - paste/put     put</li>
+</ul>
+<h3 id="words"><a href="#words" class="headerlink" title="words"></a>words</h3><ul>
+<li><code>w</code></li>
+<li><code>e</code></li>
+</ul>
+<h3 id="Sentence"><a href="#Sentence" class="headerlink" title="Sentence"></a>Sentence</h3><ul>
+<li><code>(</code></li>
+<li><code>)</code></li>
+</ul>
+<h3 id="Paragraph"><a href="#Paragraph" class="headerlink" title="Paragraph"></a>Paragraph</h3><ul>
+<li><code>{</code></li>
+<li><code>}</code></li>
+</ul>
+<h3 id="Visual-Mode-Select"><a href="#Visual-Mode-Select" class="headerlink" title="Visual Mode Select"></a>Visual Mode Select</h3><ul>
+<li><p><code>aw</code></p>
+<p> select a word</p>
+</li>
+<li><p><code>ap</code></p>
+<p>select a paragraph</p>
+</li>
+<li><p><code>ab</code></p>
+<p>select a block (anything with a pair of parentheses)</p>
+</li>
+<li><p><code>a&quot;</code></p>
+<p>select a quoted string (like “this is a quoted string”)</p>
+</li>
+</ul>
+<h3 id="Marking-your-territory"><a href="#Marking-your-territory" class="headerlink" title="Marking your territory"></a>Marking your territory</h3><ul>
+<li><p>create a mark where you can jump here later</p>
+<p><code>ma</code> (a-zA-Z ) then you create a mark called ‘a’</p>
+</li>
+<li><p>return the cursor to the mark</p>
+<p><code>&#39;a</code> take you to the exact line and column of the mark</p>
+</li>
+</ul>
+<h3 id="Time-machine-using-undo-redo"><a href="#Time-machine-using-undo-redo" class="headerlink" title="Time machine using undo/redo"></a>Time machine using undo/redo</h3><ul>
+<li><p><code>u</code> undo  :leftwards_arrow_with_hook:</p>
+</li>
+<li><p><code>ctrl-r</code> redo :arrow_right_hook:</p>
+</li>
+<li><p>more…</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take you back by 4 minutes</span></span><br><span class="line">:earlier 4m</span><br><span class="line"></span><br><span class="line"><span class="comment"># take you later by 45 seconds</span></span><br><span class="line">:later 45s</span><br><span class="line"></span><br><span class="line"><span class="comment"># go back 5 changes</span></span><br><span class="line">undo 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># view the undo tree</span></span><br><span class="line">undolist</span><br></pre></td></tr></table></figure>
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Powerful%20Commands/">Vim Powerful Commands</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Vim-Versatile-commands"><a href="#Vim-Versatile-commands" class="headerlink" title="Vim Versatile commands"></a>Vim Versatile commands</h2><ul>
-<li><p><code>.</code></p>
-<ul>
-<li><p>通过 Normal Mode （命令行模式）下的 <code>.</code> 命令来重复上一次的修改操作. 上一次的修改意味着很多操作：Normal Mode 下删除一个或多个字符，单词，行， 如 <code>x</code>, <code>dw</code>, <code>d$</code>, <code>dd</code> 等；比如改变缩进的命令：<code>&gt;&gt;</code>, <code>&lt;&lt;</code> 等. </p>
-</li>
-<li><p>命令行模式下大多数命令对文本做出的修改，都可以使用 <code>.</code> 来重复；Insert Mode （编辑模式） 下做出的修改的重复取决于进入该模式的命令，加入，你通过 <code>A</code> 进入 Insert Mode, 在末尾添加了单词 <code>end</code>，按下 <code>Esc</code>,  <code>.</code> 命令会在末尾重复添加单词 <code>end</code>.</p>
-</li>
+
+
+<h3 id="Powerful-search-engine"><a href="#Powerful-search-engine" class="headerlink" title="Powerful search engine"></a>Powerful search engine</h3><ul>
+<li>basic search</li>
 </ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1. You are now in Normal Mode, you have the text like those below:</span></span><br><span class="line"></span><br><span class="line">This is </span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Press A to enter Insert Mode and write text `end`</span></span><br><span class="line">This is end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Press Esc to enter Normal Mode and press .(period), things will happen like this:</span></span><br><span class="line">This is end end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. mode dot, mode ` end`</span></span><br><span class="line">This is end end end</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># search</span></span><br><span class="line">/the&lt;cr&gt; <span class="comment"># /the followed by the enter key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># next occurrence</span></span><br><span class="line">press `n`</span><br><span class="line"></span><br><span class="line"><span class="comment"># previous occurrence</span></span><br><span class="line">press `N`</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><code>5.</code> 表示重复执行多少次</li>
-<li>Motions (光标的移动) 并不会改变任何事情，所以 <code>.</code> 并不会进行重复</li>
+<li>start searching as and when you type the search phrase</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> incsearch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ignore the case of the text that you are searching for</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> ignorecase</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>smart case</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smarkcase</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>searching for <code>/step</code>, then it will search for any combination of upper and lower case text. So eventually, “Step”, “Stephen”,”stepbrother”</li>
+<li>searching for <code>/Step</code>, <strong>only</strong> “Step”, “Stephen”, but not “stepbrother”</li>
+</ul>
+<ul>
+<li>basic patterns</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exactly search the word 'step' and not 'stepfather'</span></span><br><span class="line">/\&lt;step\&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># search numbers</span></span><br><span class="line">/\d\+</span><br><span class="line"></span><br><span class="line"><span class="comment"># see :help pattern for more details</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>《VIm实用技巧》</p>
 
                 
             </div>
@@ -162,7 +210,7 @@
                 <h2><a class="post-title-link" href="/Linux/Vim%20%E4%BB%8B%E7%BB%8D/">Vim 介绍</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-11</span>
+                <span class="post-time">2020-09-25</span>
                 
                 <span class="post-category">
                     
@@ -339,10 +387,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/WSL/">WSL</a></h2>
+                <h2><a class="post-title-link" href="/Linux/Terminology/">Terminology</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-06</span>
+                <span class="post-time">2020-09-19</span>
                 
                 <span class="post-category">
                     
@@ -353,18 +401,45 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="Make-it-started-when-you-start-your-Windows"><a href="#Make-it-started-when-you-start-your-Windows" class="headerlink" title="Make it started when you start your Windows"></a>Make it started when you start your Windows</h2><p>wsl-ubuntun.vbs - 开机自启</p>
-<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
+                    <p>symbolic links</p>
+<p>fork</p>
 
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Vim%20Powerful%20Commands/">Vim Powerful Commands</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-09-11</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Vim-Versatile-commands"><a href="#Vim-Versatile-commands" class="headerlink" title="Vim Versatile commands"></a>Vim Versatile commands</h2><ul>
+<li><p><code>.</code></p>
+<ul>
+<li><p>通过 Normal Mode （命令行模式）下的 <code>.</code> 命令来重复上一次的修改操作. 上一次的修改意味着很多操作：Normal Mode 下删除一个或多个字符，单词，行， 如 <code>x</code>, <code>dw</code>, <code>d$</code>, <code>dd</code> 等；比如改变缩进的命令：<code>&gt;&gt;</code>, <code>&lt;&lt;</code> 等. </p>
+</li>
+<li><p>命令行模式下大多数命令对文本做出的修改，都可以使用 <code>.</code> 来重复；Insert Mode （编辑模式） 下做出的修改的重复取决于进入该模式的命令，加入，你通过 <code>A</code> 进入 Insert Mode, 在末尾添加了单词 <code>end</code>，按下 <code>Esc</code>,  <code>.</code> 命令会在末尾重复添加单词 <code>end</code>.</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1. You are now in Normal Mode, you have the text like those below:</span></span><br><span class="line"></span><br><span class="line">This is </span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Press A to enter Insert Mode and write text `end`</span></span><br><span class="line">This is end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Press Esc to enter Normal Mode and press .(period), things will happen like this:</span></span><br><span class="line">This is end end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. mode dot, mode ` end`</span></span><br><span class="line">This is end end end</span><br></pre></td></tr></table></figure>
 
-
-<p>/etc/init.wsl</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+w <span class="string">"R"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找视频文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -ZP <span class="string">"\.(MP4|mkv|mov|mp4|wmv)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> video/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找图片文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -P <span class="string">"\.(JPG|jpg|png|jpeg|gif|raw)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> ./picture</span><br></pre></td></tr></table></figure>
-
+<ul>
+<li><code>5.</code> 表示重复执行多少次</li>
+<li>Motions (光标的移动) 并不会改变任何事情，所以 <code>.</code> 并不会进行重复</li>
+</ul>
 
                 
             </div>
