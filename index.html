@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Java/JOSE/">Java/JOSE</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-27</span>
+                <span class="post-time">2020-09-29</span>
                 
             </div>
             <div class="post-content">
@@ -102,7 +102,7 @@
                 <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-27</span>
+                <span class="post-time">2020-09-29</span>
                 
                 <span class="post-category">
                     
@@ -113,11 +113,84 @@
             </div>
             <div class="post-content">
                 
-                    <h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><ul>
-<li><code>d</code> - delete          cut</li>
-<li><code>y</code> - yank             copy</li>
-<li><code>p</code> - paste/put     put</li>
-</ul>
+                    <h1 id="Editing-Basics"><a href="#Editing-Basics" class="headerlink" title="Editing Basics"></a>Editing Basics</h1><h3 id="Buffers"><a href="#Buffers" class="headerlink" title="Buffers"></a>Buffers</h3><p>当你编辑一个文件时， Vim 将磁盘上的文件内容读取到计算机的 RAM 中. 这意味这文件的一个备份被存储到了计算机的内存中，你对文件做出的任何修改，是直接映射到内存中的，并且会立即展示出来. 一旦完成了编辑，你可以保存文件，这意味着 Vim 将内存中的内容要写回磁盘. 临时存储文件的内存被称为缓存  (<strong>Buffer</strong>) .  所以，这就是为什么编辑完后要保存文件的原因.</p>
+<h3 id="Swap"><a href="#Swap" class="headerlink" title="Swap"></a>Swap</h3><p>当你编辑文件时, 会在相同目录下会创建一个类似于 <code>.hello.txt.swp</code> 的文件. 查看确切的文件名可以使用如下命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:swapname</span><br></pre></td></tr></table></figure>
+
+<p> Vim 维护了文件缓存区 (buffer) 的一个文件备份, 会定期保存到该文件中, 以避免出现问题时进行恢复 (如 计算机或者 Vim 程序崩溃).  这个文件被称为 <code>swap file</code>, 因为 Vim 会不断交换内存中的内容到磁盘上的文件中.</p>
+<h3 id="Save-my-file"><a href="#Save-my-file" class="headerlink" title="Save my file"></a>Save my file</h3><p>当你修改了文件时, 并且没有保存, 在另一个窗口查看时, 此时是不会看到之前修改的内容的, 这也很好理解, 因为 Vim 只修改了 buffer 中的内容, 还没有保存到磁盘上. 可以通过  <code>:write</code> 命令来完成保存过程, 将内存中的内存写到磁盘中.</p>
+<p><strong>为了让生活变得容易一点, 你可以使用快捷键映射, 在 vimrc 文件中:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#To save,ctrl-s.</span></span><br><span class="line">nmap &lt;c<span class="_">-s</span>&gt; :w&lt;CR&gt;</span><br><span class="line">imap &lt;c<span class="_">-s</span>&gt; &lt;Esc&gt;:w&lt;CR&gt;a</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><table>
+<thead>
+<tr>
+<th>desktop</th>
+<th>vim word</th>
+<th>operation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cut</td>
+<td>delete</td>
+<td>d</td>
+</tr>
+<tr>
+<td>copy</td>
+<td>yank</td>
+<td>y</td>
+</tr>
+<tr>
+<td>paste</td>
+<td>put</td>
+<td>p</td>
+</tr>
+</tbody></table>
+<p>剪切操作在 Vim 中意味着从 buffer 中删除文本, 并将其存储到寄存器中</p>
+<p>复制操作中同样也意味着拉取 (yank) 文本,并将其放到寄存器中</p>
+<p>粘贴没有其特殊含义</p>
+<p><strong>Why yank not copy ?</strong></p>
+<blockquote>
+<p><strong>Yanking is just a Vim name for copying.  The “c” letter was already used for the change operator, and “y” was still available.  Calling this operator “yank” made it easier to remember to use the “y” key.</strong></p>
+<p>– Vim User Manual</p>
+</blockquote>
+<h4 id="如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作"><a href="#如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作" class="headerlink" title="如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?"></a>如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?</h4><p>你可以:</p>
+<table>
+<thead>
+<tr>
+<th>command</th>
+<th>operation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dl</td>
+<td>删除单个字符</td>
+</tr>
+<tr>
+<td>dw</td>
+<td>删除一个单词</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>删除一行</td>
+</tr>
+<tr>
+<td>d$</td>
+<td>删除光标位置到行尾的所有字符</td>
+</tr>
+<tr>
+<td>dwwP</td>
+<td>交换两个单词</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<p><strong>是不是很棒, 这里最让人激动的事情在于, 你可以结合之前的移动等命令, 更多的可能不是吗?  一般的编辑器, 可能没有办法做到如此简洁, 有力 , 并保持方便记忆 !</strong></p>
+<p>还记得清空当前文档的操作吗 ?</p>
 <h3 id="words"><a href="#words" class="headerlink" title="words"></a>words</h3><ul>
 <li><code>w</code></li>
 <li><code>e</code></li>
@@ -169,6 +242,7 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># search</span></span><br><span class="line">/the&lt;cr&gt; <span class="comment"># /the followed by the enter key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># next occurrence</span></span><br><span class="line">press `n`</span><br><span class="line"></span><br><span class="line"><span class="comment"># previous occurrence</span></span><br><span class="line">press `N`</span><br></pre></td></tr></table></figure>
 
+<p>  还记得我们第一次介绍 Vim 的骚操作吗 <code>*</code> 搜索当前光标所在的单词</p>
 <ul>
 <li>start searching as and when you type the search phrase</li>
 </ul>
@@ -182,7 +256,7 @@
 <ul>
 <li>smart case</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smarkcase</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smartcase</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>searching for <code>/step</code>, then it will search for any combination of upper and lower case text. So eventually, “Step”, “Stephen”,”stepbrother”</li>
@@ -195,11 +269,8 @@
 
 
 
-
-
-
-
-<p>《VIm实用技巧》</p>
+<p><strong>永远不要去死记硬背这些操作, 试着理解, 并练习, 最终成为肌肉记忆.</strong></p>
+<p><a href="http://vimdoc.sourceforge.net/htmldoc/usr_04.html" target="_blank" rel="noopener">vim doc</a></p>
 
                 
             </div>
