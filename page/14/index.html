@@ -84,133 +84,59 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
+                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>使用 DataSource 对象的优点</p>
-<ul>
-<li><p>便携性，可维护性强</p>
-<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
-</li>
-<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
-</li>
-</ul>
-<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
-<thead>
-<tr>
-<th><strong>Config Property</strong></th>
-<th><strong>Default Value</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>maxIdle</td>
-<td>100</td>
-<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
-</tr>
-<tr>
-<td>minIdle</td>
-<td>10</td>
-<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
-</tr>
-<tr>
-<td>maxActive</td>
-<td>100</td>
-<td>连接池中同一时间可以分配的最大活跃连接数</td>
-</tr>
-<tr>
-<td>timeBetweenEvictionRunsMillis</td>
-<td>5000 (5秒)</td>
-<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
-</tr>
-<tr>
-<td>initialSize</td>
-<td>10</td>
-<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
-</tr>
-<tr>
-<td>testWhileIdle</td>
-<td>false</td>
-<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
-</tr>
-<tr>
-<td>testOnBorrow</td>
-<td>false</td>
-<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
-</tr>
-<tr>
-<td>validationInterval</td>
-<td>3000（3秒）</td>
-<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
-</tr>
-<tr>
-<td>validationQuery</td>
-<td></td>
-<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
-</tr>
-<tr>
-<td>validationQueryTimeout</td>
-<td>-1</td>
-<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
-</tr>
-<tr>
-<td>removeAbandoned</td>
-<td>false</td>
-<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
-</tr>
-<tr>
-<td>removeAbandonedTimeout</td>
-<td>60 s</td>
-<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
-</tr>
-<tr>
-<td>abandonWhenPercentageFull</td>
-<td>0</td>
-<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
-</tr>
-<tr>
-<td>maxWait</td>
-<td>30000（30秒）</td>
-<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
-</tr>
-<tr>
-<td>minEvictableIdleTimeMillis</td>
-<td>60000 （60 秒）</td>
-<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
-<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
-<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
-<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
-<p>return result; </p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
-<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
-<p>**<br>**</p>
-<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
-<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
-<p>**<br>**</p>
-<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
-<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
-<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
-<p>maxIdle </p>
-<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
+                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
+<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
+<p>– Becoming Functional</p>
+</blockquote>
+<p>一级函数 高阶函数？</p>
+<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
+<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
+<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
+<p>在 Java 中， 比如定义了一个 Function 接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
+</blockquote>
+<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
+<p><strong>匿名函数</strong></p>
+<blockquote>
+<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
+</blockquote>
+<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
+<blockquote>
+<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
+</blockquote>
+<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
+<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
+
+
+
 
                 
             </div>
