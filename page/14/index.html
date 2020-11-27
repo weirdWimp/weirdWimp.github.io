@@ -84,85 +84,133 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%208%20Pattern%20Matching/">Chapter 8 Pattern Matching</a></h2>
+                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="Chapter-8-Patter-Matching"><a href="#Chapter-8-Patter-Matching" class="headerlink" title="Chapter 8 Patter Matching"></a>Chapter 8 Patter Matching</h1><p>函数式编程下的模式识别</p>
-<p>主要是为了避免 <code>if/else</code> 结构的维护性差，可读性差。通过匹配对象，以及对对象的成员进行解析（Extract）进行匹配，来观察对象的类型或者执行一定的操作。文中主要用 Scala 进行演示，主要通过 <code>case</code> <code>match</code> 关键字来完成模式匹配。</p>
-<p>例如有一个需求，Customer 对象的成员有 name, state, domain 都是 String 类型的，要求有一个构造方法，若其中任何一个字段为空字符串，返回 NULL。</p>
-<p>最简单直接的方式就是用 if/else</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    name,</span><br><span class="line">    state,</span><br><span class="line">    domain,</span><br><span class="line">    <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">    <span class="type">List</span>()</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在通过 case match 进行重构之前，自认为可以简单的通过卫语句来进行重写，可以让逻辑稍微清晰一点。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br></pre></td></tr></table></figure>
-
-
-
-<p>现在使用 case 和 match 来重构，完成模式匹配。主要做法是将三个属性封装在一个对象或者数据结构里，如 Tuple 元组 （name, state, domain), 然后对这元祖进行匹配。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name:<span class="type">String</span>, state:<span class="type">String</span>, domain:<span class="type">String</span>)</span><br><span class="line">: <span class="type">Customer</span> = &#123;</span><br><span class="line">    (name, state, string) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="string">""</span>, _, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        cae (_, <span class="string">""</span>, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>继续来重构之前用尾递归写的一个方法：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="keyword">if</span>(ids.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(initialIds.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123; <span class="type">List</span>() &#125; <span class="keyword">else</span> &#123; <span class="type">List</span>(cls(precust.get)) &#125;</span><br><span class="line">    cust ::: updateCustomerByIdList(</span><br><span class="line">      initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)),</span><br><span class="line">      ids.tail,</span><br><span class="line">      cls</span><br><span class="line">    )</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>同样使用元祖、case、match 来进行重构</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> _ =&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)), ids.drop(<span class="number">1</span>), cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>但是，能否进一步减少这个方法的复杂程度呢？通过 <code>Extracting Lists</code> 来实现。</p>
-<p><code>x::y</code> 操作符出现在 case 语句中，告诉 Scala, 匹配的对象应该是一个 list， 这个 list 的首元素将被赋值给 x, 剩下的元素 (也是一个list) tail 将赋值给 y</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>上面的代码中，find 方法返回的是一个Option 对象，可以将它转换为 list, 集训进行 <code>Extracting Lists</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id).toList</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">List</span>() =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>None 和 Some 是 Option 接口的两个实现类，None 对象不包含任何对象，Some 包含了实际存在的对象。因此可以对 find 返回的 Option 对象直接进行模式匹配，包含两种模式 <code>case None</code> <code>case Some</code></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">None</span> =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> <span class="type">Some</span>(cust) ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以让之前的 createCustomer 直接返回一个 Option 对象，更加函数化</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name : <span class="type">String</span>,</span><br><span class="line">                   state : <span class="type">String</span>,</span><br><span class="line">                   domain : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">error</span></span>(message : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    println(message)</span><br><span class="line">    <span class="type">None</span></span><br><span class="line">  &#125;</span><br><span class="line">  (name, state, domain) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="string">""</span>, _, _) =&gt; error(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, <span class="string">""</span>, _) =&gt; error(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; error(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        name,</span><br><span class="line">        state,</span><br><span class="line">        domain,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">        <span class="type">List</span>()</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>用 case 关键字修饰类</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span>(<span class="params">val customer_id : <span class="type">Integer</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val name : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val state : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val domain : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val enabled : <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contract : <span class="type">Contract</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contacts : <span class="type">List</span>[<span class="type">Contact</span>]</span>) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">case</span> cust :: custs =&gt; &#123;</span><br><span class="line">          <span class="keyword">if</span> (cust.enabled &amp;&amp; cust.contacts.exists(&#123; contact =&gt; contact.enabled&#125;))</span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">        <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">              countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">    customers <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,<span class="type">List</span>()) :: custs =&gt;</span><br><span class="line">               countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">           <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">                countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <p>使用 DataSource 对象的优点</p>
+<ul>
+<li><p>便携性，可维护性强</p>
+<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
+</li>
+<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
+</li>
+</ul>
+<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
+<thead>
+<tr>
+<th><strong>Config Property</strong></th>
+<th><strong>Default Value</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>maxIdle</td>
+<td>100</td>
+<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
+</tr>
+<tr>
+<td>minIdle</td>
+<td>10</td>
+<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
+</tr>
+<tr>
+<td>maxActive</td>
+<td>100</td>
+<td>连接池中同一时间可以分配的最大活跃连接数</td>
+</tr>
+<tr>
+<td>timeBetweenEvictionRunsMillis</td>
+<td>5000 (5秒)</td>
+<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
+</tr>
+<tr>
+<td>initialSize</td>
+<td>10</td>
+<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
+</tr>
+<tr>
+<td>testWhileIdle</td>
+<td>false</td>
+<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
+</tr>
+<tr>
+<td>testOnBorrow</td>
+<td>false</td>
+<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
+</tr>
+<tr>
+<td>validationInterval</td>
+<td>3000（3秒）</td>
+<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
+</tr>
+<tr>
+<td>validationQuery</td>
+<td></td>
+<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
+</tr>
+<tr>
+<td>validationQueryTimeout</td>
+<td>-1</td>
+<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
+</tr>
+<tr>
+<td>removeAbandoned</td>
+<td>false</td>
+<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
+</tr>
+<tr>
+<td>removeAbandonedTimeout</td>
+<td>60 s</td>
+<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
+</tr>
+<tr>
+<td>abandonWhenPercentageFull</td>
+<td>0</td>
+<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
+</tr>
+<tr>
+<td>maxWait</td>
+<td>30000（30秒）</td>
+<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
+</tr>
+<tr>
+<td>minEvictableIdleTimeMillis</td>
+<td>60000 （60 秒）</td>
+<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
+<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
+<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
+<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
+<p>return result; </p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
+<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
+<p>**<br>**</p>
+<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
+<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
+<p>**<br>**</p>
+<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
+<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
+<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
+<p>maxIdle </p>
+<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
 
                 
             </div>
@@ -225,6 +273,45 @@
 </li>
 <li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
 </li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
+<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>利用 <code>rename</code> 命令</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>清理工作</li>
 </ol>
 
                 
@@ -355,45 +442,6 @@
 <p>Ctrl + w：删除光标前面的单词。</p>
 <p>Ctrl + l快捷键可以清除屏幕，即将当前行移到屏幕的第一行</p>
 <p>Alt + f：移动到当前单词的词尾。<br>Alt + b：移动到当前单词的词首。</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
-<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>利用 <code>rename</code> 命令</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>清理工作</li>
-</ol>
 
                 
             </div>

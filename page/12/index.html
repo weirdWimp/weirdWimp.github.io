@@ -84,125 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Servlet/">Servlet</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ResourceBundle</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BA%8B%E5%8A%A1/">Spring 事务</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="声明式事务管理"><a href="#声明式事务管理" class="headerlink" title="声明式事务管理"></a>声明式事务管理</h2><p> While the Spring default behavior for declarative transaction management follows EJB convention (roll back is automatic only on unchecked exceptions), it is often useful to customize this behavior.</p>
-<h3 id="Using-Transactional"><a href="#Using-Transactional" class="headerlink" title="Using @Transactional"></a>Using @Transactional</h3><p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations</a></p>
-<blockquote>
-<p>You can apply the <code>@Transactional</code> annotation to an interface definition, a method on an interface, a class definition, or a public method on a class. However, the mere presence of the <code>@Transactional</code> annotation is not enough to activate the transactional behavior. The <code>@Transactional</code> annotation is merely metadata that can be consumed by some runtime infrastructure that is <code>@Transactional</code>-aware and that can use the metadata to configure the appropriate beans with transactional behavior. In the preceding example, the <code>&lt;tx:annotation-driven/&gt;</code> element switches on the transactional behavior.</p>
-</blockquote>
-<p><code>@Transactional</code> 注解只是配置事务行为的元数据，并不会激活这些事务行为，Spring 的事务框架会使用这些元数据为某些 bean 配置它们的事务行为，xml 文件中的 <code>&lt;tx:annotation-driven/&gt;</code> 和配置类（<code>@Configuration</code>）上的 <code>@EnableTransactionManagement</code>注解会激活这些事务行为。</p>
-<blockquote>
-<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> looks for <code>@Transactional</code> only on beans in the same application context in which they are defined. This means that, if you put annotation-driven configuration in a <code>WebApplicationContext</code> for a <code>DispatcherServlet</code>, it checks for <code>@Transactional</code> beans only in your controllers and not your services. See <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-servlet" target="_blank" rel="noopener">MVC</a> for more information.</p>
-</blockquote>
-<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> 只会在定义它们本身的上下文中寻找 <code>@Transactional</code> 注解的 bean， 如果是在 Web 应用的 <code>DispatcherServlet</code> 对应的 <code>WebApplicationContext</code> <code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code>只会在这个上下文中查找，这个上下文一般只会定义控制器以及试图解析器等 web 组件，而不是 service 类。</p>
-<blockquote>
-<p>In proxy mode (which is the default), only external method calls coming in through the proxy are intercepted. This means that self-invocation (in effect, a method within the target object calling another method of the target object) does not lead to an actual transaction at runtime even if the invoked method is marked with <code>@Transactional</code>. Also, the proxy must be fully initialized to provide the expected behavior, so you should not rely on this feature in your initialization code (that is, <code>@PostConstruct</code>).</p>
-</blockquote>
-<p>由于 Spring 事务是基于代理的，只有通过代理的外部方法调用才会被拦截，目标对象内部的方法调用（一个方法调用对象内部的另一个方法）是不会在运行时导致一个实际的事务发生的；另外，必须完全初始化代理以提供预期的行为，因此不应在初始化代码（即@PostConstruct）中依赖此功能。</p>
-<blockquote>
-<p>Consider using of AspectJ mode (see the <code>mode</code> attribute in the following table) if you expect self-invocations to be wrapped with transactions as well. In this case, there no proxy in the first place. Instead, the target class is woven (that is, its byte code is modified) to turn <code>@Transactional</code> into runtime behavior on any kind of method.</p>
-</blockquote>
-<p>如果想要实现内部调用的事务行为，可以考虑基于 AspectJ 的 AOP, 首先，不会有代理，目标类被编织以将 <code>@Transactional</code> 的运行时行为应用于任何方法上</p>
-<p><strong>使用基于代理的事务的 proxy 类型</strong></p>
-<ul>
-<li><p>class-based proxies </p>
-</li>
-<li><p>standard JDK interface-based proxies （default or omitted）</p>
-</li>
-</ul>
-<h4 id="Transactional-settings"><a href="#Transactional-settings" class="headerlink" title="@Transactional settings"></a>@Transactional settings</h4><p>默认的<code>@Transactional</code> 的设置：</p>
-<ul>
-<li><p>The propagation setting is <code>PROPAGATION_REQUIRED.</code> #  默认的传播行为</p>
-</li>
-<li><p>The isolation level is <code>ISOLATION_DEFAULT.</code> # 默认的事务隔离级别</p>
-</li>
-<li><p>The transaction is read-write. # 模式是读-写的事务</p>
-</li>
-<li><p>The transaction timeout defaults to the default timeout of the underlying transaction system, or to none if timeouts are not supported. # 超时时间</p>
-</li>
-<li><p>Any <code>RuntimeException</code> triggers rollback, and any checked <code>Exception</code> does not. # 触发回滚的规则（异常类别）</p>
-<p>fully-qualified class name </p>
-</li>
-</ul>
-<h2 id="编程式事务"><a href="#编程式事务" class="headerlink" title="编程式事务"></a>编程式事务</h2><h3 id="使用-TransactionTemplate"><a href="#使用-TransactionTemplate" class="headerlink" title="使用 TransactionTemplate"></a>使用 TransactionTemplate</h3><p><code>TransactionTemplate</code> 和 Spring 中其他模板类相似（如 <code>JdbcTemplate</code>），目的是为了减少应用代码中获取和释放事务相关资源的样板式代码</p>
-<p>（boilerplate acquisition and release transactional resources），这样应用就可以将关注点放在业务逻辑上。它使用一个回调方法。</p>
-<p>应用代码必须执行在一个事务上下文（transactional context）中,  并且使用 <code>TransactionTemplate</code>，仅需两个步骤：</p>
-<ol>
-<li>应用代码编写  <code>TransactionCallback</code> 实现，这个实现中包含了事务要包含的所有的操作，通常是匿名内部类的形式 。</li>
-<li>回调类实现的实例传入 <code>TransactionTemplate.execute(CallBack)</code> 方法中</li>
-</ol>
-<p>示例代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleService</span> <span class="keyword">implements</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// single TransactionTemplate shared amongst all methods in this instance</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TransactionTemplate transactionTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use constructor-injection to supply the PlatformTransactionManager</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleService</span><span class="params">(PlatformTransactionManager transactionManager)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.transactionTemplate = <span class="keyword">new</span> TransactionTemplate(transactionManager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">someServiceMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> TransactionCallback() &#123;</span><br><span class="line">            <span class="comment">// the code in this method executes in a transactional context</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">doInTransaction</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">                updateOperation1();</span><br><span class="line">                <span class="keyword">return</span> resultOfUpdateOperation2();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>无返回的事务可以实现 <code>TransactionCallbackWithoutResult</code> 接口</p>
-<p>事务的属性，如传播行为、隔离级别等可以通过  <code>TransactionTemplate</code> 提供的方法设置（程序中或XML中） </p>
-<blockquote>
-<p>Code within the callback can roll the transaction back by calling the <code>setRollbackOnly()</code> method on the supplied <code>TransactionStatus</code> object, as follows:</p>
-</blockquote>
-<p>也可以在回调方法中，调用 <code>TransactionStatus.setRollbackOnly()</code> 回滚事务,  这里取决于是否是新事务，来决定是否直接回滚。 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">transactionTemplate.execute(<span class="keyword">new</span> TransactionCallbackWithoutResult() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            updateOperation1();</span><br><span class="line">            updateOperation2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SomeBusinessException ex) &#123;</span><br><span class="line">            status.setRollbackOnly();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="使用-PlatformTransactionManager"><a href="#使用-PlatformTransactionManager" class="headerlink" title="使用 PlatformTransactionManager"></a>使用 PlatformTransactionManager</h3><p>也可以提直接使用 <code>PlatformTransactionManager</code> 来管理事务，需要结合 Spring 事务抽象的其它对象： <code>TransactionDefinition</code>, <code>TransactionStatus</code>。 可以实现事务的初始化、回滚和提交。编程式事务也可以显示设置事务的名称，声明式的事务名称一般都是默认的全限定类名+方法名。</p>
-<p>Java </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DefaultTransactionDefinition def = <span class="keyword">new</span> DefaultTransactionDefinition();</span><br><span class="line"><span class="comment">// explicitly setting the transaction name is something that can be done only programmatically</span></span><br><span class="line">def.setName(<span class="string">"SomeTxName"</span>);</span><br><span class="line">def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line"></span><br><span class="line">TransactionStatus status = txManager.getTransaction(def);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// execute your business logic here</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (MyException ex) &#123;</span><br><span class="line">    txManager.rollback(status);</span><br><span class="line">    <span class="keyword">throw</span> ex;</span><br><span class="line">&#125;</span><br><span class="line">txManager.commit(status);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在 <code>PlatformTransactionManager.rollback(TransactionStatus status)</code> 方法有如下的注释：</p>
-<blockquote>
-<p>Do not call rollback on a transaction if commit threw an exception. The transaction will already have been completed and cleaned up when commit  returns, even in case of a commit exception. Consequently, a rollback call after commit failure will lead to an IllegalTransactionStateException.</p>
-</blockquote>
-<p>不要在commit 时异常后进行回滚，commit 返回时（即使有提交异常），事务已经完成并且已经被清理。所以这时，如果调用 rollback 操作，会导致一个 <code>IllegalTransactionStateException</code>， 这也是上述示例代码中 commit 放在最后的原因</p>
-<blockquote>
-<p>If the transaction wasn’t a new one, omit the commit for proper participation in the surrounding transaction.</p>
-</blockquote>
-<p><strong>当调用了 commit 后，如果该事务不是一个新事务，则会忽略提交以正确参与周围的事务中。</strong></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E9%80%9F%E6%9F%A5%E8%A1%A8/">速查表</a></h2>
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -216,156 +98,58 @@
             </div>
             <div class="post-content">
                 
-                    <p><a href="https://ihateregex.io/cheatsheet/#" target="_blank" rel="noopener"># cheatsheet</a></p>
-<p>tiny regex cheatsheet</p>
-<table>
-<thead>
-<tr>
-<th>expr</th>
-<th>usage</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>/hello/</td>
-<td>looks for the string between the forward slashes (case-sensitive)</td>
-</tr>
-<tr>
-<td>/hello/i</td>
-<td>looks for the string between the forward slashes (case-insensitive)</td>
-</tr>
-<tr>
-<td>/hello/g</td>
-<td>looks for multiple occurrences of string between the forward slashes</td>
-</tr>
-<tr>
-<td>/h.llo/</td>
-<td>the ‘.’ matches any one character other than a new line character… matches ‘hello’, ‘hallo’ but not ‘h llo’</td>
-</tr>
-<tr>
-<td>/h.*llo/</td>
-<td>the “*” matches any character(s) zero or more times… matches “hello”, “heeeeeello”, “hllo”, “hwarwareallo”</td>
-</tr>
-<tr>
-<td>/\d/</td>
-<td>matches any digit</td>
-</tr>
-<tr>
-<td>/\D/</td>
-<td>matches any non-digit</td>
-</tr>
-<tr>
-<td>/\w/</td>
-<td>matches any word character (a-z, A-Z, 0-9, _)</td>
-</tr>
-<tr>
-<td>/\W/</td>
-<td>matches any non-word character</td>
-</tr>
-<tr>
-<td>/\s/</td>
-<td>matches any white space character (\r (carriage return),\n (new line), \t (tab), \f (form feed))</td>
-</tr>
-<tr>
-<td>/\S/</td>
-<td>matches any non-white space character</td>
-</tr>
-<tr>
-<td>/[abcd]/</td>
-<td>matches any character in square brackets</td>
-</tr>
-<tr>
-<td>/[ch]at/</td>
-<td>matches cat or hat</td>
-</tr>
-<tr>
-<td>/[^abcd]/</td>
-<td>matches anything except the characters in square brackets</td>
-</tr>
-<tr>
-<td>/[a-z]/</td>
-<td>matches all lowercase letters (a to z)</td>
-</tr>
-<tr>
-<td>/[A-Z]/</td>
-<td>matches all uppercase letters (A to Z)</td>
-</tr>
-<tr>
-<td>/[0-9]/</td>
-<td>matches all digits</td>
-</tr>
-<tr>
-<td>/[a-zA-Z]/</td>
-<td>matches all lowercase and uppercase letters</td>
-</tr>
-<tr>
-<td>/[^a-zA-Z]/</td>
-<td>matches non-letters</td>
-</tr>
-<tr>
-<td>/[a-zA-Z0-9]/</td>
-<td>matches all lowercase, uppercase letters and numbers</td>
-</tr>
-<tr>
-<td>/(hello){4}/</td>
-<td>matches “hellohellohellohello”</td>
-</tr>
-<tr>
-<td>/hello{3}/</td>
-<td>matches “hellooo” and “helloooo” but not “helloo”</td>
-</tr>
-<tr>
-<td>/(hello){1,3}/</td>
-<td>matches “hello” that occur between 1 and 3 times (inclusive)</td>
-</tr>
-<tr>
-<td>/(hello){3,}/</td>
-<td>matches “hello” that occur atleast 3 times</td>
-</tr>
-<tr>
-<td>/ab*c/</td>
-<td>matches zero or more repetitions of “b” (matches “abc”, “abbbbc”, “ac”)</td>
-</tr>
-<tr>
-<td>/ab+c/</td>
-<td>matches one or more repetitions of “b” (matches “abc”, “abbbbc”, but not “ac”)</td>
-</tr>
-<tr>
-<td>/^/</td>
-<td>matches beginning of a line</td>
-</tr>
-<tr>
-<td>/$/</td>
-<td>matches end of a line</td>
-</tr>
-<tr>
-<td>/(hard)?work/</td>
-<td>matches “work” or “hardwork”</td>
-</tr>
-<tr>
-<td>/(?:hard)?work/</td>
-<td>matches “work” or “hardwork” but is a non-capturing group</td>
-</tr>
-<tr>
-<td>/i am a (cat|dog|whale) person/</td>
-<td>matches “i am a cat person”, “i am a dog person” and “i am a whale person”</td>
-</tr>
-<tr>
-<td>/z(?=a)/</td>
-<td>positive lookahead… matches the “z” before the “a” in pizza but not the first “z”</td>
-</tr>
-<tr>
-<td>/z(?!a)/</td>
-<td>negative lookahead… matches the first “z” but not the “z” before the “a”</td>
-</tr>
-<tr>
-<td>/(?&lt;=[aeiou])\w/</td>
-<td>positive lookbehind… matches any word character that is preceded by a vowel</td>
-</tr>
-<tr>
-<td>/(?&lt;![aeiou])\w/</td>
-<td>negative lookbehind… matches any word character that is not preceded by a vowel</td>
-</tr>
-</tbody></table>
+                    <p>对一个字符串按每x位进行分割</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每8位进行分割，表达式所匹配的含义是：匹配一个位置，左边有字符，右边包含的字符总数是8的倍数</span></span><br><span class="line">(?&lt;=\w)(?=(\w&#123;8&#125;)+\b)</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E6%BA%90%E7%A0%81/">Spring 源码</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ConfigurableWebApplicationContext</span> <span class="keyword">extends</span> <span class="title">WebApplicationContext</span>, <span class="title">ConfigurableApplicationContext</span></span></span><br></pre></td></tr></table></figure>
+
+<p>ConfigurableWebApplicationContext 提供了  configLocation 的属性，为 web application context 设置 config 文件的路径</p>
+<p>在 <code>public class ContextLoaderListener extends ContextLoader implements ServletContextListener</code> 中，在监听到 ServletContext 初始化时，会初始化一个 WebApplication 实例（实现了ConfigurableWebApplicationContext接口），会从 web.xml 中 配置的 Servlet Context 参数中寻找  <code>contextConfigLocation</code>， 填充  configLocation .</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -415,28 +199,59 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
+                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>getResourceAsStream</p>
-<p>java.lang.reflect.Proxy</p>
-<p>MySQL for Excel</p>
-<ul>
-<li>Import MySQL data into Excel.</li>
-<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
-<li>Modify MySQL data directly from within Excel.</li>
-</ul>
+                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
+<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
+<p>– Becoming Functional</p>
+</blockquote>
+<p>一级函数 高阶函数？</p>
+<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
+<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
+<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
+<p>在 Java 中， 比如定义了一个 Function 接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
+</blockquote>
+<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
+<p><strong>匿名函数</strong></p>
+<blockquote>
+<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
+</blockquote>
+<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
+<blockquote>
+<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
+</blockquote>
+<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
+<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
+
+
+
 
                 
             </div>
