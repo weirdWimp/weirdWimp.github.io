@@ -223,42 +223,50 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/1%20%E8%BF%90%E8%A1%8C%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE/">1 运行前的配置</a></h2>
+                <h2><a class="post-title-link" href="/Mysql/MySQL%208.0.16%20JDBC%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98/">MySQL 8.0.16 JDBC 数据库连接问题</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    <a class="category" href="/categories/Mysql/">Mysql</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="1-运行前的配置"><a href="#1-运行前的配置" class="headerlink" title="1 运行前的配置"></a>1 运行前的配置</h1><h2 id="1-1-用户信息配置"><a href="#1-1-用户信息配置" class="headerlink" title="1.1 用户信息配置"></a>1.1 用户信息配置</h2><p>Git 自带一个 <code>git config</code> 的工具来设置 Git 外观和行为的配置参数。有三个不同级别的设置，分别对应不同的文件夹和作用域。</p>
-<ol>
-<li>如果使用带有<code>--system</code> 选项的 <code>git config</code> 时，他会从文件 <code>/etc/gitconfig</code> 文件中进行配置变量的读写。==包含对系统上每一个用户及他们仓库的通用配置==。</li>
-</ol>
-<ol start="2">
-<li>如果使用带有 <code>--global</code> 选现的 <code>git config</code> 时，他会从文件 <code>~/.gitconfig</code> 或 <code>~/.config/git/config</code> 文件中进行配置变量的读写。==只针对当前用户==。</li>
-</ol>
-<ol start="3">
-<li>当前使用仓库的 Git 目录中的 config 文件（.git/config）: ==只针对该仓库== </li>
-</ol>
-<p>每一个级别覆盖上一个级别的配置。所以 <code>.git/config</code> 的配置变量会覆盖 <code>/etc/gitconfig</code> 中的配置变量。</p>
-<p> 在 Windows 系统中，Git 会查找 <code>$HOME</code> 目录下（一般情况是 <code>C:\Users\$USER</code>）的 <code>.gitconfig</code> 文件。 Git 同样也会寻找 <code>/etc/gitconfig</code> 文件，但只限于 MSys 的根目录下，即安装 Git 时所选的目标位置。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为当前用户配置用户名</span></span><br><span class="line">git config --global user.name Guo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为当前用户配置邮箱</span></span><br><span class="line">git config --global user.email email@company.com</span><br></pre></td></tr></table></figure>
+                    <h3 id="MySQL-8-0-16-JDBC-数据库连接问题"><a href="#MySQL-8-0-16-JDBC-数据库连接问题" class="headerlink" title="MySQL 8.0.16 JDBC 数据库连接问题"></a>MySQL 8.0.16 JDBC 数据库连接问题</h3><p>Mysql 版本：mysql  Ver 8.0.16 for Win64 on x86_64 (MySQL Community Server - GPL)， 使用 5.x.x 或较低版本的  JDBC driver for MySQL 会出现连接问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.ClassCastException: java.math.BigInteger cannot be cast to java.lang.Long</span><br><span class="line">	at com.mysql.jdbc.ConnectionImpl.buildCollationMapping(ConnectionImpl.java:<span class="number">1019</span>)</span><br><span class="line">	... <span class="number">16</span> more</span><br></pre></td></tr></table></figure>
+
+<p>需要修改驱动器为对应的版本 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.16<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="1-2-文本编辑器"><a href="#1-2-文本编辑器" class="headerlink" title="1.2 文本编辑器"></a>1.2 文本编辑器</h2><p>既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，通常是 Vim。 如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
+<p><strong>InvalidConnectionAttributeException</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.InvalidConnectionAttributeException: </span><br><span class="line"></span><br><span class="line">The server time zone value <span class="string">'�й���׼ʱ��'</span> is unrecognized or represents more than one time zone. <span class="function">You must configure either the server or JDBC <span class="title">driver</span> <span class="params">(via the serverTimezone configuration property)</span> to use a more specifc time zone value <span class="keyword">if</span> you want to utilize time zone support.</span></span><br></pre></td></tr></table></figure>
+
+<p>url 设置 serverTimezone属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//localhost:3306/world?serverTimezone=UTC</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="1-3-检查配置信息"><a href="#1-3-检查配置信息" class="headerlink" title="1.3 检查配置信息"></a>1.3 检查配置信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global user.name</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="MySQL-Connector-J-Database-URL"><a href="#MySQL-Connector-J-Database-URL" class="headerlink" title="MySQL Connector/J Database URL"></a>MySQL Connector/J Database URL</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:&#x2F;&#x2F;[host][,failoverhost...]</span><br><span class="line">    [:port]&#x2F;[database]</span><br><span class="line">    [?propertyName1][&#x3D;propertyValue1]</span><br><span class="line">    [&amp;propertyName2][&#x3D;propertyValue2]...</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>left join 与 left outer join 的区别</p>
+<p>事务的隔离级别</p>
+<p>Vector 的使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> java.util.<span class="function">Enumeration&lt;Driver&gt; <span class="title">getDrivers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    java.util.Vector&lt;Driver&gt; result = <span class="keyword">new</span> java.util.Vector&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; callerClass = Reflection.getCallerClass();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Walk through the loaded registeredDrivers.</span></span><br><span class="line">    <span class="keyword">for</span>(DriverInfo aDriver : registeredDrivers) &#123;</span><br><span class="line">        <span class="comment">// If the caller does not have permission to load the driver then</span></span><br><span class="line">        <span class="comment">// skip it.</span></span><br><span class="line">        <span class="keyword">if</span>(isDriverAllowed(aDriver.driver, callerClass)) &#123;</span><br><span class="line">            result.addElement(aDriver.driver);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            println(<span class="string">"    skipping: "</span> + aDriver.getClass().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (result.elements());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 
                 
@@ -267,7 +275,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/2%20%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">2 基础操作</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/README/">README</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -281,410 +289,7 @@
             </div>
             <div class="post-content">
                 
-                    <hr>
-<h2 id="typora-copy-images-to-md-pics"><a href="#typora-copy-images-to-md-pics" class="headerlink" title="typora-copy-images-to: ......\md_pics"></a>typora-copy-images-to: ......\md_pics</h2><h1 id="2-基本操作"><a href="#2-基本操作" class="headerlink" title="2 基本操作"></a>2 基本操作</h1><p>Git 的基本操作都要由命令行完成，当然也有 GUI 方式的 Git 工具，是对某些命令的封。</p>
-<p>[TOC]</p>
-<h2 id="2-1-获取-Git-仓库"><a href="#2-1-获取-Git-仓库" class="headerlink" title="2.1 获取 Git 仓库"></a>2.1 获取 Git 仓库</h2><p><strong>在现有目录中初始化仓库</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入该项目，并执行一下命令</span></span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<p>该命令将创建一个名为 <code>.git</code> 的子目录，包含了初始化的 Git 仓库中所有的必须文件，是 Git 仓库的骨干。</p>
-<p>接着通过 <code>git add</code> 命令来对指定文件进行跟踪，并将其放入暂存区域，执行 <code>git commit</code> 进行提交。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add *.md</span><br><span class="line"></span><br><span class="line">git commit -m <span class="string">"description of this commit"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>克隆已有的仓库</strong></p>
-<p>Git 克隆的是该 Git ==仓库服务器上的几乎所有数据==，而不是仅仅复制完成你的工作所需要文件。 当你执行 <code>git clone</code> 命令的时候，默认配置下远程 Git 仓库中的每一个文件的每一个版本都将被拉取下来。 事实上，如果你的服务器的磁盘坏掉了，你通常可以使用任何一个克隆下来的用户端来重建服务器上的仓库。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git clone [url] [local repository name]</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/weirdWimp/gitpro-guide.git</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
-
-<p>支持多种数据传输协议。https://、git:// 或者 SSH 协议。</p>
-<h2 id="2-2-记录每次更新到仓库"><a href="#2-2-记录每次更新到仓库" class="headerlink" title="2.2 记录每次更新到仓库"></a>2.2 记录每次更新到仓库</h2><p><strong>仓库中每个文件的状态</strong></p>
-<p><img src="E:%5Cmd_pics%5Clifecycle.png" alt="Git 下文件生命周期图。"> </p>
-<p>工作目录下的文件不外乎两种状态：已跟踪或未跟踪。已跟踪的文件是指那些被纳入了版本控制的文件，在上一次快照中有它们的记录。工作一段时间后，状态可能处于 <strong>未修改</strong> <strong>已修改</strong> <strong>已暂存</strong>。 新建的文件属于未跟踪文件。初次克隆某个仓库有的时候，工作目录中所有文件都属于以跟踪文件，并处于未修改状态。</p>
-<p><strong>状态简览</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前文件的状态，显示当前所属的分支，反应每个文件是处于 已修改未暂存 还是 已暂存 或者 未追踪状态</span></span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出跟为简单的状态</span></span><br><span class="line"></span><br><span class="line">git status -s</span><br><span class="line">git status --short</span><br></pre></td></tr></table></figure>
-
-<p>新添加的未跟踪文件前面有 <code>??</code> 标记</p>
-<p>新添加到暂存区中的文件前面有 <code>A</code> 标记</p>
-<p>修改过的文件前面有 <code>M</code> 标记</p>
-<p> <code>M</code> 有两个可以出现的位置，出现在右边的 <code>M</code> 表示该文件被修改了但是还没放入暂存区，出现在靠左边的 <code>M</code> 表示该文件被修改了并放入了暂存区。 </p>
-<p>例如，上面的状态报告显示： <code>README</code> 文件在工作区被修改了但是还没有将修改后的文件放入暂存区, <code>lib/simplegit.rb</code>  文件被修改了并将修改后的文件放入了暂存区。 而 <code>Rakefile</code> 在工作区被修改并提交到暂存区后又在工作区中被修改了，所以在暂存区和工作区都有该文件被修改了的记录。 </p>
-<p><strong>追踪文件或将已修改文件放入暂存区</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git add 不仅可以用于追踪文件，还用于暂存文件</span></span><br><span class="line"></span><br><span class="line">git add newFile <span class="comment">#追踪文件并将其加入暂存区</span></span><br><span class="line"></span><br><span class="line">git add modifiedFile <span class="comment">#将已经修改的文件加入暂存区</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 还可以用于修改冲突，其实最好的解释是 git add 操作的是下次要提交的文件（保存文件快照，并生成索引？）</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>查看已暂存和未暂存的修改</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看已修改文件和暂存区域文件的差异</span></span><br><span class="line">git diff</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看暂存区域文件与最近的上一次提交的文件的差异</span></span><br><span class="line">git diff --cached</span><br><span class="line">git diff --staged</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>提交更新</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将暂存区域的更新提交只版本库</span></span><br><span class="line">git commit -m <span class="string">"description of commit"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 给 git commit 加上 -a 选项，Git 就会自动把所有已经跟踪过的文件暂存起来一并提交，从而跳过 git add 步骤</span></span><br><span class="line">git commit -a -m <span class="string">"description of commit"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>移除文件</strong></p>
-<ul>
-<li>先将文件从工作目录中删除，然后运行 <code>git rm</code> 记录此次移除文件的操作，也就是不在追踪此文件。之后再提交后，版本库里的文件也被移除掉了。</li>
-<li>如果要保留工作目录中的文件，即需要移除暂存区的文件，需要通过 <code>git rm --cached READEME.md</code>, 提交后，Git 就不再跟踪此文件，但工作目录中依然保留。</li>
-</ul>
-<p><code>git rm</code> 命令后面可以列出文件或者目录的名字，也可以使用 glob 模式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached <span class="built_in">log</span>/\*.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">git rm \*~</span><br><span class="line"></span><br><span class="line"><span class="comment"># * 号之前添加反斜杠，是因为 Git 有自己的文件模式扩展匹配方式。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>移动文件</strong></p>
-<p>移动文件和文件的重命名是一样的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git mv fileFrom fileTo</span><br></pre></td></tr></table></figure>
-
-<p>相当于运行了下面的三条命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv README.md README</span><br><span class="line">git rm README.md</span><br><span class="line">git add README</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<p><strong>忽略文件</strong></p>
-<p>有些文件不需要被 Git 管理，比如编译后生成的文件、日志文件、临时生成的文件。这时就可以创建一个名为 <code>.gitignore</code>  的文件。列出要忽略的文件模式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个 .gitignore 文件 </span></span><br><span class="line">cat &gt; .gitignore</span><br><span class="line"><span class="comment"># 忽略txt格式的文件</span></span><br><span class="line">*.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略以~结尾的文件</span></span><br><span class="line">*~</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>.gitignore 文件的格式规范如下：</strong></p>
-<ul>
-<li><p>所有空行或者以 <code>＃</code> 开头的行都会被 Git 忽略。</p>
-</li>
-<li><p>可以使用标准的 glob 模式匹配。</p>
-</li>
-<li><p>匹配模式可以以（<code>/</code>）开头防止递归。</p>
-</li>
-<li><p>匹配模式可以以（<code>/</code>）结尾指定目录。</p>
-</li>
-<li><p>要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（<code>!</code>）取反。</p>
-</li>
-</ul>
-<p>glob 模式是指使用简化了的正则表达式</p>
-<p>* 表示匹配零个或多个任意字符</p>
-<p>[abc ] 匹配方括号中的任意一个字符</p>
-<p>[0-9] 范围</p>
-<p>？匹配一个任意字符</p>
-<p>使用两个星号 ** 匹配任意中间目录，比如 a/**/z 可以匹配 a/z a/b/z  或 a/b/c/z</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># no .a files</span></span><br><span class="line">*.a</span><br><span class="line"></span><br><span class="line"><span class="comment"># but do track lib.a, even though you're ignoring .a files above</span></span><br><span class="line">!lib.a</span><br><span class="line"></span><br><span class="line"><span class="comment"># only ignore the TODO file in the current directory, not subdir/TODO</span></span><br><span class="line">/TODO</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore all files in the build/ directory</span></span><br><span class="line">build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore doc/notes.txt, but not doc/server/arch.txt</span></span><br><span class="line">doc/*.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore all .pdf files in the doc/ directory</span></span><br><span class="line">doc/**/*.pdf</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="2-3-查看提交历史"><a href="#2-3-查看提交历史" class="headerlink" title="2.3 查看提交历史"></a>2.3 查看提交历史</h2><p>在提交了若干更新，又或者克隆了某个项目之后，你也许想回顾下提交历史。 完成这个任务最简单而又有效的工具是 <code>git log</code> 命令。</p>
-<p>默认不用任何参数的话，<code>git log</code> 会按提交时间列出所有的更新，最近的更新排在最上面。这个命令会列出每个提交的 SHA-1 校验和、作者的名字和电子邮件地址、提交时间以及提交说明。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只显示提交的作者、时间信息和提交的注释说明</span></span><br><span class="line">git <span class="built_in">log</span> -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 参数，显示此次提交的具体信息，包括具体的行删除、增加、改动信息。</span></span><br><span class="line">git <span class="built_in">log</span> -p -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line">diff --git a/revoke.md b/revoke.md</span><br><span class="line">index 14df9a5..72b1f8d 100644</span><br><span class="line">--- a/revoke.md</span><br><span class="line">+++ b/revoke.md</span><br><span class="line">@@ -1,3 +1,4 @@</span><br><span class="line"> revoke</span><br><span class="line"> <span class="comment">## I am falling in love with you. My stunning girl.</span></span><br><span class="line"> ** I [ Hate You! **</span><br><span class="line">+I love you and I hate I love you.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># --stat 总结性参数选项，显示简略的统计信息。具体为哪个文件被修改，插入了几行，删除了几行，改动了几行</span></span><br><span class="line">git <span class="built_in">log</span> --<span class="built_in">stat</span> -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line"> revoke.md | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>默认内置格式显示</strong></p>
-<p>另外一个常用的选项是 <code>--pretty</code>。 这个选项可以指定使用不同于默认格式的方式展示提交历史。 这个选项有一些内建的子选项供你使用。 比如用 <code>oneline</code> 将每个提交放在一行显示，查看的提交数很大时非常有用。 另外还有 <code>short</code>，<code>full</code> 和 <code>fuller</code> 可以用，展示的信息或多或少有些不同，请自己动手实践一下看看效果如何。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line">ca82a6dff817ec66f44342007202690a93763949 changed the version number</span><br><span class="line">085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7 removed unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef06a3f659402fe7563abf99ad00de2209e6 first commit</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>格式化显示</strong></p>
-<p>可以定制显示的记录格式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%h - %an, %ar : %s"</span></span><br><span class="line">ca82a6d - Scott Chacon, 6 years ago : changed the version number</span><br><span class="line">085bb3b - Scott Chacon, 6 years ago : removed unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef0 - Scott Chacon, 6 years ago : first commit</span><br></pre></td></tr></table></figure>
-
-<p>下表列出了常用的格式占位符写法及其代表的意义。</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>%H</code></td>
-<td>提交对象（commit）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%h</code></td>
-<td>提交对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%T</code></td>
-<td>树对象（tree）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%t</code></td>
-<td>树对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%P</code></td>
-<td>父对象（parent）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%p</code></td>
-<td>父对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%an</code></td>
-<td>作者（author）的名字</td>
-</tr>
-<tr>
-<td><code>%ae</code></td>
-<td>作者的电子邮件地址</td>
-</tr>
-<tr>
-<td><code>%ad</code></td>
-<td>作者修订日期（可以用 –date= 选项定制格式）</td>
-</tr>
-<tr>
-<td><code>%ar</code></td>
-<td>作者修订日期，按多久以前的方式显示</td>
-</tr>
-<tr>
-<td><code>%cn</code></td>
-<td>提交者（committer）的名字</td>
-</tr>
-<tr>
-<td><code>%ce</code></td>
-<td>提交者的电子邮件地址</td>
-</tr>
-<tr>
-<td><code>%cd</code></td>
-<td>提交日期</td>
-</tr>
-<tr>
-<td><code>%cr</code></td>
-<td>提交日期，按多久以前的方式显示</td>
-</tr>
-<tr>
-<td><code>%s</code></td>
-<td>提交说明</td>
-</tr>
-</tbody></table>
-<p>作者指的是实际作出修改的人，提交者指的是最后将此工作成果提交到仓库的人。 所以，当你为某个项目发布补丁，然后某个核心成员将你的补丁并入项目时，你就是作者，而那个核心成员就是提交者。</p>
-<p>当 oneline 或 format 与另一个 <code>log</code> 选项 <code>--graph</code> 结合使用时尤其有用。 这个选项添加了一些ASCII字符串来形象地展示你的分支、合并历史：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%h %s"</span> --graph</span><br></pre></td></tr></table></figure>
-
-<p>以上只是简单介绍了一些 <code>git log</code> 命令支持的选项。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%ad ar - %s"</span> --date=format:%Y-%m-%d </span><br><span class="line"><span class="comment"># 指定日志打印的时间的格式，git log --help 获取多种预定义好的格式，如 --date=short</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">%a        Abbreviated weekday name</span><br><span class="line">%A        Full weekday name</span><br><span class="line">%b        Abbreviated month name</span><br><span class="line">%B        Full month name</span><br><span class="line">%c        Date and time representation appropriate <span class="keyword">for</span> locale</span><br><span class="line">%d        Day of month as decimal number (01 – 31)</span><br><span class="line">%H        Hour <span class="keyword">in</span> 24-hour format (00 – 23)</span><br><span class="line">%I        Hour <span class="keyword">in</span> 12-hour format (01 – 12)</span><br><span class="line">%j        Day of year as decimal number (001 – 366)</span><br><span class="line">%m        Month as decimal number (01 – 12)</span><br><span class="line">%M        Minute as decimal number (00 – 59)</span><br><span class="line">%p        Current locale<span class="string">'s A.M./P.M. indicator for 12-hour clock</span></span><br><span class="line"><span class="string">%S        Second as decimal number (00 – 59)</span></span><br><span class="line"><span class="string">%U        Week of year as decimal number, with Sunday as first day of week (00 – 53)</span></span><br><span class="line"><span class="string">%w        Weekday as decimal number (0 – 6; Sunday is 0)</span></span><br><span class="line"><span class="string">%W        Week of year as decimal number, with Monday as first day of week (00 – 53)</span></span><br><span class="line"><span class="string">%x        Date representation for current locale</span></span><br><span class="line"><span class="string">%X        Time representation for current locale</span></span><br><span class="line"><span class="string">%y        Year without century, as decimal number (00 – 99)</span></span><br><span class="line"><span class="string">%Y        Year with century, as decimal number</span></span><br><span class="line"><span class="string">%z, %Z        Either the time-zone name or time zone abbreviation, depending on registry settings; no characters if time zone is unknown</span></span><br><span class="line"><span class="string">%%        Percent sign</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://cloud.tencent.com/developer/ask/77373" target="_blank" rel="noopener">Git strftime 占位符原表出处</a></p>
-<p>下面列出了我们目前涉及到的和没涉及到的选项，以及它们是如何影响 log 命令的输出的：</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-p</code></td>
-<td>按补丁格式显示每个更新之间的差异。</td>
-</tr>
-<tr>
-<td><code>--stat</code></td>
-<td>显示每次更新的文件修改统计信息。</td>
-</tr>
-<tr>
-<td><code>--shortstat</code></td>
-<td>只显示 –stat 中最后的行数修改添加移除统计。</td>
-</tr>
-<tr>
-<td><code>--name-only</code></td>
-<td>仅在提交信息后显示已修改的文件清单。</td>
-</tr>
-<tr>
-<td><code>--name-status</code></td>
-<td>显示新增、修改、删除的文件清单。</td>
-</tr>
-<tr>
-<td><code>--abbrev-commit</code></td>
-<td>仅显示 SHA-1 的前几个字符，而非所有的 40 个字符。</td>
-</tr>
-<tr>
-<td><code>--relative-date</code></td>
-<td>使用较短的相对时间显示（比如，“2 weeks ago”）。</td>
-</tr>
-<tr>
-<td><code>--graph</code></td>
-<td>显示 ASCII 图形表示的分支合并历史。</td>
-</tr>
-<tr>
-<td><code>--pretty</code></td>
-<td>使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）。</td>
-</tr>
-</tbody></table>
-<p><strong>限制输出长度</strong></p>
-<p>Git 在输出所有提交时会自动调用分页程序，所以你一次只会看到一页的内容。</p>
-<p>按照时间作限制的选项，比如 <code>--since</code> 和 <code>--until</code> 也很有用。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面的命令列出所有最近两周内的提交：</span></span><br><span class="line"></span><br><span class="line">$ git <span class="built_in">log</span> --since=2.weeks</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个命令可以在多种格式下工作，比如说具体的某一天 "2008-01-15"，或者是相对地多久以前 "2 years 1 day 3 minutes ago"。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p> 用 <code>--author</code> 选项显示指定作者的提交，用 <code>--grep</code> 选项搜索提交说明中的关键字。 （请注意，如果要得到同时满足这两个选项搜索条件的提交，就必须用 <code>--all-match</code> 选项。否则，满足任意一个条件的提交都会被匹配出来）</p>
-<p>另一个非常有用的筛选选项是 <code>-S</code>，可以列出那些添加或移除了某些字符串的提交。 比如说，你想找出添加或移除了某一个特定函数的引用的提交，你可以这样使用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> -Sfunction_name</span><br></pre></td></tr></table></figure>
-
-<p>最后一个很实用的 <code>git log</code> 选项是路径（path）， 如果只关心某些文件或者目录的历史提交，可以在 git log 选项的最后指定它们的路径。 因为是放在最后位置上的选项，所以用两个短划线（–）隔开之前的选项和后面限定的路径名。</p>
-<p>常用的选项</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-(n)</code></td>
-<td>仅显示最近的 n 条提交</td>
-</tr>
-<tr>
-<td><code>--since</code>, <code>--after</code></td>
-<td>仅显示指定时间之后的提交。</td>
-</tr>
-<tr>
-<td><code>--until</code>, <code>--before</code></td>
-<td>仅显示指定时间之前的提交。</td>
-</tr>
-<tr>
-<td><code>--author</code></td>
-<td>仅显示指定作者相关的提交。</td>
-</tr>
-<tr>
-<td><code>--committer</code></td>
-<td>仅显示指定提交者相关的提交。</td>
-</tr>
-<tr>
-<td><code>--grep</code></td>
-<td>仅显示含指定关键字的提交</td>
-</tr>
-<tr>
-<td><code>-S</code></td>
-<td>仅显示添加或移除了某个关键字的提交</td>
-</tr>
-</tbody></table>
-<p>来看一个实际的例子，如果要查看 Git 仓库中，2008 年 10 月期间，Junio Hamano 提交的但未合并的测试文件，可以用下面的查询命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=<span class="string">"%h - %s"</span> --author=gitster --since=<span class="string">"2008-10-01"</span> \</span><br><span class="line">   --before=<span class="string">"2008-11-01"</span> --no-merges -- t/</span><br><span class="line">5610e3b - Fix testcase failure when extended attributes are <span class="keyword">in</span> use</span><br><span class="line">acd3b9e - Enhance hold_lock_file_for_&#123;update,append&#125;() API</span><br><span class="line">f563754 - demonstrate breakage of detached checkout with symbolic link HEAD</span><br><span class="line">d1a43f2 - reset --hard/<span class="built_in">read</span>-tree --reset -u: remove unmerged new paths</span><br><span class="line">51a94af - Fix <span class="string">"checkout --track -b newbranch"</span> on detached HEAD</span><br><span class="line">b0ad11e - pull: allow <span class="string">"git pull origin <span class="variable">$something</span>:<span class="variable">$current_branch</span>"</span> into an unborn branch</span><br></pre></td></tr></table></figure>
-
-<p>在近 40000 条提交中，上面的输出仅列出了符合条件的 6 条记录。</p>
-<h2 id="2-4-撤销操作"><a href="#2-4-撤销操作" class="headerlink" title="2.4 撤销操作"></a>2.4 撤销操作</h2><p><strong>补充提交</strong></p>
-<p>如果在一次提交完成之后发现有些文件还没有被添加，或者提交信息写错了。此时可以通过以下命令尝试重新提交：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
-
-<p>这个命令会将添加进暂存区的文件再次提交。如果上次提交后立马执行了此命令，那么修改的只是提交信息。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">"Add files."</span></span><br><span class="line"></span><br><span class="line">git commit --amend -m <span class="string">"Add two files"</span></span><br><span class="line"><span class="comment"># 最终结果将只有一次提交，并且只将提交信息改为 Add two files.</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">'Add files'</span></span><br><span class="line">git add forgotten_file</span><br><span class="line">git commit --amend -m <span class="string">"Add files"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 被忘记提交的文件与上一次提交的文件作为一次提交。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>取消暂存的文件</strong></p>
-<p>如过不想同时暂存两个文件，但又通过命令 <code>git add *</code> 暂存了所有的文件，如何撤销已经暂存的另一个文件。 git 在 git status 中一般有相应的提示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD second.md</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行完该命令后， second.md 文件已经变为未暂存的状态了。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>撤销对文件的修改</strong></p>
-<p>如果对该文件的修改要退回到上次提交后的状态。 git status 中同样有所提示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个命令应该是重新从版本库中重新获取了该文件并进行了替换。</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="2-5-远程仓库"><a href="#2-5-远程仓库" class="headerlink" title="2.5 远程仓库"></a>2.5 远程仓库</h2><p>远程仓库的几个命令</p>
-<p><strong>进行远程仓库的克隆</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> repository_url</span><br></pre></td></tr></table></figure>
-
-<p><strong>从远程仓库中进行抓取，本地库被更新为最新的版本</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch [remote-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>从远程仓库中进行来进行拉取，并尝试合并到当前所在的分支</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull [remote-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>推送到远程仓库中相应的分支中</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push [remote-name] [branch-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>添加远程仓库</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add [remote-name] [remote-url]</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的别名</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的别名与远程库链接</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的具体信息</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git remote show [remote-name]</span><br><span class="line"></span><br><span class="line">$ git remote show origin</span><br><span class="line">* remote origin</span><br><span class="line">  Fetch URL: https://github.com/schacon/ticgit</span><br><span class="line">  Push  URL: https://github.com/schacon/ticgit</span><br><span class="line">  HEAD branch: master</span><br><span class="line">  Remote branches:</span><br><span class="line">    master                               tracked</span><br><span class="line">    dev-branch                           tracked</span><br><span class="line">  Local branch configured <span class="keyword">for</span> <span class="string">'git pull'</span>:</span><br><span class="line">    master merges with remote master</span><br><span class="line">  Local ref configured <span class="keyword">for</span> <span class="string">'git push'</span>:</span><br><span class="line">    master pushes to master (up to date)</span><br></pre></td></tr></table></figure>
-
-
-<p><strong>一般的流程是</strong> </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch ---&gt; git add ---&gt; git commit ---&gt; git push</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="2-6-打标签"><a href="#2-6-打标签" class="headerlink" title="2.6 打标签"></a>2.6 打标签</h2><p>给历史提交打上标签，来标记重要的提交节点或重大的功能完成节点。</p>
-<p><strong>列出已有的标签</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出特定模式的标签</span></span><br><span class="line">git tag -l <span class="string">'v1.8.5*'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>创建标签</strong></p>
-<p>Git 中有两种标签：lightweight - 轻量标签； annotated - 附注标签</p>
-<p>一个轻量标签只是一个特定提交的引用。</p>
-<p>一个附注标签是存储在 Git 数据库中的一个完整对象，包括打标签作者的名字、电子邮件地址、日期时间、标签信息，可以使用 GNU Privacy Guard (GPG) 签名与验证。</p>
-<p>通常建议创建附注标签，这样可以拥有很多信息。</p>
-<ul>
-<li><strong>附注标签</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">'version 1.0'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -m 制定了该标签的详细描述，没有指定的话，Git 会运行编辑器要求你输入信息。</span></span><br><span class="line"></span><br><span class="line">git show v1.0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以看到标签信息与对应的提交信息</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>轻量标签</strong></p>
-<p>轻量标签本质上是提交校验和存储到一个文件中 - 没有保存任何其他信息。只需要提供标签名字就可以创建轻量标签。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git tag v1.0-lightweight</span><br><span class="line"></span><br><span class="line">git show v1.0-lightweight</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不会看到额外的标签信息。命令之后会显示出提交信息。</span></span><br><span class="line"><span class="comment"># 这个在 git version 2.16.2.windows.1 中为什么还是会显示提交信息？</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>  如果前面的某一次提交忘记打标签了，可以在之后补上标签。需要在命令的末尾指定提交的校验和（部分校验和）。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line"></span><br><span class="line">34874876b494a234ca52790d6e9cd85a47927953 (HEAD -&gt; master, tag: v1.0-lightweight, tag: v1.0, origin/master) Add something to revoke.md</span><br><span class="line">c3176ae309d942cb495257ad457172e244da21d9 Add <span class="built_in">test</span> line to revoke.md</span><br><span class="line">5969cb43806b3a632fe7b3cb6ab0201be49d3801 Add markdown notes.</span><br><span class="line">c4331a9d271ee5516976a54a42ed282d9fb82d42 Initial commit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git tag -a v0.9 5969cb -m <span class="string">"version 0.9"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p><strong>共享标签至远程库</strong></p>
-<p>创建完标签，必须显示地推送标签到共享服务器上。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git push origin [tagname]</span></span><br><span class="line"></span><br><span class="line">git push origin v1.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一次性推送很多标签, 会把所有不在远程仓库服务器上的标签全部传送到那里。当被人从仓库中克隆或拉去，也能得到相应的标签。</span></span><br><span class="line"></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p><strong>检出标签</strong></p>
-<p>在 Git 中你并不能真的检出一个标签，因为它们并不能像分支一样来回移动。 如果你想要工作目录与仓库中特定的标签版本完全一样，可以使用 <code>git checkout -b [branchname] [tagname]</code> 在特定的标签上创建一个新分支：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b version2 v2.0.0</span><br><span class="line">Switched to a new branch &#39;version2&#39;</span><br></pre></td></tr></table></figure>
-<p>当然，如果在这之后又进行了一次提交，<code>version2</code> 分支会因为改动向前移动了，那么   <code>version2</code> 分支就会和 <code>v2.0.0</code> 标签稍微有些不同，这时就应该当心了。</p>
-</li>
-</ul>
-<h2 id="2-7-别名"><a href="#2-7-别名" class="headerlink" title="2.7 别名"></a>2.7 别名</h2><p>Git 可以通过别名的方式简化命令，为命令设置一个别名，通过别名就可完成相应的命令。别名一般从字面上就可以看出该命令的执行作用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.co checkout</span><br><span class="line">git config --global alias.ci commit</span><br><span class="line">git config --global alias.st status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当要输入 git commit 时，只需要输入 git ci 就可以了。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git config --global alias.unstage <span class="string">'reset HEAD --'</span></span><br><span class="line"><span class="comment"># 下面两个命令是等价的</span></span><br><span class="line">git unstage file</span><br><span class="line">git reset HEAD -- file</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示最近一次提交的日志信息</span></span><br><span class="line">git config --global alias.last <span class="string">'log -1 HEAD'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以看出，Git 只是简单地将别名替换为对应的命令。 然而，你可能想要执行外部命令，而不是一个 Git 子命令。 如果是那样的话，可以在命令前面加入 <code>!</code> 符号。 如果你自己要写一些与 Git 仓库协作的工具的话，那会很有用。 我们现在演示将 <code>git visual</code> 定义为 <code>gitk</code> 的别名：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.visual <span class="string">'!gitk'</span></span><br></pre></td></tr></table></figure>
-
+                    <h1 id="Pro-Git-Note"><a href="#Pro-Git-Note" class="headerlink" title="Pro-Git-Note"></a>Pro-Git-Note</h1><p>Markdown notes for <a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener">Pro Git</a><br>Love the life you live.<br>Live the life you love.<br>Find your own thing.</p>
 
                 
             </div>
@@ -692,7 +297,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/3%20%E5%88%86%E6%94%AF/">3 分支</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/git%20log%20example/">git log example</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -706,30 +311,11 @@
             </div>
             <div class="post-content">
                 
-                    <h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建分支</span></span><br><span class="line">git branch branchname</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换分支</span></span><br><span class="line">git checkout branchname</span><br><span class="line"></span><br><span class="line"><span class="comment"># -----------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并切换分支</span></span><br><span class="line">git checkout -b branchname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除分支</span></span><br><span class="line">git branch -d branchname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示所有的分支及当前所在分支</span></span><br><span class="line">git branch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进一步显示所有分支的最后一次提交</span></span><br><span class="line">git branch -v</span><br></pre></td></tr></table></figure>
+                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.ll <span class="string">"log --pretty='%C(yellow)%h %C(cyan)%cd %Creset%s %Cred&lt;%an&gt;' --date=format:'%y/%m/%d %H:%M' --graph"</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p>–merged 与 –no-merged 这两个有用的选项可以过滤这个列表中已经合并或尚未合并到当前分支的分支。 如果要查看哪些分支已经合并到当前分支，可以运行 git branch –merged：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch --merged</span><br><span class="line">  iss53</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
-
-<p>查看所有包含未合并工作的分支，可以运行 <code>git branch --no-merged</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git branch --no-merged</span><br><span class="line">  testing</span><br></pre></td></tr></table></figure>
-
-<p>这里显示了其他分支。 因为它包含了还未合并的工作，尝试使用 <code>git branch -d</code> 命令删除它时会失败：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch -d testing</span><br><span class="line">error: The branch <span class="string">'testing'</span> is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run <span class="string">'git branch -D testing'</span>.</span><br></pre></td></tr></table></figure>
-
-<p>如果真的想要删除分支并丢掉那些工作，如同帮助信息里所指出的，可以使用 <code>-D</code> 选项强制删除它。</p>
-<p><strong>变基操作</strong></p>
-<p>在本地仓库的 master 分之下执行变基操作时，默认以本地 refs/origin/master (前提是通过 git fetch 进行抓取过了) 为变基操作的目标基地分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git rebase</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改冲突后</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br></pre></td></tr></table></figure>
-
-<p>本地 master 的分支与 res/origin/master 的分支有共同的祖先，找出本地 master 分支相对于 res/origin/master的修改，并将其应用到 res/origin/master 的分支上，（这时，可能需要修改冲突的地方后继续），  res/origin/master 分支和本地master分支共同指向最新的合并后的分支，git push 将本地 master 的分支推送到远程仓库的 master 分支，完成了 res/origin/master 分支和本地master分支的变基操作。</p>
-<p><strong>合并操作</strong></p>
-<p>在本地仓库的 master 分之下执行合并操作时，默认以 refs/origin/master 为要合并的另一个分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git merge</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改冲突后</span></span><br><span class="line">git commit -a -m <span class="string">"decscription"</span></span><br></pre></td></tr></table></figure>
-
-<p>进行一次三方合并后，本地master分支的最新提交对象推送到远程仓库完成了合并操作。</p>
+<p><a href="https://www.cnblogs.com/bellkosmos/p/5923439.html" target="_blank" rel="noopener">https://www.cnblogs.com/bellkosmos/p/5923439.html</a></p>
 
                 
             </div>

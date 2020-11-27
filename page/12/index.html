@@ -84,23 +84,28 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
-
+                    <ol>
+<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
+<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
+</li>
+<li><p>如果没有推送到远程库呢？</p>
+<p>这时 git commit –amend 应该是可以的</p>
+</li>
+</ol>
 
                 
             </div>
@@ -108,110 +113,58 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20Enviroment/">Spring Enviroment</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
-
-
-
-<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符出啊；查找和替换，字符串的更新</p>
-<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
-<li><p>集成式 （integrated）</p>
-<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
-</li>
-<li><p>程序式 (procedural)</p>
-<p>函数式</p>
-</li>
-<li><p>面向对象式 (object-oriented)</p>
-<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
-</li>
+                    <h2 id="Spring-Environment"><a href="#Spring-Environment" class="headerlink" title="Spring Environment"></a>Spring Environment</h2><p><code>Environment</code> 是对 Spring 应用环境 (Spring Application Environment) 的抽象; 应用于应用环境的两个方面：<code>profiles</code> 以及 <code>properties</code>。 </p>
+<p><code>profiles</code> 属于条件化创建 bean 的一种机制， 不同的 <code>profile</code> 包含了一组 bean 的定义，运行时，可以指定激活哪些 <code>profile</code>(spring.profiles.active), 以及应用哪些默认的 <code>profile</code>(spring.profiles.default)。</p>
+<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p><code>properties</code> 包含了应用用到的所有属性对，可能来源于（不限于）：</p>
+<ul>
+<li>properties 文件</li>
+<li>JVM 系统属性</li>
+<li>系统环境变量</li>
+<li>JNDI</li>
+<li>Servlet Context Parameters</li>
+<li>临时属性对象 ad-hoc <code>Properties</code> object</li>
+<li>Map 对象</li>
 </ul>
-<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
-<thead>
-<tr>
-<th>表示</th>
-<th>Unicode code point</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LF</td>
-<td>U+000A</td>
-<td>ASCII 换行符</td>
-</tr>
-<tr>
-<td>VT</td>
-<td>U+000B</td>
-<td>ASCII 垂直制表符</td>
-</tr>
-<tr>
-<td>FF</td>
-<td>U+000C</td>
-<td>ASCII 进纸符</td>
-</tr>
-<tr>
-<td>CR</td>
-<td>U+000D</td>
-<td>ASCII 回车</td>
-</tr>
-<tr>
-<td>CR/LF</td>
-<td>U+000D U+000A</td>
-<td>ASCII 回车/换行</td>
-</tr>
-<tr>
-<td>NEL</td>
-<td>U+0085</td>
-<td>Unicode 换行</td>
-</tr>
-<tr>
-<td>LS</td>
-<td>U+2028</td>
-<td>Unicode 行分隔符</td>
-</tr>
-<tr>
-<td>PS</td>
-<td>U+2029</td>
-<td>Unicode 段分隔符</td>
-</tr>
-</tbody></table>
-<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
-<thead>
-<tr>
-<th>字母</th>
-<th>模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>不区分大小写的匹配模式</td>
-</tr>
-<tr>
-<td>x</td>
-<td>宽松排列和注释模式</td>
-</tr>
-<tr>
-<td>s</td>
-<td>点号通配模式（单行模式）</td>
-</tr>
-<tr>
-<td>m</td>
-<td>增强的行锚点模式（多行模式）</td>
-</tr>
-</tbody></table>
+<p><code>PropertySource</code> 是对任何键值对的属性源的一种抽象，Spring 提供的 <code>Environment</code> 都会配置两个 <code>PropertySource</code> 对象，分别代表JVM系统属性的集合（ <code>System.getProperties()</code> ）和系统环境变量  （<code>System.getenv()</code> ）</p>
+<p><code>Environment</code> 对象提供了配置 <code>PropertySource</code> 以及在这些 <code>PropertySource</code> 对象上的检索功能，检索某个属性键是否存在或者对应的值。</p>
+<p>Spring Web 应用中, <code>StandardServletEnvironment</code> 实现，检索的优先级如下：</p>
+<ol>
+<li>ServletConfig parameters </li>
+<li>ServletContext parameters ( web.xml context-param entries )</li>
+<li>JNDI environment variables  (<code>java:comp/env/</code> entries) </li>
+<li>JVM system properties (<code>-D</code> command-line arguments) </li>
+<li>JVM system environment (operating system environment variables) </li>
+</ol>
+<p>整个机制是可配置的, 可以移除某个 <code>PropertySource</code> ，或者改变检索的优先级</p>
+<h4 id="PropertySource-注解"><a href="#PropertySource-注解" class="headerlink" title="@PropertySource 注解"></a><code>@PropertySource</code> 注解</h4><p><code>@PropertySource</code> 注解提供了一种向 <code>Environment</code> 添加属性源的便利方式，使用在 <code>@Configuration</code> 类上，需要提的一点是，任何出现在 <code>@PropertySource</code>属性源路径中的 <code>${..}</code> 占位符会从已经注册的 <code>PropertySource</code> 中检索，也可以提供一个默认值，如 <code>${key:default}</code></p>
+<p>xml 定义中，import 其他bean定义时，可以使用占位符，Spring 会从当前 Environment 中进行解析</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"$&#123;test&#125;.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>但是当定义某个 bean 时，必须配置一个 PropertySourcesPlaceholderConfigurer， 才可以使用占位符</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java.beans.PropertyEditor Spring implementation which can convert String paths to Resource objects.</span><br><span class="line">Classloader.getResource()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">		<span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">		prepareRefresh();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">		prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">			postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">               <span class="comment">/* </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               *  在这里处理 PropertySource </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               */</span></span><br><span class="line">			<span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">			invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">			registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize message source for this context.</span></span><br><span class="line">			initMessageSource();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize event multicaster for this context.</span></span><br><span class="line">			initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">			onRefresh();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Check for listener beans and register them.</span></span><br><span class="line">			registerListeners();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">			finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Last step: publish corresponding event.</span></span><br><span class="line">			finishRefresh();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">			logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt"</span>, ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">			destroyBeans();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Reset 'active' flag.</span></span><br><span class="line">			cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Propagate exception to caller.</span></span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -219,26 +172,82 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20MVC/">Spring MVC</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>org.springframework.boot.SpringApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <h2 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h2><blockquote>
+<p>设计良好的控制器本身只处理很少甚至不处理工作，而是将业务逻辑委托给一个或多个服务对象。</p>
+</blockquote>
+<h3 id="使用Java类配置Spring-MVC"><a href="#使用Java类配置Spring-MVC" class="headerlink" title="使用Java类配置Spring MVC"></a>使用Java类配置Spring MVC</h3><p>Servlet 3.0 查找 <code>javax.servlet.ServletContainerInitializer</code> 的实现类来配置 Servlet 容器；Spring 提供了该接口的实现：<code>SpringServletContainerInitializer</code> , 并且又会查找实现<code>WebApplicationInitializer</code> 的类来进行配置，并引入了一个<code>AbstractAnnotationConfigDispatcherServletInitializer</code>的基础实现，所以在Spring中通过Java代码进行配置的时候，需要扩展该基础实现类。</p>
+<p><strong>这种配置DispatcherServlet的方式只能部署到支持Servlet 3.0的服务器中才能工作。</strong></p>
+<p><strong>UML 图示：</strong></p>
+<p><img src="D:%5Cmd_pics%5CSpringServlet.png" alt="SpringServlet"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Delegate the ServletContext to any WebApplicationInitializer implementations present on the application classpath.</span><br><span class="line">Because <span class="keyword">this</span> <span class="class"><span class="keyword">class</span> <span class="title">declares</span> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>), <span class="title">Servlet</span> 3.0+ <span class="title">containers</span> <span class="title">will</span> <span class="title">automatically</span> <span class="title">scan</span> <span class="title">the</span> <span class="title">classpath</span> <span class="title">for</span> <span class="title">implementations</span> <span class="title">of</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">WebApplicationInitializer</span> <span class="title">interface</span> <span class="title">and</span> <span class="title">provide</span> <span class="title">the</span> <span class="title">set</span> <span class="title">of</span> <span class="title">all</span> <span class="title">such</span> <span class="title">types</span> <span class="title">to</span> <span class="title">the</span> <span class="title">webAppInitializerClasses</span> <span class="title">parameter</span> <span class="title">of</span> <span class="title">this</span> <span class="title">method</span>.</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    <span class="title">Assuming</span> <span class="title">that</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">WebApplicationInitializer</span> <span class="title">types</span> <span class="title">are</span> <span class="title">detected</span>, <span class="title">they</span> <span class="title">will</span> <span class="title">be</span> <span class="title">instantiated</span> (<span class="title">and</span> <span class="title">sorted</span> <span class="title">if</span> <span class="title">the</span> @@<span class="title">Order</span> <span class="title">annotation</span> <span class="title">is</span> <span class="title">present</span> <span class="title">or</span> <span class="title">the</span> <span class="title">Ordered</span> <span class="title">interface</span> <span class="title">has</span> <span class="title">been</span> <span class="title">implemented</span>). <span class="title">Then</span> <span class="title">the</span> <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>) <span class="title">method</span> <span class="title">will</span> <span class="title">be</span> <span class="title">invoked</span> <span class="title">on</span> <span class="title">each</span> <span class="title">instance</span>, <span class="title">delegating</span> <span class="title">the</span> <span class="title">ServletContext</span> <span class="title">such</span> <span class="title">that</span> <span class="title">each</span> <span class="title">instance</span> <span class="title">may</span> <span class="title">register</span> <span class="title">and</span> <span class="title">configure</span> <span class="title">servlets</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">DispatcherServlet</span>, <span class="title">listeners</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">ContextLoaderListener</span>, <span class="title">or</span> <span class="title">any</span> <span class="title">other</span> <span class="title">Servlet</span> <span class="title">API</span> <span class="title">componentry</span> <span class="title">such</span> <span class="title">as</span> <span class="title">filters</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  /* <span class="title">Servlet</span> 3.0+ 会自动在应用的 <span class="title">classpath</span> 中寻找 <span class="title">WebApplicationInitializer</span> 的实现类，并对每一个实现类进行实例化，将 <span class="title">ServletContext</span> 委托给他们，对每一个实例调用 <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>), 加载和注册所有的 <span class="title">Servlet</span>、<span class="title">Listener</span>、<span class="title">Filter</span> */</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"><span class="title">If</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">are</span> <span class="title">found</span> <span class="title">on</span> <span class="title">the</span> <span class="title">classpath</span>, <span class="title">this</span> <span class="title">method</span> <span class="title">is</span> <span class="title">effectively</span> <span class="title">a</span> <span class="title">no</span>-<span class="title">op</span>. <span class="title">An</span> <span class="title">INFO</span>-<span class="title">level</span> <span class="title">log</span> <span class="title">message</span> <span class="title">will</span> <span class="title">be</span> <span class="title">issued</span> <span class="title">notifying</span> <span class="title">the</span> <span class="title">user</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ServletContainerInitializer</span> <span class="title">has</span> <span class="title">indeed</span> <span class="title">been</span> <span class="title">invoked</span> <span class="title">but</span> <span class="title">that</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">were</span> <span class="title">found</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"> // <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">SpringServletContainerInitializer</span> </span></span><br><span class="line"><span class="class"> </span></span><br><span class="line"><span class="class"> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, @NotNull ServletContext servletContext)</span> <span class="keyword">throws</span> 		ServletException </span>&#123;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
-<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
-<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
+
+
+<p><strong>Root Application Context</strong><br>As such, it typically contains middle-tier services, data sources, etc.</p>
+<p><strong>Servlet Application Context</strong><br>As such, it typically contains controllers, view resolvers, locale resolvers, and other web-related beans.</p>
+<p>Root Application Context 用来初始化 ContextLoaderListener 对象，并将该对象注册到 Servlet 容器中</p>
+<p>Servlet Application Context 用来初始化 DispatcherServlet 对象，并将该对象注册到 Servlet 容器中，随后添加 Filters, 添加 Mapping 映射， 当然用户还可以通过 customizeRegistration(ServletRegistration.Dynamic registration) 来进行自定义之后的操作，如配置 Multipart 处理的参数</p>
+<h3 id="DispatcherServlet"><a href="#DispatcherServlet" class="headerlink" title="DispatcherServlet"></a>DispatcherServlet</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DispatcherServlet api 与 Web.xml中 对应的初始化参数</span></span><br><span class="line">setContextClass(Class) / <span class="string">'contextClass'</span></span><br><span class="line">setContextConfigLocation(String) / <span class="string">'contextConfigLocation'</span></span><br><span class="line">setContextAttribute(String) / <span class="string">'contextAttribute'</span></span><br><span class="line">setNamespace(String) / <span class="string">'namespace'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// indicates which ApplicationContextInitializer classes should be used to further configure the internal application context prior to refresh().</span></span><br><span class="line">setContextInitializerClasses(String) / <span class="string">'contextInitializerClasses'</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="编写控制器方法"><a href="#编写控制器方法" class="headerlink" title="编写控制器方法"></a>编写控制器方法</h3><ul>
+<li>处理查询参数请求</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对类似 /messageList?count=10 的url进行处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/messageList"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">message</span><span class="params">(@RequestParam(value = <span class="string">"count"</span>, defaultValue = <span class="string">"20"</span>)</span> <span class="keyword">int</span> count, Model model) </span>&#123;</span><br><span class="line">    model.addAttribute(<span class="string">"messageList"</span>, repository.getMessageList(count));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"message"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>处理路径变量</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对类似 /messageList/Tom 这样的url进行处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/messageList/&#123;name&#125;"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">messageListByName</span><span class="params">(@PathVariable String name, Model model)</span> </span>&#123;</span><br><span class="line">    model.addAttribute(<span class="string">"messageList"</span>, repository.getMessageListByName(name));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"message"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>处理表单提交，以及增加校验 </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/register"</span>, method = RequestMethod.POST)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">processRegistration</span><span class="params">(@Valid User user, Errors errors)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (errors.hasErrors()) &#123;</span><br><span class="line">        errors.getAllErrors().forEach(error -&gt; printError(error));</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"registerFormSpringForm"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">"--------"</span> + user.getUsername());</span><br><span class="line">    repository.saveUser(user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"redirect:/blog/"</span> + user.getUsername();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>==C:\Users\guo.IntelliJIdea2018.3\system\tomcat\Unnamed_spring_web_java_config\work\Catalina\localhost\ROOT==</p>
+<h3 id="表单数据校验"><a href="#表单数据校验" class="headerlink" title="表单数据校验"></a>表单数据校验</h3><p>在使用validator对表单数据进行校验时，需要</p>
+<blockquote>
+<p>Spring对Java校验API（Java Validation API，又称JSR-303）的支持。从Spring 3.0开始，在Spring MVC中提供了对Java校验API的支持。在Spring MVC中要使用Java校验API的话，并不需要什么额外的配置。只要保证在类路径下包含这个Java API的实现即可，比如Hibernate Validator。</p>
+</blockquote>
+<p>java的 JSR 303: Bean Validation 只是一个规范，并没有具体的实现，hibernate-validator 项目是对其的一个实现，因此，具体使用要引入相应的JAR包：validation-api（定义校验注解） hibernate-validator（具体实现）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.validation<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>validation-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.1.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.0.13.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>==并且如果之前没有添加，后来添加了，要生效，必须重新打包部署，即重新生产 Artifacts, 并部署到tomcat上，否则就不会起作用！！==</p>
+<h3 id="使用spring-test进行测试"><a href="#使用spring-test进行测试" class="headerlink" title="使用spring-test进行测试"></a>使用spring-test进行测试</h3><p>在用spring-test进行测试的时候，需要和spring其他组件的jar包版本一致，否则就可能会出现NoSuchMethodError</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.NoSuchMethodError: org.springframework.util.StreamUtils.emptyInput()Ljava/io/InputStream;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>Apache Common Lang包来实现<code>equals()</code>和<code>hashCode()</code>方法。</p>
+<blockquote>
+<p>对“/spittles/12345”发起<code>GET</code>请求要优于对“/spittles/show?spittle_id=12345”发起请求。前者能够识别出要查询的资源，而后者描述的是带有参数的一个操作——本质上是通过HTTP发起的RPC。</p>
+</blockquote>
 
                 
             </div>
@@ -288,28 +297,59 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
+                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>getResourceAsStream</p>
-<p>java.lang.reflect.Proxy</p>
-<p>MySQL for Excel</p>
-<ul>
-<li>Import MySQL data into Excel.</li>
-<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
-<li>Modify MySQL data directly from within Excel.</li>
-</ul>
+                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
+<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
+<p>– Becoming Functional</p>
+</blockquote>
+<p>一级函数 高阶函数？</p>
+<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
+<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
+<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
+<p>在 Java 中， 比如定义了一个 Function 接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
+</blockquote>
+<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
+<p><strong>匿名函数</strong></p>
+<blockquote>
+<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
+</blockquote>
+<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
+<blockquote>
+<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
+</blockquote>
+<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
+<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
+
+
+
 
                 
             </div>
