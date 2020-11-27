@@ -84,6 +84,79 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">高级文本命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-06-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="高级文本命令"><a href="#高级文本命令" class="headerlink" title="高级文本命令"></a>高级文本命令</h1><h4 id="1-sed-命令"><a href="#1-sed-命令" class="headerlink" title="1 sed  命令"></a>1 sed  命令</h4><h5 id="synopsis-基本用法"><a href="#synopsis-基本用法" class="headerlink" title="synopsis - 基本用法"></a><strong>synopsis - 基本用法</strong></h5><p>sed [OPTION]… {script-only-if-no-other-script} [input-file]..</p>
+<h5 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h5><p><a href="https://www.cnblogs.com/theCambrian/p/3606214.html" target="_blank" rel="noopener">博客园  sed 的工作原理</a></p>
+<p><code>man sed</code></p>
+<h5 id="option"><a href="#option" class="headerlink" title="option"></a><strong>option</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># suppress automatic printing of pattern space</span></span><br><span class="line"><span class="comment"># 关闭 pattern space 的自动打印，如果 command 中已经指定了 p, 可能就需要指定该选项</span></span><br><span class="line">-n, --quiet, --silent</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="script-command"><a href="#script-command" class="headerlink" title="script command"></a><strong>script command</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">d      <span class="comment"># Delete pattern space.  Start next cycle.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Copy 即覆盖， append 即追加</span></span><br><span class="line">h H    <span class="comment"># Copy/append pattern space to hold space.</span></span><br><span class="line">g G    <span class="comment"># Copy/append hold space to pattern space.</span></span><br><span class="line">x      <span class="comment"># Exchange the contents of the hold and pattern spaces.</span></span><br><span class="line"></span><br><span class="line">n N    <span class="comment"># Read/append the next line of input into the pattern space.</span></span><br><span class="line">p      <span class="comment"># Print the current pattern space.</span></span><br><span class="line">P      <span class="comment"># Print up to the first embedded newline of the current pattern space.</span></span><br><span class="line"></span><br><span class="line">w filename <span class="comment"># Write the current pattern space to filename.</span></span><br><span class="line">W filename <span class="comment"># Write the first line of the current pattern space to filename.  This is a GNU extension.</span></span><br></pre></td></tr></table></figure>
+<h5 id="examples"><a href="#examples" class="headerlink" title="examples"></a><strong>examples</strong></h5><ul>
+<li>逆序打印文件行，等同于 <code>tac</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一行，只将 pattern space 中的内容 copy 到 hold space，再删除 pattern space，下一轮循环</span></span><br><span class="line"><span class="comment"># 接下来，每一行，将 hold space 的内容 append 到 pattern space，再删除 pattern space，下一轮循环</span></span><br><span class="line">sed <span class="string">'1&#123;h;d&#125;;G;h;$!d'</span> seq.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sed <span class="string">'1!G;h;$!d'</span> t.txt</span><br><span class="line"><span class="comment"># 1!G —— 只有第一行不执行G命令，将hold space中的内容append回到pattern space</span></span><br><span class="line"><span class="comment"># h —— 第一行都执行h命令，将pattern space中的内容拷贝到hold space中</span></span><br><span class="line"><span class="comment"># $!d —— 除了最后一行不执行d命令，其它行都执行d命令，删除当前行</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定要处理的行</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印第一行，1 指定第一行</span></span><br><span class="line">sed  -n <span class="string">'1p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印除了第一行的所有行</span></span><br><span class="line">sed -n <span class="string">'1!p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印奇数行，如第 1 行，第 3 行，第 5 行...， 语义为，从第一行开始，每隔 2 行打印</span></span><br><span class="line">sed -n <span class="string">'1~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印偶数行, 语义为每隔 2 行，打印</span></span><br><span class="line">sed -n <span class="string">'0~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，以及后续连续的 5 行</span></span><br><span class="line">sed -n <span class="string">'1,+5p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，直到第一次遇到行号是 2 的倍数的行，打印</span></span><br><span class="line">sed -n <span class="string">'1,~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印最后一行</span></span><br><span class="line">sed -n <span class="string">'$p'</span> seq.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印</span></span><br><span class="line">sed -n <span class="string">'/regex/p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># &amp; 代表匹配的内容</span></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | xargs -n 1 | sed <span class="string">"s/[a-z]/[&amp;]/g"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>sed表达式通常用单引号来引用。不过也可以使用双引号。 shell会在调用sed前先扩展双引<br>号中的内容。如果想在sed表达式中使用变量，双引号就能派上用场了。</p>
+</blockquote>
+<h4 id="2-cut"><a href="#2-cut" class="headerlink" title="2 cut"></a>2 cut</h4><p>synopsis - 基本用法</p>
+<p>cut OPTION  [FILE]</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-d, --delimiter		<span class="comment"># 指定列分隔符</span></span><br><span class="line">-f, --fields		<span class="comment"># 制定要打印的列（不包含列分隔符的行同样会被打印，除非指定 -s）</span></span><br><span class="line">--complement		<span class="comment"># 打印指定之外的列、字符或字节（相当于取反）</span></span><br><span class="line">-output-delimiter	<span class="comment"># 指定打印时的列分隔符</span></span><br><span class="line">-z 					<span class="comment"># 行分隔符为 NUL， cut 是对一行进行切割的</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cut -d <span class="string">","</span> f 2,5 file		<span class="comment"># 打印第2列，第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 file		<span class="comment"># 打印第2列到第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 --complement file	<span class="comment"># 打印除了2-5列的其他列</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 制定打印第几个字节、字符、列（区间）</span></span><br><span class="line"><span class="comment"># N-M 从第N个字节、字符或字段开始到行尾</span></span><br><span class="line"><span class="comment"># N-  从第N个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"><span class="comment"># -M  从第1个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | cut -d <span class="string">" "</span> -f-4</span><br><span class="line"><span class="comment"># result: a b c d</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"4 3\x001 2"</span> | cut -z -d <span class="string">" "</span> --output-delimiter <span class="string">"#"</span> -f1,2</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="3-awk"><a href="#3-awk" class="headerlink" title="3 awk"></a>3 awk</h4><p>awk BEGIN{} PATTERN {} END{}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk 的 pattern</span></span><br><span class="line">$ awk <span class="string">'NR &lt; 5'</span> <span class="comment"># 行号小于5的行</span></span><br><span class="line">$ awk <span class="string">'NR==1,NR==4'</span> <span class="comment"># 行号在1到5之间的行</span></span><br><span class="line">$ awk <span class="string">'/linux/'</span> <span class="comment"># 包含模式为linux的行（可以用正则表达式来指定模式）</span></span><br><span class="line">$ awk <span class="string">'!/linux/'</span> <span class="comment"># 不包含模式为linux的行</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F":" 'BEGIN&#123;OFS="#"&#125; &#123;print $1,$2&#125;'</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk可以调用命令并读取输出。把命令放入引号中，然后利用管道将命令输出传入getline：</span></span><br><span class="line">awk <span class="string">'BEGIN &#123;FS=":"&#125; &#123; "grep root /etc/passwd" | getline; \</span></span><br><span class="line"><span class="string">print $1,$6 &#125;'</span></span><br><span class="line"></span><br><span class="line">root /root</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-tr"><a href="#4-tr" class="headerlink" title="4 tr"></a>4 tr</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> alnum：字母和数字。</span><br><span class="line"> alpha：字母。</span><br><span class="line"> cntrl：控制（非打印）字符。</span><br><span class="line"> digit：数字。</span><br><span class="line"> graph：图形字符。</span><br><span class="line"> lower：小写字母。</span><br><span class="line"> <span class="built_in">print</span>：可打印字符。</span><br><span class="line"> punct：标点符号。</span><br><span class="line"> space：空白字符。</span><br><span class="line"> upper：大写字母。</span><br><span class="line"> xdigit：十六进制字符。</span><br></pre></td></tr></table></figure>
+
+
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/Maven/">Maven</a></h2>
             </div>
             <div class="post-meta">
@@ -194,6 +267,50 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> java.util.<span class="function">Enumeration&lt;Driver&gt; <span class="title">getDrivers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    java.util.Vector&lt;Driver&gt; result = <span class="keyword">new</span> java.util.Vector&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; callerClass = Reflection.getCallerClass();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Walk through the loaded registeredDrivers.</span></span><br><span class="line">    <span class="keyword">for</span>(DriverInfo aDriver : registeredDrivers) &#123;</span><br><span class="line">        <span class="comment">// If the caller does not have permission to load the driver then</span></span><br><span class="line">        <span class="comment">// skip it.</span></span><br><span class="line">        <span class="keyword">if</span>(isDriverAllowed(aDriver.driver, callerClass)) &#123;</span><br><span class="line">            result.addElement(aDriver.driver);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            println(<span class="string">"    skipping: "</span> + aDriver.getClass().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (result.elements());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Pro-Git-Note/1%20%E8%BF%90%E8%A1%8C%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE/">1 运行前的配置</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="1-运行前的配置"><a href="#1-运行前的配置" class="headerlink" title="1 运行前的配置"></a>1 运行前的配置</h1><h2 id="1-1-用户信息配置"><a href="#1-1-用户信息配置" class="headerlink" title="1.1 用户信息配置"></a>1.1 用户信息配置</h2><p>Git 自带一个 <code>git config</code> 的工具来设置 Git 外观和行为的配置参数。有三个不同级别的设置，分别对应不同的文件夹和作用域。</p>
+<ol>
+<li>如果使用带有<code>--system</code> 选项的 <code>git config</code> 时，他会从文件 <code>/etc/gitconfig</code> 文件中进行配置变量的读写。==包含对系统上每一个用户及他们仓库的通用配置==。</li>
+</ol>
+<ol start="2">
+<li>如果使用带有 <code>--global</code> 选现的 <code>git config</code> 时，他会从文件 <code>~/.gitconfig</code> 或 <code>~/.config/git/config</code> 文件中进行配置变量的读写。==只针对当前用户==。</li>
+</ol>
+<ol start="3">
+<li>当前使用仓库的 Git 目录中的 config 文件（.git/config）: ==只针对该仓库== </li>
+</ol>
+<p>每一个级别覆盖上一个级别的配置。所以 <code>.git/config</code> 的配置变量会覆盖 <code>/etc/gitconfig</code> 中的配置变量。</p>
+<p> 在 Windows 系统中，Git 会查找 <code>$HOME</code> 目录下（一般情况是 <code>C:\Users\$USER</code>）的 <code>.gitconfig</code> 文件。 Git 同样也会寻找 <code>/etc/gitconfig</code> 文件，但只限于 MSys 的根目录下，即安装 Git 时所选的目标位置。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为当前用户配置用户名</span></span><br><span class="line">git config --global user.name Guo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为当前用户配置邮箱</span></span><br><span class="line">git config --global user.email email@company.com</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-2-文本编辑器"><a href="#1-2-文本编辑器" class="headerlink" title="1.2 文本编辑器"></a>1.2 文本编辑器</h2><p>既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，通常是 Vim。 如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-3-检查配置信息"><a href="#1-3-检查配置信息" class="headerlink" title="1.3 检查配置信息"></a>1.3 检查配置信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global user.name</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -620,77 +737,6 @@
 <p>可以看出，Git 只是简单地将别名替换为对应的命令。 然而，你可能想要执行外部命令，而不是一个 Git 子命令。 如果是那样的话，可以在命令前面加入 <code>!</code> 符号。 如果你自己要写一些与 Git 仓库协作的工具的话，那会很有用。 我们现在演示将 <code>git visual</code> 定义为 <code>gitk</code> 的别名：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.visual <span class="string">'!gitk'</span></span><br></pre></td></tr></table></figure>
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/3%20%E5%88%86%E6%94%AF/">3 分支</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建分支</span></span><br><span class="line">git branch branchname</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换分支</span></span><br><span class="line">git checkout branchname</span><br><span class="line"></span><br><span class="line"><span class="comment"># -----------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并切换分支</span></span><br><span class="line">git checkout -b branchname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除分支</span></span><br><span class="line">git branch -d branchname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示所有的分支及当前所在分支</span></span><br><span class="line">git branch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进一步显示所有分支的最后一次提交</span></span><br><span class="line">git branch -v</span><br></pre></td></tr></table></figure>
-
-
-
-<p>–merged 与 –no-merged 这两个有用的选项可以过滤这个列表中已经合并或尚未合并到当前分支的分支。 如果要查看哪些分支已经合并到当前分支，可以运行 git branch –merged：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch --merged</span><br><span class="line">  iss53</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
-
-<p>查看所有包含未合并工作的分支，可以运行 <code>git branch --no-merged</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git branch --no-merged</span><br><span class="line">  testing</span><br></pre></td></tr></table></figure>
-
-<p>这里显示了其他分支。 因为它包含了还未合并的工作，尝试使用 <code>git branch -d</code> 命令删除它时会失败：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch -d testing</span><br><span class="line">error: The branch <span class="string">'testing'</span> is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run <span class="string">'git branch -D testing'</span>.</span><br></pre></td></tr></table></figure>
-
-<p>如果真的想要删除分支并丢掉那些工作，如同帮助信息里所指出的，可以使用 <code>-D</code> 选项强制删除它。</p>
-<p><strong>变基操作</strong></p>
-<p>在本地仓库的 master 分之下执行变基操作时，默认以本地 refs/origin/master (前提是通过 git fetch 进行抓取过了) 为变基操作的目标基地分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git rebase</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改冲突后</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br></pre></td></tr></table></figure>
-
-<p>本地 master 的分支与 res/origin/master 的分支有共同的祖先，找出本地 master 分支相对于 res/origin/master的修改，并将其应用到 res/origin/master 的分支上，（这时，可能需要修改冲突的地方后继续），  res/origin/master 分支和本地master分支共同指向最新的合并后的分支，git push 将本地 master 的分支推送到远程仓库的 master 分支，完成了 res/origin/master 分支和本地master分支的变基操作。</p>
-<p><strong>合并操作</strong></p>
-<p>在本地仓库的 master 分之下执行合并操作时，默认以 refs/origin/master 为要合并的另一个分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git merge</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改冲突后</span></span><br><span class="line">git commit -a -m <span class="string">"decscription"</span></span><br></pre></td></tr></table></figure>
-
-<p>进行一次三方合并后，本地master分支的最新提交对象推送到远程仓库完成了合并操作。</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/git%20log%20example/">git log example</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.ll <span class="string">"log --pretty='%C(yellow)%h %C(cyan)%cd %Creset%s %Cred&lt;%an&gt;' --date=format:'%y/%m/%d %H:%M' --graph"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><a href="https://www.cnblogs.com/bellkosmos/p/5923439.html" target="_blank" rel="noopener">https://www.cnblogs.com/bellkosmos/p/5923439.html</a></p>
 
                 
             </div>
