@@ -84,6 +84,229 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E9%80%9F%E6%9F%A5%E8%A1%A8/">速查表</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p><a href="https://ihateregex.io/cheatsheet/#" target="_blank" rel="noopener"># cheatsheet</a></p>
+<p>tiny regex cheatsheet</p>
+<table>
+<thead>
+<tr>
+<th>expr</th>
+<th>usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/hello/</td>
+<td>looks for the string between the forward slashes (case-sensitive)</td>
+</tr>
+<tr>
+<td>/hello/i</td>
+<td>looks for the string between the forward slashes (case-insensitive)</td>
+</tr>
+<tr>
+<td>/hello/g</td>
+<td>looks for multiple occurrences of string between the forward slashes</td>
+</tr>
+<tr>
+<td>/h.llo/</td>
+<td>the ‘.’ matches any one character other than a new line character… matches ‘hello’, ‘hallo’ but not ‘h llo’</td>
+</tr>
+<tr>
+<td>/h.*llo/</td>
+<td>the “*” matches any character(s) zero or more times… matches “hello”, “heeeeeello”, “hllo”, “hwarwareallo”</td>
+</tr>
+<tr>
+<td>/\d/</td>
+<td>matches any digit</td>
+</tr>
+<tr>
+<td>/\D/</td>
+<td>matches any non-digit</td>
+</tr>
+<tr>
+<td>/\w/</td>
+<td>matches any word character (a-z, A-Z, 0-9, _)</td>
+</tr>
+<tr>
+<td>/\W/</td>
+<td>matches any non-word character</td>
+</tr>
+<tr>
+<td>/\s/</td>
+<td>matches any white space character (\r (carriage return),\n (new line), \t (tab), \f (form feed))</td>
+</tr>
+<tr>
+<td>/\S/</td>
+<td>matches any non-white space character</td>
+</tr>
+<tr>
+<td>/[abcd]/</td>
+<td>matches any character in square brackets</td>
+</tr>
+<tr>
+<td>/[ch]at/</td>
+<td>matches cat or hat</td>
+</tr>
+<tr>
+<td>/[^abcd]/</td>
+<td>matches anything except the characters in square brackets</td>
+</tr>
+<tr>
+<td>/[a-z]/</td>
+<td>matches all lowercase letters (a to z)</td>
+</tr>
+<tr>
+<td>/[A-Z]/</td>
+<td>matches all uppercase letters (A to Z)</td>
+</tr>
+<tr>
+<td>/[0-9]/</td>
+<td>matches all digits</td>
+</tr>
+<tr>
+<td>/[a-zA-Z]/</td>
+<td>matches all lowercase and uppercase letters</td>
+</tr>
+<tr>
+<td>/[^a-zA-Z]/</td>
+<td>matches non-letters</td>
+</tr>
+<tr>
+<td>/[a-zA-Z0-9]/</td>
+<td>matches all lowercase, uppercase letters and numbers</td>
+</tr>
+<tr>
+<td>/(hello){4}/</td>
+<td>matches “hellohellohellohello”</td>
+</tr>
+<tr>
+<td>/hello{3}/</td>
+<td>matches “hellooo” and “helloooo” but not “helloo”</td>
+</tr>
+<tr>
+<td>/(hello){1,3}/</td>
+<td>matches “hello” that occur between 1 and 3 times (inclusive)</td>
+</tr>
+<tr>
+<td>/(hello){3,}/</td>
+<td>matches “hello” that occur atleast 3 times</td>
+</tr>
+<tr>
+<td>/ab*c/</td>
+<td>matches zero or more repetitions of “b” (matches “abc”, “abbbbc”, “ac”)</td>
+</tr>
+<tr>
+<td>/ab+c/</td>
+<td>matches one or more repetitions of “b” (matches “abc”, “abbbbc”, but not “ac”)</td>
+</tr>
+<tr>
+<td>/^/</td>
+<td>matches beginning of a line</td>
+</tr>
+<tr>
+<td>/$/</td>
+<td>matches end of a line</td>
+</tr>
+<tr>
+<td>/(hard)?work/</td>
+<td>matches “work” or “hardwork”</td>
+</tr>
+<tr>
+<td>/(?:hard)?work/</td>
+<td>matches “work” or “hardwork” but is a non-capturing group</td>
+</tr>
+<tr>
+<td>/i am a (cat|dog|whale) person/</td>
+<td>matches “i am a cat person”, “i am a dog person” and “i am a whale person”</td>
+</tr>
+<tr>
+<td>/z(?=a)/</td>
+<td>positive lookahead… matches the “z” before the “a” in pizza but not the first “z”</td>
+</tr>
+<tr>
+<td>/z(?!a)/</td>
+<td>negative lookahead… matches the first “z” but not the “z” before the “a”</td>
+</tr>
+<tr>
+<td>/(?&lt;=[aeiou])\w/</td>
+<td>positive lookbehind… matches any word character that is preceded by a vowel</td>
+</tr>
+<tr>
+<td>/(?&lt;![aeiou])\w/</td>
+<td>negative lookbehind… matches any word character that is not preceded by a vowel</td>
+</tr>
+</tbody></table>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Mysql/MySQL%208.0.16%20JDBC%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98/">MySQL 8.0.16 JDBC 数据库连接问题</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="MySQL-8-0-16-JDBC-数据库连接问题"><a href="#MySQL-8-0-16-JDBC-数据库连接问题" class="headerlink" title="MySQL 8.0.16 JDBC 数据库连接问题"></a>MySQL 8.0.16 JDBC 数据库连接问题</h3><p>Mysql 版本：mysql  Ver 8.0.16 for Win64 on x86_64 (MySQL Community Server - GPL)， 使用 5.x.x 或较低版本的  JDBC driver for MySQL 会出现连接问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.ClassCastException: java.math.BigInteger cannot be cast to java.lang.Long</span><br><span class="line">	at com.mysql.jdbc.ConnectionImpl.buildCollationMapping(ConnectionImpl.java:<span class="number">1019</span>)</span><br><span class="line">	... <span class="number">16</span> more</span><br></pre></td></tr></table></figure>
+
+<p>需要修改驱动器为对应的版本 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.16<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>InvalidConnectionAttributeException</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.InvalidConnectionAttributeException: </span><br><span class="line"></span><br><span class="line">The server time zone value <span class="string">'�й���׼ʱ��'</span> is unrecognized or represents more than one time zone. <span class="function">You must configure either the server or JDBC <span class="title">driver</span> <span class="params">(via the serverTimezone configuration property)</span> to use a more specifc time zone value <span class="keyword">if</span> you want to utilize time zone support.</span></span><br></pre></td></tr></table></figure>
+
+<p>url 设置 serverTimezone属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//localhost:3306/world?serverTimezone=UTC</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="MySQL-Connector-J-Database-URL"><a href="#MySQL-Connector-J-Database-URL" class="headerlink" title="MySQL Connector/J Database URL"></a>MySQL Connector/J Database URL</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:&#x2F;&#x2F;[host][,failoverhost...]</span><br><span class="line">    [:port]&#x2F;[database]</span><br><span class="line">    [?propertyName1][&#x3D;propertyValue1]</span><br><span class="line">    [&amp;propertyName2][&#x3D;propertyValue2]...</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>left join 与 left outer join 的区别</p>
+<p>事务的隔离级别</p>
+<p>Vector 的使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> java.util.<span class="function">Enumeration&lt;Driver&gt; <span class="title">getDrivers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    java.util.Vector&lt;Driver&gt; result = <span class="keyword">new</span> java.util.Vector&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; callerClass = Reflection.getCallerClass();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Walk through the loaded registeredDrivers.</span></span><br><span class="line">    <span class="keyword">for</span>(DriverInfo aDriver : registeredDrivers) &#123;</span><br><span class="line">        <span class="comment">// If the caller does not have permission to load the driver then</span></span><br><span class="line">        <span class="comment">// skip it.</span></span><br><span class="line">        <span class="keyword">if</span>(isDriverAllowed(aDriver.driver, callerClass)) &#123;</span><br><span class="line">            result.addElement(aDriver.driver);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            println(<span class="string">"    skipping: "</span> + aDriver.getClass().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (result.elements());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E7%A4%BA%E4%BE%8B%E6%AD%A3%E5%88%99/">示例正则</a></h2>
             </div>
             <div class="post-meta">
@@ -100,89 +323,6 @@
                 
                     <p>Hibernate validator 源码中 RegexpURLValidator 对校验 url 的正则表达式</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// see http://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern URL_REGEX = Pattern</span><br><span class="line">		.compile(</span><br><span class="line">				<span class="string">"(?i)^([a-z](?:[-a-z0-9\\+\\.])*)"</span> + <span class="comment">// protocol</span></span><br><span class="line">				<span class="string">":(?:\\/\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:])*@)?"</span> + <span class="comment">// auth</span></span><br><span class="line">				<span class="string">"((?:\\[(?:(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;6&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|::(?:[0-9a-f]&#123;1,4&#125;:)&#123;5&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;4&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;3&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,2&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:)&#123;2&#125;(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,3&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;:(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,4&#125;[0-9a-f]&#123;1,4&#125;)?::(?:[0-9a-f]&#123;1,4&#125;:[0-9a-f]&#123;1,4&#125;|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;)|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,5&#125;[0-9a-f]&#123;1,4&#125;)?::[0-9a-f]&#123;1,4&#125;|(?:(?:[0-9a-f]&#123;1,4&#125;:)&#123;0,6&#125;[0-9a-f]&#123;1,4&#125;)?::)|v[0-9a-f]+[-a-z0-9\\._~!\\$&amp;'\\(\\)\\*\\+,;=:]+)\\]|(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\.(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))&#123;3&#125;|(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=@])*))"</span> + <span class="comment">// host/ip</span></span><br><span class="line">				<span class="string">"(?::([0-9]*))?"</span> + <span class="comment">// port</span></span><br><span class="line">				<span class="string">"(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|\\/(?:(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*)?|(?:(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))+)(?:\\/(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@]))*)*|(?!(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])))(?:\\?(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\x&#123;E000&#125;-\\x&#123;F8FF&#125;\\x&#123;F0000&#125;-\\x&#123;FFFFD&#125;|\\x&#123;100000&#125;-\\x&#123;10FFFD&#125;\\/\\?])*)?(?:\\#(?:(?:%[0-9a-f][0-9a-f]|[-a-z0-9\\._~\\x&#123;A0&#125;-\\x&#123;D7FF&#125;\\x&#123;F900&#125;-\\x&#123;FDCF&#125;\\x&#123;FDF0&#125;-\\x&#123;FFEF&#125;\\x&#123;10000&#125;-\\x&#123;1FFFD&#125;\\x&#123;20000&#125;-\\x&#123;2FFFD&#125;\\x&#123;30000&#125;-\\x&#123;3FFFD&#125;\\x&#123;40000&#125;-\\x&#123;4FFFD&#125;\\x&#123;50000&#125;-\\x&#123;5FFFD&#125;\\x&#123;60000&#125;-\\x&#123;6FFFD&#125;\\x&#123;70000&#125;-\\x&#123;7FFFD&#125;\\x&#123;80000&#125;-\\x&#123;8FFFD&#125;\\x&#123;90000&#125;-\\x&#123;9FFFD&#125;\\x&#123;A0000&#125;-\\x&#123;AFFFD&#125;\\x&#123;B0000&#125;-\\x&#123;BFFFD&#125;\\x&#123;C0000&#125;-\\x&#123;CFFFD&#125;\\x&#123;D0000&#125;-\\x&#123;DFFFD&#125;\\x&#123;E1000&#125;-\\x&#123;EFFFD&#125;!\\$&amp;'\\(\\)\\*\\+,;=:@])|[\\/\\?])*)?$"</span></span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20Enviroment/">Spring Enviroment</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Spring-Environment"><a href="#Spring-Environment" class="headerlink" title="Spring Environment"></a>Spring Environment</h2><p><code>Environment</code> 是对 Spring 应用环境 (Spring Application Environment) 的抽象; 应用于应用环境的两个方面：<code>profiles</code> 以及 <code>properties</code>。 </p>
-<p><code>profiles</code> 属于条件化创建 bean 的一种机制， 不同的 <code>profile</code> 包含了一组 bean 的定义，运行时，可以指定激活哪些 <code>profile</code>(spring.profiles.active), 以及应用哪些默认的 <code>profile</code>(spring.profiles.default)。</p>
-<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p><code>properties</code> 包含了应用用到的所有属性对，可能来源于（不限于）：</p>
-<ul>
-<li>properties 文件</li>
-<li>JVM 系统属性</li>
-<li>系统环境变量</li>
-<li>JNDI</li>
-<li>Servlet Context Parameters</li>
-<li>临时属性对象 ad-hoc <code>Properties</code> object</li>
-<li>Map 对象</li>
-</ul>
-<p><code>PropertySource</code> 是对任何键值对的属性源的一种抽象，Spring 提供的 <code>Environment</code> 都会配置两个 <code>PropertySource</code> 对象，分别代表JVM系统属性的集合（ <code>System.getProperties()</code> ）和系统环境变量  （<code>System.getenv()</code> ）</p>
-<p><code>Environment</code> 对象提供了配置 <code>PropertySource</code> 以及在这些 <code>PropertySource</code> 对象上的检索功能，检索某个属性键是否存在或者对应的值。</p>
-<p>Spring Web 应用中, <code>StandardServletEnvironment</code> 实现，检索的优先级如下：</p>
-<ol>
-<li>ServletConfig parameters </li>
-<li>ServletContext parameters ( web.xml context-param entries )</li>
-<li>JNDI environment variables  (<code>java:comp/env/</code> entries) </li>
-<li>JVM system properties (<code>-D</code> command-line arguments) </li>
-<li>JVM system environment (operating system environment variables) </li>
-</ol>
-<p>整个机制是可配置的, 可以移除某个 <code>PropertySource</code> ，或者改变检索的优先级</p>
-<h4 id="PropertySource-注解"><a href="#PropertySource-注解" class="headerlink" title="@PropertySource 注解"></a><code>@PropertySource</code> 注解</h4><p><code>@PropertySource</code> 注解提供了一种向 <code>Environment</code> 添加属性源的便利方式，使用在 <code>@Configuration</code> 类上，需要提的一点是，任何出现在 <code>@PropertySource</code>属性源路径中的 <code>${..}</code> 占位符会从已经注册的 <code>PropertySource</code> 中检索，也可以提供一个默认值，如 <code>${key:default}</code></p>
-<p>xml 定义中，import 其他bean定义时，可以使用占位符，Spring 会从当前 Environment 中进行解析</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"$&#123;test&#125;.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>但是当定义某个 bean 时，必须配置一个 PropertySourcesPlaceholderConfigurer， 才可以使用占位符</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java.beans.PropertyEditor Spring implementation which can convert String paths to Resource objects.</span><br><span class="line">Classloader.getResource()</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">		<span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">		prepareRefresh();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">		prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">			postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">               <span class="comment">/* </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               *  在这里处理 PropertySource </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               */</span></span><br><span class="line">			<span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">			invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">			registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize message source for this context.</span></span><br><span class="line">			initMessageSource();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize event multicaster for this context.</span></span><br><span class="line">			initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">			onRefresh();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Check for listener beans and register them.</span></span><br><span class="line">			registerListeners();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">			finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Last step: publish corresponding event.</span></span><br><span class="line">			finishRefresh();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">			logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt"</span>, ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">			destroyBeans();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Reset 'active' flag.</span></span><br><span class="line">			cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Propagate exception to caller.</span></span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>对一个字符串按每x位进行分割</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每8位进行分割，表达式所匹配的含义是：匹配一个位置，左边有字符，右边包含的字符总数是8的倍数</span></span><br><span class="line">(?&lt;=\w)(?=(\w&#123;8&#125;)+\b)</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -233,59 +373,28 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
+                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
-<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
-<p>– Becoming Functional</p>
-</blockquote>
-<p>一级函数 高阶函数？</p>
-<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
-<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
-<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
-<p>在 Java 中， 比如定义了一个 Function 接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
-</blockquote>
-<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
-<p><strong>匿名函数</strong></p>
-<blockquote>
-<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
-</blockquote>
-<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
-<blockquote>
-<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
-</blockquote>
-<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
-<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
-
-
-
+                    <p>getResourceAsStream</p>
+<p>java.lang.reflect.Proxy</p>
+<p>MySQL for Excel</p>
+<ul>
+<li>Import MySQL data into Excel.</li>
+<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
+<li>Modify MySQL data directly from within Excel.</li>
+</ul>
 
                 
             </div>
