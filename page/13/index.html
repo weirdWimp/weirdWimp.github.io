@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
+                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%208%20Pattern%20Matching/">Chapter 8 Pattern Matching</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,84 +98,71 @@
             </div>
             <div class="post-content">
                 
-                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
-<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
-<p>– Becoming Functional</p>
-</blockquote>
-<p>一级函数 高阶函数？</p>
-<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
-<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
-<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
-<p>在 Java 中， 比如定义了一个 Function 接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
+                    <h1 id="Chapter-8-Patter-Matching"><a href="#Chapter-8-Patter-Matching" class="headerlink" title="Chapter 8 Patter Matching"></a>Chapter 8 Patter Matching</h1><p>函数式编程下的模式识别</p>
+<p>主要是为了避免 <code>if/else</code> 结构的维护性差，可读性差。通过匹配对象，以及对对象的成员进行解析（Extract）进行匹配，来观察对象的类型或者执行一定的操作。文中主要用 Scala 进行演示，主要通过 <code>case</code> <code>match</code> 关键字来完成模式匹配。</p>
+<p>例如有一个需求，Customer 对象的成员有 name, state, domain 都是 String 类型的，要求有一个构造方法，若其中任何一个字段为空字符串，返回 NULL。</p>
+<p>最简单直接的方式就是用 if/else</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="literal">null</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    name,</span><br><span class="line">    state,</span><br><span class="line">    domain,</span><br><span class="line">    <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">    <span class="type">List</span>()</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<blockquote>
-<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
-</blockquote>
-<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
-<p><strong>匿名函数</strong></p>
-<blockquote>
-<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
-</blockquote>
-<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
-<blockquote>
-<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
-</blockquote>
-<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在通过 case match 进行重构之前，自认为可以简单的通过卫语句来进行重写，可以让逻辑稍微清晰一点。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(name.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(state.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(domain.isEmpty) &#123;</span><br><span class="line">  println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br></pre></td></tr></table></figure>
 
 
 
-<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
-<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
+<p>现在使用 case 和 match 来重构，完成模式匹配。主要做法是将三个属性封装在一个对象或者数据结构里，如 Tuple 元组 （name, state, domain), 然后对这元祖进行匹配。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name:<span class="type">String</span>, state:<span class="type">String</span>, domain:<span class="type">String</span>)</span><br><span class="line">: <span class="type">Customer</span> = &#123;</span><br><span class="line">    (name, state, string) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="string">""</span>, _, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        cae (_, <span class="string">""</span>, _,) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; &#123;</span><br><span class="line">            println(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">            <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Customer</span>( <span class="number">0</span>, name, state, domain, <span class="literal">true</span>, <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>), <span class="type">List</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>继续来重构之前用尾递归写的一个方法：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="keyword">if</span>(ids.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(initialIds.size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    initialIds</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123; <span class="type">List</span>() &#125; <span class="keyword">else</span> &#123; <span class="type">List</span>(cls(precust.get)) &#125;</span><br><span class="line">    cust ::: updateCustomerByIdList(</span><br><span class="line">      initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)),</span><br><span class="line">      ids.tail,</span><br><span class="line">      cls</span><br><span class="line">    )</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>同样使用元祖、case、match 来进行重构</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> _ =&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == ids(<span class="number">0</span>))</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == ids(<span class="number">0</span>)), ids.drop(<span class="number">1</span>), cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>但是，能否进一步减少这个方法的复杂程度呢？通过 <code>Extracting Lists</code> 来实现。</p>
+<p><code>x::y</code> 操作符出现在 case 语句中，告诉 Scala, 匹配的对象应该是一个 list， 这个 list 的首元素将被赋值给 x, 剩下的元素 (也是一个list) tail 将赋值给 y</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            <span class="keyword">val</span> cust = <span class="keyword">if</span>(precust.isEmpty) &#123;<span class="type">List</span>()&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">List</span>(cls(precust.get))&#125;</span><br><span class="line">            cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>上面的代码中，find 方法返回的是一个Option 对象，可以将它转换为 list, 集训进行 <code>Extracting Lists</code></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id).toList</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">List</span>() =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> cust ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>None 和 Some 是 Option 接口的两个实现类，None 对象不包含任何对象，Some 包含了实际存在的对象。因此可以对 find 返回的 Option 对象直接进行模式匹配，包含两种模式 <code>case None</code> <code>case Some</code></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateCustomerByIdList</span></span>(initialIds : <span class="type">List</span>[<span class="type">Customer</span>],</span><br><span class="line">                           ids : <span class="type">List</span>[<span class="type">Integer</span>],</span><br><span class="line">                           cls : <span class="type">Customer</span> =&gt; <span class="type">Customer</span>) : <span class="type">List</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    (initialIds, ids) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> (<span class="type">List</span>(), _) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, <span class="type">List</span>()) =&gt; initialIds</span><br><span class="line">        <span class="keyword">case</span> (_, id::tailIds)=&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> precust = initialIds.find(cust =&gt; cust.customer_id == id)</span><br><span class="line">            precust <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">None</span> =&gt; updateCustomerByIdList(initialIds, tailIds, cls)</span><br><span class="line">                <span class="keyword">case</span> <span class="type">Some</span>(cust) ::: updateCustomerByIdList(initialIds.filter(cust =&gt; cust.customer_id == id), tailIds, cls)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以让之前的 createCustomer 直接返回一个 Option 对象，更加函数化</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createCustomer</span></span>(name : <span class="type">String</span>,</span><br><span class="line">                   state : <span class="type">String</span>,</span><br><span class="line">                   domain : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">error</span></span>(message : <span class="type">String</span>) : <span class="type">Option</span>[<span class="type">Customer</span>] = &#123;</span><br><span class="line">    println(message)</span><br><span class="line">    <span class="type">None</span></span><br><span class="line">  &#125;</span><br><span class="line">  (name, state, domain) <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="string">""</span>, _, _) =&gt; error(<span class="string">"Name cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, <span class="string">""</span>, _) =&gt; error(<span class="string">"State cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> (_, _, <span class="string">""</span>) =&gt; error(<span class="string">"Domain cannot be blank"</span>)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">new</span> <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">Customer</span>(</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        name,</span><br><span class="line">        state,</span><br><span class="line">        domain,</span><br><span class="line">        <span class="literal">true</span>,</span><br><span class="line">        <span class="keyword">new</span> <span class="type">Contract</span>(<span class="type">Calendar</span>.getInstance, <span class="literal">true</span>),</span><br><span class="line">        <span class="type">List</span>()</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
-<p>allocation table - 分配表</p>
-<p>stack frame - 栈帧</p>
-<p>heap - 堆</p>
-<p>reachable object - 可达对象/活性对象</p>
-<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
-<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
-<p>对象的预期生命周期称为 <code>代</code></p>
-<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
-<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
-<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
-<p> Eden 区 / Nursery 区</p>
-<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
-<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
-<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
-<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
-<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
-<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
+
+<p>用 case 关键字修饰类</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span>(<span class="params">val customer_id : <span class="type">Integer</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val name : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val state : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val domain : <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val enabled : <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contract : <span class="type">Contract</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                    val contacts : <span class="type">List</span>[<span class="type">Contact</span>]</span>) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">case</span> cust :: custs =&gt; &#123;</span><br><span class="line">          <span class="keyword">if</span> (cust.enabled &amp;&amp; cust.contacts.exists(&#123; contact =&gt; contact.enabled&#125;))</span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                 countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">  customers <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">        <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">              countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countEnabledCustomersWithNoEnabledContacts</span></span>(customers : <span class="type">List</span>[<span class="type">Customer</span>], sum : <span class="type">Integer</span>) : <span class="type">Integer</span> = &#123;</span><br><span class="line">    customers <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">List</span>() =&gt; sum</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,<span class="type">List</span>()) :: custs =&gt;</span><br><span class="line">               countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> <span class="type">Customer</span>(_,_,_,_,<span class="literal">true</span>,_,cont) :: custs</span><br><span class="line">           <span class="keyword">if</span> cont.exists(&#123; contact =&gt; contact.enabled&#125;) =&gt;</span><br><span class="line">                countEnabledCustomersWithNoEnabledContacts(custs, sum + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">case</span> cust :: custs =&gt; countEnabledCustomersWithNoEnabledContacts(custs, sum)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
                 
             </div>
@@ -317,28 +304,59 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/ClassLoaderWrapper/">ClassLoaderWrapper</a></h2>
+                <h2><a class="post-title-link" href="/Becoming%20Functional/Chapter%202%20Fist%20Class%20Function/">Chapter 2 Fist Class Function</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Becoming-Functional/">Becoming Functional</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>getResourceAsStream</p>
-<p>java.lang.reflect.Proxy</p>
-<p>MySQL for Excel</p>
-<ul>
-<li>Import MySQL data into Excel.</li>
-<li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
-<li>Modify MySQL data directly from within Excel.</li>
-</ul>
+                    <h1 id="Chapter-2-First-Class-Function"><a href="#Chapter-2-First-Class-Function" class="headerlink" title="Chapter 2 First Class Function"></a>Chapter 2 First Class Function</h1><blockquote>
+<p>First-class functions are functions treated as objects themselves, meaning we can pass a function as a parameter to another function, return a function from a function, or store a function in a variable.</p>
+<p>– Becoming Functional</p>
+</blockquote>
+<p>一级函数 高阶函数？</p>
+<p>First-Class Function (暂时不知道怎么样翻译较为妥当) 或者 High Order Function 是被视作为对象的函数，也就是说本质上还是一个对象，因此可以作为另一个函数的参数或者在一个函数中返回一个函数，或者将一个函数保存在一个对象中。</p>
+<p>函数与对象的区别：函数，顾名思义，就是实现一定功能，是对操作的封装，是有别于存储数据的对象的, 但并不等同于一个类，类中有一个方法。比如定义一个 Student 类，其定义中必定包含相关的属性，如学号、姓名等。 它的对象是存储了数据的，而一个函数仅仅是对输入作相应的操作，并返回一个结果，在 Java 中就可以通过定义一个接口，而这个接口中有一个抽象的方法，作为这个函数相关操作封装的地方。</p>
+<p>上述理解我觉得只是在 Java 中的理解，或者面向对象的语言中的理解，运用接口来实现接受和返回 “函数”。在完全的函数式编程语言中的理解留作后续的研究。 纯粹的 First-Class Function 或者 High Order Function 定义就是函数可以作为另一个函数的参数，或者返回值。</p>
+<p>在 Java 中， 比如定义了一个 Function 接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么实现这个接口的任何类或者类的对象都是一个 First-Class Function。 可以作为参数，可以作为一个返回值，可以存储在一个变量中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;T, R&gt; function = t -&gt; r;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>The DRY (Don’t Repeat Yourself) principle</strong> has been around for many years; the concept is that we should not be duplicating lines of code. This makes the code harder to maintain. But why is that the case?<br>Think about what happens if you duplicate a function multiple times. Now imagine that you just found a bug in one of those functions; you’ll have to go through however many other functions to see if that same bug exists.</p>
+</blockquote>
+<p>不要写重复的代码，如果重复的代码出现在多处，那么后来发现有错误，就要进行多处的检查，不好维护，而且没有本质的意义。</p>
+<p><strong>匿名函数</strong></p>
+<blockquote>
+<p><strong>Lambda functions</strong> are unnamed functions that contain a parameter list, a body, and a return.</p>
+</blockquote>
+<p>作者定义 Lambda 函数包含三部分： <strong>参数列表、函数体、返回值</strong>， 并且是没有名称的函数（unnamed）</p>
+<blockquote>
+<p><strong>Closures</strong> are much like lambdas, except they reference variables outside the scope of the function. The body references a variable that doesn’t exist in either the body or the parameter list.</p>
+</blockquote>
+<p><strong>Closure</strong> 和 lambda function 很像，但区别在于它们引用了函数范围以外的变量，这个变量既不存在参数列表中，也不存在函数体中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getEnabledCustomerSomeoneEmail</span><span class="params">(<span class="keyword">final</span> String someone)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> Customer.getEnabledCustomerField(<span class="keyword">new</span>           Function1&lt;Customer, String&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> someone + <span class="string">"@"</span> + customer.domain;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Using closures, you can build functions and pass them to other functions while referencing local variables. </p>
+<p>使用 Closure，就可以将函数作为一个参数传至另一个函数，并且引用局部变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Example 2-18. getField with test function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;B&gt; <span class="function">List&lt;B&gt; <span class="title">getField</span><span class="params">(Function1&lt;Customer,Boolean&gt; test,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   Function1&lt;Customer,B&gt; func)</span> </span>&#123;</span><br><span class="line">  ArrayList&lt;B&gt; outList = <span class="keyword">new</span> ArrayList&lt;B&gt;();</span><br><span class="line">  <span class="keyword">for</span> (Customer customer : Customer.allCustomers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (test.call(customer)) &#123;</span><br><span class="line">      outList.add(func.call(customer));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> outList;</span><br></pre></td></tr></table></figure>
+
+
+
 
                 
             </div>
@@ -346,7 +364,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E6%B3%9B%E5%9E%8B/">泛型</a></h2>
+                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -360,23 +378,83 @@
             </div>
             <div class="post-content">
                 
-                    <p>参考 Comparator 接口的静态方法 comparing</p>
-<blockquote>
-<p>Producer Extends, Consumer Super</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T, E extends Comparable&lt;? <span class="keyword">super</span> E&gt;&gt; <span class="function">Comparator&lt;T&gt; <span class="title">comparing</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends E&gt; keyGenerator)</span> </span>&#123;</span><br><span class="line">    Comparator&lt;T&gt; comparator1 = <span class="keyword">new</span> Comparator&lt;T&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 假设 keyGenerator 的定义接受一个 T 的父类型, 如 FatherT</span></span><br><span class="line">            <span class="comment">// 此时 o1 是 T 类型的，是可以作为 keyGenerator.apply(FatherT fatherT) 的参数的</span></span><br><span class="line">            <span class="comment">// 会进行向上转换，是合理有效的，任何父类引用都可以指向子类对象（父类的方法都会被子类继承，所以是合理的）</span></span><br><span class="line">            <span class="keyword">return</span> keyGenerator.apply(o1).compareTo(keyGenerator.apply(o2));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// lambda 表达式写法</span></span><br><span class="line">    Comparator&lt;T&gt; comparator = (c1, c2) -&gt; keyGenerator.apply(c1).compareTo(keyGenerator.apply(c2));</span><br><span class="line">    <span class="keyword">return</span> comparator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
+<p>allocation table - 分配表</p>
+<p>stack frame - 栈帧</p>
+<p>heap - 堆</p>
+<p>reachable object - 可达对象/活性对象</p>
+<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
+<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
+<p>对象的预期生命周期称为 <code>代</code></p>
+<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
+<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
+<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
+<p> Eden 区 / Nursery 区</p>
+<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
+<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
+<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
+<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
+<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
+<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
+<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>如果要返回一个 T 类型的 Comparator, 也就是 Comparator<T>, 其负载类型为 T，comparing 是可以传入一个 Functinon&lt;? super T, ? extends E&gt; 的实例的，Functinon  的负载类型的第一个参数类型可以为 T 的任何父类型，也就是此 Functinon 的 apply() 方法可以接受任何 T 的父类对象。</p>
-<p>在返回一个 Comparator<T> 对象时，Functinon 函数会接受一个 T 对象实例，此时，会发生向上转换:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法签名接受一个 Father 对象</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printField</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">    System.out.pritln(father.getField());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Son = <span class="keyword">new</span> Son();</span><br><span class="line">    <span class="comment">// 传入一个子类 Son 对象</span></span><br><span class="line">    printField(son);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
+<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
+<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
+<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
+<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
+<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
+<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
+<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
+<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
+<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
+<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
+<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
+<p>维基百科 - initialization-on-demand holder</p>
+<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
+<p>分为以下几个阶段：</p>
+<ol>
+<li><strong>加载</strong></li>
+</ol>
+<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
+<ol>
+<li><strong>验证</strong></li>
+</ol>
+<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
+<ol>
+<li><strong>准备和解析</strong></li>
+</ol>
+<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
+<ol>
+<li><strong>初始化</strong></li>
+</ol>
+<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
 
-
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dateTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Function&lt;Circle, Integer&gt; circleFunc = circle -&gt; circle.getR().length();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 当左边的类型为 CircleSubClass 时， keyGenerator 的负载类型可以是 CircleSubClass 的任何父类型</span></span><br><span class="line">    <span class="comment">// 当右边 keyGenerator 的负载类型是 Circle 时，左边的 Comparator 负载类型可以是 Circle 的任何子类</span></span><br><span class="line">    Comparator&lt;CircleSubClass&gt; comparing = comparing(circleFunc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                 
             </div>
         </article>
