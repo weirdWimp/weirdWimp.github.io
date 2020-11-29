@@ -53,7 +53,7 @@
             <span></span>
         </div>
         <div class="mobile-nav-title">
-            <a href="/" class="mobile-nav-title-link">Guo's Blog</a>
+            <a href="/" class="mobile-nav-title-link">Guop's Blog</a>
         </div>
 
     </div>
@@ -84,6 +84,35 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <ol>
+<li><p>如果有这样一种情形：已经对文件做了修改并提交，并推送到远程库了，但此时发现提交信息不合规范或提交信息有误，可以进行撤销并进行重新提交正确信息吗？</p>
+<p>如果此时进行 git commit –amend -m “correct commit information”; 本地库已经没有了上次提交的信息，也就是被覆盖掉了；此时远程库依然存在，并且相当于基于同样的 parent 做出了修改，成了两个分支，这时，直接 push 会报错，需要进行合并后再次提交，这种方式并不能撤销远程库的提交信息。</p>
+</li>
+<li><p>如果没有推送到远程库呢？</p>
+<p>这时 git commit –amend 应该是可以的</p>
+</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Pro-Git-Note/%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/">提交历史</a></h2>
             </div>
             <div class="post-meta">
@@ -100,33 +129,6 @@
                 
                     <p>$ git rebase origin/master<br>First, rewinding head to replay your work on top of it…<br>Applying: second add from local<br>error: Failed to merge in the changes.<br>Using index info to reconstruct a base tree…<br>M       rebase.md<br>Falling back to patching base and 3-way merge…<br>Auto-merging rebase.md<br>CONFLICT (content): Merge conflict in rebase.md<br>Patch failed at 0001 second add from local<br>The copy of the patch that failed is found in: .git/rebase-apply/patch</p>
 <p>Resolve all conflicts manually, mark them as resolved with<br>“git add/rm <conflicted_files>“, then run “git rebase –continue”.<br>You can instead skip this commit: run “git rebase –skip”.<br>To abort and get back to the state before “git rebase”, run “git rebase –abort”.</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="远程分支"><a href="#远程分支" class="headerlink" title="远程分支"></a><strong>远程分支</strong></h1><p>远程分支 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加远程分支</span></span><br><span class="line">git add origin git@github.com:weirdWimp/log_demo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送本地分支到远程分支</span></span><br><span class="line">git push origin dev:remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在远程分支origin/remoteDev上创建本地分支dev，并且本地分支设置跟踪远程仓库origin的remoteDev分支</span></span><br><span class="line">git checkout -b dev origin/remoteDev</span><br><span class="line"></span><br><span class="line">git checkout --track origin/remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置已有本地分支跟踪远程分支</span></span><br><span class="line">git branch -u origin/serverfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line">git push origin --delete serverfix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git fetch origin</span><br><span class="line">git merge origin/master</span><br><span class="line">git push origin master:master</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Rebased dev on refs/heads/dev</p>
 
                 
             </div>
@@ -165,6 +167,33 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="远程分支"><a href="#远程分支" class="headerlink" title="远程分支"></a><strong>远程分支</strong></h1><p>远程分支 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加远程分支</span></span><br><span class="line">git add origin git@github.com:weirdWimp/log_demo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送本地分支到远程分支</span></span><br><span class="line">git push origin dev:remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在远程分支origin/remoteDev上创建本地分支dev，并且本地分支设置跟踪远程仓库origin的remoteDev分支</span></span><br><span class="line">git checkout -b dev origin/remoteDev</span><br><span class="line"></span><br><span class="line">git checkout --track origin/remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置已有本地分支跟踪远程分支</span></span><br><span class="line">git branch -u origin/serverfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line">git push origin --delete serverfix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git fetch origin</span><br><span class="line">git merge origin/master</span><br><span class="line">git push origin master:master</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rebased dev on refs/heads/dev</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/MVC%20Note1/">MVC Note1</a></h2>
             </div>
             <div class="post-meta">
@@ -189,45 +218,6 @@
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ServletContainerInitializer</span><br><span class="line"></span><br><span class="line">SpringServletContainerInitializer</span><br><span class="line"></span><br><span class="line">WebApplicationInitializer</span><br></pre></td></tr></table></figure>
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20AOP/">Spring AOP</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring提供了4种类型的AOP支持：</p>
-<ul>
-<li>基于代理的经典Spring AOP；</li>
-<li>纯POJO切面；</li>
-<li><code>@AspectJ</code>注解驱动的切面；</li>
-<li>注入式AspectJ切面（适用于Spring各版本）。</li>
-</ul>
-<p>Spring AOP构建在动态代理基础之上，因此，Spring对AOP的支持局限于方法拦截。</p>
-<p>引入了简单的声明式AOP和基于注解的AOP之后，Spring经典的AOP看起来就显得非常笨重和过于复杂，直接使用 ProxyFactory Bean会让人感觉厌烦</p>
-<p>Spring借鉴了AspectJ的切面，以提供注解驱动的AOP</p>
-<p>方法拦截可以满足绝大部分的需求。如果需要方法拦截之外的连接点拦截功能，那么我们可以利用Aspect来补充Spring AOP的功能。</p>
-<p>在Spring AOP中，要使用AspectJ的切点表达式语言来定义切点</p>
-<p>《AspectJ in Action》第二版（Manning，2009，<a href="http://www.manning.com/laddad2/）。" target="_blank" rel="noopener">www.manning.com/laddad2/）。</a></p>
-<p><code>&lt;aop:aspectj-autoproxy&gt;</code>元素，它能够自动代理AspectJ注解的通知类</p>
-<p>如下的XML代码片段与之前基于AspectJ的引入功能是相同：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">aop:declare-parents</span></span></span><br><span class="line"><span class="tag">    <span class="attr">types-matching</span>=<span class="string">"concert.Performance+"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">implement-interface</span>=<span class="string">"concert.Encoreable"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default-impl</span>=<span class="string">"concert.DefaultEncoreable"</span></span></span><br><span class="line"><span class="tag">    /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p> <code>&lt;aop:declare-parents&gt;</code>声明了此切面所通知的bean要在它的对象层次结构中拥有新的父类型。具体到本例中，类型匹配<code>Performance</code>接口（由<code>types-matching</code>属性指定）的那些bean在父类结构中会增加<code>Encoreable</code>接口（由<code>implement-interface</code>属性指定）</p>
 
                 
             </div>
@@ -271,7 +261,7 @@
             
             2020
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
-            <a target="_blank" href="https://github.com/iJinxin">Guo</a>
+            <a target="_blank" href="https://github.com/iJinxin">Guop</a>
         </p>
         <p class="theme-info">
             Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
