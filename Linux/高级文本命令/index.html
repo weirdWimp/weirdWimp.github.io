@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">高级文本命令</h2>
             <div class="post-meta">
-                <span class="post-time">2020-06-06</span>
+                <span class="post-time">2020-11-29</span>
                 
                 <span class="post-category">
                     
@@ -98,14 +98,14 @@
         </div>
         <div class="post-toc" id="post-toc">
     <strong class="post-toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#高级文本命令"><span class="toc-text">高级文本命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-sed-命令"><span class="toc-text">1 sed  命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#synopsis-基本用法"><span class="toc-text">synopsis - 基本用法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#参考链接："><span class="toc-text">参考链接：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#option"><span class="toc-text">option</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#script-command"><span class="toc-text">script command</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#examples"><span class="toc-text">examples</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-cut"><span class="toc-text">2 cut</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-awk"><span class="toc-text">3 awk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-tr"><span class="toc-text">4 tr</span></a></li></ol></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#高级文本命令"><span class="toc-text">高级文本命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-sed-命令"><span class="toc-text">1 sed  命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#synopsis-基本用法"><span class="toc-text">synopsis - 基本用法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#参考链接"><span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#option"><span class="toc-text">option</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#script-command"><span class="toc-text">script command</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#examples"><span class="toc-text">examples</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-cut"><span class="toc-text">2 cut</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-awk"><span class="toc-text">3 awk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-tr"><span class="toc-text">4 tr</span></a></li></ol></li></ol></li></ol></li></ol>
     <div class="back-to-top" id="back-to-top">
         <a href="javascript:void(0);">回到顶部</a>
     </div>
 </div>
         <div class="post-content">
-            <h1 id="高级文本命令"><a href="#高级文本命令" class="headerlink" title="高级文本命令"></a>高级文本命令</h1><h4 id="1-sed-命令"><a href="#1-sed-命令" class="headerlink" title="1 sed  命令"></a>1 sed  命令</h4><h5 id="synopsis-基本用法"><a href="#synopsis-基本用法" class="headerlink" title="synopsis - 基本用法"></a><strong>synopsis - 基本用法</strong></h5><p>sed [OPTION]… {script-only-if-no-other-script} [input-file]..</p>
-<h5 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h5><p><a href="https://www.cnblogs.com/theCambrian/p/3606214.html" target="_blank" rel="noopener">博客园  sed 的工作原理</a></p>
+            <h1 id="高级文本命令"><a href="#高级文本命令" class="headerlink" title="高级文本命令"></a>高级文本命令</h1><h3 id="1-sed-命令"><a href="#1-sed-命令" class="headerlink" title="1 sed  命令"></a>1 sed  命令</h3><h5 id="synopsis-基本用法"><a href="#synopsis-基本用法" class="headerlink" title="synopsis - 基本用法"></a><strong>synopsis - 基本用法</strong></h5><p>sed [OPTION]… {script-only-if-no-other-script} [input-file]..</p>
+<h5 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h5><p><a href="https://www.cnblogs.com/theCambrian/p/3606214.html" target="_blank" rel="noopener">博客园  sed 的工作原理</a></p>
 <p><code>man sed</code></p>
 <h5 id="option"><a href="#option" class="headerlink" title="option"></a><strong>option</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># suppress automatic printing of pattern space</span></span><br><span class="line"><span class="comment"># 关闭 pattern space 的自动打印，如果 command 中已经指定了 p, 可能就需要指定该选项</span></span><br><span class="line">-n, --quiet, --silent</span><br></pre></td></tr></table></figure>
 
@@ -170,15 +170,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Mysql/TimeZoneMapping/">
+            <a class="prev" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">TimeZoneMapping</span>
+                <span class="nav-default">Sed 命令行手册</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Java/Maven/">
-                <span class="nav-default">Maven</span>
+            <a class="next" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">
+                <span class="nav-default">新词汇</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">Guo's Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Sed 命令行手册</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-11-29</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#print-delete-and-next"><span class="toc-text">print, delete, and next</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-text">参考链接</span></a></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="print-delete-and-next"><a href="#print-delete-and-next" class="headerlink" title="print, delete, and next"></a>print, delete, and next</h2><table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P</td>
+<td>打印 pattern space 中的一行</td>
+</tr>
+<tr>
+<td>D</td>
+<td>删除当前 pattern space 的一行,并重新开始新的循环</td>
+</tr>
+<tr>
+<td>N</td>
+<td>读取输入源的下一行，并追加到 pattern space，使用 newline 分隔，并继续当前循环的执行（execution of cycle）</td>
+</tr>
+</tbody></table>
+<p>一行指的是，使用行分隔符分隔</p>
+<p>sed 命令中，似乎有这样的规约：大写字母的命令总是与多行数据相关的；通常利用这些命令实现一个队列 <code>FIFO</code>.</p>
+<p>例子：移除文件中最后5行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  1 &#123; N;N;N;N &#125;     # ensure the pattern space contains *five* lines</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  N                 # append a sixth line onto the queue</span></span><br><span class="line"><span class="string">  P                 # Print the head of the queue</span></span><br><span class="line"><span class="string">  D                 # Remove the head of the queue</span></span><br><span class="line"><span class="string">'</span></span><br></pre></td></tr></table></figure>
+
+<p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Linux/" title="Linux">Linux</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Java/JOSE/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">
+                <span class="nav-default">高级文本命令</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2020
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin">Guo</a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
