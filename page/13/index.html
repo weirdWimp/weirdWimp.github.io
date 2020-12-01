@@ -84,6 +84,177 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E9%80%9F%E6%9F%A5%E8%A1%A8/">速查表</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p><a href="https://ihateregex.io/cheatsheet/#" target="_blank" rel="noopener"># cheatsheet</a></p>
+<p>tiny regex cheatsheet</p>
+<table>
+<thead>
+<tr>
+<th>expr</th>
+<th>usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/hello/</td>
+<td>looks for the string between the forward slashes (case-sensitive)</td>
+</tr>
+<tr>
+<td>/hello/i</td>
+<td>looks for the string between the forward slashes (case-insensitive)</td>
+</tr>
+<tr>
+<td>/hello/g</td>
+<td>looks for multiple occurrences of string between the forward slashes</td>
+</tr>
+<tr>
+<td>/h.llo/</td>
+<td>the ‘.’ matches any one character other than a new line character… matches ‘hello’, ‘hallo’ but not ‘h llo’</td>
+</tr>
+<tr>
+<td>/h.*llo/</td>
+<td>the “*” matches any character(s) zero or more times… matches “hello”, “heeeeeello”, “hllo”, “hwarwareallo”</td>
+</tr>
+<tr>
+<td>/\d/</td>
+<td>matches any digit</td>
+</tr>
+<tr>
+<td>/\D/</td>
+<td>matches any non-digit</td>
+</tr>
+<tr>
+<td>/\w/</td>
+<td>matches any word character (a-z, A-Z, 0-9, _)</td>
+</tr>
+<tr>
+<td>/\W/</td>
+<td>matches any non-word character</td>
+</tr>
+<tr>
+<td>/\s/</td>
+<td>matches any white space character (\r (carriage return),\n (new line), \t (tab), \f (form feed))</td>
+</tr>
+<tr>
+<td>/\S/</td>
+<td>matches any non-white space character</td>
+</tr>
+<tr>
+<td>/[abcd]/</td>
+<td>matches any character in square brackets</td>
+</tr>
+<tr>
+<td>/[ch]at/</td>
+<td>matches cat or hat</td>
+</tr>
+<tr>
+<td>/[^abcd]/</td>
+<td>matches anything except the characters in square brackets</td>
+</tr>
+<tr>
+<td>/[a-z]/</td>
+<td>matches all lowercase letters (a to z)</td>
+</tr>
+<tr>
+<td>/[A-Z]/</td>
+<td>matches all uppercase letters (A to Z)</td>
+</tr>
+<tr>
+<td>/[0-9]/</td>
+<td>matches all digits</td>
+</tr>
+<tr>
+<td>/[a-zA-Z]/</td>
+<td>matches all lowercase and uppercase letters</td>
+</tr>
+<tr>
+<td>/[^a-zA-Z]/</td>
+<td>matches non-letters</td>
+</tr>
+<tr>
+<td>/[a-zA-Z0-9]/</td>
+<td>matches all lowercase, uppercase letters and numbers</td>
+</tr>
+<tr>
+<td>/(hello){4}/</td>
+<td>matches “hellohellohellohello”</td>
+</tr>
+<tr>
+<td>/hello{3}/</td>
+<td>matches “hellooo” and “helloooo” but not “helloo”</td>
+</tr>
+<tr>
+<td>/(hello){1,3}/</td>
+<td>matches “hello” that occur between 1 and 3 times (inclusive)</td>
+</tr>
+<tr>
+<td>/(hello){3,}/</td>
+<td>matches “hello” that occur atleast 3 times</td>
+</tr>
+<tr>
+<td>/ab*c/</td>
+<td>matches zero or more repetitions of “b” (matches “abc”, “abbbbc”, “ac”)</td>
+</tr>
+<tr>
+<td>/ab+c/</td>
+<td>matches one or more repetitions of “b” (matches “abc”, “abbbbc”, but not “ac”)</td>
+</tr>
+<tr>
+<td>/^/</td>
+<td>matches beginning of a line</td>
+</tr>
+<tr>
+<td>/$/</td>
+<td>matches end of a line</td>
+</tr>
+<tr>
+<td>/(hard)?work/</td>
+<td>matches “work” or “hardwork”</td>
+</tr>
+<tr>
+<td>/(?:hard)?work/</td>
+<td>matches “work” or “hardwork” but is a non-capturing group</td>
+</tr>
+<tr>
+<td>/i am a (cat|dog|whale) person/</td>
+<td>matches “i am a cat person”, “i am a dog person” and “i am a whale person”</td>
+</tr>
+<tr>
+<td>/z(?=a)/</td>
+<td>positive lookahead… matches the “z” before the “a” in pizza but not the first “z”</td>
+</tr>
+<tr>
+<td>/z(?!a)/</td>
+<td>negative lookahead… matches the first “z” but not the “z” before the “a”</td>
+</tr>
+<tr>
+<td>/(?&lt;=[aeiou])\w/</td>
+<td>positive lookbehind… matches any word character that is preceded by a vowel</td>
+</tr>
+<tr>
+<td>/(?&lt;![aeiou])\w/</td>
+<td>negative lookbehind… matches any word character that is not preceded by a vowel</td>
+</tr>
+</tbody></table>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Java%20Servlet/Cookie/">Cookie</a></h2>
             </div>
             <div class="post-meta">
@@ -294,140 +465,6 @@
 <li>Export Excel data to MySQL as a new table or append data to an existing table.</li>
 <li>Modify MySQL data directly from within Excel.</li>
 </ul>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Tomcat%20JDBC/">Tomcat JDBC</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>使用 DataSource 对象的优点</p>
-<ul>
-<li><p>便携性，可维护性强</p>
-<p>连接数据库的必要信息，如 url 等不必硬编码在代码中，可以直接通过 properties 文件进行设置和更新</p>
-</li>
-<li><p>DataSource 可以实现为支持数据库连接池、支持分布式事务（Distributed Transactions）</p>
-</li>
-</ul>
-<h2 id="Tomcat-JDBC"><a href="#Tomcat-JDBC" class="headerlink" title="Tomcat JDBC"></a>Tomcat JDBC</h2><table>
-<thead>
-<tr>
-<th><strong>Config Property</strong></th>
-<th><strong>Default Value</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>maxIdle</td>
-<td>100</td>
-<td>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。</td>
-</tr>
-<tr>
-<td>minIdle</td>
-<td>10</td>
-<td>任何时间，连接池中应该保持的已建立连接的最小数目。连接池中连接的数目可能会小于这个数字（由于验证查询失败或者连接被关闭），在清理程序运行时（during an evicition), 不会小于这个数字，介于 getMindle 和 getMaxIdle/getMaxActive 之间i</td>
-</tr>
-<tr>
-<td>maxActive</td>
-<td>100</td>
-<td>连接池中同一时间可以分配的最大活跃连接数</td>
-</tr>
-<tr>
-<td>timeBetweenEvictionRunsMillis</td>
-<td>5000 (5秒)</td>
-<td>空闲连接验证（idle connection validation)、弃用连接清理程序（abandoned cleaner）、idle  pool resizing 运行的时间间隔（number of milliseconds to sleep）</td>
-</tr>
-<tr>
-<td>initialSize</td>
-<td>10</td>
-<td>当启动连接池时，要建立的初始连接数，如果超过了 maxActive, 会自动减小这个数字</td>
-</tr>
-<tr>
-<td>testWhileIdle</td>
-<td>false</td>
-<td>期望连接处于空闲（idle）时，能够对其通过查询验证有效性的话，将其设置为 true</td>
-</tr>
-<tr>
-<td>testOnBorrow</td>
-<td>false</td>
-<td>表示从连接池获取连接之前，是否要对其进行验证。如果验证失败，该连接会被连接池丢弃（dropped from pool），并尝试重新获取连接。<strong>如果设置为 true 要生效的话，<code>validationQuery</code> 参数必须非空。</strong>为了提升性能， 默认 false。请参考 validationInterval 参数</td>
-</tr>
-<tr>
-<td>validationInterval</td>
-<td>3000（3秒）</td>
-<td>为了避免频繁进行验证，如果连接应进行验证，但之前已在此时间间隔内已进行验证，则不会再次对其进行验证。</td>
-</tr>
-<tr>
-<td>validationQuery</td>
-<td></td>
-<td>连接池用来对连接进行验证的 SQL 查询语句，这个查询不需要返回任何数据，例如： SELECT 1(mysql), select 1 from dual(oracle), SELECT 1(MS Sql Server)</td>
-</tr>
-<tr>
-<td>validationQueryTimeout</td>
-<td>-1</td>
-<td>连接验证查询失败前的超时时间 （The timeout in seconds before a connection validation queries fail），-1 表示不启用该特性</td>
-</tr>
-<tr>
-<td>removeAbandoned</td>
-<td>false</td>
-<td>表示如果 abandoned connections 超过了 removeAbandonedTimout 的值，是否要移除这些连接。如果设置为true，则如果连接的使用时间超过了getRemoveAbandonedTimeout（）并且满足了getAbandonWhenPercentageFull（）的条件，则认为该连接已被放弃并可以删除。 将此设置为true可以从无法关闭连接的应用程序恢复数据库连接。 另请参见isLogAbandoned（）缺省值为false</td>
-</tr>
-<tr>
-<td>removeAbandonedTimeout</td>
-<td>60 s</td>
-<td>如果一个连接使用超过了该时间，被认为是被弃用 （abandoned） 的连接。可以使用拦截器在查询后重置计时器。</td>
-</tr>
-<tr>
-<td>abandonWhenPercentageFull</td>
-<td>0</td>
-<td>只有使用中的连接超过了该参数定义的百分比，被弃用的连接（abandoned/timed out)才会被关闭和报告。默认为0，表示只要连接超过了 removeAbandonedTimeout 的值，就可以关闭该连接</td>
-</tr>
-<tr>
-<td>maxWait</td>
-<td>30000（30秒）</td>
-<td>当连接池中的连接数已经达到 maxActive，没有可用的连接时，连接池等待的超时时间，超过了该时间，就会抛出异常</td>
-</tr>
-<tr>
-<td>minEvictableIdleTimeMillis</td>
-<td>60000 （60 秒）</td>
-<td>当连接处于空闲的时间超过了该值，才可以移除（eligible for eviction）</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<p>isPoolSweeperEnabled 如果连接池启用了 pool sweeper，返回 true</p>
-<p>result = getTimeBetweenEvictionRunsMillis()&gt;0; </p>
-<p>result = result &amp;&amp; (isRemoveAbandoned() &amp;&amp; getRemoveAbandonedTimeout()&gt;0); </p>
-<p>result = result || (isTestWhileIdle() &amp;&amp; getValidationQuery()!=null); </p>
-<p>return result; </p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="timeBetweenEvictionRunsMillis-参数涉及的三个方面"><a href="#timeBetweenEvictionRunsMillis-参数涉及的三个方面" class="headerlink" title="timeBetweenEvictionRunsMillis 参数涉及的三个方面"></a>timeBetweenEvictionRunsMillis 参数涉及的三个方面</h3><p><strong>1. 空闲连接验证（idle connection validation)</strong></p>
-<p>对连接池中的空闲连接进行验证，如果验证失败，则丢弃该连接，参考 testWhileIdle，validationQuery，validationInterval，timeBetweenEvictionRunsMillis</p>
-<p>**<br>**</p>
-<p><strong>2. 启用清理程序（abandoned cleaner）</strong></p>
-<p>对连接池中 abandoned connection 进行清理，参考 removeAbandoned，removeAbandonedTimeout，abandonWhenPercentageFull</p>
-<p>**<br>**</p>
-<p><strong>3. 连接池大小调整 （idle  pool resizing ）</strong></p>
-<p>当连接池中的空闲连接空闲时间超过一定值时，可以被清理，最终保持连接池中的空闲连接至少为 minIdle,  参考 minIdle， minEvictableIdleTimeMillis</p>
-<p>凡是有校验的机制，如 testOnBorrow, testOnReturn, testWhileIdle ，都使用 validationQuery 查询语句，受限于 validationInterval 参数，也就是限制对一个连接进行验证的频率，如同时设置了 testOnBorrow, testOnReturn， 在从连接池中取出连接时，会对该连接进行验证，使用并返回时（时间很短），期间的时间间隔如果小于 validationInterval ，是不会再次进行验证的。避免频繁进行验证，影响性能。</p>
-<p>maxIdle </p>
-<p>如果 isPoolSweeperEnabled() 返回 false，空闲池（idle pool）中应该保持的最大连接数。也就是空闲的连接数不会超过该数目，但是如果 isPoolSweeperEnabled 返回 true， 也就是启用了清理程序，最大的空闲连接数是可以达到 maxActive 的，且可以根据  getMinEvictableIdleTimeMillis() 的设置，逐渐减少，参考 minEvictableIdleTimeMillis 参数设置</p>
 
                 
             </div>
