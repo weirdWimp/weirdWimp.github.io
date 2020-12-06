@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Shell变量</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-12-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Shell-Variable"><span class="toc-text">Shell Variable</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#example"><span class="toc-text">example</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h1 id="Shell-Variable"><a href="#Shell-Variable" class="headerlink" title="Shell Variable"></a>Shell Variable</h1><h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set default variable value</span></span><br><span class="line">first_var=<span class="variable">$&#123;1:-first&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;first_var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set the default value for variable user if it does not have one</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;user:=second&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># warn</span></span><br><span class="line"><span class="comment"># var=$&#123;1:=defaultValue&#125;  ### FAIL with an error cannot assign in this way</span></span><br><span class="line"><span class="comment"># var=$&#123;1:-defaultValue&#125;  ### Perfect</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message</span></span><br><span class="line">third_var=<span class="variable">$&#123;3:?"Third argument is not definied or empty"&#125;</span></span><br><span class="line">fourth_var=<span class="variable">$&#123;4:"Fourth argument is not definied"&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message and run command</span></span><br><span class="line">fifth_var=<span class="variable">$&#123;5:? "Fifth argument is not definied or empty and print current dir" $(pwd)&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># variable length</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># strip string varibale</span></span><br><span class="line">msg=<span class="string">"who.is.my.love"</span></span><br><span class="line"><span class="comment"># front strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg#*.&#125;</span>  <span class="comment"># shortest match result: is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg##*.&#125;</span> <span class="comment"># longest match  result: love</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># back strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%.*&#125;</span>  <span class="comment"># shortest match result: who.is.my</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%%*.&#125;</span> <span class="comment"># longest match  result: who</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># substring</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var:4&#125;</span>       <span class="comment"># $&#123;var:position&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var:4：2&#125;</span>    <span class="comment"># $&#123;var:position:length&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## convert case</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var^&#125;</span>    <span class="comment"># who.is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var^^&#125;</span>   <span class="comment"># WHO.IS.MY.LOVE</span></span><br><span class="line"></span><br><span class="line">upper_msg=<span class="string">"WHO.IS.MY.LOVE"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,&#125;</span>    <span class="comment"># wHO.IS.MY.LOVE</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,,&#125;</span>   <span class="comment"># who.is.my.love</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Only convert first character in $dest if it is a capital ‘H’:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,H&#125;</span> <span class="comment"># fial</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Want to get the names of variables whose names begin with prefix</span></span><br><span class="line">VECH=<span class="string">"Bus"</span></span><br><span class="line">VECH1=<span class="string">"Car"</span></span><br><span class="line">VECH2=<span class="string">"Train"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;!VECH*&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html" target="_blank" rel="noopener">How To Use Bash Parameter Substitution Like A Pro - nixCraft (cyberciti.biz)</a></p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Linux/" title="Linux">Linux</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Java/JOSE/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Java/Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F/">
+                <span class="nav-default">Semaphore-信号量</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2020
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

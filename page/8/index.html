@@ -110,6 +110,28 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Pro-Git-Note/README/">README</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Pro-Git-Note"><a href="#Pro-Git-Note" class="headerlink" title="Pro-Git-Note"></a>Pro-Git-Note</h1><p>Markdown notes for <a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener">Pro Git</a><br>Love the life you live.<br>Live the life you love.<br>Find your own thing.</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Pro-Git-Note/%E5%85%B3%E4%BA%8E%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/">关于撤销操作</a></h2>
             </div>
             <div class="post-meta">
@@ -139,26 +161,22 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/">提交历史</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>org.springframework.boot.SpringApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
-<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
-<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
+                    <p>$ git rebase origin/master<br>First, rewinding head to replay your work on top of it…<br>Applying: second add from local<br>error: Failed to merge in the changes.<br>Using index info to reconstruct a base tree…<br>M       rebase.md<br>Falling back to patching base and 3-way merge…<br>Auto-merging rebase.md<br>CONFLICT (content): Merge conflict in rebase.md<br>Patch failed at 0001 second add from local<br>The copy of the patch that failed is found in: .git/rebase-apply/patch</p>
+<p>Resolve all conflicts manually, mark them as resolved with<br>“git add/rm <conflicted_files>“, then run “git rebase –continue”.<br>You can instead skip this commit: run “git rebase –skip”.<br>To abort and get back to the state before “git rebase”, run “git rebase –abort”.</p>
 
                 
             </div>
@@ -186,36 +204,6 @@
 
 
 <p>Rebased dev on refs/heads/dev</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE/">自定义配置</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h3 id="属性文件外置配置"><a href="#属性文件外置配置" class="headerlink" title="属性文件外置配置"></a>属性文件外置配置</h3><p><code>@ConfigurationProperties</code> </p>
-<p><code>@DataSourceProperties</code></p>
-<p><code>DataSourceAutoConfiguration</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Condition&#125; to detect when an embedded &#123;<span class="doctag">@link</span> DataSource&#125; type can be used.</span></span><br><span class="line"><span class="comment"> * If a pooled &#123;<span class="doctag">@link</span> DataSource&#125; is available, it will always be preferred to an</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> EmbeddedDatabase&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EmbeddedDatabaseCondition</span> <span class="keyword">extends</span> <span class="title">SpringBootCondition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> SpringBootCondition pooledCondition = <span class="keyword">new</span> PooledDataSourceCondition();</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ConditionOutcome <span class="title">getMatchOutcome</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> </span>&#123;</span><br><span class="line">		ConditionMessage.Builder message = ConditionMessage.forCondition(<span class="string">"EmbeddedDataSource"</span>);</span><br><span class="line">		<span class="keyword">if</span> (anyMatches(context, metadata, <span class="keyword">this</span>.pooledCondition)) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.foundExactly(<span class="string">"supported pooled data source"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		EmbeddedDatabaseType type = EmbeddedDatabaseConnection.get(context.getClassLoader()).getType();</span><br><span class="line">		<span class="keyword">if</span> (type == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> ConditionOutcome.noMatch(message.didNotFind(<span class="string">"embedded database"</span>).atAll());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ConditionOutcome.match(message.found(<span class="string">"embedded database"</span>).items(type));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 
                 
             </div>

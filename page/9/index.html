@@ -214,65 +214,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20Enviroment/">Spring Enviroment</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Spring-Environment"><a href="#Spring-Environment" class="headerlink" title="Spring Environment"></a>Spring Environment</h2><p><code>Environment</code> 是对 Spring 应用环境 (Spring Application Environment) 的抽象; 应用于应用环境的两个方面：<code>profiles</code> 以及 <code>properties</code>。 </p>
-<p><code>profiles</code> 属于条件化创建 bean 的一种机制， 不同的 <code>profile</code> 包含了一组 bean 的定义，运行时，可以指定激活哪些 <code>profile</code>(spring.profiles.active), 以及应用哪些默认的 <code>profile</code>(spring.profiles.default)。</p>
-<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p><code>properties</code> 包含了应用用到的所有属性对，可能来源于（不限于）：</p>
-<ul>
-<li>properties 文件</li>
-<li>JVM 系统属性</li>
-<li>系统环境变量</li>
-<li>JNDI</li>
-<li>Servlet Context Parameters</li>
-<li>临时属性对象 ad-hoc <code>Properties</code> object</li>
-<li>Map 对象</li>
-</ul>
-<p><code>PropertySource</code> 是对任何键值对的属性源的一种抽象，Spring 提供的 <code>Environment</code> 都会配置两个 <code>PropertySource</code> 对象，分别代表JVM系统属性的集合（ <code>System.getProperties()</code> ）和系统环境变量  （<code>System.getenv()</code> ）</p>
-<p><code>Environment</code> 对象提供了配置 <code>PropertySource</code> 以及在这些 <code>PropertySource</code> 对象上的检索功能，检索某个属性键是否存在或者对应的值。</p>
-<p>Spring Web 应用中, <code>StandardServletEnvironment</code> 实现，检索的优先级如下：</p>
-<ol>
-<li>ServletConfig parameters </li>
-<li>ServletContext parameters ( web.xml context-param entries )</li>
-<li>JNDI environment variables  (<code>java:comp/env/</code> entries) </li>
-<li>JVM system properties (<code>-D</code> command-line arguments) </li>
-<li>JVM system environment (operating system environment variables) </li>
-</ol>
-<p>整个机制是可配置的, 可以移除某个 <code>PropertySource</code> ，或者改变检索的优先级</p>
-<h4 id="PropertySource-注解"><a href="#PropertySource-注解" class="headerlink" title="@PropertySource 注解"></a><code>@PropertySource</code> 注解</h4><p><code>@PropertySource</code> 注解提供了一种向 <code>Environment</code> 添加属性源的便利方式，使用在 <code>@Configuration</code> 类上，需要提的一点是，任何出现在 <code>@PropertySource</code>属性源路径中的 <code>${..}</code> 占位符会从已经注册的 <code>PropertySource</code> 中检索，也可以提供一个默认值，如 <code>${key:default}</code></p>
-<p>xml 定义中，import 其他bean定义时，可以使用占位符，Spring 会从当前 Environment 中进行解析</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"$&#123;test&#125;.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>但是当定义某个 bean 时，必须配置一个 PropertySourcesPlaceholderConfigurer， 才可以使用占位符</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java.beans.PropertyEditor Spring implementation which can convert String paths to Resource objects.</span><br><span class="line">Classloader.getResource()</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">		<span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">		prepareRefresh();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">		prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">			postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">               <span class="comment">/* </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               *  在这里处理 PropertySource </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               */</span></span><br><span class="line">			<span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">			invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">			registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize message source for this context.</span></span><br><span class="line">			initMessageSource();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize event multicaster for this context.</span></span><br><span class="line">			initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">			onRefresh();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Check for listener beans and register them.</span></span><br><span class="line">			registerListeners();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">			finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Last step: publish corresponding event.</span></span><br><span class="line">			finishRefresh();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">			logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt"</span>, ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">			destroyBeans();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Reset 'active' flag.</span></span><br><span class="line">			cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Propagate exception to caller.</span></span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Spring%20AOP/">Spring AOP</a></h2>
             </div>
             <div class="post-meta">
@@ -305,6 +246,29 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">aop:declare-parents</span></span></span><br><span class="line"><span class="tag">    <span class="attr">types-matching</span>=<span class="string">"concert.Performance+"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">implement-interface</span>=<span class="string">"concert.Encoreable"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default-impl</span>=<span class="string">"concert.DefaultEncoreable"</span></span></span><br><span class="line"><span class="tag">    /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p> <code>&lt;aop:declare-parents&gt;</code>声明了此切面所通知的bean要在它的对象层次结构中拥有新的父类型。具体到本例中，类型匹配<code>Performance</code>接口（由<code>types-matching</code>属性指定）的那些bean在父类结构中会增加<code>Encoreable</code>接口（由<code>implement-interface</code>属性指定）</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Servlet/">Servlet</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ResourceBundle</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
