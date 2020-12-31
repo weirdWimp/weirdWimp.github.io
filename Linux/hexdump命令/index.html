@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">hexdump命令</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-12-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hexdump-命令"><span class="toc-text">hexdump 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单介绍"><span class="toc-text">简单介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本选项"><span class="toc-text">基本选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#b-八进制"><span class="toc-text">-b 八进制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#c-字符"><span class="toc-text">-c 字符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-十六进制-ASCII字符"><span class="toc-text">-C  十六进制+ASCII字符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#d-两个字节的十进制"><span class="toc-text">-d 两个字节的十进制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#x-两个字节的十六进制"><span class="toc-text">-x 两个字节的十六进制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#n-只处理-n-个字节"><span class="toc-text">-n 只处理 n 个字节</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#v-展示所有的字符"><span class="toc-text">-v 展示所有的字符</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#格式化"><span class="toc-text">格式化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#e-格式化字符串"><span class="toc-text">-e 格式化字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#f-包含格式化字符串的文件"><span class="toc-text">-f 包含格式化字符串的文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#指定格式化字符串的列子"><span class="toc-text">指定格式化字符串的列子</span></a></li></ol></li></ol></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h1 id="hexdump-命令"><a href="#hexdump-命令" class="headerlink" title="hexdump 命令"></a>hexdump 命令</h1><p><strong>一点感想</strong>：自从学习 Shell 脚本编程以来，有时候会觉得，使用图形化界面的工具实现一个稍微复杂的操作过于麻烦，并且如果你学习过 Vim 的基本操作和哲学思想后，就会了解命令行的组合可以比图形界面上有限的菜单，按钮能做更过的事情，即实现高度的定制化。</p>
+<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>hexdump 工具可以将指定的文件或标准输入，以用户指定的格式进行展示，打印到控制台，提供了很多选项（options），如打印出对应字符的八进制，十六进制</p>
+<h2 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h2><h4 id="b-八进制"><a href="#b-八进制" class="headerlink" title="-b 八进制"></a>-b 八进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-b One-byte octal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, zero-filled, bytes of input data, <span class="keyword">in</span> octal, per line.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后将输入的每个字节以八进制展示 (占 3 位，不足 3 位的用 0 填充)，并以空格分隔</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -b</span><br><span class="line"></span><br><span class="line">0000000 150 145 154 154 157</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="c-字符"><a href="#c-字符" class="headerlink" title="-c 字符"></a>-c 字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-c      One-byte character display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, space-filled, characters of input data per line.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后展示输入的每个字符 (占 3 位，不足 3 位的用空格填充)，并以空格分隔</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -c</span><br><span class="line">0000000   h   e   l   l   o</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="C-十六进制-ASCII字符"><a href="#C-十六进制-ASCII字符" class="headerlink" title="-C  十六进制+ASCII字符"></a>-C  十六进制+ASCII字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-C Canonical hex+ASCII display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, two column, hexadecimal bytes, followed by the same sixteen bytes <span class="keyword">in</span> %_p format enclosed <span class="keyword">in</span> ``|<span class="string">''</span> characters.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后展示每个字节的十六进制，随后是包含在两个 <code>|</code> 中的对应的字符，<strong>非打印字符以</strong> <code>.</code> 展示</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -C</span><br><span class="line">00000000  68 65 6c 6c 6f                                    |hello|</span><br><span class="line">00000005</span><br></pre></td></tr></table></figure>
+
+<p><code>-C</code> 选项应该是比较常用的，比较方便对比字符与对应的十六进制</p>
+<h4 id="d-两个字节的十进制"><a href="#d-两个字节的十进制" class="headerlink" title="-d 两个字节的十进制"></a>-d 两个字节的十进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-d      Two-byte decimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight space-separated, five column, zero-filled, two-byte units of input data, <span class="keyword">in</span> unsigned decimal, per line.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后将输入数据中的每两个字节作为一个单元，并展示他们组合成的无符号十进制数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -d</span><br><span class="line">0000000   25960   27756   00111</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：两个字节组合的顺序与字符的顺序相反，例如 <code>he</code>, <code>h</code> 的十六进制是 <code>0x68</code>，<code>e</code> 的十六进制是 <code>0x65</code>， 但是字节组合的顺序是 <code>0x6568</code>, 对应的十进制就是上面结果中的 2590</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $((16<span class="comment">#6568))</span></span><br><span class="line">25960</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="x-两个字节的十六进制"><a href="#x-两个字节的十六进制" class="headerlink" title="-x 两个字节的十六进制"></a>-x 两个字节的十六进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-x      Two-byte hexadecimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight, space separated, four column, zero-filled, two-byte quantities of input data, <span class="keyword">in</span> hexadecimal, per line.</span><br></pre></td></tr></table></figure>
+
+<p>和 <code>-d</code> 类似</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -x</span><br><span class="line">0000000    6568    6c6c    006f</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="n-只处理-n-个字节"><a href="#n-只处理-n-个字节" class="headerlink" title="-n 只处理 n 个字节"></a>-n 只处理 n 个字节</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-n length Interpret only length bytes of input.</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="v-展示所有的字符"><a href="#v-展示所有的字符" class="headerlink" title="-v 展示所有的字符"></a>-v 展示所有的字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-v      Cause hexdump to display all input data.  Without the -v option, any number of groups of output lines, <span class="built_in">which</span> would be identical to the immediately preceding group of output lines (except <span class="keyword">for</span> the input offsets), are</span><br><span class="line">        replaced with a line comprised of a single asterisk.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h2><h4 id="e-格式化字符串"><a href="#e-格式化字符串" class="headerlink" title="-e 格式化字符串"></a>-e 格式化字符串</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-e format_string</span><br><span class="line">           Specify a format string to be used <span class="keyword">for</span> displaying data.</span><br></pre></td></tr></table></figure>
+
+<p>指定格式化字符串</p>
+<h4 id="f-包含格式化字符串的文件"><a href="#f-包含格式化字符串的文件" class="headerlink" title="-f 包含格式化字符串的文件"></a>-f 包含格式化字符串的文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f format_file</span><br><span class="line">        Specify a file that contains one or more newline separated format strings.  Empty lines and lines whose first non-blank character is a <span class="built_in">hash</span> mark (<span class="comment">#) are ignored.</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>一个<strong>格式化字符串</strong>由任意多个格式化单元（format unit）组成，每个格式化单元以空格分隔。一个格式化单元最多由三个部分组成：<strong>迭代次数</strong>（iteration count），<strong>字节个数</strong> (byte count)，<strong>以及格式字符串</strong> (format)</p>
+<p><strong>迭代次数</strong>：可选的正整数，默认位位1， 表示格式字符串要被应用多少次</p>
+<p><strong>字节个数</strong>: 可选的正整数. 如果指定了，它定义了每次应用格式字符串时，需要使用多少个字节</p>
+<p>​    如果指定了迭代次数和（或）字节个数，需要使用 <code>/</code> 来加以区分，如 <code>1/4</code>，<code>/4</code></p>
+<p><strong>格式字符串</strong>：必须指定，并且要包含在双引号中 <code>&quot;&quot;</code>, 类似于 <code>fprintf</code> 中的格式字符串， 支持单个字符的转义序列：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NUL                  \0</span><br><span class="line">&lt;alert character&gt;    \a</span><br><span class="line">&lt;backspace&gt;          \b</span><br><span class="line">&lt;form-feed&gt;          \f</span><br><span class="line">&lt;newline&gt;            \n</span><br><span class="line">&lt;carriage <span class="built_in">return</span>&gt;    \r</span><br><span class="line">&lt;tab&gt;                \t</span><br><span class="line">&lt;vertical tab&gt;       \v</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如包含一个格式化单元的格式化字符串：<code>&#39;4/1 &quot;%_p&quot;&#39;</code> ， 4 表示迭代次数，1表示每次使用一个字节，<code>%_p</code> 为格式字符串</p>
+<p>也支持额外的转换字符串：</p>
+<ul>
+<li><p><code>_a[dox]</code> 展示输入偏移量 <code>d</code>,<code>o</code>,<code>x</code> 分表表示十进制，八进制和十六进制</p>
+</li>
+<li><p><code>_A[dox]</code> 与 <code>_a[dox]</code> 行为一致，但是只执行一次，当所有的输入数据都被处理了</p>
+</li>
+<li><p><code>_c</code>  以默认的字符集打印出输入字符，非打印字符以八进制展示（占 3 位，不足三位用 0 填充），如果该字符支持转义序列，则会以转义序列的形式展示，如 <code>\n</code></p>
+</li>
+<li><p><code>_p</code> 以默认的字符集打印出输入字符. 非打印字符会被展示成 <code>.</code></p>
+</li>
+<li><p><code>_u</code> 打印出 <code>ASCII</code> 字符，控制字符会被展示成如下的名称（小写）：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">000 NUL  001 SOH  002 STX  003 ETX  004 EOT  005 ENQ</span><br><span class="line">006 ACK  007 BEL  008 BS   009 HT   00A LF   00B VT</span><br><span class="line">00C FF   00D CR   00E SO   00F SI   010 DLE  011 DC1</span><br><span class="line">012 DC2  013 DC3  014 DC4  015 NAK  016 SYN  017 ETB</span><br><span class="line">018 CAN  019 EM   01A SUB  01B ESC  01C FS   01D GS</span><br><span class="line">01E RS   01F US   07F DEL</span><br></pre></td></tr></table></figure>
+
+
+
+<p>每个格式字符串需要使用字节个数等于所有格式化单元使用的字节个数加起来，每个格式化单元使用的字节个数 = 迭代次数 * 字节个数 （或者没有指定字节个数，格式单元需要的字节个数）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"ABCDEFGH"</span> | hexdump -e <span class="string">'4/1 "%_p"'</span></span><br></pre></td></tr></table></figure>
+
+<p>上述中的格式化字符串需要使用的字节个数 = 4 * 1</p>
+<p>输入数据，是以 “数据块”（blocks） 的形式处理的，一个数据块定义为所有格式化字符使用的最大字节数</p>
+<h4 id="指定格式化字符串的列子"><a href="#指定格式化字符串的列子" class="headerlink" title="指定格式化字符串的列子"></a>指定格式化字符串的列子</h4><p><strong>打印输入数据的十六进制</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X "'</span> ; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>打印输入数据的十六进制及字符</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% <span class="built_in">echo</span> hello | hexdump -e <span class="string">'8/1 "%02X ""\t"" "'</span> -e <span class="string">'8/1 "%c""\n"'</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A        hello</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>打印十六进制，并加上前缀 <code>x</code></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hex with preceding 'x'</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'"x" 1/1 "%02X" " "'</span> ; <span class="built_in">echo</span></span><br><span class="line">x68 x65 x6C x6C x6F x0A</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>打印十六进制，每行一个字节</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># one hex byte per line</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X\n"'</span></span><br><span class="line">68</span><br><span class="line">65</span><br><span class="line">6C</span><br><span class="line">6C</span><br><span class="line">6F</span><br><span class="line">0A</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>带偏移量</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># byte# &amp; ASCII with control chars</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#  "'</span> -e <span class="string">'/1 " _%_u\_\n"'</span></span><br><span class="line">0<span class="comment">#   _h_</span></span><br><span class="line">1<span class="comment">#   _e_</span></span><br><span class="line">2<span class="comment">#   _l_</span></span><br><span class="line">3<span class="comment">#   _l_</span></span><br><span class="line">4<span class="comment">#   _o_</span></span><br><span class="line">5<span class="comment">#   _lf_</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>每行只打印一个字节对应的十六进制，以及对应的 ASCII 字符，行首打印偏移量，即序号</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"ABCDEFG"</span> | hexdump -e <span class="string">'/1 "%02_ad#  "'</span> -e <span class="string">'/1 "%02X "'</span> -e <span class="string">'/1 " %_u\n"'</span></span><br><span class="line">00<span class="comment">#  41  A</span></span><br><span class="line">01<span class="comment">#  42  B</span></span><br><span class="line">02<span class="comment">#  43  C</span></span><br><span class="line">03<span class="comment">#  44  D</span></span><br><span class="line">04<span class="comment">#  45  E</span></span><br><span class="line">05<span class="comment">#  46  F</span></span><br><span class="line">06<span class="comment">#  47  G</span></span><br><span class="line">07<span class="comment">#  0A  lf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># lf 表示 LF 换行符</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>7C1C分隔符示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># char.dat</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"A\u007c\u001cB\u007c\u001cC"</span> &gt; char.dat</span><br><span class="line"></span><br><span class="line">cat char.dat | hexdump -v -e <span class="string">'"%02_ad#\t"'</span> -e <span class="string">'/1 "0x%02X\t"'</span> -e <span class="string">'/1 "%_p\n"'</span></span><br><span class="line">00<span class="comment">#     0x41    A</span></span><br><span class="line">01<span class="comment">#     0x7C    |</span></span><br><span class="line">02<span class="comment">#     0x1C    .</span></span><br><span class="line">03<span class="comment">#     0x42    B</span></span><br><span class="line">04<span class="comment">#     0x7C    |</span></span><br><span class="line">05<span class="comment">#     0x1C    .</span></span><br><span class="line">06<span class="comment">#     0x43    C</span></span><br><span class="line">07<span class="comment">#     0x0A    .</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Linux/" title="Linux">Linux</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Java/JOSE/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Linux/Man/">
+                <span class="nav-default">Man</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2020
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
