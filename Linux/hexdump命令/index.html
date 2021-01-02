@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">hexdump命令</h2>
             <div class="post-meta">
-                <span class="post-time">2020-12-31</span>
+                <span class="post-time">2021-01-02</span>
                 
                 <span class="post-category">
                     
@@ -224,6 +224,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># char.dat</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"A\u007c\u001cB\u007c\u001cC"</span> &gt; char.dat</span><br><span class="line"></span><br><span class="line">cat char.dat | hexdump -v -e <span class="string">'"%02_ad#\t"'</span> -e <span class="string">'/1 "0x%02X\t"'</span> -e <span class="string">'/1 "%_p\n"'</span></span><br><span class="line">00<span class="comment">#     0x41    A</span></span><br><span class="line">01<span class="comment">#     0x7C    |</span></span><br><span class="line">02<span class="comment">#     0x1C    .</span></span><br><span class="line">03<span class="comment">#     0x42    B</span></span><br><span class="line">04<span class="comment">#     0x7C    |</span></span><br><span class="line">05<span class="comment">#     0x1C    .</span></span><br><span class="line">06<span class="comment">#     0x43    C</span></span><br><span class="line">07<span class="comment">#     0x0A    .</span></span><br></pre></td></tr></table></figure>
 
 
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a table of byte#, hex, decimal, octal, ASCII</span></span><br><span class="line">% <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#    "'</span> -e <span class="string">'/1    "%02X hex"'</span> -e <span class="string">'/1 " = %03i dec"'</span> -e <span class="string">'/1 " = %03o oct"'</span> -e <span class="string">'/1 " = _%c\_\n"'</span></span><br><span class="line">           0<span class="comment">#    68 hex = 104 dec = 150 oct = _h_</span></span><br><span class="line">           1<span class="comment">#    65 hex = 101 dec = 145 oct = _e_</span></span><br><span class="line">           2<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           3<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           4<span class="comment">#    6F hex = 111 dec = 157 oct = _o_</span></span><br><span class="line">           5<span class="comment">#    0A hex = 010 dec = 012 oct = _</span></span><br></pre></td></tr></table></figure>
+
+
         </div>
         
         <div class="post-tag">
@@ -237,15 +241,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Java/JOSE/">
+            <a class="prev" href="/Java/%E5%B9%B6%E5%8F%91/%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-default">基础组件</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/Man/">
-                <span class="nav-default">Man</span>
+            <a class="next" href="/Linux/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">
+                <span class="nav-default">杂七杂八</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
@@ -271,7 +275,7 @@
             &copy;
             
             
-            2020
+            2021
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>
