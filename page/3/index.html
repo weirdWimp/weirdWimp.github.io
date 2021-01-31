@@ -84,10 +84,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">新词汇</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">杂七杂八</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-11-29</span>
+                <span class="post-time">2020-12-27</span>
                 
                 <span class="post-category">
                     
@@ -98,10 +98,8 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="login-shell"><a href="#login-shell" class="headerlink" title="login shell"></a>login shell</h2><p>The goal here is to separate the users having a login shell from the others:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  \=(/usr/sbin/nologin|/bin/false)$= &#123; H;d; &#125;</span></span><br><span class="line"><span class="string">              # Append matching lines to the hold buffer</span></span><br><span class="line"><span class="string">              # and continue to next cycle</span></span><br><span class="line"><span class="string">  p           # Print other lines</span></span><br><span class="line"><span class="string">  $ &#123; g;p &#125;   # On the last line,</span></span><br><span class="line"><span class="string">              # get and print the content of the hold buffer</span></span><br></pre></td></tr></table></figure>
-
-<p>What is a <strong>login shell</strong> ?</p>
+                    <p><a href="https://blog.csdn.net/cuijiying/article/details/104993550" target="_blank" rel="noopener">window系统电脑某个端口下的程序无法被局域网内的电脑访问的问题</a></p>
+<p><a href="https://blog.csdn.net/qq_43442102/article/details/100195522" target="_blank" rel="noopener">ubuntu-linux 笔记本合上盖子保持链接</a></p>
 
                 
             </div>
@@ -109,10 +107,152 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E5%9B%BE%E5%BA%8A%E6%B5%8B%E8%AF%95/">图床测试</a></h2>
+                <h2><a class="post-title-link" href="/Linux/cURL%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">cURL基本使用</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-11-28</span>
+                <span class="post-time">2020-12-11</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h4 id="指定用户代理"><a href="#指定用户代理" class="headerlink" title="指定用户代理"></a>指定用户代理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -A, --user-agent &lt;name&gt; Send User-Agent &lt;name&gt; to server</span></span><br><span class="line">curl -A <span class="string">"Mozilla/5.0"</span> http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="设置参照页（referer）"><a href="#设置参照页（referer）" class="headerlink" title="设置参照页（referer）"></a>设置参照页（referer）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -e, --referer &lt;URL&gt; Referrer URL</span></span><br><span class="line">curl --referer http://google.com http://knopper.org</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用-cURL-进行认证"><a href="#使用-cURL-进行认证" class="headerlink" title="使用 cURL 进行认证"></a>使用 cURL 进行认证</h4><p>HTTP Basic 认证</p>
+<ol>
+<li>使用 <code>Authorization</code> 头部</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -H <span class="string">"Authorization: Basic Z3Vlc3Q6Z3Vlc3Q="</span> http://localhost:8080/validation/basic</span><br><span class="line"></span><br><span class="line"><span class="comment"># Authorization Success</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用 <code>-u</code> 完成 HTTP 或 FTP 认证</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl -u user:pass</span></span><br><span class="line">curl -u <span class="string">"guest:guest"</span> http://localhost:8080/validation/basic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示后输入密码</span></span><br><span class="line">curl -u guest http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="只打印返回头部信息"><a href="#只打印返回头部信息" class="headerlink" title="只打印返回头部信息"></a>只打印返回头部信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -I http://localhost:8080/validation/basic</span><br><span class="line"></span><br><span class="line">curl --head http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="打印响应头部信息"><a href="#打印响应头部信息" class="headerlink" title="打印响应头部信息"></a>打印响应头部信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -i, --include       Include protocol response headers in the output</span></span><br><span class="line">curl -i http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用其他-HTTP-方法"><a href="#使用其他-HTTP-方法" class="headerlink" title="使用其他 HTTP 方法"></a>使用其他 HTTP 方法</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  -X, --request &lt;command&gt; Specify request command to use</span></span><br><span class="line">curl -X DELETE http://upload.linuxhandbook.org/files/deleteFile.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="发送数据到服务器"><a href="#发送数据到服务器" class="headerlink" title="发送数据到服务器"></a>发送数据到服务器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -d, --data &lt;data&gt;   HTTP POST data</span></span><br><span class="line">curl -i -X POST http://localhost:8080/addPerson -d <span class="string">'&#123;"name":"Jason","age":26,"gender":"male","address"AVE.18"&#125;'</span> -H <span class="string">"Content-Type: application/json"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="将-Cookie-写入到文件中"><a href="#将-Cookie-写入到文件中" class="headerlink" title="将 Cookie 写入到文件中"></a>将 Cookie 写入到文件中</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  -c, --cookie-jar &lt;filename&gt; Write cookies to &lt;filename&gt; after operation</span></span><br><span class="line">curl -c googleCookie.txt http://www.google.com/files</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用Cookie"><a href="#使用Cookie" class="headerlink" title="使用Cookie"></a>使用Cookie</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  -b, --cookie &lt;data&gt; Send cookies from string/file</span></span><br><span class="line"><span class="comment"># 从文件读取或者在命令行中指定</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 多个 cookie 使用分号分割</span></span><br><span class="line">curl http://example.com --cookie <span class="string">"user=username;pass=hack"</span></span><br><span class="line"></span><br><span class="line">curl -b googleCookie.txt http://www.google.com/files</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="开启新的会话（Session）"><a href="#开启新的会话（Session）" class="headerlink" title="开启新的会话（Session）"></a>开启新的会话（Session）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -j, --junk-session-cookies Ignore session cookies read from file</span></span><br><span class="line">curl -b googleCookie.txt http://www.google.com/files -j</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">Sed 命令行手册</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-12-11</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="print-delete-and-next"><a href="#print-delete-and-next" class="headerlink" title="print, delete, and next"></a>print, delete, and next</h2><table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P</td>
+<td>打印 pattern space 中的一行</td>
+</tr>
+<tr>
+<td>D</td>
+<td>删除当前 pattern space 的一行,并重新开始新的循环</td>
+</tr>
+<tr>
+<td>N</td>
+<td>读取输入源的下一行，并追加到 pattern space，使用 newline 分隔，并继续当前循环的执行（execution of cycle）</td>
+</tr>
+</tbody></table>
+<p>一行指的是，使用行分隔符分隔</p>
+<p>sed 命令中，似乎有这样的规约：大写字母的命令总是与多行数据相关的；通常利用这些命令实现一个队列 <code>FIFO</code>.</p>
+<p>例子：移除文件中最后5行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  1 &#123; N;N;N;N &#125;     # ensure the pattern space contains *five* lines</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  N                 # append a sixth line onto the queue</span></span><br><span class="line"><span class="string">  P                 # Print the head of the queue</span></span><br><span class="line"><span class="string">  D                 # Remove the head of the queue</span></span><br><span class="line"><span class="string">'</span></span><br></pre></td></tr></table></figure>
+
+<p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Shell%E5%8F%98%E9%87%8F/">Shell变量</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-12-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Shell-Variable"><a href="#Shell-Variable" class="headerlink" title="Shell Variable"></a>Shell Variable</h1><h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set default variable value</span></span><br><span class="line">first_var=<span class="variable">$&#123;1:-first&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;first_var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set the default value for variable user if it does not have one</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;user:=second&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># warn</span></span><br><span class="line"><span class="comment"># var=$&#123;1:=defaultValue&#125;  ### FAIL with an error cannot assign in this way</span></span><br><span class="line"><span class="comment"># var=$&#123;1:-defaultValue&#125;  ### Perfect</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message</span></span><br><span class="line">third_var=<span class="variable">$&#123;3:?"Third argument is not definied or empty"&#125;</span></span><br><span class="line">fourth_var=<span class="variable">$&#123;4:"Fourth argument is not definied"&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message and run command</span></span><br><span class="line">fifth_var=<span class="variable">$&#123;5:? "Fifth argument is not definied or empty and print current dir" $(pwd)&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># variable length</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># strip string varibale</span></span><br><span class="line">msg=<span class="string">"who.is.my.love"</span></span><br><span class="line"><span class="comment"># front strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg#*.&#125;</span>  <span class="comment"># shortest match result: is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg##*.&#125;</span> <span class="comment"># longest match  result: love</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># back strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%.*&#125;</span>  <span class="comment"># shortest match result: who.is.my</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%%*.&#125;</span> <span class="comment"># longest match  result: who</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># substring</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg:4&#125;</span>       <span class="comment"># $&#123;var:position&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg:4：2&#125;</span>    <span class="comment"># $&#123;var:position:length&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## convert case</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg^&#125;</span>    <span class="comment"># Who.is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg^^&#125;</span>   <span class="comment"># WHO.IS.MY.LOVE</span></span><br><span class="line"></span><br><span class="line">upper_msg=<span class="string">"WHO.IS.MY.LOVE"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,&#125;</span>    <span class="comment"># wHO.IS.MY.LOVE</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,,&#125;</span>   <span class="comment"># who.is.my.love</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Only convert first character in $dest if it is a capital ‘H’:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,H&#125;</span> <span class="comment"># fial</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Want to get the names of variables whose names begin with prefix</span></span><br><span class="line">VECH=<span class="string">"Bus"</span></span><br><span class="line">VECH1=<span class="string">"Car"</span></span><br><span class="line">VECH2=<span class="string">"Train"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;!VECH*&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print all L* variables' name and value</span></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;!L*&#125;</span>; <span class="keyword">do</span> </span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"name: <span class="variable">$&#123;var&#125;</span>, value: <span class="variable">$&#123;!var&#125;</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># name: LANG, value: C.UTF-8</span></span><br><span class="line"><span class="comment"># name: LESSCLOSE, value: /usr/bin/lesspipe %s %s</span></span><br><span class="line"><span class="comment"># name: LESSOPEN, value: | /usr/bin/lesspipe %s</span></span><br><span class="line"><span class="comment"># name: LINENO, value: 58</span></span><br><span class="line"><span class="comment"># name: LINES, value: 56</span></span><br><span class="line"><span class="comment"># name: LOGNAME, value: guo</span></span><br><span class="line"><span class="comment"># name: LS_COLORS, value: rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html" target="_blank" rel="noopener">How To Use Bash Parameter Substitution Like A Pro - nixCraft (cyberciti.biz)</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F/">Semaphore-信号量</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-12-05</span>
                 
                 <span class="post-category">
                     
@@ -123,392 +263,60 @@
             </div>
             <div class="post-content">
                 
-                    <p>Description</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128011943682.png" alt="image-20201128011943682"></p>
-<p>真是一件麻烦的事情呢，竟然使用了 Redis 作为图片去重的校验…</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128012358249.png" alt="image-20201128012358249"></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-29</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Editing-Basics"><a href="#Editing-Basics" class="headerlink" title="Editing Basics"></a>Editing Basics</h1><h3 id="Buffers"><a href="#Buffers" class="headerlink" title="Buffers"></a>Buffers</h3><p>当你编辑一个文件时， Vim 将磁盘上的文件内容读取到计算机的 RAM 中. 这意味这文件的一个备份被存储到了计算机的内存中，你对文件做出的任何修改，是直接映射到内存中的，并且会立即展示出来. 一旦完成了编辑，你可以保存文件，这意味着 Vim 将内存中的内容要写回磁盘. 临时存储文件的内存被称为缓存  (<strong>Buffer</strong>) .  所以，这就是为什么编辑完后要保存文件的原因.</p>
-<h3 id="Swap"><a href="#Swap" class="headerlink" title="Swap"></a>Swap</h3><p>当你编辑文件时, 会在相同目录下会创建一个类似于 <code>.hello.txt.swp</code> 的文件. 查看确切的文件名可以使用如下命令:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:swapname</span><br></pre></td></tr></table></figure>
-
-<p> Vim 维护了文件缓存区 (buffer) 的一个文件备份, 会定期保存到该文件中, 以避免出现问题时进行恢复 (如 计算机或者 Vim 程序崩溃).  这个文件被称为 <code>swap file</code>, 因为 Vim 会不断交换内存中的内容到磁盘上的文件中.</p>
-<h3 id="Save-my-file"><a href="#Save-my-file" class="headerlink" title="Save my file"></a>Save my file</h3><p>当你修改了文件时, 并且没有保存, 在另一个窗口查看时, 此时是不会看到之前修改的内容的, 这也很好理解, 因为 Vim 只修改了 buffer 中的内容, 还没有保存到磁盘上. 可以通过  <code>:write</code> 命令来完成保存过程, 将内存中的内存写到磁盘中.</p>
-<p><strong>为了让生活变得容易一点, 你可以使用快捷键映射, 在 vimrc 文件中:</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#To save,ctrl-s.</span></span><br><span class="line">nmap &lt;c<span class="_">-s</span>&gt; :w&lt;CR&gt;</span><br><span class="line">imap &lt;c<span class="_">-s</span>&gt; &lt;Esc&gt;:w&lt;CR&gt;a</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><table>
-<thead>
-<tr>
-<th>desktop</th>
-<th>vim word</th>
-<th>operation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>cut</td>
-<td>delete</td>
-<td>d</td>
-</tr>
-<tr>
-<td>copy</td>
-<td>yank</td>
-<td>y</td>
-</tr>
-<tr>
-<td>paste</td>
-<td>put</td>
-<td>p</td>
-</tr>
-</tbody></table>
-<p>剪切操作在 Vim 中意味着从 buffer 中删除文本, 并将其存储到寄存器中</p>
-<p>复制操作中同样也意味着拉取 (yank) 文本,并将其放到寄存器中</p>
-<p>粘贴没有其特殊含义</p>
-<p><strong>Why yank not copy ?</strong></p>
-<blockquote>
-<p><strong>Yanking is just a Vim name for copying.  The “c” letter was already used for the change operator, and “y” was still available.  Calling this operator “yank” made it easier to remember to use the “y” key.</strong></p>
-<p>– Vim User Manual</p>
-</blockquote>
-<h4 id="如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作"><a href="#如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作" class="headerlink" title="如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?"></a>如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?</h4><p>你可以:</p>
-<table>
-<thead>
-<tr>
-<th>command</th>
-<th>operation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>dl</td>
-<td>删除单个字符</td>
-</tr>
-<tr>
-<td>dw</td>
-<td>删除一个单词</td>
-</tr>
-<tr>
-<td>dd</td>
-<td>删除一行</td>
-</tr>
-<tr>
-<td>d$</td>
-<td>删除光标位置到行尾的所有字符</td>
-</tr>
-<tr>
-<td>dwwP</td>
-<td>交换两个单词</td>
-</tr>
-<tr>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
-<p><strong>是不是很棒, 这里最让人激动的事情在于, 你可以结合之前的移动等命令, 更多的可能不是吗?  一般的编辑器, 可能没有办法做到如此简洁, 有力 , 并保持方便记忆 !</strong></p>
-<p>还记得清空当前文档的操作吗 ?</p>
-<h3 id="words"><a href="#words" class="headerlink" title="words"></a>words</h3><ul>
-<li><code>w</code></li>
-<li><code>e</code></li>
-</ul>
-<h3 id="Sentence"><a href="#Sentence" class="headerlink" title="Sentence"></a>Sentence</h3><ul>
-<li><code>(</code></li>
-<li><code>)</code></li>
-</ul>
-<h3 id="Paragraph"><a href="#Paragraph" class="headerlink" title="Paragraph"></a>Paragraph</h3><ul>
-<li><code>{</code></li>
-<li><code>}</code></li>
-</ul>
-<h3 id="Visual-Mode-Select"><a href="#Visual-Mode-Select" class="headerlink" title="Visual Mode Select"></a>Visual Mode Select</h3><ul>
-<li><p><code>aw</code></p>
-<p> select a word</p>
-</li>
-<li><p><code>ap</code></p>
-<p>select a paragraph</p>
-</li>
-<li><p><code>ab</code></p>
-<p>select a block (anything with a pair of parentheses)</p>
-</li>
-<li><p><code>a&quot;</code></p>
-<p>select a quoted string (like “this is a quoted string”)</p>
-</li>
-</ul>
-<h3 id="Marking-your-territory"><a href="#Marking-your-territory" class="headerlink" title="Marking your territory"></a>Marking your territory</h3><ul>
-<li><p>create a mark where you can jump here later</p>
-<p><code>ma</code> (a-zA-Z ) then you create a mark called ‘a’</p>
-</li>
-<li><p>return the cursor to the mark</p>
-<p><code>&#39;a</code> take you to the exact line and column of the mark</p>
-</li>
-</ul>
-<h3 id="Time-machine-using-undo-redo"><a href="#Time-machine-using-undo-redo" class="headerlink" title="Time machine using undo/redo"></a>Time machine using undo/redo</h3><ul>
-<li><p><code>u</code> undo  :leftwards_arrow_with_hook:</p>
-</li>
-<li><p><code>ctrl-r</code> redo :arrow_right_hook:</p>
-</li>
-<li><p>more…</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take you back by 4 minutes</span></span><br><span class="line">:earlier 4m</span><br><span class="line"></span><br><span class="line"><span class="comment"># take you later by 45 seconds</span></span><br><span class="line">:later 45s</span><br><span class="line"></span><br><span class="line"><span class="comment"># go back 5 changes</span></span><br><span class="line">undo 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># view the undo tree</span></span><br><span class="line">undolist</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Powerful-search-engine"><a href="#Powerful-search-engine" class="headerlink" title="Powerful search engine"></a>Powerful search engine</h3><ul>
-<li>basic search</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># search</span></span><br><span class="line">/the&lt;cr&gt; <span class="comment"># /the followed by the enter key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># next occurrence</span></span><br><span class="line">press `n`</span><br><span class="line"></span><br><span class="line"><span class="comment"># previous occurrence</span></span><br><span class="line">press `N`</span><br></pre></td></tr></table></figure>
-
-<p>  还记得我们第一次介绍 Vim 的骚操作吗 <code>*</code> 搜索当前光标所在的单词</p>
+                    <h2 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore - 信号量"></a>Semaphore - 信号量</h2><h3 id="1-什么是信号量"><a href="#1-什么是信号量" class="headerlink" title="1. 什么是信号量"></a>1. 什么是信号量</h3><p> 一个信号量是一个整数变量，在多个进程间进行共享. 信号量的主要目的在于 ：</p>
 <ul>
-<li>start searching as and when you type the search phrase</li>
+<li>处理同步问题</li>
+<li>并发环境下用于共享资源的访问控制</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> incsearch</span><br></pre></td></tr></table></figure>
-
+<p>信号量的取值取决于遇到的具体问题，通常，会使用可用资源的个数作为信号量的初始值。</p>
+<h3 id="2-信号量操作"><a href="#2-信号量操作" class="headerlink" title="2. 信号量操作"></a>2. 信号量操作</h3><p>信号量包含两个独立的原子操作，也就是 <code>wait</code> 和 <code>signal</code>. 也被称之为 <code>P</code> (荷兰语Proberen(测试)的首字母) 和 <code>V</code> 荷兰语Verhogen(增加)的首字母. </p>
+<p>假设 <code>S</code> 表示一个信号量，他的整数值代表了某种可用资源的数量，那么 <code>wait</code> 和 <code>signal</code> 操作分表可用如下的伪代码表示</p>
+<h4 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201204409486.png" alt="image-20201201204409486"></p>
+<p>如果 <code>S</code> 的值大于 0，<code>wait</code> 操作会简单的进行减 1 操作，表示仍有资源可以用于分配；如果 <code>S</code> 已经是 0 ， 表示没有可用的资源进行分配， 那么调用 <code>wait</code> 操作的进程会进入休眠（sleep）状态</p>
+<h4 id="signal"><a href="#signal" class="headerlink" title="signal"></a>signal</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201204646050.png" alt="image-20201201204646050"></p>
+<p>如果没有其它进程等待资源， <code>signal</code> 操作会进行一个加 1 操作；否则，一个等待的进程会被唤醒（操作系统调度器），最终，唤醒的进程获得了资源的访问控制权限。</p>
+<p><strong>简单总结</strong></p>
+<p><code>wait</code>： (把信号量减1)，若成功，则退出；若失败，则该进程被阻塞；</p>
+<p><code>signal</code>：(把信号量加1)，如果发现有被阻塞的进程，则选择一个唤醒之。</p>
+<h3 id="3-信号量的种类"><a href="#3-信号量的种类" class="headerlink" title="3. 信号量的种类"></a>3. 信号量的种类</h3><ul>
+<li><p>Binary Semphore - 二元信号量</p>
+<p>二元信号量的取值只能是 0 或 1, 可以实现互斥的效果（mutex）， 可以用来解决临界区（critial section）问题。</p>
+</li>
+</ul>
+<p>  <strong>binary semphore is not a mutex ?</strong></p>
 <ul>
-<li>ignore the case of the text that you are searching for</li>
+<li><p>Counting Semphore - 计数信号量</p>
+<p>计数信号量的取值域是不受限制的，可以用来解决资源分配的同步问题。</p>
+</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> ignorecase</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>smart case</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smartcase</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>searching for <code>/step</code>, then it will search for any combination of upper and lower case text. So eventually, “Step”, “Stephen”,”stepbrother”</li>
-<li>searching for <code>/Step</code>, <strong>only</strong> “Step”, “Stephen”, but not “stepbrother”</li>
-</ul>
-<ul>
-<li>basic patterns</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exactly search the word 'step' and not 'stepfather'</span></span><br><span class="line">/\&lt;step\&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># search numbers</span></span><br><span class="line">/\d\+</span><br><span class="line"></span><br><span class="line"><span class="comment"># see :help pattern for more details</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>永远不要去死记硬背这些操作, 试着理解, 并练习, 最终成为肌肉记忆.</strong></p>
-<p><a href="http://vimdoc.sourceforge.net/htmldoc/usr_04.html" target="_blank" rel="noopener">vim doc</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20%E4%BB%8B%E7%BB%8D/">Vim 介绍</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-25</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Vim-的基本使用"><a href="#Vim-的基本使用" class="headerlink" title="Vim 的基本使用"></a>Vim 的基本使用</h2><p>内容取自 byte-of-vim， 查看原文，请参考文末链接.</p>
-<h3 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h3><p>Vim 是一个用于写作的计算机程序（computer program），提供一系列特性帮助你更好地进行写作。 可以用来编写购物清单，写书，或者是程序代码。</p>
-<h3 id="为什么选择-Vim"><a href="#为什么选择-Vim" class="headerlink" title="为什么选择 Vim"></a>为什么选择 Vim</h3><h4 id="简单"><a href="#简单" class="headerlink" title="简单"></a>简单</h4><ul>
-<li>极简主义界面，帮助你集中注意力</li>
-<li>少许的核心概念</li>
-</ul>
-<h4 id="高效"><a href="#高效" class="headerlink" title="高效"></a>高效</h4><blockquote>
-<p>There is no great writing, only great rewriting.</p>
-<p>​                                                        ——Louis Brandeis</p>
-</blockquote>
-<p>与纯文本或富文本编辑器对比，Vim 可以使得复杂大量频繁的修改该变得更容易，更快，更好。Minimal effort. Maximal effect.</p>
-<h3 id="Vim-能干什么？"><a href="#Vim-能干什么？" class="headerlink" title="Vim 能干什么？"></a>Vim 能干什么？</h3><p><strong>说了这么多漂亮话，Vim 到底强在哪里？</strong></p>
-<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><table>
-<thead>
-<tr>
-<th>编辑</th>
-<th>Vim 中的操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>如何将光标向下移动 7 行</td>
-<td>Press 7j</td>
-</tr>
-<tr>
-<td>删除一个单词</td>
-<td>Press dw</td>
-</tr>
-<tr>
-<td>搜索文档中光标所在的单词</td>
-<td>Press *</td>
-</tr>
-<tr>
-<td>在 50-100 行进行查找并替换</td>
-<td>Run :50,100s/old/new/g (s = substitute, c = confirmation )</td>
-</tr>
-<tr>
-<td>如果光标所在的单词是一个文件，如何打开</td>
-<td>gf (g = goto, f = file)</td>
-</tr>
-<tr>
-<td>如果每行只有前N个字符是有用的？</td>
-<td>ctrl-v  –&gt; y (copy)</td>
-</tr>
-<tr>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
-<p><strong>所以，你被说服了吗？</strong></p>
-<p>我们为什么学习 Vim ?</p>
-<h4 id="Vim-图形化界面版本"><a href="#Vim-图形化界面版本" class="headerlink" title="Vim 图形化界面版本"></a>Vim 图形化界面版本</h4><p><strong>Windows</strong></p>
-<p><strong>Mac OS X</strong></p>
-<p><strong>Linux/BSD</strong></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901204140178.png" alt="image-20200901204140178"></p>
-<p>​                                                                    Windos 下的 Vim</p>
-<h4 id="终端版本"><a href="#终端版本" class="headerlink" title="终端版本"></a>终端版本</h4><p><strong>Windows</strong></p>
-<p><strong>Mac OS X</strong></p>
-<p><strong>Linux/BSD</strong></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901204402296.png" alt="image-20200901204402296"></p>
-<h3 id="最重要的概念-模式"><a href="#最重要的概念-模式" class="headerlink" title="最重要的概念 - 模式"></a>最重要的概念 - 模式</h3><p>Vim 中的模式也许是最令刚接触 Vim 的人最疑惑的部分，为什么打开不能直接输入文字？该怎么样保存并退出 Vim？据说 Stack Overflow 上关于如何退出 Vim 的问题，其点击量已有上百万次了</p>
-<p>Vim 中不同的模式就像是电视机中的正常模式和 DVD 模式，每种模式都有其特定的功能。模式使得功能区得以划分，使得事情变得尽可能简单。Vim 的目标之一就是使用键盘就可以完成所有工作，而不需要借助鼠标。</p>
-<h4 id="Normal-Mode-正常模式-命令行模式"><a href="#Normal-Mode-正常模式-命令行模式" class="headerlink" title="Normal Mode (正常模式/命令行模式)"></a>Normal Mode (正常模式/命令行模式)</h4><p><strong>A mode for running commands</strong></p>
-<p>Vim 启动的默认模式</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Vim command :echo</span></span><br><span class="line">:<span class="built_in">echo</span> <span class="string">"Hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Vim command :help takes us to the table of contents of the reference manual</span></span><br><span class="line">:<span class="built_in">help</span> usr_toc</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Insert-Mode-插入模式-编辑模式"><a href="#Insert-Mode-插入模式-编辑模式" class="headerlink" title="Insert Mode (插入模式/编辑模式)"></a>Insert Mode (插入模式/编辑模式)</h4><p><strong>A mode for writing text</strong></p>
-<p>打开 Vim，命令行模式下运行 <code>:e temp.txt</code>,  按下 <code>i</code>, 进入编辑模式，输入文本；</p>
-<p>按下 <code>&lt;ESC&gt;</code>, 切换回命令行模式，运行 <code>:w</code> 命令保存</p>
-<p><strong>使用命令进行更方便的移动光标</strong></p>
-<p>除了  <code>i</code> 之外，你还可以 </p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>insert text just before the cursor</td>
-</tr>
-<tr>
-<td>I</td>
-<td>insert text at the start of the line</td>
-</tr>
-<tr>
-<td>a</td>
-<td>append text just after the cursor</td>
-</tr>
-<tr>
-<td>A</td>
-<td>append text at the end of the line</td>
-</tr>
-</tbody></table>
-<p>光标移动，并切换为 Insert Mode</p>
-<p><strong>其他常用操作命令</strong></p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>o</td>
-<td>open a new line below</td>
-</tr>
-<tr>
-<td>O</td>
-<td>open a new line above</td>
-</tr>
-<tr>
-<td>s</td>
-<td>substitute character</td>
-</tr>
-<tr>
-<td>S</td>
-<td>substitutes the whole line</td>
-</tr>
-<tr>
-<td>r</td>
-<td>replace the current character</td>
-</tr>
-<tr>
-<td>R</td>
-<td>replace continuous characters</td>
-</tr>
-</tbody></table>
-<p>编辑完文本，切换回 Normal Mode, 是一个良好的习惯，完成文档的初始编写时，最好切换为 Normal Mode。</p>
-<p>这两种模式的切换时如此的简单，按下 <code>i</code> 即可进入编辑模式， <code>&lt;ESC&gt;</code> 即可切换为命令行模式，图形化界面看似提供了很多菜单选项，可是如果上百个命令，以及这些命令的组合，图形化界面是难以做到的。</p>
-<p>一旦你理解了 Vim 的模式 （哲学）， 你就不会觉得好难用，好奇怪，是吧？</p>
-<h4 id="Visual-mode"><a href="#Visual-mode" class="headerlink" title="Visual mode"></a>Visual mode</h4><p>假如想要选中一连串的单词（words），并将它们完全替换为新的文本， 该如何做呢？你可不想按住删除键全部删除，再重新添加新的文本吧？Visual Mode 就将发挥它的作用。</p>
-<p>Normal Mode 下，按下 <code>v</code> 或则 <code>V</code> 进入 Visual Mode</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>desc</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>v</td>
-<td>Visual Mode, character basis</td>
-</tr>
-<tr>
-<td>V</td>
-<td>Visual Mode, line basis</td>
-</tr>
-</tbody></table>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901215958686.png" alt="image-20200901215958686"></p>
-<p>​                                                relation between the difference modes</p>
-<h3 id="Graphical-cheat-sheet"><a href="#Graphical-cheat-sheet" class="headerlink" title="Graphical cheat sheet"></a>Graphical cheat sheet</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901221532521.png" alt="image-20200901221532521"></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>理解模式是如何工作的，以及如何进行模式的切换是成为一个 <strong>Vimmer</strong> 的关键，当然， Vim 也只是众多编辑器中的一种 （如 Vim 于 Emacs 之争），如何选择，取决于你的个人习惯和偏好，工欲善其事必先利其器，Vim 也只是提供了一种选择，这个看似古老的软件依然在庞大的程序员群体中占有一席之地，继续发光发热。</p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://github.com/swaroopch/byte-of-vim" target="_blank" rel="noopener">A Byte of Vim</a></p>
-<p>[2] <a href="https://initialcommit.com/blog/7-versatile-vim-commands" target="_blank" rel="noopener">7 versatile Vim commands that are easy to memorize</a></p>
-<p>[3] <a href="https://github.com/wsdjeg/vim-galore-zh_cn" target="_blank" rel="noopener">Vim Galore</a></p>
-<p>[4] <a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html" target="_blank" rel="noopener">Graphical vi-vim Cheat Sheet and Tutorial</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Terminology/">Terminology</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-19</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>symbolic links</p>
-<p>fork</p>
+<p>信号量的实现，通常需要一个整数值来保存信号量的值，以及一个指针指向等待队列中下一个要执行的进程，同时要避免死锁（deadlock）和饥饿 (starvation)</p>
+<h4 id="死锁的情况"><a href="#死锁的情况" class="headerlink" title="死锁的情况"></a>死锁的情况</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201214736878.png" alt="image-20201201214736878"></p>
+<p>进程 0 执行了 <code>wait(S)</code> 操作，然后进程被打断，进程 1 开始执行 <code>wait(Q)</code> 操作后，就开始等待信号量 <code>S</code>, 会被阻塞，然后进入休眠状态，当内核开始执行进程 0 时，信号量 <code>Q</code> 已经被使用，所以两个进程互相等待对方的情况，出现了死锁</p>
+<p>如何解决 ?</p>
+<h3 id="4-使用信号量的例子"><a href="#4-使用信号量的例子" class="headerlink" title="4. 使用信号量的例子"></a>4. 使用信号量的例子</h3><h4 id="临界区问题"><a href="#临界区问题" class="headerlink" title="临界区问题"></a>临界区问题</h4><p><strong>临界区（critical section）</strong>是指代码的一部分，必须避免并发访问。 这时，可以使用一个二元信号量来解决这个问题，信号量的值初始化为 1.  保证互斥的执行临界区代码，一旦 <code>signal</code> 操作，内核会将休眠的进程添加到就绪队列，等待内核执行该进程时，就可以继续执行临界的代码。确保在任何时刻，临界区的代码只有一个和进程在执行</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201215432904.png" alt="image-20201201215432904"></p>
+<h4 id="以顺序执行"><a href="#以顺序执行" class="headerlink" title="以顺序执行"></a>以顺序执行</h4><p>假设要执行代码片段 S1 和 S2 ，但是要求 S1 先执行， S2 后执行</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201220621412.png" alt="image-20201201220621412"></p>
+<p>使用一个初始值为 0 的信号量就可以解决这个问题：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201220908667.png" alt="image-20201201220908667"></p>
+<h4 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者/消费者问题"></a>生产者/消费者问题</h4><p>在这个问题中，生产者往缓冲区中生产物品，消费中从缓冲区中拿出来消费，他们分别对应 Producer 进程和 Consumer 进程，这是，使用一个信号量 <code>S</code> 代表换取中的物品个数，初始化为 0.</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201222814601.png" alt="image-20201201222814601"></p>
+<p>缓冲区满了，生产者应该停止生产，进入休眠状态，缓冲区空闲了，谁来通知 Producer 进程呢？</p>
+<p>使用三个信号量：</p>
+<p><code>empty</code>： 表示缓冲区中剩余空间大小，初始化为缓冲区的大小</p>
+<p><code>full</code>：表示缓冲区中已用空间大小，初始化为 0</p>
+<p><code>S</code> 用来保护缓冲区同时只能被一个进程访问， 初始化 1</p>
+<p>![image-20201201223208708](D:\Markdown 目录\Markdown 文档\工作\Java\img-assets\image-20201201223208708.png)·</p>
+<p><strong>生产者</strong>：</p>
+<p>如果 <code>empty</code> 信号量变为 0 ，生产者进入休眠状态；否则往缓冲区里进行生产，然后通知 <code>full</code> 信号量，因此会触发唤醒任何可能等待的消费者</p>
+<p><strong>消费者</strong>：</p>
+<p>如果 <code>full</code> 信号量变为 0 ，消费者进入休眠状态，否则从缓冲区中取出物品，并通知 <code>empty</code> 信号量，因此会触发唤醒任何需要进程生成的生成者</p>
+<p>除非缓冲区中还有空间，否则生产者进入休眠状态；除非缓冲区中还有元素，否则消费者进入休眠状态</p>
+<p>还有很多案例，包括哲学家吃饭问题，同一数据集上的读写问题….</p>
+<p>工作中的例子</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.baeldung.com/cs/semaphore" target="_blank" rel="noopener">What is a Semaphore</a></p>
+<p>[2] <a href="https://www.cnblogs.com/biglucky/p/4633706.html" target="_blank" rel="noopener">哲学家进餐问题</a></p>
+<p>[3] <a href="https://zhuanlan.zhihu.com/p/61326272" target="_blank" rel="noopener">PV操作</a></p>
 
                 
             </div>

@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Java/%E8%B4%A8%E6%95%B0%E7%9A%84%E5%88%A4%E6%96%AD/">Java/质数的判断</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-01-02</span>
+                <span class="post-time">2021-01-31</span>
                 
             </div>
             <div class="post-content">
@@ -102,7 +102,7 @@
                 <h2><a class="post-title-link" href="/Java/JOSE/">Java/JOSE</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-01-02</span>
+                <span class="post-time">2021-01-31</span>
                 
             </div>
             <div class="post-content">
@@ -114,185 +114,175 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6/">基础组件</a></h2>
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">对称密码</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-01-02</span>
+                <span class="post-time">2021-01-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p>Executor 接口中只定义了一个方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Executes the given command at some time in the future.  The command</span></span><br><span class="line"><span class="comment">     * may execute in a new thread, in a pooled thread, or in the calling</span></span><br><span class="line"><span class="comment">     * thread, at the discretion of the &#123;<span class="doctag">@code</span> Executor&#125; implementation.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> command the runnable task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException if this task cannot be</span></span><br><span class="line"><span class="comment">     * accepted for execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if command is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <h2 id="一次性密码本"><a href="#一次性密码本" class="headerlink" title="一次性密码本"></a>一次性密码本</h2><p>一次性密码本也称为<strong>维纳密码</strong>（Vernam Cipher），特点：无条件安全，理论上是 ”无法破译” 的。</p>
+<h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>将明文与一串<strong>随机</strong>的比特序列进行 <strong>XOR</strong> 运算，随机不是随便臆想出一个随机的序列，抛硬币的过程可以看作随机的过程，比如出现正面，可以看作比特位 1， 反面看作比特位 0. 密码学中有专门的随机数生成硬件和伪随机数生成器软件。</p>
+<p>例如, 明文 midnight 的 ASCII 比特序列为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">"midnight"</span> | hexdump -e <span class="string">'/1 "%02X "'</span> | xargs -n 1 | <span class="keyword">while</span> <span class="built_in">read</span> dec; <span class="keyword">do</span> <span class="built_in">echo</span>  <span class="string">"ibase=16;obase=2;<span class="variable">$dec</span>"</span> | bc | tr <span class="string">"\n"</span> <span class="string">" "</span> | sed <span class="string">'s/^/0/g'</span>; <span class="keyword">done</span>; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 ====&gt; midnight</span><br></pre></td></tr></table></figure>
 
-<p><code>execute(Runnable command)</code> 方法负责执行提交的任务，<code>Executor</code> 接口将任务的提交，任务的执行，以及线程使用的细节进行解耦。隐藏了创建线程的操作，甚至可以实现为非异步的方式，即由调用线程来直接执行：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DirectExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    r.run();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>产生一个和明文长度相同的 64 位比特序列，作为一次性密码本的密钥:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 ====&gt; 密钥</span><br></pre></td></tr></table></figure>
 
-<p>但是，通常情况下，是由调用该方法线程以外的线程来执行的，也就是会为每一个 <code>Runnable</code> 任务（命令）创建一个线程来异步执行：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPerTaskExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(r).start();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>属于多线程设计模式 <code>Thread-Per-Message</code>（见《图解 Java 多线程设计模式》） 的实现，即为每个请求分配一个新线程，由这个线程来执行处理。</p>
-<p><strong>该模式具有以下特点：</strong></p>
-<ol>
-<li>提高方法的响应，缩短延迟时间</li>
-<li>适用于对操作顺序没有要求（即方法的调用顺序不一定和执行顺序一致）</li>
-<li>适用于不需要返回值（<code>execute</code>方法的返回类型为 <code>void</code>）</li>
-</ol>
-<p>​    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">hexdump命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-01-02</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="hexdump-命令"><a href="#hexdump-命令" class="headerlink" title="hexdump 命令"></a>hexdump 命令</h1><p><strong>一点感想</strong>：自从学习 Shell 脚本编程以来，有时候会觉得，使用图形化界面的工具实现一个稍微复杂的操作过于麻烦，并且如果你学习过 Vim 的基本操作和哲学思想后，就会了解命令行的组合可以比图形界面上有限的菜单，按钮能做更过的事情，即实现高度的定制化。</p>
-<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>hexdump 工具可以将指定的文件或标准输入，以用户指定的格式进行展示，打印到控制台，提供了很多选项（options），如打印出对应字符的八进制，十六进制</p>
-<h2 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h2><h4 id="b-八进制"><a href="#b-八进制" class="headerlink" title="-b 八进制"></a>-b 八进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-b One-byte octal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, zero-filled, bytes of input data, <span class="keyword">in</span> octal, per line.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后将输入的每个字节以八进制展示 (占 3 位，不足 3 位的用 0 填充)，并以空格分隔</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -b</span><br><span class="line"></span><br><span class="line">0000000 150 145 154 154 157</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+<p>加密，即进行异或运算</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 明文</span><br><span class="line">⊕</span><br><span class="line">	01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 密钥</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">	00100000 00100100 00110000 00010000 00000110 00000110 00101000 01100000 密文</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="c-字符"><a href="#c-字符" class="headerlink" title="-c 字符"></a>-c 字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-c      One-byte character display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, space-filled, characters of input data per line.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后展示输入的每个字符 (占 3 位，不足 3 位的用空格填充)，并以空格分隔</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -c</span><br><span class="line">0000000   h   e   l   l   o</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>解密就是加密的反向运算，即用密文和密钥进行 X0R 运算，就可以得到明文</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	00100000 00100100 00110000 00010000 00000110 00000110 00101000 01100000 密文</span><br><span class="line">⊕</span><br><span class="line">	01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 密钥</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">	01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 明文</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="C-十六进制-ASCII字符"><a href="#C-十六进制-ASCII字符" class="headerlink" title="-C  十六进制+ASCII字符"></a>-C  十六进制+ASCII字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-C Canonical hex+ASCII display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, two column, hexadecimal bytes, followed by the same sixteen bytes <span class="keyword">in</span> %_p format enclosed <span class="keyword">in</span> ``|<span class="string">''</span> characters.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后展示每个字节的十六进制，随后是包含在两个 <code>|</code> 中的对应的字符，<strong>非打印字符以</strong> <code>.</code> 展示</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -C</span><br><span class="line">00000000  68 65 6c 6c 6f                                    |hello|</span><br><span class="line">00000005</span><br></pre></td></tr></table></figure>
-
-<p><code>-C</code> 选项应该是比较常用的，比较方便对比字符与对应的十六进制</p>
-<h4 id="d-两个字节的十进制"><a href="#d-两个字节的十进制" class="headerlink" title="-d 两个字节的十进制"></a>-d 两个字节的十进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-d      Two-byte decimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight space-separated, five column, zero-filled, two-byte units of input data, <span class="keyword">in</span> unsigned decimal, per line.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后将输入数据中的每两个字节作为一个单元，并展示他们组合成的无符号十进制数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -d</span><br><span class="line">0000000   25960   27756   00111</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>：两个字节组合的顺序与字符的顺序相反，例如 <code>he</code>, <code>h</code> 的十六进制是 <code>0x68</code>，<code>e</code> 的十六进制是 <code>0x65</code>， 但是字节组合的顺序是 <code>0x6568</code>, 对应的十进制就是上面结果中的 2590</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $((16<span class="comment">#6568))</span></span><br><span class="line">25960</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="x-两个字节的十六进制"><a href="#x-两个字节的十六进制" class="headerlink" title="-x 两个字节的十六进制"></a>-x 两个字节的十六进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-x      Two-byte hexadecimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight, space separated, four column, zero-filled, two-byte quantities of input data, <span class="keyword">in</span> hexadecimal, per line.</span><br></pre></td></tr></table></figure>
-
-<p>和 <code>-d</code> 类似</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -x</span><br><span class="line">0000000    6568    6c6c    006f</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="n-只处理-n-个字节"><a href="#n-只处理-n-个字节" class="headerlink" title="-n 只处理 n 个字节"></a>-n 只处理 n 个字节</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-n length Interpret only length bytes of input.</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="v-展示所有的字符"><a href="#v-展示所有的字符" class="headerlink" title="-v 展示所有的字符"></a>-v 展示所有的字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-v      Cause hexdump to display all input data.  Without the -v option, any number of groups of output lines, <span class="built_in">which</span> would be identical to the immediately preceding group of output lines (except <span class="keyword">for</span> the input offsets), are</span><br><span class="line">        replaced with a line comprised of a single asterisk.</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h2><h4 id="e-格式化字符串"><a href="#e-格式化字符串" class="headerlink" title="-e 格式化字符串"></a>-e 格式化字符串</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-e format_string</span><br><span class="line">           Specify a format string to be used <span class="keyword">for</span> displaying data.</span><br></pre></td></tr></table></figure>
-
-<p>指定格式化字符串</p>
-<h4 id="f-包含格式化字符串的文件"><a href="#f-包含格式化字符串的文件" class="headerlink" title="-f 包含格式化字符串的文件"></a>-f 包含格式化字符串的文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f format_file</span><br><span class="line">        Specify a file that contains one or more newline separated format strings.  Empty lines and lines whose first non-blank character is a <span class="built_in">hash</span> mark (<span class="comment">#) are ignored.</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>一个<strong>格式化字符串</strong>由任意多个格式化单元（format unit）组成，每个格式化单元以空格分隔。一个格式化单元最多由三个部分组成：<strong>迭代次数</strong>（iteration count），<strong>字节个数</strong> (byte count)，<strong>以及格式字符串</strong> (format)</p>
-<p><strong>迭代次数</strong>：可选的正整数，默认位位1， 表示格式字符串要被应用多少次</p>
-<p><strong>字节个数</strong>: 可选的正整数. 如果指定了，它定义了每次应用格式字符串时，需要使用多少个字节</p>
-<p>​    如果指定了迭代次数和（或）字节个数，需要使用 <code>/</code> 来加以区分，如 <code>1/4</code>，<code>/4</code></p>
-<p><strong>格式字符串</strong>：必须指定，并且要包含在双引号中 <code>&quot;&quot;</code>, 类似于 <code>fprintf</code> 中的格式字符串， 支持单个字符的转义序列：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NUL                  \0</span><br><span class="line">&lt;alert character&gt;    \a</span><br><span class="line">&lt;backspace&gt;          \b</span><br><span class="line">&lt;form-feed&gt;          \f</span><br><span class="line">&lt;newline&gt;            \n</span><br><span class="line">&lt;carriage <span class="built_in">return</span>&gt;    \r</span><br><span class="line">&lt;tab&gt;                \t</span><br><span class="line">&lt;vertical tab&gt;       \v</span><br></pre></td></tr></table></figure>
-
-
-
-<p>如包含一个格式化单元的格式化字符串：<code>&#39;4/1 &quot;%_p&quot;&#39;</code> ， 4 表示迭代次数，1表示每次使用一个字节，<code>%_p</code> 为格式字符串</p>
-<p>也支持额外的转换字符串：</p>
-<ul>
-<li><p><code>_a[dox]</code> 展示输入偏移量 <code>d</code>,<code>o</code>,<code>x</code> 分表表示十进制，八进制和十六进制</p>
+<h3 id="一次性密码本是无法破译的"><a href="#一次性密码本是无法破译的" class="headerlink" title="一次性密码本是无法破译的"></a>一次性密码本是无法破译的</h3><p>只要遍历密钥空间，总能找到进行加密解密的密钥（运算能力无穷大，可以在有限时间内），然后对密文界面，无法破译指的是<strong>没有办法判断解密后的内容是否是正确的的明文</strong>， 所有可能密钥的解密，可能会出现类似于 midnight, onenight 的单词，也可能会出现其他不规则的字符组合，作为一个破译者，没有办法定义哪一个是正确的明文。明文就对应着密钥，所以一次性密码本无法破译。</p>
+<h3 id="一次性密码本存在的问题"><a href="#一次性密码本存在的问题" class="headerlink" title="一次性密码本存在的问题"></a>一次性密码本存在的问题</h3><ul>
+<li><p>密钥配送</p>
+<p>可以安全的发送密钥，那为什么不直接用来安全的发送明文？</p>
 </li>
-<li><p><code>_A[dox]</code> 与 <code>_a[dox]</code> 行为一致，但是只执行一次，当所有的输入数据都被处理了</p>
+<li><p>密钥保存</p>
+<p>密钥与明文一样长，保存明文转换为保存密钥的问题</p>
 </li>
-<li><p><code>_c</code>  以默认的字符集打印出输入字符，非打印字符以八进制展示（占 3 位，不足三位用 0 填充），如果该字符支持转义序列，则会以转义序列的形式展示，如 <code>\n</code></p>
+<li><p>密钥重用</p>
+<p>不能重用用过的随机比特序列，否则，获取所有的机密通信将被全部解密</p>
 </li>
-<li><p><code>_p</code> 以默认的字符集打印出输入字符. 非打印字符会被展示成 <code>.</code></p>
-</li>
-<li><p><code>_u</code> 打印出 <code>ASCII</code> 字符，控制字符会被展示成如下的名称（小写）：</p>
+<li><p>密钥同步</p>
+<p>密钥长度与明文长度相同，明文过长，密钥的传输与通信不能有任何差错（比特位的丢失，错位等），否则，将不能解密</p>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">000 NUL  001 SOH  002 STX  003 ETX  004 EOT  005 ENQ</span><br><span class="line">006 ACK  007 BEL  008 BS   009 HT   00A LF   00B VT</span><br><span class="line">00C FF   00D CR   00E SO   00F SI   010 DLE  011 DC1</span><br><span class="line">012 DC2  013 DC3  014 DC4  015 NAK  016 SYN  017 ETB</span><br><span class="line">018 CAN  019 EM   01A SUB  01B ESC  01C FS   01D GS</span><br><span class="line">01E RS   01F US   07F DEL</span><br></pre></td></tr></table></figure>
+<h2 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h2><p>DES (Data Encryption Standard) 是 1997 年美国联邦信息处理标准中采用的一种对称密码。DES 已经可以在短时间内被破译，所以除了兼容性，不应该再使用 DES 来直接加密</p>
+<h3 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h3><p>DES 属于<strong>分组密码</strong>（block cipher），以 64 比特位为一个单位来进行加密的，密钥长度为 64 位，实际只有 56 位，每隔 7 位会设置一个错误校验位，所以 DES 的密钥长度为 56 位.     (分组密码的模式)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126210108366.png" alt="image-20210126210108366"></p>
+<h3 id="DES-的结构"><a href="#DES-的结构" class="headerlink" title="DES 的结构"></a>DES 的结构</h3><p>DES 的基本结构由 Horst Feistel 设计, 所以也称为 Feistel  网络, Feistel 结构, Feistel  密码, 并且应用到了其它的密码算法中. Feistel  中将每一次加密过程, 称为<strong>轮</strong> (round), DES 是一种 16 轮循环的 Feistel  网络.</p>
+<h4 id="一轮的过程"><a href="#一轮的过程" class="headerlink" title="一轮的过程"></a>一轮的过程</h4><h5 id="加密的过程"><a href="#加密的过程" class="headerlink" title="加密的过程"></a>加密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126211458134.png" alt="image-20210126211458134"></p>
+<p>Feistel  网络中一轮的过程如上图所示, 输入被等分为左右两半,分别进行处理, 写作左侧和右侧, 加密后的左半部分写作”加密后的左侧”, 右侧称为右侧.</p>
+<p>Feistel  网络中每一轮都需要使用一个不同的密钥, 所以这个密钥只在一轮中使用, 因此称为 <strong>子密钥</strong> (subkey)</p>
+<p><strong>具体的步骤:</strong></p>
+<p>(1) 将输入的数据等分为左右两部分<br>(2) 将输入的右侧直接发送到输出的右侧<br>(3) 将输入的右侧发送到轮函数<br>(4) 轮函数根据右侧数据和子密钥，计算出 一串看上去是随机 的比特序列<br>(5) 将上一步得到的比特序列与左侧数据进行 XOR 运算， 将结果作为加密后的左侧</p>
+<p>每一轮, 右侧部分是没有被加密的,因此需要使用不同的子密钥重复多轮, 每两轮之间将左侧和右侧的数据进行对调. 最后一轮结束后不需要对调。3 轮的Feistel  网络如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213116336.png" alt="image-20210126213116336"></p>
+<h5 id="解密的过程"><a href="#解密的过程" class="headerlink" title="解密的过程"></a>解密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213750078.png" alt="image-20210126213750078"></p>
+<p>用相同的子密钥运行两次 Feistel 网络就能够将数据还原， 利用的其实 XOR 异或的性质 (两个相同的数异或为 0)， 多轮的情况是一样的：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126214210806.png" alt="image-20210126214210806"></p>
+<h4 id="Feistel-网络的性质"><a href="#Feistel-网络的性质" class="headerlink" title="Feistel 网络的性质"></a>Feistel 网络的性质</h4><ul>
+<li><p><strong>加密时无论使用任何函数作为轮函数都可以正确解密</strong></p>
+<p>即便使用的轮函数的输出结果无法逆计算出输入的值（即该函数不存在反函数）也没有问题，可以被设计得任意复杂；Feistel 网络实际上就是从加密算法中抽取出“密码的本质部分”并将其封装成一个轮函数</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>可解密性</strong></p>
+<p>在 Feistel 网络的一轮中， 右半边部分没有进行任何处理，看起来时一种浪费，但却保证了可解密性，是解密过程中所必须的信息；</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>加密和解密可以用相同的结构来实现</strong></p>
+<p>由于加密解密可以用相同的结构来实现，因此用于实现 DES 算法的硬件设备的设计变得容易</p>
+</li>
+</ul>
+<h4 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h4><p>三重 DES (triple - DES) 是为了增加 DES 的强度， 将 DES 重复 3 次的一种密码算法，也称为 TDEA (Triple Date Ecnryption Algorithm), 通常称为 3DES。</p>
+<p><strong>三重 DES 的加密过程：</strong></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221848991.png" alt="image-20210126221848991"></p>
+<p>明文经过三次 DES 处理变为密文，所以三重 DES 的密钥长度是 56 * 3=168 比特. 三重 DES 并不是进行三次加密，而是 <code>加密 --&gt; 解密--&gt; 加密</code> 的过程， 此方法由 IBM 公司设计，目的是兼容普通的 DES， 当三重 DES 使用的所有密钥都相同时，三重 DES 就相等于普通的 DES , 因为 <code>加密--&gt;解密</code> 就变为明文了。因此<strong>三重 DES 对 DES 具备向下兼容性</strong></p>
+<p><strong>DES-EDE2</strong>： 密钥1和密钥3使用相同的密钥，密钥2使用不同的密钥</p>
+<p><strong>DES-EDE3</strong>:   密钥1，密钥2，密钥3全部使用不同的比特序列</p>
+<p><strong>三重 DES 的解密过程：</strong></p>
+<p>三重 DES 的解密过程和加密正好相反，以密钥3，密钥2，密钥1的顺序执行 <code>解密--&gt;加密--&gt;解密</code> 的操作</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221714656.png" alt="image-20210126221714656"></p>
+<h4 id="关于-DES-于-3DES-的使用"><a href="#关于-DES-于-3DES-的使用" class="headerlink" title="关于 DES 于 3DES 的使用"></a>关于 DES 于 3DES 的使用</h4><p>由于 DES 的密文已经可以在短时间内被破译，处理解密以前的密文，不应该再使用 DES 了。三重 DES 由于处理速度不高，很少被用于新的用途。</p>
+<blockquote>
+<p>在日本总务省和经济产业省 2013 年发布的《电子政府相关技术采购中参考的密码清单》中，“电子政府推荐使用的密码清单” 项中将 3-key Triple DES 作为 64 比特分组密码列了出来，但考虑到 IST SP 800-67 的规定，以及其事实性标准的地位，又在脚注中给出了“目前暂且允许使用”的描述</p>
+</blockquote>
+<h4 id="使用-openssl-通过-3DES-进行加密和解密"><a href="#使用-openssl-通过-3DES-进行加密和解密" class="headerlink" title="使用 openssl 通过 3DES 进行加密和解密"></a>使用 openssl 通过 3DES 进行加密和解密</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加密</span></span><br><span class="line">$ cat seq.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">$ openssl enc -e -des3 -a -salt -<span class="keyword">in</span> seq.txt -out encrypted.txt</span><br><span class="line">enter des-ede3-cbc encryption password:</span><br><span class="line">Verifying - enter des-ede3-cbc encryption password:</span><br><span class="line"></span><br><span class="line">$ cat encrypted.txt</span><br><span class="line">U2FsdGVkX1+HbjKWGlQzlIM7EM/TFhzn8wzKBBWn91TBdUSH3bOCeQ==</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密</span></span><br><span class="line">openssl enc -d -des3 -a -salt -<span class="keyword">in</span> encrypted.txt -out decrypted.txt</span><br><span class="line">enter des-ede3-cbc decryption password:</span><br><span class="line"></span><br><span class="line">$ cat decrypted.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/ASN.1/">ASN.1</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-01-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="ASN-1"><a href="#ASN-1" class="headerlink" title="ASN.1"></a>ASN.1</h1><h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>ASN.1 (Abstract Syntax Notation dot one) ，用来描述通信协议中传输的数据，定义了抽象数据类型规范的形式, 具有健壮性, 准确性, 独立于编程语言,独立于硬件和操作系统, 可以通过简单类型组成复杂的数据类型。</p>
+<p>例如定义联系人 Contact 类型的语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Contact ::&#x3D; SEQUENCE &#123;</span><br><span class="line">name VisibleString,</span><br><span class="line">phone NumericString</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>每个格式字符串需要使用字节个数等于所有格式化单元使用的字节个数加起来，每个格式化单元使用的字节个数 = 迭代次数 * 字节个数 （或者没有指定字节个数，格式单元需要的字节个数）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"ABCDEFGH"</span> | hexdump -e <span class="string">'4/1 "%_p"'</span></span><br></pre></td></tr></table></figure>
-
-<p>上述中的格式化字符串需要使用的字节个数 = 4 * 1</p>
-<p>输入数据，是以 “数据块”（blocks） 的形式处理的，一个数据块定义为所有格式化字符使用的最大字节数</p>
-<h4 id="指定格式化字符串的列子"><a href="#指定格式化字符串的列子" class="headerlink" title="指定格式化字符串的列子"></a>指定格式化字符串的列子</h4><p><strong>打印输入数据的十六进制</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X "'</span> ; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A</span><br></pre></td></tr></table></figure>
+<p>上述的例子中定义了一个联系人的结构, 具有这样结构的联系人 name = ‘Josn Smith’, phone = 987 6543210可以通过 AS1.1 的<strong>编码规则</strong> (后面会讲到) 序列化为二进制或文本格式, 便于进行传输</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">        JSON Encoding Rules (JER)  </span><br><span class="line">&#123; &quot;name&quot; : &quot;John Smith&quot;, &quot;phone&quot; : &quot;987 6543210&quot; &#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>打印输入数据的十六进制及字符</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% <span class="built_in">echo</span> hello | hexdump -e <span class="string">'8/1 "%02X ""\t"" "'</span> -e <span class="string">'8/1 "%c""\n"'</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A        hello</span><br></pre></td></tr></table></figure>
+<p><strong>完整定义的示例</strong></p>
+<p>购买订单类型的 ASN.1 定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">-- 所有的定义都需要包含在一个模块(module)中, module 是以 &#39;BEGIN&#39; 关键字开始, &#39;END&#39; 关键字结束</span><br><span class="line">-- ASN.1 中一个 Tag 是消息中每个组件的一个内部标识符(internal identification). Tag 都是唯一的, 可以直接指定,但最好还是使用 AUTOMATIC TAGS, 易于阅读和理解, 较少歧义性和冲突性的可能</span><br><span class="line"></span><br><span class="line">MyShopPurchaseOrders DEFINITIONS AUTOMATIC TAGS ::&#x3D; BEGIN</span><br><span class="line"></span><br><span class="line">PurchaseOrder ::&#x3D; SEQUENCE &#123;</span><br><span class="line">dateOfOrder DATE,</span><br><span class="line">customer    CustomerInfo,</span><br><span class="line">items       ListOfItems</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CustomerInfo ::&#x3D; SEQUENCE &#123;</span><br><span class="line">companyName    VisibleString (SIZE (3..50)),</span><br><span class="line">billingAddress Address,</span><br><span class="line">contactPhone   NumericString (SIZE (7..12))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Address::&#x3D; SEQUENCE &#123;</span><br><span class="line">street  VisibleString (SIZE (5 .. 50)) OPTIONAL,</span><br><span class="line">city    VisibleString (SIZE (2..30)),</span><br><span class="line">state   VisibleString (SIZE(2) ^ FROM (&quot;A&quot;..&quot;Z&quot;)),</span><br><span class="line">zipCode NumericString (SIZE(5 | 9))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ListOfItems ::&#x3D; SEQUENCE (SIZE (1..100)) OF Item</span><br><span class="line"></span><br><span class="line">Item ::&#x3D; SEQUENCE &#123;</span><br><span class="line">itemCode        INTEGER (1..99999),</span><br><span class="line">color           VisibleString (&quot;Black&quot; | &quot;Blue&quot; | &quot;Brown&quot;),</span><br><span class="line">power           INTEGER (110 | 220),</span><br><span class="line">deliveryTime    INTEGER (8..12 | 14..19),</span><br><span class="line">quantity        INTEGER (1..1000),</span><br><span class="line">unitPrice       REAL (1.00 .. 9999.00),</span><br><span class="line">isTaxable       BOOLEAN</span><br><span class="line">&#125;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>打印十六进制，并加上前缀 <code>x</code></strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hex with preceding 'x'</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'"x" 1/1 "%02X" " "'</span> ; <span class="built_in">echo</span></span><br><span class="line">x68 x65 x6C x6C x6F x0A</span><br></pre></td></tr></table></figure>
+<h2 id="ASN-1-基础数据类型"><a href="#ASN-1-基础数据类型" class="headerlink" title="ASN.1 基础数据类型"></a>ASN.1 基础数据类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-- BOOLEAN</span><br><span class="line">doorOpen BOOLEAN ::&#x3D; TRUE</span><br><span class="line"></span><br><span class="line">-- INTEGER</span><br><span class="line">speed INTEGER (0..60) ::&#x3D; 40</span><br><span class="line"></span><br><span class="line">--VisibleString</span><br><span class="line">LineOfText ::&#x3D; VisibleString</span><br><span class="line"></span><br><span class="line">--IA5String</span><br><span class="line">TextWithLayout ::&#x3D; IA5String</span><br><span class="line"></span><br><span class="line">--MORE ARE NOT LISTED HERE</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.oss.com/asn1/resources/asn1-made-simple/types.html" target="_blank" rel="noopener">Most Common ASN.1 Types</a></p>
+<h2 id="Constaints-约束"><a href="#Constaints-约束" class="headerlink" title="Constaints 约束"></a>Constaints 约束</h2><p>ASN.1 的 schema 定于中可以包含约束, 用来限制给定字段或类型的有效值集合, 通过使用约束, 也可以生成一个更紧凑的编码, 例如 <code>INTEGER(0..200)</code> 的值用一个字节进行编码就够了</p>
+<h4 id="基础约束"><a href="#基础约束" class="headerlink" title="基础约束"></a>基础约束</h4><p>字母表约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ardToReadChars ::&#x3D; IA5String (FROM(&quot;8BI10OD5S&quot;))</span><br></pre></td></tr></table></figure>
+
+<p>模式(类似于正则表达式)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LicensePlate ::&#x3D; IA5String (PATTERN &quot;[0-9]#4(-[A-Z]#2)?&quot;) -- NNNN[-NN]</span><br></pre></td></tr></table></figure>
+
+<p>值的大小,长度约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LicensePlate ::&#x3D; IA5String (SIZE (4..7))</span><br><span class="line">CarPark ::&#x3D; SEQUENCE SIZE (1..25) OF LicensePlate</span><br></pre></td></tr></table></figure>
+
+<p>值取值范围约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CarSpeed ::&#x3D; INTEGER (0..200)</span><br></pre></td></tr></table></figure>
+
+<p>单值约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WarningColors ::&#x3D; UTF8String (&quot;Red&quot; | &quot;Yellow&quot;)</span><br><span class="line">InfoColors ::&#x3D; UTF8String (&quot;Blue&quot; | &quot;White&quot;)</span><br><span class="line">CitySpeedLimit ::&#x3D; INTEGER (25 | 30 | 40)</span><br><span class="line">HighwaySpeedLimit ::&#x3D; INTEGER (40 | 50 | 60 | 70)</span><br></pre></td></tr></table></figure>
+
+<p>包含子类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SignColors ::&#x3D; UTF8String (InfoColors UNION WarningColors)</span><br><span class="line">SpeedLimitSigns ::&#x3D; INTEGER (CitySpeedLimit | HighwaySpeedLimit | 10 | 65)</span><br><span class="line">RuralSpeedLimit ::&#x3D; INTEGER (CitySpeedLimit INTERSECTION HighwaySpeedLimit)</span><br></pre></td></tr></table></figure>
+
+<p>编码约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">PerInside ::&#x3D; OCTET STRING (</span><br><span class="line">                    CONTAINING Doc </span><br><span class="line">                    ENCODED BY &#123; joint-iso-itu-t asn1(1) </span><br><span class="line">                                 packed-encoding(3) </span><br><span class="line">                                 basic(0) </span><br><span class="line">                                 unaligned(1)&#125;) </span><br><span class="line"></span><br><span class="line"> pdf OBJECT IDENTIFIER ::&#x3D; &#123; iso(1) </span><br><span class="line">                             member-body(2) </span><br><span class="line">                             us(840) </span><br><span class="line">                             adobe(113583) </span><br><span class="line">                             acrobat(1)&#125;</span><br><span class="line"></span><br><span class="line"> Doc ::&#x3D; OCTET STRING (ENCODED BY pdf)</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>打印十六进制，每行一个字节</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># one hex byte per line</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X\n"'</span></span><br><span class="line">68</span><br><span class="line">65</span><br><span class="line">6C</span><br><span class="line">6C</span><br><span class="line">6F</span><br><span class="line">0A</span><br></pre></td></tr></table></figure>
+<p>更复杂的字段条件依赖约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Schema DEFINITIONS AUTOMATIC TAGS ::&#x3D; BEGIN</span><br><span class="line"></span><br><span class="line">Address ::&#x3D; SEQUENCE &#123;</span><br><span class="line">   street-address UTF8String,</span><br><span class="line">   country UTF8String -- see a note below, </span><br><span class="line">   postal-code UTF8String</span><br><span class="line">&#125; ((WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;USA&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9]#5(-[0-9]#4)?&quot;)</span><br><span class="line">    &#125; </span><br><span class="line">  | WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;Canada&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9][A-Z][0-9] </span><br><span class="line">                                [A-Z][0-9][A-Z]&quot;)</span><br><span class="line">    &#125;  </span><br><span class="line">  | WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;Netherlands&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9]#4 [A-Z]#2&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  ))</span><br><span class="line"></span><br><span class="line">END</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>带偏移量</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># byte# &amp; ASCII with control chars</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#  "'</span> -e <span class="string">'/1 " _%_u\_\n"'</span></span><br><span class="line">0<span class="comment">#   _h_</span></span><br><span class="line">1<span class="comment">#   _e_</span></span><br><span class="line">2<span class="comment">#   _l_</span></span><br><span class="line">3<span class="comment">#   _l_</span></span><br><span class="line">4<span class="comment">#   _o_</span></span><br><span class="line">5<span class="comment">#   _lf_</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>每行只打印一个字节对应的十六进制，以及对应的 ASCII 字符，行首打印偏移量，即序号</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"ABCDEFG"</span> | hexdump -e <span class="string">'/1 "%02_ad#  "'</span> -e <span class="string">'/1 "%02X "'</span> -e <span class="string">'/1 " %_u\n"'</span></span><br><span class="line">00<span class="comment">#  41  A</span></span><br><span class="line">01<span class="comment">#  42  B</span></span><br><span class="line">02<span class="comment">#  43  C</span></span><br><span class="line">03<span class="comment">#  44  D</span></span><br><span class="line">04<span class="comment">#  45  E</span></span><br><span class="line">05<span class="comment">#  46  F</span></span><br><span class="line">06<span class="comment">#  47  G</span></span><br><span class="line">07<span class="comment">#  0A  lf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># lf 表示 LF 换行符</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>7C1C分隔符示例</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># char.dat</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"A\u007c\u001cB\u007c\u001cC"</span> &gt; char.dat</span><br><span class="line"></span><br><span class="line">cat char.dat | hexdump -v -e <span class="string">'"%02_ad#\t"'</span> -e <span class="string">'/1 "0x%02X\t"'</span> -e <span class="string">'/1 "%_p\n"'</span></span><br><span class="line">00<span class="comment">#     0x41    A</span></span><br><span class="line">01<span class="comment">#     0x7C    |</span></span><br><span class="line">02<span class="comment">#     0x1C    .</span></span><br><span class="line">03<span class="comment">#     0x42    B</span></span><br><span class="line">04<span class="comment">#     0x7C    |</span></span><br><span class="line">05<span class="comment">#     0x1C    .</span></span><br><span class="line">06<span class="comment">#     0x43    C</span></span><br><span class="line">07<span class="comment">#     0x0A    .</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a table of byte#, hex, decimal, octal, ASCII</span></span><br><span class="line">% <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#    "'</span> -e <span class="string">'/1    "%02X hex"'</span> -e <span class="string">'/1 " = %03i dec"'</span> -e <span class="string">'/1 " = %03o oct"'</span> -e <span class="string">'/1 " = _%c\_\n"'</span></span><br><span class="line">           0<span class="comment">#    68 hex = 104 dec = 150 oct = _h_</span></span><br><span class="line">           1<span class="comment">#    65 hex = 101 dec = 145 oct = _e_</span></span><br><span class="line">           2<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           3<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           4<span class="comment">#    6F hex = 111 dec = 157 oct = _o_</span></span><br><span class="line">           5<span class="comment">#    0A hex = 010 dec = 012 oct = _</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="Encoding-Rules-编码规则"><a href="#Encoding-Rules-编码规则" class="headerlink" title="Encoding Rules - 编码规则"></a>Encoding Rules - 编码规则</h2><p>编码规则描述了应该将 ASN.1 中定义的值如何进行编码以进行传输（被转换为字节进行传输，或者反之，将字节转为 ASN.1 中的值） ，并且不受机器，编程语言，应用程序表示的影响。每一种编码规则都有其特点，例如在压缩方面的，解码速度方面的。任何一种编码规则都能表示要进行交换的信息，只是使用场景不同</p>
+<h3 id="BER-DER-CER"><a href="#BER-DER-CER" class="headerlink" title="BER, DER, CER"></a>BER, DER, CER</h3><p>BER (Basic Encoding Rules) 是最古老的编码规则，使用 TLV (Tag-Length-Value) 的格式对所有的信息进行编码，即先发送一个标签（Tag）表明数据的类型，如 SEQUENCE，接着是数据的长度（Length）, 然年后是实际的数据，DER (Distinguished Encoding Rules) 以及 CER (Canonical Encoding Rules) 是 BER 的子集，消除了 BER 提供的一些灵活性。DER 通常使用在于安全相关的应用中，例如 X.509 数字证书。</p>
+<h3 id="OER"><a href="#OER" class="headerlink" title="OER"></a>OER</h3><p>OER (Octet Encoding Rules) - 最快的 ASN.1 编码规则，与 PER (Packed Encoding Rules) 一样，通过利用 ASN.1 的 schema 的信息表示的优势来限制包含类每个编码消息的信息数量，生成紧凑的编码输出。聚焦于编码与解码的速度。</p>
+<h3 id="PER"><a href="#PER" class="headerlink" title="PER"></a>PER</h3><p>PER (Packed Encoding Rules) 最紧凑的编码规则，与 BER 不同的是，PER 不会发送 TLV 中的标签 T, 是应为消息中的组件的顺序是一致的，如果 TLV 中的值 V 是大小固定的，也不会发送长度 L. PER 同样使用的 ASN.1 定义之外的的信息来减少冗余的数据（V）. 因此，PER 编码的消息更加紧凑，能够节省带宽.</p>
+<h3 id="XER-E-XER"><a href="#XER-E-XER" class="headerlink" title="XER,E-XER"></a>XER,E-XER</h3><p>XER (XML Encodind Rules), E-XER(Extended XER) 使用 XML 文本格式来进行编码, 格式为 <code>&lt;start-tag&gt; value &lt;end-tag&gt;</code>. XER 与 E-XER 的区别在于 E-XER 生成的默认编码更适合与 XSD(XML Schema Definition) 引擎进行信息交换. 相同的 ASN.1 数据可以使用多个编码规则, 这意味着来自于手机的 PER 编码的消息可以转换为 E-XER 编码, 用于在一个 web 浏览器中进行展示和操作</p>
+<h3 id="JER"><a href="#JER" class="headerlink" title="JER"></a>JER</h3><p>JER (JSON Encoding Rules), 基于 JSON 格式的编码规则, 相比 XER, E-XER, 更加紧凑, 易于使用. 基于 RFC-7159 中的 JSON 规范.</p>
+<p>通过JER，ASN.1用户可以轻松调试ASN.1协议并进行故障排除.</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://www.oss.com/asn1/resources/asn1-made-simple/introduction.html" target="_blank" rel="noopener">What is ASN1</a></p>
+<p>[2] <a href="https://blog.csdn.net/fengbingchun/article/details/106487696" target="_blank" rel="noopener">ASN.1简介及OpenSSL中ASN.1接口使用举例</a></p>
+<p>[3] <a href="https://blog.csdn.net/jf223355/article/details/103511644" target="_blank" rel="noopener">openssl 密钥生成和解析</a></p>
 
                 
             </div>
@@ -300,22 +290,43 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">杂七杂八</a></h2>
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PKCS/">PKCS</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-12-27</span>
+                <span class="post-time">2021-01-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Linux/">Linux</a>
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p><a href="https://blog.csdn.net/cuijiying/article/details/104993550" target="_blank" rel="noopener">window系统电脑某个端口下的程序无法被局域网内的电脑访问的问题</a></p>
-<p><a href="https://blog.csdn.net/qq_43442102/article/details/100195522" target="_blank" rel="noopener">ubuntu-linux 笔记本合上盖子保持链接</a></p>
+                    <h2 id="PKCS"><a href="#PKCS" class="headerlink" title="PKCS"></a>PKCS</h2><p>PKCS (Public-Key Cryptography Standards) 公钥密码标准由 RSA 公司制定, 用于标准化公钥基础设施 (public key infrastructure), 从 PKCS #1, PKCS #2 到 PKCS #15 总共提供了 15 个标准</p>
+<h3 id="PKCS-1"><a href="#PKCS-1" class="headerlink" title="PKCS #1"></a>PKCS #1</h3><p>RSA 密码算法的加密标准，定义了 RSA 公钥函数，数字证书等的基础规则；也定义了 RSA 私钥和公钥的语法， 可以用来计算 RSA 算法中使用的密钥对。除了这些，还定义了数字证书应该如何计算，以及数据的结构应该如何被签名，数字签名的格式</p>
+<p><strong>用于 RSA 公钥密钥</strong></p>
+<h3 id="PKCS-7"><a href="#PKCS-7" class="headerlink" title="PKCS #7"></a>PKCS #7</h3><p>加密消息语法标准。定义了加密操作结果形式数据的语法，例如数字签名 (digital signature) 和数字信封 (digital envelopes)</p>
+<p><strong>用于生成和验证数字签名和由 PKI 管理的证书</strong></p>
+<p><strong>用于证书或证书链</strong></p>
+<h3 id="PKCS-8"><a href="#PKCS-8" class="headerlink" title="PKCS #8"></a>PKCS #8</h3><p>私钥信息标准。定义了私钥信息的语法。换句话说，定义了用来生成私钥的算法以及属性</p>
+<p><strong>用于各种公钥密码</strong></p>
+<h3 id="PKCS-12"><a href="#PKCS-12" class="headerlink" title="PKCS #12"></a>PKCS #12</h3><p>个人信息交换的语法标准。定义了用于个人识别的语法，如数字证书，私钥等。换句话说，这个标准允许用户使用标准机制将数据从一个设备传输到另一台设备</p>
+<p><strong>用于数字证书+私钥</strong>， 常用文件后缀 <code>.pfx</code>, <code>.p12</code> ,<code>.pem</code> </p>
+<h3 id="速查简表"><a href="#速查简表" class="headerlink" title="速查简表"></a>速查简表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Format        Purpose</span><br><span class="line"></span><br><span class="line">PKCS<span class="comment">#1   Encryption and signing</span></span><br><span class="line">PKCS<span class="comment">#3   Diffie-Hellman key protocol</span></span><br><span class="line">PKCS<span class="comment">#5   String encryption</span></span><br><span class="line">PKCS<span class="comment">#7   Signed cert</span></span><br><span class="line">PKCS<span class="comment">#8   Private key and attributes</span></span><br><span class="line">PKCS<span class="comment">#9   Attributes</span></span><br><span class="line">PKCS<span class="comment">#10  Cert signing request (CSR)</span></span><br><span class="line">PKCS<span class="comment">#11  Cryptoki smart card API</span></span><br><span class="line">PKCS<span class="comment">#12  Cert and publisher private key</span></span><br><span class="line">PKCS<span class="comment">#15  Cryptoki token credentials</span></span><br><span class="line">PKCS<span class="comment">#12  X.509 Cert and private keys</span></span><br><span class="line">PKCS<span class="comment">#13  Elliptic Curve cryptography</span></span><br><span class="line">PKCS<span class="comment">#14  Pseudo-random number generation</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="PEM"><a href="#PEM" class="headerlink" title="PEM"></a>PEM</h2><p>PEM (Privacy Enhanced Mail) 私密增强邮件, 是 X.509  证书，CSRs (Certiticate Signing Requests) 证书签名请求，加密密钥的常用格式。PEM 文件包含了一个或多个 Base64 编码的内容，并且每一内容都有一个头部和尾部：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Base64 encoded data</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>单个 PEM 文件可以包含一个证书，一个私钥，或多个证书组成完整的证书信任链。</p>
+<p>通常使用的文件扩展名：<code>.crt</code>, <code>.pem</code>, <code>.cer</code>, <code>.key</code> (用于密钥)</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://tools.ietf.org/html/rfc2315" target="_blank" rel="noopener">PKCS #7</a></p>
+<p>[2] <a href="https://tools.ietf.org/html/rfc8017#appendix-A.2.4" target="_blank" rel="noopener">PKCS #1</a></p>
+<p>[2] <a href="https://www.cryptomathic.com/news-events/blog/introduction-to-digital-signatures-and-pkcs-7" target="_blank" rel="noopener">Introduction to Digital Signatures and PKCS #7</a></p>
+<p>[3] <a href="https://www.pcmag.com/encyclopedia/term/pkcs" target="_blank" rel="noopener">PKCS</a></p>
 
                 
             </div>

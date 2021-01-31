@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">PKCS</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-01-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PKCS"><span class="toc-text">PKCS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PKCS-1"><span class="toc-text">PKCS #1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PKCS-7"><span class="toc-text">PKCS #7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PKCS-8"><span class="toc-text">PKCS #8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PKCS-12"><span class="toc-text">PKCS #12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#速查简表"><span class="toc-text">速查简表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PEM"><span class="toc-text">PEM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="PKCS"><a href="#PKCS" class="headerlink" title="PKCS"></a>PKCS</h2><p>PKCS (Public-Key Cryptography Standards) 公钥密码标准由 RSA 公司制定, 用于标准化公钥基础设施 (public key infrastructure), 从 PKCS #1, PKCS #2 到 PKCS #15 总共提供了 15 个标准</p>
+<h3 id="PKCS-1"><a href="#PKCS-1" class="headerlink" title="PKCS #1"></a>PKCS #1</h3><p>RSA 密码算法的加密标准，定义了 RSA 公钥函数，数字证书等的基础规则；也定义了 RSA 私钥和公钥的语法， 可以用来计算 RSA 算法中使用的密钥对。除了这些，还定义了数字证书应该如何计算，以及数据的结构应该如何被签名，数字签名的格式</p>
+<p><strong>用于 RSA 公钥密钥</strong></p>
+<h3 id="PKCS-7"><a href="#PKCS-7" class="headerlink" title="PKCS #7"></a>PKCS #7</h3><p>加密消息语法标准。定义了加密操作结果形式数据的语法，例如数字签名 (digital signature) 和数字信封 (digital envelopes)</p>
+<p><strong>用于生成和验证数字签名和由 PKI 管理的证书</strong></p>
+<p><strong>用于证书或证书链</strong></p>
+<h3 id="PKCS-8"><a href="#PKCS-8" class="headerlink" title="PKCS #8"></a>PKCS #8</h3><p>私钥信息标准。定义了私钥信息的语法。换句话说，定义了用来生成私钥的算法以及属性</p>
+<p><strong>用于各种公钥密码</strong></p>
+<h3 id="PKCS-12"><a href="#PKCS-12" class="headerlink" title="PKCS #12"></a>PKCS #12</h3><p>个人信息交换的语法标准。定义了用于个人识别的语法，如数字证书，私钥等。换句话说，这个标准允许用户使用标准机制将数据从一个设备传输到另一台设备</p>
+<p><strong>用于数字证书+私钥</strong>， 常用文件后缀 <code>.pfx</code>, <code>.p12</code> ,<code>.pem</code> </p>
+<h3 id="速查简表"><a href="#速查简表" class="headerlink" title="速查简表"></a>速查简表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Format        Purpose</span><br><span class="line"></span><br><span class="line">PKCS<span class="comment">#1   Encryption and signing</span></span><br><span class="line">PKCS<span class="comment">#3   Diffie-Hellman key protocol</span></span><br><span class="line">PKCS<span class="comment">#5   String encryption</span></span><br><span class="line">PKCS<span class="comment">#7   Signed cert</span></span><br><span class="line">PKCS<span class="comment">#8   Private key and attributes</span></span><br><span class="line">PKCS<span class="comment">#9   Attributes</span></span><br><span class="line">PKCS<span class="comment">#10  Cert signing request (CSR)</span></span><br><span class="line">PKCS<span class="comment">#11  Cryptoki smart card API</span></span><br><span class="line">PKCS<span class="comment">#12  Cert and publisher private key</span></span><br><span class="line">PKCS<span class="comment">#15  Cryptoki token credentials</span></span><br><span class="line">PKCS<span class="comment">#12  X.509 Cert and private keys</span></span><br><span class="line">PKCS<span class="comment">#13  Elliptic Curve cryptography</span></span><br><span class="line">PKCS<span class="comment">#14  Pseudo-random number generation</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="PEM"><a href="#PEM" class="headerlink" title="PEM"></a>PEM</h2><p>PEM (Privacy Enhanced Mail) 私密增强邮件, 是 X.509  证书，CSRs (Certiticate Signing Requests) 证书签名请求，加密密钥的常用格式。PEM 文件包含了一个或多个 Base64 编码的内容，并且每一内容都有一个头部和尾部：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Base64 encoded data</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>单个 PEM 文件可以包含一个证书，一个私钥，或多个证书组成完整的证书信任链。</p>
+<p>通常使用的文件扩展名：<code>.crt</code>, <code>.pem</code>, <code>.cer</code>, <code>.key</code> (用于密钥)</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://tools.ietf.org/html/rfc2315" target="_blank" rel="noopener">PKCS #7</a></p>
+<p>[2] <a href="https://tools.ietf.org/html/rfc8017#appendix-A.2.4" target="_blank" rel="noopener">PKCS #1</a></p>
+<p>[2] <a href="https://www.cryptomathic.com/news-events/blog/introduction-to-digital-signatures-and-pkcs-7" target="_blank" rel="noopener">Introduction to Digital Signatures and PKCS #7</a></p>
+<p>[3] <a href="https://www.pcmag.com/encyclopedia/term/pkcs" target="_blank" rel="noopener">PKCS</a></p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/" title="加密与解密">加密与解密</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/ASN.1/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">ASN.1</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%AA%8C%E8%AF%81/">
+                <span class="nav-default">创建证书并验证</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

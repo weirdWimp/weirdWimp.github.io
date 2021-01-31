@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">创建证书并验证</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-01-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-openssl-验证证书"><span class="toc-text">使用 openssl 验证证书</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-openssl-生成两层结构的-CA"><span class="toc-text">使用 openssl 生成两层结构的 CA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#证书验证"><span class="toc-text">证书验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装证书"><span class="toc-text">安装证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="使用-openssl-验证证书"><a href="#使用-openssl-验证证书" class="headerlink" title="使用 openssl 验证证书"></a>使用 openssl 验证证书</h2><p>证书可以具有层次结构，认证机构的公钥可以由其它认证机构施加数字签名，生成认证机构的公钥证书，一个认证机构的公钥来验证另一个认证机构的公钥，会最终形成一个认证链，认证链的终点称为<strong>根CA</strong> (Root CA). 根CA机构为自己的公钥进行数字签名，称为<strong>自签名</strong>(self-signature)</p>
+<h3 id="使用-openssl-生成两层结构的-CA"><a href="#使用-openssl-生成两层结构的-CA" class="headerlink" title="使用 openssl 生成两层结构的 CA"></a>使用 openssl 生成两层结构的 CA</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Root CA -----&gt; Sub CA -------&gt; Server Certificate</span><br><span class="line"></span><br><span class="line">Root CA 自签名为自己颁发证书</span><br><span class="line">Root CA 为 Sub CA 颁发证书（Root CA 私钥对 Sub CA 公钥进行数字签名）</span><br><span class="line">Sub CA 为 Server 颁发证书 (Sub CA 私钥对 Server 的公钥进行数字签名)</span><br></pre></td></tr></table></figure>
+
+<p>具体命令</p>
+<ol>
+<li>生成 Root CA 自签名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># req 表示 csr 证书签名请求</span></span><br><span class="line"><span class="comment"># -nodes 表示对密钥不加密</span></span><br><span class="line"><span class="comment"># -newkey 生成新的密钥，使用的公钥密码的类型和参数</span></span><br><span class="line"><span class="comment"># -keyout 密钥输出文件</span></span><br><span class="line"><span class="comment"># -x509 输出一个x509证书，而不是一个 csr 文件</span></span><br><span class="line"><span class="comment"># -days 证书有效期</span></span><br><span class="line">$ openssl req -nodes -newkey rsa:2048 -keyout root_ca_key.pem -out root_ca.crt -x509 -days 365</span><br><span class="line"></span><br><span class="line">root_ca_key.pem <span class="comment"># Root CA 密钥文件</span></span><br><span class="line">root_ca.crt <span class="comment"># Root CA 证书文件</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>生成 Sub CA 的密钥，CSR 文件，以及通过 Root CA 为其颁发证书</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 Sub CA 的密钥，CSR 文件</span></span><br><span class="line">$ openssl req -nodes -newkey rsa:2048 -keyout sub_ca_key.pem -out sub_ca.csr</span><br><span class="line"></span><br><span class="line">sub_ca.csr <span class="comment"># sub CA CSR 证书签名请求文件</span></span><br><span class="line">sub_ca_key.pem <span class="comment"># sub CA 密钥文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 Root CA 为其颁发证书</span></span><br><span class="line">$ openssl x509 -req -<span class="keyword">in</span> sub_ca.csr -days 365 -CA root_ca.crt -CAkey root_ca_key.pem -CAcreateserial -out sub_ca.crt  -extfile ext.cnf</span><br><span class="line"></span><br><span class="line">$ cat ext.cnf</span><br><span class="line">basicConstraints=critical,CA:TRUE</span><br></pre></td></tr></table></figure>
+
+<p>   上述的 <code>-extfile</code> 指定了 x509 扩展文件（extentisons) ，其中指明了颁发的证书作为 CA. 可以通过查看证书的内容看到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ openssl x509 -<span class="keyword">in</span> sub_ca.crt -noout -text -purpose -ext basicConstraints</span><br><span class="line"></span><br><span class="line">Certificate:</span><br><span class="line">    Data:</span><br><span class="line">        Version: 3 (0x2)</span><br><span class="line">        Serial Number:</span><br><span class="line">            33:7a:a8:42:c1:0a:39:59:55:fe:21:ab:88:a0:15:7d:d2:19:ac:32</span><br><span class="line">        Signature Algorithm: sha256WithRSAEncryption</span><br><span class="line">        Issuer: C = CN, ST = Sichuan, L = Chengdu, O = CdTech, OU = IT, CN = www.CdTech.com, emailAddress = CdTech@CdTech.com</span><br><span class="line">        Validity</span><br><span class="line">            Not Before: Jan 31 11:53:54 2021 GMT</span><br><span class="line">            Not After : Jan 31 11:53:54 2022 GMT</span><br><span class="line">        Subject: C = CN, ST = Sichuan, L = Luzhou, O = LuzhouTech, OU = IT, CN = www.LuzhouTech.com</span><br><span class="line">        Subject Public Key Info:</span><br><span class="line">            Public Key Algorithm: rsaEncryption</span><br><span class="line">                RSA Public-Key: (2048 bit)</span><br><span class="line">                Modulus:</span><br><span class="line">                    00:ad:a7:b4:4e:57:7e:a8:2b:95:49:79:06:bc:9e:</span><br><span class="line">                    60:04:a4:2c:4f:45:dd:47:69:7c:bd:1f:88:14:3a:</span><br><span class="line">                    b3:48:6a:80:bb:ed:97:99:eb:ab:b9:bf:c9:51:c3:</span><br><span class="line">                    ......</span><br><span class="line">                Exponent: 65537 (0x10001)</span><br><span class="line">        X509v3 extensions:</span><br><span class="line">            X509v3 Basic Constraints: critical</span><br><span class="line">                CA:TRUE</span><br><span class="line">    Signature Algorithm: sha256WithRSAEncryption</span><br><span class="line">         6b:b8:19:ea:77:7e:75:bd:22:3f:85:d0:17:84:b2:3e:cc:7a:</span><br><span class="line">         b1:80:b3:26:25:26:27:1b:42:b6:1d:90:db:40:41:1f:17:90:</span><br><span class="line">         e1:36:2e:b4:70:89:23:52:d8:af:86:98:2a:54:ba:09:8a:03:</span><br><span class="line">         ......</span><br></pre></td></tr></table></figure>
+
+<p>   最早进行测试的时候，没有指定该扩展，通过 sub CA 的私钥对 Server 进行签发证书后，使用 <code>openssl verify</code> 会验证失败，所以这里猜想，应该是没有指定 <code>CA:TRUE</code> 的扩展，所以验证的时候，不会将 sub CA 作为一个 CA 对待。可以通过 <a href="https://www.openssl.org/docs/man1.1.1/man5/x509v3_config.html" target="_blank" rel="noopener">openssl x509v3_config</a> 查看更详细的内容。serverfault 中的该问题 <a href="https://serverfault.com/questions/486798/openssl-invalid-ca-certificate" target="_blank" rel="noopener">openssl invalid CA certificate</a> 应该和这里是一样的问题</p>
+<ol start="3">
+<li>生成 Server 的密钥，CSR 文件，并通过 sub CA 私钥为其颁发证书</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ openssl req -nodes -newkey rsa:2048 -keyout server_key.pem -out server_ca.csr</span><br><span class="line"></span><br><span class="line">server.csr</span><br><span class="line">server_key.pem</span><br><span class="line"></span><br><span class="line">$ openssl x509 -req -<span class="keyword">in</span> server_ca.csr -days 365 -CA sub_caa.crt -CAkey sub_ca_key.pem -CAcreateserial -out server.crt</span><br><span class="line"></span><br><span class="line">server.crt <span class="comment"># server 的公钥证书，由 sub CA 进行数字签名</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="证书验证"><a href="#证书验证" class="headerlink" title="证书验证"></a>证书验证</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根证书验证（自签名）</span></span><br><span class="line">$ openssl verify -CAfile root_ca.crt  root_ca.crt</span><br><span class="line">root_ca.crt: OK</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sub CA 证书验证</span></span><br><span class="line">$ openssl verify -CAfile root_ca.crt  sub_ca.crt</span><br><span class="line">sub_ca.crt: OK</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># server 证书验证</span></span><br><span class="line">cat sub_ca.crt root_ca.crt &gt; chain.crt</span><br><span class="line"></span><br><span class="line">openssl verify -CAfile chain.crt server.crt</span><br><span class="line">server.crt: OK</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装证书"><a href="#安装证书" class="headerlink" title="安装证书"></a>安装证书</h3><p>Linux： Installed CA certificate as trusted certificate</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /usr/share/ca-certificates/extra</span><br><span class="line"></span><br><span class="line">sudo cp root_ca.crt /usr/share/ca-certificates/extra/root_ca.crt</span><br><span class="line"></span><br><span class="line">sudo dpkg-reconfigure ca-certificates</span><br><span class="line"></span><br><span class="line">sudo update-ca-certificates</span><br></pre></td></tr></table></figure>
+
+<p>*使用空格选中要安装的证书 <code>root_ca.crt</code>，回车，就可以安装，安装完后，再对 <code>root_ca.crt</code> <code>sub_ca.crt</code> 进行验证，就不要再指定 <code>-CAfile</code>了，因为已经将根证书安装在系统中称为信任的证书</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://stackoverflow.com/questions/13295585/openssl-certificate-verification-on-linux" target="_blank" rel="noopener">openSSL certificate-verification on Linux </a></p>
+<p>[2] <a href="https://serverfault.com/questions/486798/openssl-invalid-ca-certificate" target="_blank" rel="noopener">openssl invalid CA certificate</a></p>
+<p>[3] <a href="https://www.openssl.org/docs/man1.1.1/man1/x509.html" target="_blank" rel="noopener">openssl man x509</a></p>
+<p>[4] <a href="https://www.openssl.org/docs/man1.1.1/man5/x509v3_config.html" target="_blank" rel="noopener">openssl man x509v3 config</a></p>
+<p>[5] <a href="https://stackoverflow.com/questions/25482199/verify-a-certificate-chain-using-openssl-verify" target="_blank" rel="noopener">verify-a-certificate-chain-using-openssl-verify</a></p>
+<p>[6] <a href="https://www.cnblogs.com/rader/archive/2014/06/11/3781880.html" target="_blank" rel="noopener">Ubuntun 的证书配置</a></p>
+<p>[7] <a href="https://www.cnblogs.com/lhj588/p/6069890.html" target="_blank" rel="noopener">如何制作 CSR 文件</a></p>
+<p>[8] <a href="https://blog.csdn.net/fym0121/article/details/8001190/" target="_blank" rel="noopener">验证证书链</a></p>
+<p>[9] <a href="https://www.cnblogs.com/274914765qq/p/4467025.html" target="_blank" rel="noopener">openssl 证书操作</a></p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/" title="加密与解密">加密与解密</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PKCS/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">PKCS</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">
+                <span class="nav-default">hexdump命令</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
