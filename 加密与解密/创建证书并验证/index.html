@@ -141,6 +141,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /usr/share/ca-certificates/extra</span><br><span class="line"></span><br><span class="line">sudo cp root_ca.crt /usr/share/ca-certificates/extra/root_ca.crt</span><br><span class="line"></span><br><span class="line">sudo dpkg-reconfigure ca-certificates</span><br><span class="line"></span><br><span class="line">sudo update-ca-certificates</span><br></pre></td></tr></table></figure>
 
 <p>*使用空格选中要安装的证书 <code>root_ca.crt</code>，回车，就可以安装，安装完后，再对 <code>root_ca.crt</code> <code>sub_ca.crt</code> 进行验证，就不要再指定 <code>-CAfile</code>了，因为已经将根证书安装在系统中称为信任的证书</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210131213446735.png" alt="image-20210131213446735"></p>
 <h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://stackoverflow.com/questions/13295585/openssl-certificate-verification-on-linux" target="_blank" rel="noopener">openSSL certificate-verification on Linux </a></p>
 <p>[2] <a href="https://serverfault.com/questions/486798/openssl-invalid-ca-certificate" target="_blank" rel="noopener">openssl invalid CA certificate</a></p>
 <p>[3] <a href="https://www.openssl.org/docs/man1.1.1/man1/x509.html" target="_blank" rel="noopener">openssl man x509</a></p>
@@ -164,15 +165,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PKCS/">
+            <a class="prev" href="/Java/JOSE/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">PKCS</span>
+                <span class="nav-default">Java/JOSE</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">
-                <span class="nav-default">hexdump命令</span>
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">
+                <span class="nav-default">对称密码</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
