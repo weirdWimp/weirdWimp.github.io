@@ -150,7 +150,7 @@
 <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213116336.png" alt="image-20210126213116336"></p>
 <h5 id="解密的过程"><a href="#解密的过程" class="headerlink" title="解密的过程"></a>解密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213750078.png" alt="image-20210126213750078"></p>
 <p>用相同的子密钥运行两次 Feistel 网络就能够将数据还原， 利用的其实 XOR 异或的性质 (两个相同的数异或为 0)， 多轮的情况是一样的：</p>
-<p>![image-20210126214210806](D:\Markdown 目录\Markdown 文档\工作\img-assets\image-20210126214210806.png)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126214210806.png" alt="image-20210126214210806"></p>
 <h4 id="Feistel-网络的性质"><a href="#Feistel-网络的性质" class="headerlink" title="Feistel 网络的性质"></a>Feistel 网络的性质</h4><ul>
 <li><p><strong>加密时无论使用任何函数作为轮函数都可以正确解密</strong></p>
 <p>即便使用的轮函数的输出结果无法逆计算出输入的值（即该函数不存在反函数）也没有问题，可以被设计得任意复杂；Feistel 网络实际上就是从加密算法中抽取出“密码的本质部分”并将其封装成一个轮函数</p>
@@ -168,13 +168,13 @@
 </ul>
 <h4 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h4><p>三重 DES (triple - DES) 是为了增加 DES 的强度， 将 DES 重复 3 次的一种密码算法，也称为 TDEA (Triple Date Ecnryption Algorithm), 通常称为 3DES。</p>
 <p><strong>三重 DES 的加密过程：</strong></p>
-<p>![image-20210126221848991](D:\Markdown 目录\Markdown 文档\工作\img-assets\image-20210126221848991.png)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221848991.png" alt="image-20210126221848991"></p>
 <p>明文经过三次 DES 处理变为密文，所以三重 DES 的密钥长度是 56 * 3=168 比特. 三重 DES 并不是进行三次加密，而是 <code>加密 --&gt; 解密--&gt; 加密</code> 的过程， 此方法由 IBM 公司设计，目的是兼容普通的 DES， 当三重 DES 使用的所有密钥都相同时，三重 DES 就相等于普通的 DES , 因为 <code>加密--&gt;解密</code> 就变为明文了。因此<strong>三重 DES 对 DES 具备向下兼容性</strong></p>
 <p><strong>DES-EDE2</strong>： 密钥1和密钥3使用相同的密钥，密钥2使用不同的密钥</p>
 <p><strong>DES-EDE3</strong>:   密钥1，密钥2，密钥3全部使用不同的比特序列</p>
 <p><strong>三重 DES 的解密过程：</strong></p>
 <p>三重 DES 的解密过程和加密正好相反，以密钥3，密钥2，密钥1的顺序执行 <code>解密--&gt;加密--&gt;解密</code> 的操作</p>
-<p>![image-20210126221714656](D:\Markdown 目录\Markdown 文档\工作\img-assets\image-20210126221714656.png)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221714656.png" alt="image-20210126221714656"></p>
 <h4 id="关于-DES-与-3DES-的使用"><a href="#关于-DES-与-3DES-的使用" class="headerlink" title="关于 DES 与 3DES 的使用"></a>关于 DES 与 3DES 的使用</h4><p>由于 DES 的密文已经可以在短时间内被破译，处理解密以前的密文，不应该再使用 DES 了。三重 DES 由于处理速度不高，很少被用于新的用途。</p>
 <blockquote>
 <p>在日本总务省和经济产业省 2013 年发布的《电子政府相关技术采购中参考的密码清单》中，“电子政府推荐使用的密码清单” 项中将 3-key Triple DES 作为 64 比特分组密码列了出来，但考虑到 IST SP 800-67 的规定，以及其事实性标准的地位，又在脚注中给出了“目前暂且允许使用”的描述</p>
