@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">JCA</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-02-19</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JCA-设计原则"><span class="toc-text">JCA 设计原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cryptographic-Service-Providers"><span class="toc-text">Cryptographic Service Providers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Provider-具体是怎么实现的"><span class="toc-text">Provider 具体是怎么实现的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KeyStore"><span class="toc-text">KeyStore</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Engine-Classes-and-Algorithoms"><span class="toc-text">Engine Classes and Algorithoms</span></a></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <p>JSSE Java Secure Socket Extension</p>
+<p>JGSS Java Generic Security Services - kerberos</p>
+<p>SASL Simple Authentication and Security Layer</p>
+<p>JCE 使用和 JCA 一样的架构，JCE 应该被看做是 JCA 的一部分.</p>
+<p><strong>JDK 中的 JCA 包含两个组件：</strong></p>
+<ul>
+<li>定义密码服务以及提供支持的框架</li>
+<li>实际提供实现的 provider， 如 Sun, SunRsaSign, SunJCE</li>
+</ul>
+<h2 id="JCA-设计原则"><a href="#JCA-设计原则" class="headerlink" title="JCA 设计原则"></a><strong>JCA 设计原则</strong></h2><ul>
+<li>实现独立性与互操作性</li>
+<li>算法独立性与可扩展</li>
+</ul>
+<p>使用密码服务，例如数字签名，消息摘要等，并不需要担心实现的细节，甚至是组成这些基础概念的的算法。完全的算法独立性是做不到的，这里的意思就是不可能完全抽象出一个接口，屏蔽使用的细节，做到算法的独立性。JCA 提供了标准化的，特定类型相关算法的 API. 并且当有多个实现时，允许开发者指定特定的实现。</p>
+<p><strong>算法的独立性</strong></p>
+<p>通过密码引擎（cryptographic engines）， 以及提供这些密码引擎功能的定义类实现独立性。这些类被称为 <strong>引擎类</strong>，如 <code>MessageDigest</code>, <code>Signature</code>, <code>KeyFactory</code>, <code>KeyPairGenerator</code>, <code>Cipher</code> 等类</p>
+<p><strong>实现的独立性</strong></p>
+<p>使用基于 procider 的架构实现的， provider（Cryptograpic Service Provider）在这里指的是实现一个或多个密码服务（如数字签名算法，消息摘要算法等）的包或一组包。应用程序可能只是简单的从安装的众多 provider 中请求实现了某个特定服务的特定类型对象，如实现了 DSA 签名算法的 <code>Signature</code> 对象，当然也可以自己指定从哪个特定的 provider 中获取。provider 对应用程序的使用是透明的。</p>
+<p><strong>可互操作性</strong></p>
+<p>的事项也可以正常工作，一个 provider 提供的某个服务实现产生的密钥，可以用于另一个 provider 相同服务提供的实现。再比如证书以及证书的验证等。其实就是算法都是相同的，JCA 对输入，输出进行了标准化，所以不同的 provider 实现都要遵循相同的标准，又是实现相同的算法，当然可以互相操作了<strong>。</strong></p>
+<p><strong>算法的可扩展性</strong></p>
+<p>只要是现有引擎类支持，该引擎类类的新算法可以很容易的被添加。比如，现在有一种新的消息摘要算法，实现之后就可以提供 provider ，应用中使用相同的引擎类 <code>MessageDigest</code> 类获取该新算法的实例，就可以使用了。</p>
+<h2 id="Cryptographic-Service-Providers"><a href="#Cryptographic-Service-Providers" class="headerlink" title="Cryptographic Service Providers"></a>Cryptographic Service Providers</h2><p><code>java.security.Provider</code> 类是所有 provider 的基类，每一个 CSP 包含了这个类的一个实例，其中包含了 provider 的名称以及所有它实现的安全服务/算法的列表。 当需要某个特定算法的实例时，JCA 框架会查询所有的 provider，如果有匹配，就会创建它的实例。</p>
+<p>providers 的包提供了一些广为人知的密码算法的具体实现。每一个 JDK 都默认安装并配置了一个或多个 provider。额外的 provider 可以被静态或动态的安装。客户端可以配置它们的运行时环境来指定 provider 的优先级顺序。就是 provider 被搜索的顺序。</p>
+<p>使用 JCA，可以直接请求某个特定类型的对象和特定的算法，如 <code>MessageDigest</code>, 使用 <code>SHA-256</code> 摘要算法，这会从安装的 provider 中获得一个该算法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>);</span><br></pre></td></tr></table></figure>
+
+<p> 如果需要，当然也可以指定某个具体的 provider</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>,<span class="string">"providerName"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>JDK 中的密码服务实现分布在几个不同的 provider 中（Sun, SunJSSE, SunJCE, SunRsaSing）, 其它 Java 运行时环境可能不包含这些 provider ，所以只有在确定某个 provider 安装的情况下，才可以指定使用哪个 provider 的实现。JCA 提供了 API 可以用户查询安装的 provider 以及它们提供的安全服务/算法。JCA 使得第三方的 provider 的添加也是很容易的, 如 BouncyCastle。</p>
+<h3 id="Provider-具体是怎么实现的"><a href="#Provider-具体是怎么实现的" class="headerlink" title="Provider 具体是怎么实现的"></a>Provider 具体是怎么实现的</h3><p>有如下的代码，目的是获取一个 AES 密码算法的实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cipher c = Cipher.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">c.init(ENCRYPT_MODE, key);</span><br></pre></td></tr></table></figure>
+
+<p>具体的流程大概如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">调用引擎类 Cipher 的静态工厂方法 getInstance</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">JCA 框架查询每一个安装的 provider， 并获取 Provider 类的一个实例（Provider视作是提供的算法的一个数据库）</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">最终找到一个合适的 CSP(provider)，并指向了继承了 CipherSPI 的实现类 AESCipher，创建 AESCipher 的实例</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">AESCIpher 实例被封装在一个新创建的 Cipher 实例, Cipher 实例返回</span><br></pre></td></tr></table></figure>
+
+<p>当调用 <code>init</code> 方法时，Cipher 实例会将请求委托给 AESCiphrt对象对应的 <code>engineInit</code> 方法</p>
+<h3 id="KeyStore"><a href="#KeyStore" class="headerlink" title="KeyStore"></a>KeyStore</h3><p>keystore 是一种用来管理密钥和证书的数据库。应用在需要数据认证，加密以及签名时，就可以使用 keystore，在程序中，可以通过 <code>KeyStore</code> 类（位于 java.security 包下）。</p>
+<p><strong>keystore 类型/格式</strong></p>
+<ul>
+<li>pkcs12 - 基于 RSA PKCS12 （Personal Information Exchange Syntax Standard）标准, JDK9 默认以及推荐的格式</li>
+<li>jks - 私有格式</li>
+<li>jceks - 私有格式</li>
+<li>pkcs11 - 基于 RSA PKCS11 标准，支持对密码令牌的访问，如硬件安全模块和智能卡</li>
+</ul>
+<p>应用可以从不同的 provider 中选择不同类型的 keystore 实现。 KeyStore 类提供了接口来访问和修改一个 keystore 中的信息。这个类代表了一个内存中密钥和证书的集合，主要用来管理两种类型的条目:</p>
+<ul>
+<li><p>密钥 - Key</p>
+<p>密钥类型的条目保存了非常敏感的密钥信息，<strong>必须进行保护以避免未经授权的访问</strong>。通常，是一个私密的密钥 (secret key) 或者是一个私钥（private key）以及对其公钥进行认证的证书链。私钥以及证书链被一个指定的实体使用数字签名来进行自认证。例如：软件供应商对 JAR 文件进行数字签名，作为软件发布的一部分</p>
+</li>
+<li><p>受信任的证书 - Trusted Certificate Entry</p>
+<p>这种类型的条目仅包含了一个个公钥证书(从属于其它实体),  被称为受信任的证书,因为 keystore 的拥有者新人证书中的公钥确实是属于证书 <code>subject(owner)</code> 所标识的实体</p>
+</li>
+</ul>
+<p>keystore 中的每一个条目都通过一个<strong>别名</strong> (alias) 字符串表示. 对于私钥及其关联的证书链，这些字符串区分实体进行身份验证的不同方式。</p>
+<p><strong>示例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use openssl tool to create pkcs12 file:</span></span><br><span class="line"><span class="comment">     * $ openssl pkcs12 -export -in con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * con_key_crt.pem is a simple concatenation of sub_ca_key.pem and sub_ca.crt:</span></span><br><span class="line"><span class="comment">     * $ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">keyStoreTest</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (InputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"D:\\idea-workspace\\sub_ca.p12"</span>)) &#123;</span><br><span class="line">            KeyStore keyStore = KeyStore.getInstance(<span class="string">"pkcs12"</span>);</span><br><span class="line">            <span class="comment">// 此处的密码用于验证 keystore 的完整性</span></span><br><span class="line">            keyStore.load(in, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 打印所有的 alias 别名, 此例中只有一个 myKeyEntry (openssl -name 选项)</span></span><br><span class="line">            Enumeration&lt;String&gt; aliases = keyStore.aliases();</span><br><span class="line">            <span class="keyword">while</span> (aliases.hasMoreElements()) &#123;</span><br><span class="line">                System.out.println(<span class="string">"alias:"</span> + aliases.nextElement());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取 RSA 私钥</span></span><br><span class="line">            Key key = keyStore.getKey(<span class="string">"myKeyEntry"</span>, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line">            System.out.println(key.getAlgorithm());</span><br><span class="line"></span><br><span class="line">            KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">            RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(key, RSAPrivateKeySpec<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            System.out.println(privateKeySpec.getModulus());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取证书</span></span><br><span class="line">            Certificate certificate = keyStore.getCertificate(<span class="string">"myKeyEntry"</span>);</span><br><span class="line">            System.out.println(certificate.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PKCS12 文件的生成详细内容见 PKCS 一章中的介绍,这里解析的 keystore 就是使用 openssl 创建的 PKCS12 文件, 包含了私钥及证书</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Engine-Classes-and-Algorithoms"><a href="#Engine-Classes-and-Algorithoms" class="headerlink" title="Engine Classes and Algorithoms"></a>Engine Classes and Algorithoms</h2><p>引擎类提供了到某一个具体类型的安全服务的接口， 与 provider 及算法是独立的，提供了以下功能：</p>
+<ul>
+<li><p>密码服务操作（加密解密、数字签名，消息摘要等）</p>
+</li>
+<li><p>密码材料（cryotographic material）的生成或转换（密钥和算法初始化参数）</p>
+</li>
+<li><p>封装密码数据的对象（keystore 或证书），可以在抽象层的上层使用</p>
+</li>
+</ul>
+<p><strong>可用的引擎类：</strong></p>
+<ul>
+<li>SecureRandom 用来生成随机数或伪随机数</li>
+<li>MessageDigest 用来计算数据的消息摘要（hash, 单向散列函数）</li>
+<li>Signature 通过密钥进行初始化，用来对数据进行签名以及验证数字签名</li>
+<li>Cipher 通过密钥初始化，用来对数据进行加密，解密，有不同类型的密码算法：对称、非对称、PBE 等</li>
+<li>Mac Message Authentication Codes 同样也是用来生成 hash 值的，但是要用到密钥，用来保护数据的完整性</li>
+<li>KeyFactory 用来将非透明 <code>Key</code> 类型的密钥转换为特定密钥标准形式，反之亦然</li>
+<li>SecretKeyFactory 用来将非透明 <code>SecretKey</code> 类型的密钥转换为特定密钥标准形式，SecretKeyFactory 是 KeyFactory 的特殊形式，专门用来生成秘密的堆成密码的密钥</li>
+<li>KeyPairGenerator 用来生成一个新的公钥，私钥对，适用于特定的算法</li>
+<li>KeyGeneraor 用来生成特定算法的密钥</li>
+<li>KeyAgreement 使用在通信的两端，用来协商创建一个特定的密钥，使用在特定的密码操作中</li>
+<li>AlgorithmParameters 用来存储的特定算法的参数，包含参数编码和解码</li>
+<li>AlgorithmParameterGeneraor 用来生成适用于特定算法的一组 AlgorithmParameters</li>
+<li>KeyStore 用来创建以及管理一个 keystore. 一个 keystore 是一个存储密钥的数据库，keystore 中的私钥还关联了一个与其相关的证书链，用来认证对应的公钥。keystore 可能包含来自信任实体的证书</li>
+<li>CertificateFactory 用来创建公钥证书和 CRLs (Certificate Revtocation Lists) 证书撤回列表</li>
+<li>CertPathBuilder 用来创建一个证书链（也称之为证书路径）</li>
+<li>CertPathVlidator 用来对证书链进行验证</li>
+<li>CertStore 用来从一个 repository 中检索证书和 CRLs</li>
+</ul>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/" title="加密与解密">加密与解密</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Java/JOSE/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%AA%8C%E8%AF%81/">
+                <span class="nav-default">创建证书并验证</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

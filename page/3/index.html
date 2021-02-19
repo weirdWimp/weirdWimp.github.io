@@ -84,6 +84,106 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-01-16</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
+<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
+<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
+<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
+<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
+<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
+<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
+<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
+<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
+<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
+<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
+<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
+<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
+<p>维基百科 - initialization-on-demand holder</p>
+<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
+<p>分为以下几个阶段：</p>
+<ol>
+<li><strong>加载</strong></li>
+</ol>
+<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
+<ol>
+<li><strong>验证</strong></li>
+</ol>
+<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
+<ol>
+<li><strong>准备和解析</strong></li>
+</ol>
+<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
+<ol>
+<li><strong>初始化</strong></li>
+</ol>
+<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6/">基础组件</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-01-02</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p>Executor 接口中只定义了一个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Executes the given command at some time in the future.  The command</span></span><br><span class="line"><span class="comment">     * may execute in a new thread, in a pooled thread, or in the calling</span></span><br><span class="line"><span class="comment">     * thread, at the discretion of the &#123;<span class="doctag">@code</span> Executor&#125; implementation.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> command the runnable task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException if this task cannot be</span></span><br><span class="line"><span class="comment">     * accepted for execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if command is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>execute(Runnable command)</code> 方法负责执行提交的任务，<code>Executor</code> 接口将任务的提交，任务的执行，以及线程使用的细节进行解耦。隐藏了创建线程的操作，甚至可以实现为非异步的方式，即由调用线程来直接执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DirectExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    r.run();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，通常情况下，是由调用该方法线程以外的线程来执行的，也就是会为每一个 <code>Runnable</code> 任务（命令）创建一个线程来异步执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPerTaskExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(r).start();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>属于多线程设计模式 <code>Thread-Per-Message</code>（见《图解 Java 多线程设计模式》） 的实现，即为每个请求分配一个新线程，由这个线程来执行处理。</p>
+<p><strong>该模式具有以下特点：</strong></p>
+<ol>
+<li>提高方法的响应，缩短延迟时间</li>
+<li>适用于对操作顺序没有要求（即方法的调用顺序不一定和执行顺序一致）</li>
+<li>适用于不需要返回值（<code>execute</code>方法的返回类型为 <code>void</code>）</li>
+</ol>
+<p>​    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">杂七杂八</a></h2>
             </div>
             <div class="post-meta">
@@ -216,107 +316,6 @@
 
 <p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Shell%E5%8F%98%E9%87%8F/">Shell变量</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-12-06</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Shell-Variable"><a href="#Shell-Variable" class="headerlink" title="Shell Variable"></a>Shell Variable</h1><h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set default variable value</span></span><br><span class="line">first_var=<span class="variable">$&#123;1:-first&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;first_var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set the default value for variable user if it does not have one</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;user:=second&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># warn</span></span><br><span class="line"><span class="comment"># var=$&#123;1:=defaultValue&#125;  ### FAIL with an error cannot assign in this way</span></span><br><span class="line"><span class="comment"># var=$&#123;1:-defaultValue&#125;  ### Perfect</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message</span></span><br><span class="line">third_var=<span class="variable">$&#123;3:?"Third argument is not definied or empty"&#125;</span></span><br><span class="line">fourth_var=<span class="variable">$&#123;4:"Fourth argument is not definied"&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message and run command</span></span><br><span class="line">fifth_var=<span class="variable">$&#123;5:? "Fifth argument is not definied or empty and print current dir" $(pwd)&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># variable length</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># strip string varibale</span></span><br><span class="line">msg=<span class="string">"who.is.my.love"</span></span><br><span class="line"><span class="comment"># front strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg#*.&#125;</span>  <span class="comment"># shortest match result: is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg##*.&#125;</span> <span class="comment"># longest match  result: love</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># back strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%.*&#125;</span>  <span class="comment"># shortest match result: who.is.my</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%%*.&#125;</span> <span class="comment"># longest match  result: who</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># substring</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg:4&#125;</span>       <span class="comment"># $&#123;var:position&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg:4：2&#125;</span>    <span class="comment"># $&#123;var:position:length&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## convert case</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg^&#125;</span>    <span class="comment"># Who.is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg^^&#125;</span>   <span class="comment"># WHO.IS.MY.LOVE</span></span><br><span class="line"></span><br><span class="line">upper_msg=<span class="string">"WHO.IS.MY.LOVE"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,&#125;</span>    <span class="comment"># wHO.IS.MY.LOVE</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,,&#125;</span>   <span class="comment"># who.is.my.love</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Only convert first character in $dest if it is a capital ‘H’:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,H&#125;</span> <span class="comment"># fial</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Want to get the names of variables whose names begin with prefix</span></span><br><span class="line">VECH=<span class="string">"Bus"</span></span><br><span class="line">VECH1=<span class="string">"Car"</span></span><br><span class="line">VECH2=<span class="string">"Train"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;!VECH*&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print all L* variables' name and value</span></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;!L*&#125;</span>; <span class="keyword">do</span> </span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"name: <span class="variable">$&#123;var&#125;</span>, value: <span class="variable">$&#123;!var&#125;</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># name: LANG, value: C.UTF-8</span></span><br><span class="line"><span class="comment"># name: LESSCLOSE, value: /usr/bin/lesspipe %s %s</span></span><br><span class="line"><span class="comment"># name: LESSOPEN, value: | /usr/bin/lesspipe %s</span></span><br><span class="line"><span class="comment"># name: LINENO, value: 58</span></span><br><span class="line"><span class="comment"># name: LINES, value: 56</span></span><br><span class="line"><span class="comment"># name: LOGNAME, value: guo</span></span><br><span class="line"><span class="comment"># name: LS_COLORS, value: rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html" target="_blank" rel="noopener">How To Use Bash Parameter Substitution Like A Pro - nixCraft (cyberciti.biz)</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F/">Semaphore-信号量</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-12-05</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore - 信号量"></a>Semaphore - 信号量</h2><h3 id="1-什么是信号量"><a href="#1-什么是信号量" class="headerlink" title="1. 什么是信号量"></a>1. 什么是信号量</h3><p> 一个信号量是一个整数变量，在多个进程间进行共享. 信号量的主要目的在于 ：</p>
-<ul>
-<li>处理同步问题</li>
-<li>并发环境下用于共享资源的访问控制</li>
-</ul>
-<p>信号量的取值取决于遇到的具体问题，通常，会使用可用资源的个数作为信号量的初始值。</p>
-<h3 id="2-信号量操作"><a href="#2-信号量操作" class="headerlink" title="2. 信号量操作"></a>2. 信号量操作</h3><p>信号量包含两个独立的原子操作，也就是 <code>wait</code> 和 <code>signal</code>. 也被称之为 <code>P</code> (荷兰语Proberen(测试)的首字母) 和 <code>V</code> 荷兰语Verhogen(增加)的首字母. </p>
-<p>假设 <code>S</code> 表示一个信号量，他的整数值代表了某种可用资源的数量，那么 <code>wait</code> 和 <code>signal</code> 操作分表可用如下的伪代码表示</p>
-<h4 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201204409486.png" alt="image-20201201204409486"></p>
-<p>如果 <code>S</code> 的值大于 0，<code>wait</code> 操作会简单的进行减 1 操作，表示仍有资源可以用于分配；如果 <code>S</code> 已经是 0 ， 表示没有可用的资源进行分配， 那么调用 <code>wait</code> 操作的进程会进入休眠（sleep）状态</p>
-<h4 id="signal"><a href="#signal" class="headerlink" title="signal"></a>signal</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201204646050.png" alt="image-20201201204646050"></p>
-<p>如果没有其它进程等待资源， <code>signal</code> 操作会进行一个加 1 操作；否则，一个等待的进程会被唤醒（操作系统调度器），最终，唤醒的进程获得了资源的访问控制权限。</p>
-<p><strong>简单总结</strong></p>
-<p><code>wait</code>： (把信号量减1)，若成功，则退出；若失败，则该进程被阻塞；</p>
-<p><code>signal</code>：(把信号量加1)，如果发现有被阻塞的进程，则选择一个唤醒之。</p>
-<h3 id="3-信号量的种类"><a href="#3-信号量的种类" class="headerlink" title="3. 信号量的种类"></a>3. 信号量的种类</h3><ul>
-<li><p>Binary Semphore - 二元信号量</p>
-<p>二元信号量的取值只能是 0 或 1, 可以实现互斥的效果（mutex）， 可以用来解决临界区（critial section）问题。</p>
-</li>
-</ul>
-<p>  <strong>binary semphore is not a mutex ?</strong></p>
-<ul>
-<li><p>Counting Semphore - 计数信号量</p>
-<p>计数信号量的取值域是不受限制的，可以用来解决资源分配的同步问题。</p>
-</li>
-</ul>
-<p>信号量的实现，通常需要一个整数值来保存信号量的值，以及一个指针指向等待队列中下一个要执行的进程，同时要避免死锁（deadlock）和饥饿 (starvation)</p>
-<h4 id="死锁的情况"><a href="#死锁的情况" class="headerlink" title="死锁的情况"></a>死锁的情况</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201214736878.png" alt="image-20201201214736878"></p>
-<p>进程 0 执行了 <code>wait(S)</code> 操作，然后进程被打断，进程 1 开始执行 <code>wait(Q)</code> 操作后，就开始等待信号量 <code>S</code>, 会被阻塞，然后进入休眠状态，当内核开始执行进程 0 时，信号量 <code>Q</code> 已经被使用，所以两个进程互相等待对方的情况，出现了死锁</p>
-<p>如何解决 ?</p>
-<h3 id="4-使用信号量的例子"><a href="#4-使用信号量的例子" class="headerlink" title="4. 使用信号量的例子"></a>4. 使用信号量的例子</h3><h4 id="临界区问题"><a href="#临界区问题" class="headerlink" title="临界区问题"></a>临界区问题</h4><p><strong>临界区（critical section）</strong>是指代码的一部分，必须避免并发访问。 这时，可以使用一个二元信号量来解决这个问题，信号量的值初始化为 1.  保证互斥的执行临界区代码，一旦 <code>signal</code> 操作，内核会将休眠的进程添加到就绪队列，等待内核执行该进程时，就可以继续执行临界的代码。确保在任何时刻，临界区的代码只有一个和进程在执行</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201215432904.png" alt="image-20201201215432904"></p>
-<h4 id="以顺序执行"><a href="#以顺序执行" class="headerlink" title="以顺序执行"></a>以顺序执行</h4><p>假设要执行代码片段 S1 和 S2 ，但是要求 S1 先执行， S2 后执行</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201220621412.png" alt="image-20201201220621412"></p>
-<p>使用一个初始值为 0 的信号量就可以解决这个问题：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201220908667.png" alt="image-20201201220908667"></p>
-<h4 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者/消费者问题"></a>生产者/消费者问题</h4><p>在这个问题中，生产者往缓冲区中生产物品，消费中从缓冲区中拿出来消费，他们分别对应 Producer 进程和 Consumer 进程，这是，使用一个信号量 <code>S</code> 代表换取中的物品个数，初始化为 0.</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201222814601.png" alt="image-20201201222814601"></p>
-<p>缓冲区满了，生产者应该停止生产，进入休眠状态，缓冲区空闲了，谁来通知 Producer 进程呢？</p>
-<p>使用三个信号量：</p>
-<p><code>empty</code>： 表示缓冲区中剩余空间大小，初始化为缓冲区的大小</p>
-<p><code>full</code>：表示缓冲区中已用空间大小，初始化为 0</p>
-<p><code>S</code> 用来保护缓冲区同时只能被一个进程访问， 初始化 1</p>
-<p>![image-20201201223208708](D:\Markdown 目录\Markdown 文档\工作\Java\img-assets\image-20201201223208708.png)·</p>
-<p><strong>生产者</strong>：</p>
-<p>如果 <code>empty</code> 信号量变为 0 ，生产者进入休眠状态；否则往缓冲区里进行生产，然后通知 <code>full</code> 信号量，因此会触发唤醒任何可能等待的消费者</p>
-<p><strong>消费者</strong>：</p>
-<p>如果 <code>full</code> 信号量变为 0 ，消费者进入休眠状态，否则从缓冲区中取出物品，并通知 <code>empty</code> 信号量，因此会触发唤醒任何需要进程生成的生成者</p>
-<p>除非缓冲区中还有空间，否则生产者进入休眠状态；除非缓冲区中还有元素，否则消费者进入休眠状态</p>
-<p>还有很多案例，包括哲学家吃饭问题，同一数据集上的读写问题….</p>
-<p>工作中的例子</p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.baeldung.com/cs/semaphore" target="_blank" rel="noopener">What is a Semaphore</a></p>
-<p>[2] <a href="https://www.cnblogs.com/biglucky/p/4633706.html" target="_blank" rel="noopener">哲学家进餐问题</a></p>
-<p>[3] <a href="https://zhuanlan.zhihu.com/p/61326272" target="_blank" rel="noopener">PV操作</a></p>
 
                 
             </div>

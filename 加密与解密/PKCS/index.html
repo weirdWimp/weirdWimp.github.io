@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">PKCS</h2>
             <div class="post-meta">
-                <span class="post-time">2021-01-31</span>
+                <span class="post-time">2021-02-19</span>
                 
                 <span class="post-category">
                     
@@ -114,6 +114,10 @@
 <p><strong>用于各种公钥密码</strong></p>
 <h3 id="PKCS-12"><a href="#PKCS-12" class="headerlink" title="PKCS #12"></a>PKCS #12</h3><p>个人信息交换的语法标准。定义了用于个人识别的语法，如数字证书，私钥等。换句话说，这个标准允许用户使用标准机制将数据从一个设备传输到另一台设备</p>
 <p><strong>用于数字证书+私钥</strong>， 常用文件后缀 <code>.pfx</code>, <code>.p12</code> ,<code>.pem</code> </p>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 openssl 创建 pkcs#12 文件</span></span><br><span class="line"></span><br><span class="line">$ openssl pkcs12 -<span class="built_in">export</span> -<span class="keyword">in</span> con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span><br><span class="line"></span><br><span class="line"><span class="comment"># -export 表示创建一个 pkcs12 文件而不是解析一个 pkcs12 文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -in 表示包含私钥及证书的文件 PEM 格式</span></span><br><span class="line"><span class="comment"># con_key_crt.pem 是对密钥和证书的一个简单拼接</span></span><br><span class="line">$ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span><br><span class="line"></span><br><span class="line"><span class="comment"># -out 输出的 pkcs12 路径</span></span><br><span class="line"><span class="comment"># -CAfile 指定 CA 的证书文件</span></span><br><span class="line"><span class="comment"># -name 指定一个友好的别名, Java JCA 中的 KeyStore 中的 `alias`</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.openssl.org/docs/man1.1.1/man1/pkcs12.html" target="_blank" rel="noopener">openssl-man-pkcs12</a></p>
 <h3 id="速查简表"><a href="#速查简表" class="headerlink" title="速查简表"></a>速查简表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Format        Purpose</span><br><span class="line"></span><br><span class="line">PKCS<span class="comment">#1   Encryption and signing</span></span><br><span class="line">PKCS<span class="comment">#3   Diffie-Hellman key protocol</span></span><br><span class="line">PKCS<span class="comment">#5   String encryption</span></span><br><span class="line">PKCS<span class="comment">#7   Signed cert</span></span><br><span class="line">PKCS<span class="comment">#8   Private key and attributes</span></span><br><span class="line">PKCS<span class="comment">#9   Attributes</span></span><br><span class="line">PKCS<span class="comment">#10  Cert signing request (CSR)</span></span><br><span class="line">PKCS<span class="comment">#11  Cryptoki smart card API</span></span><br><span class="line">PKCS<span class="comment">#12  Cert and publisher private key</span></span><br><span class="line">PKCS<span class="comment">#15  Cryptoki token credentials</span></span><br><span class="line">PKCS<span class="comment">#12  X.509 Cert and private keys</span></span><br><span class="line">PKCS<span class="comment">#13  Elliptic Curve cryptography</span></span><br><span class="line">PKCS<span class="comment">#14  Pseudo-random number generation</span></span><br></pre></td></tr></table></figure>
 
 
@@ -141,15 +145,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/ASN.1/">
+            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%AA%8C%E8%AF%81/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">ASN.1</span>
+                <span class="nav-default">创建证书并验证</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">
-                <span class="nav-default">hexdump命令</span>
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">
+                <span class="nav-default">对称密码</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
