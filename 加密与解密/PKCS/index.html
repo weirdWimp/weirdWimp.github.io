@@ -160,10 +160,7 @@
 
 
 <p><strong>简单的图示</strong></p>
-<img src="D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\图片2.png" alt="图片2"  />
-
-
-
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/%E5%9B%BE%E7%89%872.png" alt="图片2"></p>
 <p><strong>示例</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 openssl 创建 pkcs#12 文件</span></span><br><span class="line"></span><br><span class="line">$ openssl pkcs12 -<span class="built_in">export</span> -<span class="keyword">in</span> con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span><br><span class="line"></span><br><span class="line"><span class="comment"># -export 表示创建一个 pkcs12 文件而不是解析一个 pkcs12 文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -in 表示包含私钥及证书的文件 PEM 格式</span></span><br><span class="line"><span class="comment"># con_key_crt.pem 是对密钥和证书的一个简单拼接</span></span><br><span class="line">$ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span><br><span class="line"></span><br><span class="line"><span class="comment"># -out 输出的 pkcs12 路径</span></span><br><span class="line"><span class="comment"># -CAfile 指定 CA 的证书文件</span></span><br><span class="line"><span class="comment"># -name 指定一个友好的别名, Java JCA 中的 KeyStore 中的 `alias`， 这也在 PKCS12 标准中进行了定义</span></span><br></pre></td></tr></table></figure>
 
