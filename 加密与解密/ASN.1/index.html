@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">ASN.1</h2>
             <div class="post-meta">
-                <span class="post-time">2021-01-31</span>
+                <span class="post-time">2021-02-21</span>
                 
                 <span class="post-category">
                     
@@ -124,7 +124,7 @@
 <h2 id="ASN-1-基础数据类型"><a href="#ASN-1-基础数据类型" class="headerlink" title="ASN.1 基础数据类型"></a>ASN.1 基础数据类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-- BOOLEAN</span><br><span class="line">doorOpen BOOLEAN ::&#x3D; TRUE</span><br><span class="line"></span><br><span class="line">-- INTEGER</span><br><span class="line">speed INTEGER (0..60) ::&#x3D; 40</span><br><span class="line"></span><br><span class="line">--VisibleString</span><br><span class="line">LineOfText ::&#x3D; VisibleString</span><br><span class="line"></span><br><span class="line">--IA5String</span><br><span class="line">TextWithLayout ::&#x3D; IA5String</span><br><span class="line"></span><br><span class="line">--MORE ARE NOT LISTED HERE</span><br></pre></td></tr></table></figure>
 
 <p><a href="https://www.oss.com/asn1/resources/asn1-made-simple/types.html" target="_blank" rel="noopener">Most Common ASN.1 Types</a></p>
-<h2 id="Constaints-约束"><a href="#Constaints-约束" class="headerlink" title="Constaints 约束"></a>Constaints 约束</h2><p>ASN.1 的 schema 定于中可以包含约束, 用来限制给定字段或类型的有效值集合, 通过使用约束, 也可以生成一个更紧凑的编码, 例如 <code>INTEGER(0..200)</code> 的值用一个字节进行编码就够了</p>
+<h2 id="Constaints-约束"><a href="#Constaints-约束" class="headerlink" title="Constaints 约束"></a>Constaints 约束</h2><p>ASN.1 的 schema 定义中可以包含约束, 用来限制给定字段或类型的有效值集合, 通过使用约束, 也可以生成一个更紧凑的编码, 例如 <code>INTEGER(0..200)</code> 的值用一个字节进行编码就够了</p>
 <h4 id="基础约束"><a href="#基础约束" class="headerlink" title="基础约束"></a>基础约束</h4><p>字母表约束</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ardToReadChars ::&#x3D; IA5String (FROM(&quot;8BI10OD5S&quot;))</span><br></pre></td></tr></table></figure>
 
@@ -177,15 +177,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">
+            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PKCS/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">对称密码</span>
+                <span class="nav-default">PKCS</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">
-                <span class="nav-default">hexdump命令</span>
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/JCA/">
+                <span class="nav-default">JCA</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>

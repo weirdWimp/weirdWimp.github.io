@@ -226,83 +226,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20MVC%20Restful/">Spring MVC Restful</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring 提供的将资源的 Java 表述形式转换为发送给客户端的形式</p>
-<ul>
-<li>内容协商 - Content Negotiation： 选择一个视图，将模型渲染为呈现给客户端的表述形式</li>
-</ul>
-<ul>
-<li>消息转换器 - Message Conversion: 通过一个消息转换器将控制器所返回的的的对象转换为呈现给客户端的表述形式</li>
-</ul>
-<h3 id="内容协商-Content-Negotiation"><a href="#内容协商-Content-Negotiation" class="headerlink" title="内容协商 - Content Negotiation"></a>内容协商 - Content Negotiation</h3><p>内容协商的步骤：</p>
-<ol>
-<li>确定请求的媒体类型<ul>
-<li>先根据请求 URI 的文件扩展名，如 .json 确定请求的类型是 Json</li>
-<li>文件扩展名不能得到任何媒体类型的话，考虑请求 Accept 头部信息。Accept 头部接受的类型就表明了客户端的想要的 <code>MIME</code> 类型 </li>
-<li>没有头部信息，默认接受 <code>/</code> 作为默认的内容类型，也就是可以接受各种形式的资源表述</li>
-</ul>
-</li>
-<li>找到适合请求媒体类型的最佳视图</li>
-</ol>
-<p>为此，提供了一个 <code>ContentNegotiatingViewResolver</code> 内容协商视图解析器</p>
-<blockquote>
-<p><code>ContentNegotiatingViewResolver</code>要求其他的视图解析器将逻辑视图名解析为视图。解析得到的每个视图都会放到一个列表中。这个列表装配完成后，<code>ContentNegotiatingViewResolver</code>会循环客户端请求的所有媒体类型，在候选的视图中查找能够产生对应内容类型的视图。第一个匹配的视图会用来渲染模型。</p>
-</blockquote>
-<p>假设控制器方法返回了一个 <code>spittles</code> 逻辑视图名称， 程序中定义了两个试图解析器，对应的视图渲染的表述形式不一样，如 HTML 和 Json， 如果都存在对应的视图，这时，会根据请求要求的类型，找到第一个匹配其类型的视图，渲染模型数据。</p>
-<h3 id="消息转换器-Message-Conversion"><a href="#消息转换器-Message-Conversion" class="headerlink" title="消息转换器 - Message Conversion"></a>消息转换器 - Message Conversion</h3><p><code>@ResponseBody</code>注解会告知Spring，我们要将返回的对象作为资源发送给客户端，并将其转换为客户端可接受的表述形式。<code>DispatcherServlet</code>将会考虑到请求中<code>Accept</code>头部信息，并查找能够为客户端提供所需表述形式的消息转换器。</p>
-<p>使用 <code>MappingJackson2XmlHttpMessageConverter</code>， 实现 Json 与 Java 对象转换需要引入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>使用 <code>MappingJackson2XmlHttpMessageConverter</code>， 实现  XML 与 Java 对象转换需要引入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.dataformat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-dataformat-xml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<p>@RestController 注解</p>
-<p>表明该控制器的所有处理方法都应用了消息转换功能，相当于为每个方法添加 @ResponseBody 注解，能将方法返回的 Java 对象转换为合适的资源表述，作为响应返回给客户端。</p>
-<p>FactoryBean</p>
-<h2 id="Restful-Client"><a href="#Restful-Client" class="headerlink" title="Restful Client"></a>Restful Client</h2><p>编写 Restful Client 的代码也同样存在样板式代码，也就是说有很多相同的代码要重复写，如</p>
-<ul>
-<li>创建 HttpClient 客户端</li>
-<li>创建请求，填充头部信息，请求体</li>
-<li>执行请求，对返回的响应进行解析处理</li>
-</ul>
-<p>RestTemplate 解救人民于水火，提供了各种 Http Method 的请求，并且简化了请求的代码，只需要初始化一个 Template， 就可以调用各种 Http Method 对应的方法执行请求， RestTemplate 可以通过注入的方式来使用。</p>
-<p>示例代码：</p>
-<p>Get 请求 （template.getForObject）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate template = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">      String parameterUri = <span class="string">"http://localhost:8080/rest/blog/responseEntity/&#123;name&#125;"</span>;</span><br><span class="line">      MessageEntity messageEntity = template.getForObject(parameterUri, MessageEntity.class, "Guoph");</span><br><span class="line">      System.out.println(messageEntity);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>指定请求头部的 Post 请求 (template.exchange)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String parameterUri = <span class="string">"http://localhost:8080/rest/blog/responseEntity/&#123;name&#125;"</span>;</span><br><span class="line"></span><br><span class="line">HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">headers.set(<span class="string">"Accept"</span>, MediaType.APPLICATION_JSON_VALUE);</span><br><span class="line">HttpEntity&lt;Object&gt; httpEntity = <span class="keyword">new</span> HttpEntity&lt;&gt;(headers);</span><br><span class="line"></span><br><span class="line">ResponseEntity&lt;MessageEntity&gt; responseEntity = template.exchange(parameterUri, HttpMethod.GET, httpEntity,</span><br><span class="line">        MessageEntity.class, "Guoph");</span><br><span class="line"></span><br><span class="line">System.out.println(responseEntity);</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Spring%20%E8%A3%85%E9%85%8D%20Bean/">Spring 装配 Bean</a></h2>
             </div>
             <div class="post-meta">
@@ -458,6 +381,33 @@
 
 
 
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>org.springframework.boot.SpringApplication</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
+<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
+<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
 
                 
             </div>
