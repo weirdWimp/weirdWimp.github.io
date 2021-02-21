@@ -84,10 +84,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/JCA/">JCA</a></h2>
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/ASN.1/">ASN.1</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-02-19</span>
+                <span class="post-time">2021-02-21</span>
                 
                 <span class="post-category">
                     
@@ -98,98 +98,65 @@
             </div>
             <div class="post-content">
                 
-                    <p>JSSE Java Secure Socket Extension</p>
-<p>JGSS Java Generic Security Services - kerberos</p>
-<p>SASL Simple Authentication and Security Layer</p>
-<p>JCE 使用和 JCA 一样的架构，JCE 应该被看做是 JCA 的一部分.</p>
-<p><strong>JDK 中的 JCA 包含两个组件：</strong></p>
-<ul>
-<li>定义密码服务以及提供支持的框架</li>
-<li>实际提供实现的 provider， 如 Sun, SunRsaSign, SunJCE</li>
-</ul>
-<h2 id="JCA-设计原则"><a href="#JCA-设计原则" class="headerlink" title="JCA 设计原则"></a><strong>JCA 设计原则</strong></h2><ul>
-<li>实现独立性与互操作性</li>
-<li>算法独立性与可扩展</li>
-</ul>
-<p>使用密码服务，例如数字签名，消息摘要等，并不需要担心实现的细节，甚至是组成这些基础概念的的算法。完全的算法独立性是做不到的，这里的意思就是不可能完全抽象出一个接口，屏蔽使用的细节，做到算法的独立性。JCA 提供了标准化的，特定类型相关算法的 API. 并且当有多个实现时，允许开发者指定特定的实现。</p>
-<p><strong>算法的独立性</strong></p>
-<p>通过密码引擎（cryptographic engines）， 以及提供这些密码引擎功能的定义类实现独立性。这些类被称为 <strong>引擎类</strong>，如 <code>MessageDigest</code>, <code>Signature</code>, <code>KeyFactory</code>, <code>KeyPairGenerator</code>, <code>Cipher</code> 等类</p>
-<p><strong>实现的独立性</strong></p>
-<p>使用基于 procider 的架构实现的， provider（Cryptograpic Service Provider）在这里指的是实现一个或多个密码服务（如数字签名算法，消息摘要算法等）的包或一组包。应用程序可能只是简单的从安装的众多 provider 中请求实现了某个特定服务的特定类型对象，如实现了 DSA 签名算法的 <code>Signature</code> 对象，当然也可以自己指定从哪个特定的 provider 中获取。provider 对应用程序的使用是透明的。</p>
-<p><strong>可互操作性</strong></p>
-<p>的事项也可以正常工作，一个 provider 提供的某个服务实现产生的密钥，可以用于另一个 provider 相同服务提供的实现。再比如证书以及证书的验证等。其实就是算法都是相同的，JCA 对输入，输出进行了标准化，所以不同的 provider 实现都要遵循相同的标准，又是实现相同的算法，当然可以互相操作了<strong>。</strong></p>
-<p><strong>算法的可扩展性</strong></p>
-<p>只要是现有引擎类支持，该引擎类类的新算法可以很容易的被添加。比如，现在有一种新的消息摘要算法，实现之后就可以提供 provider ，应用中使用相同的引擎类 <code>MessageDigest</code> 类获取该新算法的实例，就可以使用了。</p>
-<h2 id="Cryptographic-Service-Providers"><a href="#Cryptographic-Service-Providers" class="headerlink" title="Cryptographic Service Providers"></a>Cryptographic Service Providers</h2><p><code>java.security.Provider</code> 类是所有 provider 的基类，每一个 CSP 包含了这个类的一个实例，其中包含了 provider 的名称以及所有它实现的安全服务/算法的列表。 当需要某个特定算法的实例时，JCA 框架会查询所有的 provider，如果有匹配，就会创建它的实例。</p>
-<p>providers 的包提供了一些广为人知的密码算法的具体实现。每一个 JDK 都默认安装并配置了一个或多个 provider。额外的 provider 可以被静态或动态的安装。客户端可以配置它们的运行时环境来指定 provider 的优先级顺序。就是 provider 被搜索的顺序。</p>
-<p>使用 JCA，可以直接请求某个特定类型的对象和特定的算法，如 <code>MessageDigest</code>, 使用 <code>SHA-256</code> 摘要算法，这会从安装的 provider 中获得一个该算法的实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>);</span><br></pre></td></tr></table></figure>
-
-<p> 如果需要，当然也可以指定某个具体的 provider</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>,<span class="string">"providerName"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>JDK 中的密码服务实现分布在几个不同的 provider 中（Sun, SunJSSE, SunJCE, SunRsaSing）, 其它 Java 运行时环境可能不包含这些 provider ，所以只有在确定某个 provider 安装的情况下，才可以指定使用哪个 provider 的实现。JCA 提供了 API 可以用户查询安装的 provider 以及它们提供的安全服务/算法。JCA 使得第三方的 provider 的添加也是很容易的, 如 BouncyCastle。</p>
-<h3 id="Provider-具体是怎么实现的"><a href="#Provider-具体是怎么实现的" class="headerlink" title="Provider 具体是怎么实现的"></a>Provider 具体是怎么实现的</h3><p>有如下的代码，目的是获取一个 AES 密码算法的实例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cipher c = Cipher.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">c.init(ENCRYPT_MODE, key);</span><br></pre></td></tr></table></figure>
-
-<p>具体的流程大概如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">调用引擎类 Cipher 的静态工厂方法 getInstance</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">JCA 框架查询每一个安装的 provider， 并获取 Provider 类的一个实例（Provider视作是提供的算法的一个数据库）</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">最终找到一个合适的 CSP(provider)，并指向了继承了 CipherSPI 的实现类 AESCipher，创建 AESCipher 的实例</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">AESCIpher 实例被封装在一个新创建的 Cipher 实例, Cipher 实例返回</span><br></pre></td></tr></table></figure>
-
-<p>当调用 <code>init</code> 方法时，Cipher 实例会将请求委托给 AESCiphrt对象对应的 <code>engineInit</code> 方法</p>
-<h3 id="KeyStore"><a href="#KeyStore" class="headerlink" title="KeyStore"></a>KeyStore</h3><p>keystore 是一种用来管理密钥和证书的数据库。应用在需要数据认证，加密以及签名时，就可以使用 keystore，在程序中，可以通过 <code>KeyStore</code> 类（位于 java.security 包下）。</p>
-<p><strong>keystore 类型/格式</strong></p>
-<ul>
-<li>pkcs12 - 基于 RSA PKCS12 （Personal Information Exchange Syntax Standard）标准, JDK9 默认以及推荐的格式</li>
-<li>jks - 私有格式</li>
-<li>jceks - 私有格式</li>
-<li>pkcs11 - 基于 RSA PKCS11 标准，支持对密码令牌的访问，如硬件安全模块和智能卡</li>
-</ul>
-<p>应用可以从不同的 provider 中选择不同类型的 keystore 实现。 KeyStore 类提供了接口来访问和修改一个 keystore 中的信息。这个类代表了一个内存中密钥和证书的集合，主要用来管理两种类型的条目:</p>
-<ul>
-<li><p>密钥 - Key</p>
-<p>密钥类型的条目保存了非常敏感的密钥信息，<strong>必须进行保护以避免未经授权的访问</strong>。通常，是一个私密的密钥 (secret key) 或者是一个私钥（private key）以及对其公钥进行认证的证书链。私钥以及证书链被一个指定的实体使用数字签名来进行自认证。例如：软件供应商对 JAR 文件进行数字签名，作为软件发布的一部分</p>
-</li>
-<li><p>受信任的证书 - Trusted Certificate Entry</p>
-<p>这种类型的条目仅包含了一个个公钥证书(从属于其它实体),  被称为受信任的证书,因为 keystore 的拥有者新人证书中的公钥确实是属于证书 <code>subject(owner)</code> 所标识的实体</p>
-</li>
-</ul>
-<p>keystore 中的每一个条目都通过一个<strong>别名</strong> (alias) 字符串表示. 对于私钥及其关联的证书链，这些字符串区分实体进行身份验证的不同方式。</p>
-<p><strong>示例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use openssl tool to create pkcs12 file:</span></span><br><span class="line"><span class="comment">     * $ openssl pkcs12 -export -in con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * con_key_crt.pem is a simple concatenation of sub_ca_key.pem and sub_ca.crt:</span></span><br><span class="line"><span class="comment">     * $ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">keyStoreTest</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (InputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"D:\\idea-workspace\\sub_ca.p12"</span>)) &#123;</span><br><span class="line">            KeyStore keyStore = KeyStore.getInstance(<span class="string">"pkcs12"</span>);</span><br><span class="line">            <span class="comment">// 此处的密码用于验证 keystore 的完整性</span></span><br><span class="line">            keyStore.load(in, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 打印所有的 alias 别名, 此例中只有一个 myKeyEntry (openssl -name 选项)</span></span><br><span class="line">            Enumeration&lt;String&gt; aliases = keyStore.aliases();</span><br><span class="line">            <span class="keyword">while</span> (aliases.hasMoreElements()) &#123;</span><br><span class="line">                System.out.println(<span class="string">"alias:"</span> + aliases.nextElement());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取 RSA 私钥</span></span><br><span class="line">            Key key = keyStore.getKey(<span class="string">"myKeyEntry"</span>, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line">            System.out.println(key.getAlgorithm());</span><br><span class="line"></span><br><span class="line">            KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">            RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(key, RSAPrivateKeySpec<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            System.out.println(privateKeySpec.getModulus());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取证书</span></span><br><span class="line">            Certificate certificate = keyStore.getCertificate(<span class="string">"myKeyEntry"</span>);</span><br><span class="line">            System.out.println(certificate.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PKCS12 文件的生成详细内容见 PKCS 一章中的介绍,这里解析的 keystore 就是使用 openssl 创建的 PKCS12 文件, 包含了私钥及证书</span></span><br></pre></td></tr></table></figure>
+                    <h1 id="ASN-1"><a href="#ASN-1" class="headerlink" title="ASN.1"></a>ASN.1</h1><h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>ASN.1 (Abstract Syntax Notation dot one) ，用来描述通信协议中传输的数据，定义了抽象数据类型规范的形式, 具有健壮性, 准确性, 独立于编程语言,独立于硬件和操作系统, 可以通过简单类型组成复杂的数据类型。</p>
+<p>例如定义联系人 Contact 类型的语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Contact ::&#x3D; SEQUENCE &#123;</span><br><span class="line">name VisibleString,</span><br><span class="line">phone NumericString</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
+<p>上述的例子中定义了一个联系人的结构, 具有这样结构的联系人 name = ‘Josn Smith’, phone = 987 6543210可以通过 AS1.1 的<strong>编码规则</strong> (后面会讲到) 序列化为二进制或文本格式, 便于进行传输</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">        JSON Encoding Rules (JER)  </span><br><span class="line">&#123; &quot;name&quot; : &quot;John Smith&quot;, &quot;phone&quot; : &quot;987 6543210&quot; &#125;</span><br></pre></td></tr></table></figure>
 
 
-<h2 id="Engine-Classes-and-Algorithoms"><a href="#Engine-Classes-and-Algorithoms" class="headerlink" title="Engine Classes and Algorithoms"></a>Engine Classes and Algorithoms</h2><p>引擎类提供了到某一个具体类型的安全服务的接口， 与 provider 及算法是独立的，提供了以下功能：</p>
-<ul>
-<li><p>密码服务操作（加密解密、数字签名，消息摘要等）</p>
-</li>
-<li><p>密码材料（cryotographic material）的生成或转换（密钥和算法初始化参数）</p>
-</li>
-<li><p>封装密码数据的对象（keystore 或证书），可以在抽象层的上层使用</p>
-</li>
-</ul>
-<p><strong>可用的引擎类：</strong></p>
-<ul>
-<li>SecureRandom 用来生成随机数或伪随机数</li>
-<li>MessageDigest 用来计算数据的消息摘要（hash, 单向散列函数）</li>
-<li>Signature 通过密钥进行初始化，用来对数据进行签名以及验证数字签名</li>
-<li>Cipher 通过密钥初始化，用来对数据进行加密，解密，有不同类型的密码算法：对称、非对称、PBE 等</li>
-<li>Mac Message Authentication Codes 同样也是用来生成 hash 值的，但是要用到密钥，用来保护数据的完整性</li>
-<li>KeyFactory 用来将非透明 <code>Key</code> 类型的密钥转换为特定密钥标准形式，反之亦然</li>
-<li>SecretKeyFactory 用来将非透明 <code>SecretKey</code> 类型的密钥转换为特定密钥标准形式，SecretKeyFactory 是 KeyFactory 的特殊形式，专门用来生成秘密的堆成密码的密钥</li>
-<li>KeyPairGenerator 用来生成一个新的公钥，私钥对，适用于特定的算法</li>
-<li>KeyGeneraor 用来生成特定算法的密钥</li>
-<li>KeyAgreement 使用在通信的两端，用来协商创建一个特定的密钥，使用在特定的密码操作中</li>
-<li>AlgorithmParameters 用来存储的特定算法的参数，包含参数编码和解码</li>
-<li>AlgorithmParameterGeneraor 用来生成适用于特定算法的一组 AlgorithmParameters</li>
-<li>KeyStore 用来创建以及管理一个 keystore. 一个 keystore 是一个存储密钥的数据库，keystore 中的私钥还关联了一个与其相关的证书链，用来认证对应的公钥。keystore 可能包含来自信任实体的证书</li>
-<li>CertificateFactory 用来创建公钥证书和 CRLs (Certificate Revtocation Lists) 证书撤回列表</li>
-<li>CertPathBuilder 用来创建一个证书链（也称之为证书路径）</li>
-<li>CertPathVlidator 用来对证书链进行验证</li>
-<li>CertStore 用来从一个 repository 中检索证书和 CRLs</li>
-</ul>
+
+<p><strong>完整定义的示例</strong></p>
+<p>购买订单类型的 ASN.1 定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">-- 所有的定义都需要包含在一个模块(module)中, module 是以 &#39;BEGIN&#39; 关键字开始, &#39;END&#39; 关键字结束</span><br><span class="line">-- ASN.1 中一个 Tag 是消息中每个组件的一个内部标识符(internal identification). Tag 都是唯一的, 可以直接指定,但最好还是使用 AUTOMATIC TAGS, 易于阅读和理解, 较少歧义性和冲突性的可能</span><br><span class="line"></span><br><span class="line">MyShopPurchaseOrders DEFINITIONS AUTOMATIC TAGS ::&#x3D; BEGIN</span><br><span class="line"></span><br><span class="line">PurchaseOrder ::&#x3D; SEQUENCE &#123;</span><br><span class="line">dateOfOrder DATE,</span><br><span class="line">customer    CustomerInfo,</span><br><span class="line">items       ListOfItems</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CustomerInfo ::&#x3D; SEQUENCE &#123;</span><br><span class="line">companyName    VisibleString (SIZE (3..50)),</span><br><span class="line">billingAddress Address,</span><br><span class="line">contactPhone   NumericString (SIZE (7..12))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Address::&#x3D; SEQUENCE &#123;</span><br><span class="line">street  VisibleString (SIZE (5 .. 50)) OPTIONAL,</span><br><span class="line">city    VisibleString (SIZE (2..30)),</span><br><span class="line">state   VisibleString (SIZE(2) ^ FROM (&quot;A&quot;..&quot;Z&quot;)),</span><br><span class="line">zipCode NumericString (SIZE(5 | 9))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ListOfItems ::&#x3D; SEQUENCE (SIZE (1..100)) OF Item</span><br><span class="line"></span><br><span class="line">Item ::&#x3D; SEQUENCE &#123;</span><br><span class="line">itemCode        INTEGER (1..99999),</span><br><span class="line">color           VisibleString (&quot;Black&quot; | &quot;Blue&quot; | &quot;Brown&quot;),</span><br><span class="line">power           INTEGER (110 | 220),</span><br><span class="line">deliveryTime    INTEGER (8..12 | 14..19),</span><br><span class="line">quantity        INTEGER (1..1000),</span><br><span class="line">unitPrice       REAL (1.00 .. 9999.00),</span><br><span class="line">isTaxable       BOOLEAN</span><br><span class="line">&#125;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ASN-1-基础数据类型"><a href="#ASN-1-基础数据类型" class="headerlink" title="ASN.1 基础数据类型"></a>ASN.1 基础数据类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-- BOOLEAN</span><br><span class="line">doorOpen BOOLEAN ::&#x3D; TRUE</span><br><span class="line"></span><br><span class="line">-- INTEGER</span><br><span class="line">speed INTEGER (0..60) ::&#x3D; 40</span><br><span class="line"></span><br><span class="line">--VisibleString</span><br><span class="line">LineOfText ::&#x3D; VisibleString</span><br><span class="line"></span><br><span class="line">--IA5String</span><br><span class="line">TextWithLayout ::&#x3D; IA5String</span><br><span class="line"></span><br><span class="line">--MORE ARE NOT LISTED HERE</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.oss.com/asn1/resources/asn1-made-simple/types.html" target="_blank" rel="noopener">Most Common ASN.1 Types</a></p>
+<h2 id="Constaints-约束"><a href="#Constaints-约束" class="headerlink" title="Constaints 约束"></a>Constaints 约束</h2><p>ASN.1 的 schema 定义中可以包含约束, 用来限制给定字段或类型的有效值集合, 通过使用约束, 也可以生成一个更紧凑的编码, 例如 <code>INTEGER(0..200)</code> 的值用一个字节进行编码就够了</p>
+<h4 id="基础约束"><a href="#基础约束" class="headerlink" title="基础约束"></a>基础约束</h4><p>字母表约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ardToReadChars ::&#x3D; IA5String (FROM(&quot;8BI10OD5S&quot;))</span><br></pre></td></tr></table></figure>
+
+<p>模式(类似于正则表达式)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LicensePlate ::&#x3D; IA5String (PATTERN &quot;[0-9]#4(-[A-Z]#2)?&quot;) -- NNNN[-NN]</span><br></pre></td></tr></table></figure>
+
+<p>值的大小,长度约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LicensePlate ::&#x3D; IA5String (SIZE (4..7))</span><br><span class="line">CarPark ::&#x3D; SEQUENCE SIZE (1..25) OF LicensePlate</span><br></pre></td></tr></table></figure>
+
+<p>值取值范围约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CarSpeed ::&#x3D; INTEGER (0..200)</span><br></pre></td></tr></table></figure>
+
+<p>单值约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WarningColors ::&#x3D; UTF8String (&quot;Red&quot; | &quot;Yellow&quot;)</span><br><span class="line">InfoColors ::&#x3D; UTF8String (&quot;Blue&quot; | &quot;White&quot;)</span><br><span class="line">CitySpeedLimit ::&#x3D; INTEGER (25 | 30 | 40)</span><br><span class="line">HighwaySpeedLimit ::&#x3D; INTEGER (40 | 50 | 60 | 70)</span><br></pre></td></tr></table></figure>
+
+<p>包含子类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SignColors ::&#x3D; UTF8String (InfoColors UNION WarningColors)</span><br><span class="line">SpeedLimitSigns ::&#x3D; INTEGER (CitySpeedLimit | HighwaySpeedLimit | 10 | 65)</span><br><span class="line">RuralSpeedLimit ::&#x3D; INTEGER (CitySpeedLimit INTERSECTION HighwaySpeedLimit)</span><br></pre></td></tr></table></figure>
+
+<p>编码约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">PerInside ::&#x3D; OCTET STRING (</span><br><span class="line">                    CONTAINING Doc </span><br><span class="line">                    ENCODED BY &#123; joint-iso-itu-t asn1(1) </span><br><span class="line">                                 packed-encoding(3) </span><br><span class="line">                                 basic(0) </span><br><span class="line">                                 unaligned(1)&#125;) </span><br><span class="line"></span><br><span class="line"> pdf OBJECT IDENTIFIER ::&#x3D; &#123; iso(1) </span><br><span class="line">                             member-body(2) </span><br><span class="line">                             us(840) </span><br><span class="line">                             adobe(113583) </span><br><span class="line">                             acrobat(1)&#125;</span><br><span class="line"></span><br><span class="line"> Doc ::&#x3D; OCTET STRING (ENCODED BY pdf)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>更复杂的字段条件依赖约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Schema DEFINITIONS AUTOMATIC TAGS ::&#x3D; BEGIN</span><br><span class="line"></span><br><span class="line">Address ::&#x3D; SEQUENCE &#123;</span><br><span class="line">   street-address UTF8String,</span><br><span class="line">   country UTF8String -- see a note below, </span><br><span class="line">   postal-code UTF8String</span><br><span class="line">&#125; ((WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;USA&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9]#5(-[0-9]#4)?&quot;)</span><br><span class="line">    &#125; </span><br><span class="line">  | WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;Canada&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9][A-Z][0-9] </span><br><span class="line">                                [A-Z][0-9][A-Z]&quot;)</span><br><span class="line">    &#125;  </span><br><span class="line">  | WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;Netherlands&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9]#4 [A-Z]#2&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  ))</span><br><span class="line"></span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Encoding-Rules-编码规则"><a href="#Encoding-Rules-编码规则" class="headerlink" title="Encoding Rules - 编码规则"></a>Encoding Rules - 编码规则</h2><p>编码规则描述了应该将 ASN.1 中定义的值如何进行编码以进行传输（被转换为字节进行传输，或者反之，将字节转为 ASN.1 中的值） ，并且不受机器，编程语言，应用程序表示的影响。每一种编码规则都有其特点，例如在压缩方面的，解码速度方面的。任何一种编码规则都能表示要进行交换的信息，只是使用场景不同</p>
+<h3 id="BER-DER-CER"><a href="#BER-DER-CER" class="headerlink" title="BER, DER, CER"></a>BER, DER, CER</h3><p>BER (Basic Encoding Rules) 是最古老的编码规则，使用 TLV (Tag-Length-Value) 的格式对所有的信息进行编码，即先发送一个标签（Tag）表明数据的类型，如 SEQUENCE，接着是数据的长度（Length）, 然年后是实际的数据，DER (Distinguished Encoding Rules) 以及 CER (Canonical Encoding Rules) 是 BER 的子集，消除了 BER 提供的一些灵活性。DER 通常使用在于安全相关的应用中，例如 X.509 数字证书。</p>
+<h3 id="OER"><a href="#OER" class="headerlink" title="OER"></a>OER</h3><p>OER (Octet Encoding Rules) - 最快的 ASN.1 编码规则，与 PER (Packed Encoding Rules) 一样，通过利用 ASN.1 的 schema 的信息表示的优势来限制包含类每个编码消息的信息数量，生成紧凑的编码输出。聚焦于编码与解码的速度。</p>
+<h3 id="PER"><a href="#PER" class="headerlink" title="PER"></a>PER</h3><p>PER (Packed Encoding Rules) 最紧凑的编码规则，与 BER 不同的是，PER 不会发送 TLV 中的标签 T, 是应为消息中的组件的顺序是一致的，如果 TLV 中的值 V 是大小固定的，也不会发送长度 L. PER 同样使用的 ASN.1 定义之外的的信息来减少冗余的数据（V）. 因此，PER 编码的消息更加紧凑，能够节省带宽.</p>
+<h3 id="XER-E-XER"><a href="#XER-E-XER" class="headerlink" title="XER,E-XER"></a>XER,E-XER</h3><p>XER (XML Encodind Rules), E-XER(Extended XER) 使用 XML 文本格式来进行编码, 格式为 <code>&lt;start-tag&gt; value &lt;end-tag&gt;</code>. XER 与 E-XER 的区别在于 E-XER 生成的默认编码更适合与 XSD(XML Schema Definition) 引擎进行信息交换. 相同的 ASN.1 数据可以使用多个编码规则, 这意味着来自于手机的 PER 编码的消息可以转换为 E-XER 编码, 用于在一个 web 浏览器中进行展示和操作</p>
+<h3 id="JER"><a href="#JER" class="headerlink" title="JER"></a>JER</h3><p>JER (JSON Encoding Rules), 基于 JSON 格式的编码规则, 相比 XER, E-XER, 更加紧凑, 易于使用. 基于 RFC-7159 中的 JSON 规范.</p>
+<p>通过JER，ASN.1用户可以轻松调试ASN.1协议并进行故障排除.</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://www.oss.com/asn1/resources/asn1-made-simple/introduction.html" target="_blank" rel="noopener">What is ASN1</a></p>
+<p>[2] <a href="https://blog.csdn.net/fengbingchun/article/details/106487696" target="_blank" rel="noopener">ASN.1简介及OpenSSL中ASN.1接口使用举例</a></p>
+<p>[3] <a href="https://blog.csdn.net/jf223355/article/details/103511644" target="_blank" rel="noopener">openssl 密钥生成和解析</a></p>
 
                 
             </div>
