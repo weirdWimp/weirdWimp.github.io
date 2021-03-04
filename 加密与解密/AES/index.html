@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">AES</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-03-04</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AES-Advanced-Encryption-Standard"><span class="toc-text">AES - Advanced Encryption Standard</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AES-的选拔"><span class="toc-text">AES 的选拔</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rijndael-密码算法"><span class="toc-text">Rijndael 密码算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Rijndael-的加密和解密"><span class="toc-text">Rijndael 的加密和解密</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-SubBytes-逐字节替换"><span class="toc-text">1. SubBytes-逐字节替换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-ShiftRows-平移行"><span class="toc-text">2. ShiftRows-平移行</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-MixColumns-混合列"><span class="toc-text">3. MixColumns-混合列</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-AddRoundKey-轮密钥异或运算"><span class="toc-text">4. AddRoundKey-轮密钥异或运算</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-openssl-和-JCA-进行加密解密的验证"><span class="toc-text">使用 openssl 和 JCA 进行加密解密的验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#opesnssl-加密和解密"><span class="toc-text">opesnssl 加密和解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-JCA-Java-Cryptography-Architecture-进行验证"><span class="toc-text">使用 JCA (Java Cryptography Architecture) 进行验证</span></a></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="AES-Advanced-Encryption-Standard"><a href="#AES-Advanced-Encryption-Standard" class="headerlink" title="AES - Advanced Encryption Standard"></a>AES - Advanced Encryption Standard</h2><p>AES 是取代 DES 称为新标准的一种<strong>对称密码算法</strong></p>
+<h3 id="AES-的选拔"><a href="#AES-的选拔" class="headerlink" title="AES 的选拔"></a>AES 的选拔</h3><p>AES 由 <strong>NIST</strong> (National Institute of Standards and Technology, 国家标准技术研究所) 组织公开竞选，最终所选拔的密码算法，成为美国的国家标准，即联邦信息处理标准（<strong>FIPS</strong>）, 但最终成为一个世界性的标准。</p>
+<p>AES 选拔对全世界公开，参加者提供密码算法的详细规格书、算法强度的证明和实现代码，由全世界的企业和密码学家共同完成评审。2000 年， Rijndael  算法被 NIST 从<strong>最终候选算法</strong>名单中选定成为 AES 标准。</p>
+<p>被选为 AES 密码算法必须无条件地免费供全世界使用。</p>
+<h3 id="Rijndael-密码算法"><a href="#Rijndael-密码算法" class="headerlink" title="Rijndael 密码算法"></a>Rijndael 密码算法</h3><p>两位比利时密码学家设计，也属于*<em>分组密码算法 *</em>(block cipher)</p>
+<p><strong>分组长度</strong>: 128 比特位</p>
+<p><strong>密钥长度</strong>: 128、192 和 256 比特</p>
+<h4 id="Rijndael-的加密和解密"><a href="#Rijndael-的加密和解密" class="headerlink" title="Rijndael 的加密和解密"></a>Rijndael 的加密和解密</h4><p>和 DES 一样，Rijndael  算法由多轮构成，其中每一轮分为 SubBytes、ShiftRows、MixColumns 和 AddRoundKey 个步骤。并且使用了一种称为 SPN 结构。</p>
+<h5 id="1-SubBytes-逐字节替换"><a href="#1-SubBytes-逐字节替换" class="headerlink" title="1. SubBytes-逐字节替换"></a>1. SubBytes-逐字节替换</h5><p>Rijndael  的分组是 128 位，即 16 字节。对 16 个字节进行 SubBytes 处理，就是将每个字节所代表的无符号整数值（0-255）作为索引，从一个拥有 256 个值的替换表 (S-Box, S盒) 中查找对应的值。简单来说，就是每个字节查表映射为新的值。</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-SubBytes.png" alt="SubBytes"></p>
+<h5 id="2-ShiftRows-平移行"><a href="#2-ShiftRows-平移行" class="headerlink" title="2. ShiftRows-平移行"></a>2. ShiftRows-平移行</h5><p>将以 4 字节为单位的行 (row) 按照一定的规则向左平移，且每一行平移的字节数是不同的。图示为对其中一行进行处理的情形：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-ShiftRows.png" alt="ShiftRows"></p>
+<h5 id="3-MixColumns-混合列"><a href="#3-MixColumns-混合列" class="headerlink" title="3. MixColumns-混合列"></a>3. MixColumns-混合列</h5><p>对一个 4 字节的值进行比特运算，将其变为另一个 4 字节的值，图示为对其中一列（column）进行处理的情形：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-MixColumns.png" alt="MixColumns"></p>
+<h5 id="4-AddRoundKey-轮密钥异或运算"><a href="#4-AddRoundKey-轮密钥异或运算" class="headerlink" title="4. AddRoundKey-轮密钥异或运算"></a>4. AddRoundKey-轮密钥异或运算</h5><p>将 MixColumns 的输出与轮密钥进行 XOR，图示为对其中一个字节进行处理的情形：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-AddRoundKey.png" alt="AddRoundKey"></p>
+<p>输入的所有比特在一轮中都会被加密，相比于 DES 的 Feistel 网络相比（每一轮只加密一半输入的比特位），加密所需的轮数更少，一般重复进行10 到 14 轮，而且其中的步骤，可以分别以字节、行和列为单位进行并行计算。注：并行计算也是衡量密码算法的一个重要指标，并行意味着加密解密的速度块。</p>
+<p>加密的过程： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SubBytes  --&gt; SbiftRows --&gt; MixColumns --&gt; AddRoundKey</span><br></pre></td></tr></table></figure>
+
+<p>解密，就是按照相反的顺序来进行就可以：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AddRoundKey --&gt; InvMixColumns --&gt; InvShiftRows --&gt; InvSubBytes</span><br><span class="line"></span><br><span class="line">* Inv 表示逆运算</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rijndael 的算法背后有着严谨的数学结构，明文到密文的过程可以全部用数学公式来表达，此外，轮密钥的计算也涉及到稍微复杂的过程，没有在这里涉及。</p>
+<h2 id="使用-openssl-和-JCA-进行加密解密的验证"><a href="#使用-openssl-和-JCA-进行加密解密的验证" class="headerlink" title="使用 openssl 和 JCA 进行加密解密的验证"></a>使用 openssl 和 JCA 进行加密解密的验证</h2><h3 id="opesnssl-加密和解密"><a href="#opesnssl-加密和解密" class="headerlink" title="opesnssl 加密和解密"></a>opesnssl 加密和解密</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 openssl 加密 'hello' 字符串</span></span><br><span class="line">$ openssl enc -aes-128-cbc -e -base64 -salt -p &lt;&lt;&lt; hello</span><br><span class="line"></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line">key=421990ECB00E9A9B8372D0E46727F6AA</span><br><span class="line">iv =5973EAA7D1C1D5240B78CB8A4458D663</span><br><span class="line">U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw=</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 openssl 进行解密</span></span><br><span class="line">$ openssl enc -aes-128-cbc -d -base64 -salt -p &lt;&lt;&lt; U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw=</span><br><span class="line"></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line">key=421990ECB00E9A9B8372D0E46727F6AA</span><br><span class="line">iv =5973EAA7D1C1D5240B78CB8A4458D663</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用-JCA-Java-Cryptography-Architecture-进行验证"><a href="#使用-JCA-Java-Cryptography-Architecture-进行验证" class="headerlink" title="使用 JCA (Java Cryptography Architecture) 进行验证"></a>使用 JCA (Java Cryptography Architecture) 进行验证</h3><p>openssl 会生成 8 个比特的 salt，并以  <code>Salted__${salt}</code>  附加在加密的密文前，一共占 16 个字节，验证如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw="</span> | base64 -d | hexdump -C</span><br><span class="line">00000000  53 61 6c 74 65 64 5f 5f  36 31 c9 da 38 2c e4 87  |Salted__61..8,..|</span><br><span class="line">00000010  b0 4f 31 42 5a 2b 01 82  21 cf 1c 00 60 2d 6c dc  |.O1BZ+..!...`-l.|</span><br><span class="line">00000020</span><br></pre></td></tr></table></figure>
+
+<p>所以实际的加密后的密文的 16 进制为：<code>b04f31425a2b018221cf1c00602d6cdc</code></p>
+<p>使用 JCA 进行解密验证：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AESCryptoTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES = <span class="string">"AES"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES_CBC_PKCS_5_PADDING = <span class="string">"AES/CBC/PKCS5Padding"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String keyHex = <span class="string">"421990ECB00E9A9B8372D0E46727F6AA"</span>;</span><br><span class="line">        String ivHex = <span class="string">"5973EAA7D1C1D5240B78CB8A4458D663"</span>;</span><br><span class="line">        String cipherTextHex = <span class="string">"b04f31425a2b018221cf1c00602d6cdc"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] key = HexUtils.fromHexString(keyHex);</span><br><span class="line">        <span class="keyword">byte</span>[] iv = HexUtils.fromHexString(ivHex);</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText = HexUtils.fromHexString(cipherTextHex);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] clearText = aesDecrypt(key, iv, cipherText);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> String(clearText, StandardCharsets.UTF_8));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] aesDecrypt(<span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv, <span class="keyword">byte</span>[] cipherText) &#123;</span><br><span class="line">        <span class="comment">// constructor a secret key</span></span><br><span class="line">        SecretKeySpec secretKey = <span class="keyword">new</span> SecretKeySpec(key, AES);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init algorithm parameters with iv</span></span><br><span class="line">        AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance(AES);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        algorithmParameters.init(ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init a AES cipher with key and iv</span></span><br><span class="line">        Cipher cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, secretKey, algorithmParameters);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// decrypt</span></span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(cipherText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最终输出 hello</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/" title="加密与解密">加密与解密</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Java/JOSE/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PKCS/">
+                <span class="nav-default">PKCS</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
