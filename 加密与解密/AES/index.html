@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">AES</h2>
             <div class="post-meta">
-                <span class="post-time">2021-03-04</span>
+                <span class="post-time">2021-03-07</span>
                 
                 <span class="post-category">
                     
@@ -112,15 +112,16 @@
 <p><strong>分组长度</strong>: 128 比特位</p>
 <p><strong>密钥长度</strong>: 128、192 和 256 比特</p>
 <h4 id="Rijndael-的加密和解密"><a href="#Rijndael-的加密和解密" class="headerlink" title="Rijndael 的加密和解密"></a>Rijndael 的加密和解密</h4><p>和 DES 一样，Rijndael  算法由多轮构成，其中每一轮分为 SubBytes、ShiftRows、MixColumns 和 AddRoundKey 个步骤。并且使用了一种称为 SPN 结构。</p>
-<h5 id="1-SubBytes-逐字节替换"><a href="#1-SubBytes-逐字节替换" class="headerlink" title="1. SubBytes-逐字节替换"></a>1. SubBytes-逐字节替换</h5><p>Rijndael  的分组是 128 位，即 16 字节。对 16 个字节进行 SubBytes 处理，就是将每个字节所代表的无符号整数值（0-255）作为索引，从一个拥有 256 个值的替换表 (S-Box, S盒) 中查找对应的值。简单来说，就是每个字节查表映射为新的值。</p>
+<h5 id="1-SubBytes-逐字节替换"><a href="#1-SubBytes-逐字节替换" class="headerlink" title="1. SubBytes-逐字节替换"></a>1. SubBytes-逐字节替换</h5><p>Rijndael  的分组是 128 比特位，即 16 字节。对 16 个字节进行 SubBytes 处理，就是将每个字节所代表的无符号整数值（0-255）作为索引，从一个拥有 256 个值的替换表 (S-Box, S盒) 中查找对应的值。简单来说，就是每个字节查表映射为新的值。</p>
 <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-SubBytes.png" alt="SubBytes"></p>
 <h5 id="2-ShiftRows-平移行"><a href="#2-ShiftRows-平移行" class="headerlink" title="2. ShiftRows-平移行"></a>2. ShiftRows-平移行</h5><p>将以 4 字节为单位的行 (row) 按照一定的规则向左平移，且每一行平移的字节数是不同的。图示为对其中一行进行处理的情形：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-ShiftRows.png" alt="ShiftRows"></p>
+<p>![ShiftRows](D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\AES-ShiftRows.png)</p>
 <h5 id="3-MixColumns-混合列"><a href="#3-MixColumns-混合列" class="headerlink" title="3. MixColumns-混合列"></a>3. MixColumns-混合列</h5><p>对一个 4 字节的值进行比特运算，将其变为另一个 4 字节的值，图示为对其中一列（column）进行处理的情形：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-MixColumns.png" alt="MixColumns"></p>
+<p>![MixColumns](D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\AES-MixColumns.png)</p>
 <h5 id="4-AddRoundKey-轮密钥异或运算"><a href="#4-AddRoundKey-轮密钥异或运算" class="headerlink" title="4. AddRoundKey-轮密钥异或运算"></a>4. AddRoundKey-轮密钥异或运算</h5><p>将 MixColumns 的输出与轮密钥进行 XOR，图示为对其中一个字节进行处理的情形：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-AddRoundKey.png" alt="AddRoundKey"></p>
-<p>输入的所有比特在一轮中都会被加密，相比于 DES 的 Feistel 网络相比（每一轮只加密一半输入的比特位），加密所需的轮数更少，一般重复进行10 到 14 轮，而且其中的步骤，可以分别以字节、行和列为单位进行并行计算。注：并行计算也是衡量密码算法的一个重要指标，并行意味着加密解密的速度块。</p>
+<p>![AddRoundKey](D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\AES-AddRoundKey.png)</p>
+<p>输入的所有比特在一轮中都会被加密，相比于 DES 的 Feistel 网络相比（每一轮只加密一半输入的比特位），加密所需的轮数更少，一般重复进行10 到 14 轮，而且其中的步骤，可以分别以字节、行和列为单位进行并行计算。</p>
+<p>注：<strong>并行计算也是衡量密码算法的一个重要指标，并行意味着加密解密的速度块</strong>。</p>
 <p>加密的过程： </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SubBytes  --&gt; SbiftRows --&gt; MixColumns --&gt; AddRoundKey</span><br></pre></td></tr></table></figure>
 
@@ -137,7 +138,7 @@
 <h3 id="使用-JCA-Java-Cryptography-Architecture-进行验证"><a href="#使用-JCA-Java-Cryptography-Architecture-进行验证" class="headerlink" title="使用 JCA (Java Cryptography Architecture) 进行验证"></a>使用 JCA (Java Cryptography Architecture) 进行验证</h3><p>openssl 会生成 8 个比特的 salt，并以  <code>Salted__${salt}</code>  附加在加密的密文前，一共占 16 个字节，验证如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw="</span> | base64 -d | hexdump -C</span><br><span class="line">00000000  53 61 6c 74 65 64 5f 5f  36 31 c9 da 38 2c e4 87  |Salted__61..8,..|</span><br><span class="line">00000010  b0 4f 31 42 5a 2b 01 82  21 cf 1c 00 60 2d 6c dc  |.O1BZ+..!...`-l.|</span><br><span class="line">00000020</span><br></pre></td></tr></table></figure>
 
-<p>所以实际的加密后的密文的 16 进制为：<code>b04f31425a2b018221cf1c00602d6cdc</code></p>
+<p>所以实际加密后密文的 16 进制为：<code>b04f31425a2b018221cf1c00602d6cdc</code></p>
 <p>使用 JCA 进行解密验证：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AESCryptoTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES = <span class="string">"AES"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES_CBC_PKCS_5_PADDING = <span class="string">"AES/CBC/PKCS5Padding"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String keyHex = <span class="string">"421990ECB00E9A9B8372D0E46727F6AA"</span>;</span><br><span class="line">        String ivHex = <span class="string">"5973EAA7D1C1D5240B78CB8A4458D663"</span>;</span><br><span class="line">        String cipherTextHex = <span class="string">"b04f31425a2b018221cf1c00602d6cdc"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] key = HexUtils.fromHexString(keyHex);</span><br><span class="line">        <span class="keyword">byte</span>[] iv = HexUtils.fromHexString(ivHex);</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText = HexUtils.fromHexString(cipherTextHex);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] clearText = aesDecrypt(key, iv, cipherText);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> String(clearText, StandardCharsets.UTF_8));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] aesDecrypt(<span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv, <span class="keyword">byte</span>[] cipherText) &#123;</span><br><span class="line">        <span class="comment">// constructor a secret key</span></span><br><span class="line">        SecretKeySpec secretKey = <span class="keyword">new</span> SecretKeySpec(key, AES);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init algorithm parameters with iv</span></span><br><span class="line">        AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance(AES);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        algorithmParameters.init(ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init a AES cipher with key and iv</span></span><br><span class="line">        Cipher cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, secretKey, algorithmParameters);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// decrypt</span></span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(cipherText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最终输出 hello</span></span><br></pre></td></tr></table></figure>
 
@@ -155,9 +156,9 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Java/JOSE/">
+            <a class="prev" href="/Java/OAuth2.0/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-default">OAuth2.0</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         

@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">OAuth2.0</h2>
             <div class="post-meta">
-                <span class="post-time">2020-07-25</span>
+                <span class="post-time">2021-03-13</span>
                 
                 <span class="post-category">
                     
@@ -98,14 +98,18 @@
         </div>
         <div class="post-toc" id="post-toc">
     <strong class="post-toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端"><span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#受保护的资源端"><span class="toc-text">受保护的资源端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#授权服务器"><span class="toc-text">授权服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#授权"><span class="toc-text">授权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#令牌颁发"><span class="toc-text">令牌颁发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#授权许可类型"><span class="toc-text">授权许可类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-隐式许可类型"><span class="toc-text">1 隐式许可类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-客户端凭据许可类型"><span class="toc-text">2 客户端凭据许可类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-资源拥有者凭据类型"><span class="toc-text">3 资源拥有者凭据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-断言许可类型"><span class="toc-text">4 断言许可类型</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端"><span class="toc-text">客户端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#授权码许可方式获取访问令牌"><span class="toc-text">授权码许可方式获取访问令牌</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-state-参数添加跨站保护"><span class="toc-text">使用  state 参数添加跨站保护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用令牌访问受保护资源"><span class="toc-text">使用令牌访问受保护资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#刷新访问令牌"><span class="toc-text">刷新访问令牌</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#受保护的资源端"><span class="toc-text">受保护的资源端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#授权服务器"><span class="toc-text">授权服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#授权"><span class="toc-text">授权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#令牌颁发"><span class="toc-text">令牌颁发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#授权许可类型"><span class="toc-text">授权许可类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-隐式许可类型"><span class="toc-text">1 隐式许可类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-客户端凭据许可类型"><span class="toc-text">2 客户端凭据许可类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-资源拥有者凭据类型"><span class="toc-text">3 资源拥有者凭据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-断言许可类型"><span class="toc-text">4 断言许可类型</span></a></li></ol></li></ol>
     <div class="back-to-top" id="back-to-top">
         <a href="javascript:void(0);">回到顶部</a>
     </div>
 </div>
         <div class="post-content">
-            <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
-<p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
+            <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><ul>
+<li><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
+</li>
+<li><p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
+</li>
+</ul>
 <p><strong>其它配置：</strong></p>
 <ul>
 <li>重定向 url</li>
@@ -120,19 +124,22 @@
 <li><p>资源服务器， 受保护的资源端点</p>
 </li>
 </ul>
-<p><strong>获取访问令牌步骤：</strong></p>
-<ol>
+<h3 id="授权码许可方式获取访问令牌"><a href="#授权码许可方式获取访问令牌" class="headerlink" title="授权码许可方式获取访问令牌"></a>授权码许可方式获取访问令牌</h3><ol>
 <li>将用户重定向至授权服务器的授权端点，并在请求的 URL 中包含适当的查询参数，如请求权限范围，重定向 URL （回调 URL, 即授权服务器返回授权码给客户端的端点），client_id 等。</li>
 </ol>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">response_type</span>: 'code',</span><br><span class="line"><span class="attribute">client_id</span>: client.client_id,</span><br><span class="line"><span class="attribute">redirect_uri</span>: client.redirect_uris[0] // 客户端接收授权码的端点</span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># `code` 授权码许可类型</span></span><br><span class="line"><span class="attr">response_type</span>: <span class="string">'code',</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端标识 ID</span></span><br><span class="line"><span class="attr">client_id</span>: <span class="string">client.client_id,</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端接收授权码的端点</span></span><br><span class="line"><span class="attr">redirect_uri</span>: <span class="string">client.redirect_uris[0]</span></span><br></pre></td></tr></table></figure>
+
+
 
 <ol start="2">
-<li><p>在授权服务器授权端点，用户对客户端进行授权（可能包含必要用户身份认证），授权结束，根据客户端传过来的重定向 URL 重定向至客户端端点, 并且携带了授权服务器生成的授权码</p>
-</li>
-<li><p>客户端拿到授权码，使用 POST 请求，并使用 Http Basic 认证（client_id作为用户名，client_secret 作为密码），将授权码以表单形式放入请求体中，发送至服务器令牌端点</p>
-</li>
+<li>在授权<strong>服务器授权端点</strong>，用户对客户端进行授权（可能包含必要用户身份认证），授权结束，根据客户端传过来的重定向 URL 重定向至客户端端点, 并且携带了授权服务器生成的授权码</li>
 </ol>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">grant_type</span>: 'authorization_code',</span><br><span class="line"><span class="attribute">code</span>: code,</span><br><span class="line"><span class="attribute">redirect_uri</span>: client.redirect_uris[0]	// 这里是 OAuth 规范约定必须指定和请求授权时相同的重定向 url</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>客户端拿到授权码，使用 <strong>POST</strong> 请求，并使用 Http Basic 认证（client_id作为用户名，client_secret 作为密码），将授权码以表单形式放入请求体中，发送至<strong>服务器令牌端点</strong></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 请求头部，使用表单，使用 Http Basic 认证</span></span><br><span class="line"><span class="keyword">var</span> headers = &#123;</span><br><span class="line"><span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line"><span class="string">'Authorization'</span>: <span class="string">'Basic '</span> + encodeClientCredentials(client.client_id,</span><br><span class="line">client.client_secret)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 授权码许可类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'authorization_code',</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权码</span></span><br><span class="line"><span class="attr">code</span>: <span class="string">code,</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 此处不需要执行重定向</span></span><br><span class="line"><span class="comment"># 这里是 OAuth 规范约定必须指定和请求授权时相同的重定向 url</span></span><br><span class="line"><span class="attr">redirect_uri</span>: <span class="string">client.redirect_uris[0]</span></span><br></pre></td></tr></table></figure>
 
 <ol start="4">
 <li>请求成功时，授权服务器返回一个包含访问令牌等信息的 JSON 对象</li>
@@ -142,32 +149,32 @@
 <ol start="5">
 <li>客户端解析 JSON 对象，获取访问令牌值，并将其保存起来，以便以后使用</li>
 </ol>
-<p>为了避免恶意调用客户端重定向 URL 端点 （<code>client.redirect_uris[0]</code>），破解令牌，请求授权端点前，生成一个随机字符串，并添加在请求授权端点的请求参数中 （state），授权端点在返回授权码时，会带着这个字符串，客户端进行比较，如果相同，表明是自己之前发送的授权请求，否则，应向客户提示异常。</p>
-<p><strong>使用令牌访问受保护资源</strong></p>
-<p>使用令牌向受保护资源发出调用请求，令牌的请求形式：</p>
+<h3 id="使用-state-参数添加跨站保护"><a href="#使用-state-参数添加跨站保护" class="headerlink" title="使用  state 参数添加跨站保护"></a>使用  state 参数添加跨站保护</h3><p>为了避免恶意调用客户端重定向 URL 端点 （<code>client.redirect_uris[0]</code>），破解令牌，请求授权端点前，客户端生成一个随机字符串，并添加在请求授权端点的请求参数中 （state），授权端点在返回授权码时，会带着这个字符串，客户端进行比较，如果相同，表明是自己之前发送的授权请求，否则，应向客户提示异常。</p>
+<h3 id="使用令牌访问受保护资源"><a href="#使用令牌访问受保护资源" class="headerlink" title="使用令牌访问受保护资源"></a><strong>使用令牌访问受保护资源</strong></h3><p>bearer 令牌，它意味着无论是谁，只要持有该令牌就可以向受保护资源出示</p>
+<p>使用令牌向受保护资源发出调用请求，令牌的使用的方式有三种：</p>
 <ol>
 <li>HTTP Authorization 头部（OAuth 规范推荐）</li>
 </ol>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">'Authorization': 'Bearer ' + access_token</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li><p>使用表单格式的请求体参数 （必须使得资源提供端点支持 POST 请求和表单）</p>
+<li><p>使用表单格式的请求体参数 （必须使得资源端点支持 POST 请求和表单）</p>
 </li>
 <li><p>使用 URL 编码的查询参数 （可能使得令牌暴漏在请求日志中）</p>
 </li>
 </ol>
-<p><strong>刷新令牌</strong></p>
-<p>无需用户参与下获取新访问令牌的方法</p>
-<p>1.刷新令牌与访问令牌一起返回被客户端</p>
+<h3 id="刷新访问令牌"><a href="#刷新访问令牌" class="headerlink" title="刷新访问令牌"></a>刷新访问令牌</h3><p>无需用户参与下获取新访问令牌的方法</p>
+<p><strong>步骤</strong></p>
+<p>1.授权服务器的令牌端点会将刷新令牌与访问令牌一起返回给客户端</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>2.客户端发送访问令牌失效时（使用令牌获取资源失败），使用刷新令牌重新请求访问令牌</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// POST 请求体, 同时头部也要添加 Basic 认证信息</span><br><span class="line"><span class="attribute">grant_type</span>: 'refresh_token',</span><br><span class="line"><span class="attribute">refresh_token</span>: refresh_token</span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># POST 请求, 同时头部也要添加 Basic 认证信息，并使用表单形式</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'refresh_token',</span></span><br><span class="line"><span class="attr">refresh_token</span>: <span class="string">refresh_token</span></span><br></pre></td></tr></table></figure>
 
-<p>如果刷新令牌有效，返回新的访问令牌和刷新令牌</p>
+<p><strong>如果刷新令牌有效，返回新的访问令牌和刷新令牌</strong></p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"IqTnLQKcSY62klAuNTVevPdyEnbY82PB"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果刷新令牌无效，提示错误</p>
+<p>如果刷新令牌无效，提示错误, 回到最开始没有获取访问令牌的情况，提示用户重新进行获取与令牌的授权</p>
 <h2 id="受保护的资源端"><a href="#受保护的资源端" class="headerlink" title="受保护的资源端"></a>受保护的资源端</h2><p><strong>使用 OAuth 保护 Web API</strong></p>
 <ol>
 <li>从传入的请求中解析出令牌</li>
@@ -193,7 +200,8 @@
 <p>资源服务器可以根据令牌及其附属信息（如权限范围）直接做出授权决策。资源服务器还可以将访问令牌中的权限范围与其他访问控制信息结合起来，用于决定是否响应 API 调用以及响应什么内容。</p>
 </blockquote>
 <p>资源服务器如何设计权限是比较灵活的，而且可以和其他控制信息结合，也是属于灵活的一种体现。客户端绝不会知道授权的用户与具体的权限范围，令牌本身就代表了资源拥有者的授权与权限范文，在资源服务器端，通过验证令牌以及获取令牌对应的访问权限，用户，以及其它控制信息，做出是否有要相应的决策以及相应什么内容。</p>
-<h2 id="授权服务器"><a href="#授权服务器" class="headerlink" title="授权服务器"></a>授权服务器</h2><h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ol>
+<h2 id="授权服务器"><a href="#授权服务器" class="headerlink" title="授权服务器"></a>授权服务器</h2><p>授权服务器对用户进行身份认证、注册并管理客户端、颁发令牌。</p>
+<h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ol>
 <li>客户端将用户重定向至授权服务器授权端点 <code>/authorize</code>，并携带了必要的查询参数</li>
 </ol>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">https://api.weibo.com/oauth2/authorize?</span></span><br><span class="line">client_id=3129654709&amp;													//客户端 id</span><br><span class="line">redirect_uri=https://www.douyu.com/member/oauth/signin/weibo&amp;			//重定向客户端 uri</span><br><span class="line">state=96b2a0b5a31566c5f63b2322f987736a&amp;								//state 防止恶意调用客户端重定向 uri</span><br><span class="line">response_type=code&amp;													//授权码许可类型</span><br><span class="line">approval_prompt=force&amp;													//授权提示？</span><br><span class="line">scope=foo bar															//客户端期望的权限范围</span><br></pre></td></tr></table></figure>
@@ -201,14 +209,14 @@
 
 
 <ol start="2">
-<li>授权服务器验证客户端身份（client id），检查传入的 redirect_url 与注册时的是否一致；验证请求的权限范围是否符合要求（提前为每个客户端限定了权限范围），如果都满足要求，生成一个随机字符串 state,  并将其与客户端请求的查询参数保存为一个映射；渲染一个授权表单，提供授权或拒绝授权，以及权限范围的选择, 并将随机字符串 state，嵌入到表单中（表示未完成授权，为授权页面提供了简单的防跨站请求伪造保护，防止对服务器端授权端点的恶意请求）</li>
+<li>授权服务器验证客户端身份（client id），检查传入的 redirect_url 与注册时的是否一致；验证请求的权限范围是否符合要求（提前为每个客户端限定了权限范围），如果都满足要求，生成一个随机字符串 ,  并将其与客户端请求的查询参数保存为一个映射；渲染一个授权表单，提供授权或拒绝授权，以及权限范围的选择, 并将随机字符串 ，嵌入到表单中（表示未完成授权，为授权页面提供了简单的防跨站请求伪造保护，防止对服务器端授权端点的恶意请求）</li>
 </ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 提交的表单数据</span><br><span class="line"><span class="keyword">POST</span> <span class="string">/approve</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost:9001</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)</span><br><span class="line">Gecko/20100101 Firefox/39.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Referer</span>: http://localhost:9001/authorize?response_type=code&amp;scope=foo&amp;client_id=</span><br><span class="line">oauth-client-1&amp;redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&amp;state=</span><br><span class="line"><span class="attribute">GKckoHfwMHIjCpEwXchXvsGFlPOS266u</span></span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"></span><br><span class="line">//reqid 即 生成的 state 值，approve 表示用户的授权许可</span><br><span class="line">reqid=tKVUYQSM&amp;approve=Approve</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 提交的表单数据</span><br><span class="line"><span class="keyword">POST</span> <span class="string">/approve</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost:9001</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)</span><br><span class="line">Gecko/20100101 Firefox/39.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Referer</span>: http://localhost:9001/authorize?response_type=code&amp;scope=foo&amp;client_id=</span><br><span class="line">oauth-client-1&amp;redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&amp;state=</span><br><span class="line"><span class="attribute">GKckoHfwMHIjCpEwXchXvsGFlPOS266u</span></span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"></span><br><span class="line">//reqid 即授权服务器生成的随机值，approve 表示用户的授权许可</span><br><span class="line">reqid=tKVUYQSM&amp;approve=Approve</span><br></pre></td></tr></table></figure>
 
 
 
 <ol start="3">
-<li>用户同意授权，表单提交到授权码生成端点 <code>/approve</code>，对提交表单的请求验证 （state），权限范围进行验证（表单请求可能会被篡改，所以需要再次验证），生成授权码 code，存储在授权服务器上，并保存与之对应的权限范围（在令牌端点可以取出来，与访问令牌形成对应关系），客户端请求，并将其通过客户端请求授权时的重定向 uri 返回给客户端</li>
+<li>用户同意授权，表单提交到授权码生成端点 <code>/approve</code>，对提交表单的请求验证 （随机值），权限范围进行验证（表单请求可能会被篡改，所以需要再次验证），生成授权码 code，存储在授权服务器上，并保存与之对应的权限范围（在令牌端点可以取出来，与访问令牌形成对应关系），客户端请求，并将其通过客户端请求授权时的重定向 uri 重定向到客户端，并且在查询参数上应用了客户端的 state 值（对客户端提供跨站保护，虽然不要求客户端传递该参数，但是要求授权服务器只要收到该参数就返回它）</li>
 </ol>
 <h3 id="令牌颁发"><a href="#令牌颁发" class="headerlink" title="令牌颁发"></a>令牌颁发</h3><p>客户端身份认证，client_id, client_secret</p>
 <p>授权许可类型 grant_type 检查， 如 <code>authorization_code</code></p>
@@ -217,7 +225,7 @@
 <p>向客户端返回访问令牌，令牌类型</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">access_token</span>: access_token,</span><br><span class="line"><span class="attribute">token_type</span>: 'Bearer'</span><br></pre></td></tr></table></figure>
 
-<p>支持刷新令牌</p>
+<p>支持刷新令牌，刷新令牌只在授权服务器上使用，访问令牌只在受保护的资源上使用</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">refresh_token</span>: refresh_token,</span><br><span class="line"><span class="attribute">client_id</span>: clientId</span><br></pre></td></tr></table></figure>
 
 
@@ -254,6 +262,7 @@
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">urn:ietf:params:oauth:grant-type:jwt-bearer</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例断言</span></span><br><span class="line"><span class="attr">assertion</span>=<span class="string">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0xIn0.eyJpc3MiOiJodHRwOi8vdHJ1c3QuZXhhbXBsZS5uZXQvIiwic3ViIjoib2F1dGgtY2xpZW50LTEiLCJzY29wZSI6ImZvbyBiYXIgYmF6IiwiYXVkIjoiaHR0cDovL2F1dGhzZXJ2ZXIuZXhhbXBsZS5uZXQvdG9rZW4iLCJpYXQiOjE0NjU1ODI5NTYsImV4cCI6MTQ2NTczMzI1NiwianRpIjoiWDQ1cDM1SWZPckRZTmxXOG9BQ29Xb1djMDQ3V2J3djIifQ.HGCeZh79Va-7meazxJEtm07ZyptdLDu_Ocfw82F1zAT2p6Np6Ia_vEZTKzGhI3HdqXsUG3uDILBv337VNweWYE7F9ThNgDVD90UYGzZN5VlLf9bzjnB2CDjUWXBhgepSyaSfKHQhfyjoLnb2uHg2BUb5YDNYk5oqaBT_tyN7k_PSopt1XZyYIAf6-5VTweEcUjdpwrUUXGZ0fla8s6RIFNosqt5e6j0CsZ7Eb_zYEhfWXPo0NbRXUIG3KN6DCA-ES6D1TW0Dm2UuJLb-LfzCWsA1W_sZZz6jxbclnP6c6Pf8upBQIC9EvXqCseoPAykyR48KeW8tcd5ki3_tPtI7vA</span></span><br></pre></td></tr></table></figure>
 
 <p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌. 断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
+<p>基于 OAuth 的身份认证协议：OpenID Connect</p>
 
         </div>
         
@@ -268,15 +277,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Mysql/%E8%BF%9E%E6%8E%A5/">
+            <a class="prev" href="/Java/OAuth/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">连接</span>
+                <span class="nav-default">OAuth</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
-                <span class="nav-default">常用命令</span>
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/AES/">
+                <span class="nav-default">AES</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
