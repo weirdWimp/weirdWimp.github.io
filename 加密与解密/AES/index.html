@@ -115,11 +115,11 @@
 <h5 id="1-SubBytes-逐字节替换"><a href="#1-SubBytes-逐字节替换" class="headerlink" title="1. SubBytes-逐字节替换"></a>1. SubBytes-逐字节替换</h5><p>Rijndael  的分组是 128 比特位，即 16 字节。对 16 个字节进行 SubBytes 处理，就是将每个字节所代表的无符号整数值（0-255）作为索引，从一个拥有 256 个值的替换表 (S-Box, S盒) 中查找对应的值。简单来说，就是每个字节查表映射为新的值。</p>
 <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-SubBytes.png" alt="SubBytes"></p>
 <h5 id="2-ShiftRows-平移行"><a href="#2-ShiftRows-平移行" class="headerlink" title="2. ShiftRows-平移行"></a>2. ShiftRows-平移行</h5><p>将以 4 字节为单位的行 (row) 按照一定的规则向左平移，且每一行平移的字节数是不同的。图示为对其中一行进行处理的情形：</p>
-<p>![ShiftRows](D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\AES-ShiftRows.png)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-ShiftRows.png" alt="ShiftRows"></p>
 <h5 id="3-MixColumns-混合列"><a href="#3-MixColumns-混合列" class="headerlink" title="3. MixColumns-混合列"></a>3. MixColumns-混合列</h5><p>对一个 4 字节的值进行比特运算，将其变为另一个 4 字节的值，图示为对其中一列（column）进行处理的情形：</p>
-<p>![MixColumns](D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\AES-MixColumns.png)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-MixColumns.png" alt="MixColumns"></p>
 <h5 id="4-AddRoundKey-轮密钥异或运算"><a href="#4-AddRoundKey-轮密钥异或运算" class="headerlink" title="4. AddRoundKey-轮密钥异或运算"></a>4. AddRoundKey-轮密钥异或运算</h5><p>将 MixColumns 的输出与轮密钥进行 XOR，图示为对其中一个字节进行处理的情形：</p>
-<p>![AddRoundKey](D:\Markdown 目录\Markdown 文档\工作\加密与解密\img-assets\AES-AddRoundKey.png)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-AddRoundKey.png" alt="AddRoundKey"></p>
 <p>输入的所有比特在一轮中都会被加密，相比于 DES 的 Feistel 网络相比（每一轮只加密一半输入的比特位），加密所需的轮数更少，一般重复进行10 到 14 轮，而且其中的步骤，可以分别以字节、行和列为单位进行并行计算。</p>
 <p>注：<strong>并行计算也是衡量密码算法的一个重要指标，并行意味着加密解密的速度块</strong>。</p>
 <p>加密的过程： </p>
