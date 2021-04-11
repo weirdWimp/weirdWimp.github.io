@@ -84,6 +84,32 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Shell%E5%8F%98%E9%87%8F/">Shell变量</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-12-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Shell-Variable"><a href="#Shell-Variable" class="headerlink" title="Shell Variable"></a>Shell Variable</h1><h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set default variable value</span></span><br><span class="line">first_var=<span class="variable">$&#123;1:-first&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;first_var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set the default value for variable user if it does not have one</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;user:=second&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># warn</span></span><br><span class="line"><span class="comment"># var=$&#123;1:=defaultValue&#125;  ### FAIL with an error cannot assign in this way</span></span><br><span class="line"><span class="comment"># var=$&#123;1:-defaultValue&#125;  ### Perfect</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message</span></span><br><span class="line">third_var=<span class="variable">$&#123;3:?"Third argument is not definied or empty"&#125;</span></span><br><span class="line">fourth_var=<span class="variable">$&#123;4:"Fourth argument is not definied"&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># display error message and run command</span></span><br><span class="line">fifth_var=<span class="variable">$&#123;5:? "Fifth argument is not definied or empty and print current dir" $(pwd)&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># variable length</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#var&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># strip string varibale</span></span><br><span class="line">msg=<span class="string">"who.is.my.love"</span></span><br><span class="line"><span class="comment"># front strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg#*.&#125;</span>  <span class="comment"># shortest match result: is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg##*.&#125;</span> <span class="comment"># longest match  result: love</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># back strip</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%.*&#125;</span>  <span class="comment"># shortest match result: who.is.my</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg%%*.&#125;</span> <span class="comment"># longest match  result: who</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># substring</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg:4&#125;</span>       <span class="comment"># $&#123;var:position&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg:4：2&#125;</span>    <span class="comment"># $&#123;var:position:length&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## convert case</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg^&#125;</span>    <span class="comment"># Who.is.my.love</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;msg^^&#125;</span>   <span class="comment"># WHO.IS.MY.LOVE</span></span><br><span class="line"></span><br><span class="line">upper_msg=<span class="string">"WHO.IS.MY.LOVE"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,&#125;</span>    <span class="comment"># wHO.IS.MY.LOVE</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,,&#125;</span>   <span class="comment"># who.is.my.love</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Only convert first character in $dest if it is a capital ‘H’:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;upper_msg,H&#125;</span> <span class="comment"># fial</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Want to get the names of variables whose names begin with prefix</span></span><br><span class="line">VECH=<span class="string">"Bus"</span></span><br><span class="line">VECH1=<span class="string">"Car"</span></span><br><span class="line">VECH2=<span class="string">"Train"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;!VECH*&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print all L* variables' name and value</span></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;!L*&#125;</span>; <span class="keyword">do</span> </span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"name: <span class="variable">$&#123;var&#125;</span>, value: <span class="variable">$&#123;!var&#125;</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># name: LANG, value: C.UTF-8</span></span><br><span class="line"><span class="comment"># name: LESSCLOSE, value: /usr/bin/lesspipe %s %s</span></span><br><span class="line"><span class="comment"># name: LESSOPEN, value: | /usr/bin/lesspipe %s</span></span><br><span class="line"><span class="comment"># name: LINENO, value: 58</span></span><br><span class="line"><span class="comment"># name: LINES, value: 56</span></span><br><span class="line"><span class="comment"># name: LOGNAME, value: guo</span></span><br><span class="line"><span class="comment"># name: LS_COLORS, value: rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html" target="_blank" rel="noopener">How To Use Bash Parameter Substitution Like A Pro - nixCraft (cyberciti.biz)</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F/">Semaphore-信号量</a></h2>
             </div>
             <div class="post-meta">
@@ -275,185 +301,6 @@
 <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128011943682.png" alt="image-20201128011943682"></p>
 <p>真是一件麻烦的事情呢，竟然使用了 Redis 作为图片去重的校验…</p>
 <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128012358249.png" alt="image-20201128012358249"></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-29</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Editing-Basics"><a href="#Editing-Basics" class="headerlink" title="Editing Basics"></a>Editing Basics</h1><h3 id="Buffers"><a href="#Buffers" class="headerlink" title="Buffers"></a>Buffers</h3><p>当你编辑一个文件时， Vim 将磁盘上的文件内容读取到计算机的 RAM 中. 这意味这文件的一个备份被存储到了计算机的内存中，你对文件做出的任何修改，是直接映射到内存中的，并且会立即展示出来. 一旦完成了编辑，你可以保存文件，这意味着 Vim 将内存中的内容要写回磁盘. 临时存储文件的内存被称为缓存  (<strong>Buffer</strong>) .  所以，这就是为什么编辑完后要保存文件的原因.</p>
-<h3 id="Swap"><a href="#Swap" class="headerlink" title="Swap"></a>Swap</h3><p>当你编辑文件时, 会在相同目录下会创建一个类似于 <code>.hello.txt.swp</code> 的文件. 查看确切的文件名可以使用如下命令:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:swapname</span><br></pre></td></tr></table></figure>
-
-<p> Vim 维护了文件缓存区 (buffer) 的一个文件备份, 会定期保存到该文件中, 以避免出现问题时进行恢复 (如 计算机或者 Vim 程序崩溃).  这个文件被称为 <code>swap file</code>, 因为 Vim 会不断交换内存中的内容到磁盘上的文件中.</p>
-<h3 id="Save-my-file"><a href="#Save-my-file" class="headerlink" title="Save my file"></a>Save my file</h3><p>当你修改了文件时, 并且没有保存, 在另一个窗口查看时, 此时是不会看到之前修改的内容的, 这也很好理解, 因为 Vim 只修改了 buffer 中的内容, 还没有保存到磁盘上. 可以通过  <code>:write</code> 命令来完成保存过程, 将内存中的内存写到磁盘中.</p>
-<p><strong>为了让生活变得容易一点, 你可以使用快捷键映射, 在 vimrc 文件中:</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#To save,ctrl-s.</span></span><br><span class="line">nmap &lt;c<span class="_">-s</span>&gt; :w&lt;CR&gt;</span><br><span class="line">imap &lt;c<span class="_">-s</span>&gt; &lt;Esc&gt;:w&lt;CR&gt;a</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><table>
-<thead>
-<tr>
-<th>desktop</th>
-<th>vim word</th>
-<th>operation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>cut</td>
-<td>delete</td>
-<td>d</td>
-</tr>
-<tr>
-<td>copy</td>
-<td>yank</td>
-<td>y</td>
-</tr>
-<tr>
-<td>paste</td>
-<td>put</td>
-<td>p</td>
-</tr>
-</tbody></table>
-<p>剪切操作在 Vim 中意味着从 buffer 中删除文本, 并将其存储到寄存器中</p>
-<p>复制操作中同样也意味着拉取 (yank) 文本,并将其放到寄存器中</p>
-<p>粘贴没有其特殊含义</p>
-<p><strong>Why yank not copy ?</strong></p>
-<blockquote>
-<p><strong>Yanking is just a Vim name for copying.  The “c” letter was already used for the change operator, and “y” was still available.  Calling this operator “yank” made it easier to remember to use the “y” key.</strong></p>
-<p>– Vim User Manual</p>
-</blockquote>
-<h4 id="如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作"><a href="#如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作" class="headerlink" title="如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?"></a>如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?</h4><p>你可以:</p>
-<table>
-<thead>
-<tr>
-<th>command</th>
-<th>operation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>dl</td>
-<td>删除单个字符</td>
-</tr>
-<tr>
-<td>dw</td>
-<td>删除一个单词</td>
-</tr>
-<tr>
-<td>dd</td>
-<td>删除一行</td>
-</tr>
-<tr>
-<td>d$</td>
-<td>删除光标位置到行尾的所有字符</td>
-</tr>
-<tr>
-<td>dwwP</td>
-<td>交换两个单词</td>
-</tr>
-<tr>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
-<p><strong>是不是很棒, 这里最让人激动的事情在于, 你可以结合之前的移动等命令, 更多的可能不是吗?  一般的编辑器, 可能没有办法做到如此简洁, 有力 , 并保持方便记忆 !</strong></p>
-<p>还记得清空当前文档的操作吗 ?</p>
-<h3 id="words"><a href="#words" class="headerlink" title="words"></a>words</h3><ul>
-<li><code>w</code></li>
-<li><code>e</code></li>
-</ul>
-<h3 id="Sentence"><a href="#Sentence" class="headerlink" title="Sentence"></a>Sentence</h3><ul>
-<li><code>(</code></li>
-<li><code>)</code></li>
-</ul>
-<h3 id="Paragraph"><a href="#Paragraph" class="headerlink" title="Paragraph"></a>Paragraph</h3><ul>
-<li><code>{</code></li>
-<li><code>}</code></li>
-</ul>
-<h3 id="Visual-Mode-Select"><a href="#Visual-Mode-Select" class="headerlink" title="Visual Mode Select"></a>Visual Mode Select</h3><ul>
-<li><p><code>aw</code></p>
-<p> select a word</p>
-</li>
-<li><p><code>ap</code></p>
-<p>select a paragraph</p>
-</li>
-<li><p><code>ab</code></p>
-<p>select a block (anything with a pair of parentheses)</p>
-</li>
-<li><p><code>a&quot;</code></p>
-<p>select a quoted string (like “this is a quoted string”)</p>
-</li>
-</ul>
-<h3 id="Marking-your-territory"><a href="#Marking-your-territory" class="headerlink" title="Marking your territory"></a>Marking your territory</h3><ul>
-<li><p>create a mark where you can jump here later</p>
-<p><code>ma</code> (a-zA-Z ) then you create a mark called ‘a’</p>
-</li>
-<li><p>return the cursor to the mark</p>
-<p><code>&#39;a</code> take you to the exact line and column of the mark</p>
-</li>
-</ul>
-<h3 id="Time-machine-using-undo-redo"><a href="#Time-machine-using-undo-redo" class="headerlink" title="Time machine using undo/redo"></a>Time machine using undo/redo</h3><ul>
-<li><p><code>u</code> undo  :leftwards_arrow_with_hook:</p>
-</li>
-<li><p><code>ctrl-r</code> redo :arrow_right_hook:</p>
-</li>
-<li><p>more…</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take you back by 4 minutes</span></span><br><span class="line">:earlier 4m</span><br><span class="line"></span><br><span class="line"><span class="comment"># take you later by 45 seconds</span></span><br><span class="line">:later 45s</span><br><span class="line"></span><br><span class="line"><span class="comment"># go back 5 changes</span></span><br><span class="line">undo 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># view the undo tree</span></span><br><span class="line">undolist</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Powerful-search-engine"><a href="#Powerful-search-engine" class="headerlink" title="Powerful search engine"></a>Powerful search engine</h3><ul>
-<li>basic search</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># search</span></span><br><span class="line">/the&lt;cr&gt; <span class="comment"># /the followed by the enter key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># next occurrence</span></span><br><span class="line">press `n`</span><br><span class="line"></span><br><span class="line"><span class="comment"># previous occurrence</span></span><br><span class="line">press `N`</span><br></pre></td></tr></table></figure>
-
-<p>  还记得我们第一次介绍 Vim 的骚操作吗 <code>*</code> 搜索当前光标所在的单词</p>
-<ul>
-<li>start searching as and when you type the search phrase</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> incsearch</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ignore the case of the text that you are searching for</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> ignorecase</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>smart case</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smartcase</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>searching for <code>/step</code>, then it will search for any combination of upper and lower case text. So eventually, “Step”, “Stephen”,”stepbrother”</li>
-<li>searching for <code>/Step</code>, <strong>only</strong> “Step”, “Stephen”, but not “stepbrother”</li>
-</ul>
-<ul>
-<li>basic patterns</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exactly search the word 'step' and not 'stepfather'</span></span><br><span class="line">/\&lt;step\&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># search numbers</span></span><br><span class="line">/\d\+</span><br><span class="line"></span><br><span class="line"><span class="comment"># see :help pattern for more details</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>永远不要去死记硬背这些操作, 试着理解, 并练习, 最终成为肌肉记忆.</strong></p>
-<p><a href="http://vimdoc.sourceforge.net/htmldoc/usr_04.html" target="_blank" rel="noopener">vim doc</a></p>
 
                 
             </div>

@@ -84,6 +84,45 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Ubuntu%20%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">Ubuntu 安装配置</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-08-09</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Ubuntu 国内镜像下载</p>
+<p><a href="http://mirrors.163.com/ubuntu-releases/" target="_blank" rel="noopener">http://mirrors.163.com/ubuntu-releases/</a></p>
+<p>创建 USB 启动盘</p>
+<p><a href="https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview" target="_blank" rel="noopener">https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview</a></p>
+<p>USB 启动盘工具</p>
+<p><a href="https://rufus.ie/" target="_blank" rel="noopener">https://rufus.ie/</a></p>
+<p>安装教程：</p>
+<p><a href="https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive" target="_blank" rel="noopener">https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive</a></p>
+<p>设置教程：</p>
+<p><a href="https://cloud.tencent.com/developer/article/1626258?fromSource=gwzcw.1293314.1293314.1293314&cps_key=ad1dd5b36e1c498308f7302ab4cdabb7" target="_blank" rel="noopener">写给工程师的 Ubuntu 20.04 最佳配置指南</a></p>
+<p><a href="https://blog.csdn.net/jackghq/article/details/54974141" target="_blank" rel="noopener">开启 SSH</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 ssh-serve</span></span><br><span class="line">sudo apt-get install openssh-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置允许 root 登录</span></span><br><span class="line">sudo vi /etc/ssh/sshd_config</span><br><span class="line">  PermitRootLogin yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 ssh 密钥对</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制到目标机器</span></span><br><span class="line">ssh-copy-id user@domain/ip</span><br></pre></td></tr></table></figure>
+
+
+
+<p>安装 Vim</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. </span></span><br><span class="line">sudo apt install vim</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 修改 /etc/vim/vimrc.tinyset compatible 设置成set nocompatible . 这是因为有时候系统会默认vim兼容vi，所以使用vi的命令。</span></span><br><span class="line">vi /etc/vim/vimrc.tinyset compatible</span><br><span class="line"><span class="built_in">set</span> nocompatible</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
             </div>
             <div class="post-meta">
@@ -778,35 +817,6 @@
 
 <p><a href="https://jingyan.baidu.com/article/215817f7e68fb81eda14230f.html" target="_blank" rel="noopener">Win 8/8.1 下virtualbox无法开启虚拟化解决方法</a></p>
 <p>Push-button installer of macOS on VirtualBox <a href="https://github.com/myspaghetti/macos-virtualbox" target="_blank" rel="noopener"> macos-virtualbox</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ANSI%20Color/">ANSI Color</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-06-25</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>From Wicked Cool Shell Scripts, 2nd Edition</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">initializeANSI</span></span> () &#123;</span><br><span class="line"></span><br><span class="line">    esc=<span class="string">"\033"</span> <span class="comment"># 如果无效，直接敲 ESC 键。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 前景色：</span></span><br><span class="line">    blackf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[30m"</span>; redf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[31m"</span>; greenf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[32m"</span></span><br><span class="line">    yellowf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[33m"</span> bluef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[34m"</span>; purplef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[35m"</span></span><br><span class="line">    cyanf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[36m"</span>; whitef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[37m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 背景色：</span></span><br><span class="line">    blackb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[40m"</span>; redb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[41m"</span>; greenb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[42m"</span></span><br><span class="line">    yellowb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[43m"</span> blueb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[44m"</span>; purpleb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[45m"</span></span><br><span class="line">    cyanb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[46m"</span>; whiteb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[47m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 粗体、斜体、下划线以及样式切换：</span></span><br><span class="line">    boldon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[1m"</span>; boldoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[22m"</span></span><br><span class="line">    italicson=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[3m"</span>; italicsoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[23m"</span></span><br><span class="line">    ulon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[4m"</span>; uloff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[24m"</span></span><br><span class="line">    invon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[7m"</span>; invoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[27m"</span></span><br><span class="line">    reset=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[0m"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">initializeANSI</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span>This is a phrase in yellow<span class="variable">$&#123;redb&#125;</span> and red<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string"><span class="variable">$&#123;boldon&#125;</span>This is bold<span class="variable">$&#123;ulon&#125;</span> this is italics<span class="variable">$&#123;reset&#125;</span> bye-bye</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;italicson&#125;</span>This is italics<span class="variable">$&#123;italicsoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;ulon&#125;</span>This is ul<span class="variable">$&#123;uloff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;invon&#125;</span>This is inv<span class="variable">$&#123;invoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span><span class="variable">$&#123;redb&#125;</span>Warning I <span class="variable">$&#123;yellowb&#125;</span><span class="variable">$&#123;redf&#125;</span>Warning II<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string">"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Add snippets for shell common comment</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"Print to shellNote"</span>: &#123;</span><br><span class="line">		<span class="attr">"prefix"</span>: <span class="string">"shell"</span>,</span><br><span class="line">		<span class="attr">"body"</span>: [</span><br><span class="line">			<span class="string">" # Description: $1"</span>,</span><br><span class="line">			<span class="string">" # Author:      Your Name"</span>,</span><br><span class="line">			<span class="string">" # Date:        $&#123;CURRENT_YEAR&#125;-$&#123;CURRENT_MONTH&#125;-$&#123;CURRENT_DATE&#125;"</span></span><br><span class="line">		],</span><br><span class="line">		<span class="attr">"description"</span>: <span class="string">"shel script comment"</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
                 
             </div>
