@@ -84,45 +84,96 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/xxd%E5%91%BD%E4%BB%A4/">Linux/xxd命令</a></h2>
+                <h2><a class="post-title-link" href="/Java/JOSE/">JOSE</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2021-05-18</span>
                 
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
             </div>
             <div class="post-content">
                 
-                    
+                    <p>Jose JSON 对象的加密与签名</p>
+
                 
             </div>
         </article>
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E8%B4%A8%E6%95%B0%E7%9A%84%E5%88%A4%E6%96%AD/">Java/质数的判断</a></h2>
+                <h2><a class="post-title-link" href="/Linux/xxd%E5%91%BD%E4%BB%A4/">xxd命令</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2021-05-18</span>
                 
-            </div>
-            <div class="post-content">
-                
+                <span class="post-category">
                     
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/JOSE/">Java/JOSE</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-05-18</span>
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
                 
             </div>
             <div class="post-content">
                 
-                    
+                    <h1 id="xxd-命令"><a href="#xxd-命令" class="headerlink" title="xxd 命令"></a>xxd 命令</h1><p><code>xxd</code> 用来对指定的文件或来自标准输入的数据进行<strong>十六进制转储</strong>，也可以将将十六进制转换为原始的二进制格式，允许以邮件安全的 ASCII 表示传输二进制数据，<code>base64</code> 其实也可以达到相同的目的。也可以用来进行二进制文件 patching</p>
+<h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><p>如果没有指定输入文件或输出文件，或者指定为 <code>-</code> ，使用标准输入或标准输出</p>
+<ul>
+<li><code>-a | -autoskip</code> 开启自动跳过，以 <code>*</code> 代替空行（nul-lines），默认关闭</li>
+</ul>
+<ul>
+<li><code>-b | -bits</code> 切换到二进制位模式，而不是十六进制, <code>-r</code>, <code>-p</code>,<code>-i</code> 下不生效 </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101 01101100 01101100 01101111           hello</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-c cols | -cols cols</code> 输出的每行包含 cols 个字节，默认是 16 个 (-i: 12, -ps: 30, -b: 6).最大 256</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b -c 2</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101  he</span><br><span class="line">00000002: 01101100 01101100  ll</span><br><span class="line">00000004: 01101111           o</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-E | -EBCDIC</code> ASCII 表示切换为 EBCDIC（国际）编码 meaningless in combinations with -r, -p or -i</li>
+</ul>
+<ul>
+<li><code>-g bytes | -groupsize bytes</code> 每 bytes 个字节，添加一个空格进行分隔分组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 1</span><br><span class="line">00000000: 68 65 6c 6c 6f 0a                                hello.</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 2</span><br><span class="line">00000000: 6865 6c6c 6f0a                           hello.</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-p | -ps | -postscript | -plain</code>  以连续连续十六进制样式输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -p</span><br><span class="line">68656c6c6f0a</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-r | -revert</code> 将十六进制转为二进制。如果不是写到 stdout, xxd 在不截断的情况下将其写入输出文件。使用 <code>-r -p</code> 读取连续的十六进制输出（不包含行号信息，没有特定的列布局）</li>
+</ul>
+<ul>
+<li><p><code>-seek offset</code></p>
+<p>When used after <em>-r</em>: revert with &lt;<em>offset</em>&gt; added to file positions found in hexdump.</p>
+</li>
+</ul>
+<ul>
+<li><p><code>-s [+][-]seek</code> </p>
+<p>start at &lt;<em>seek</em>&gt; bytes abs. (or rel.) infile offset. <em>+</em> indicates that the seek is relative to the current stdin file position (meaningless when not reading from stdin). <em>-</em> indicates that the seek should be that many characters from the end of the input (or if combined with <em>+</em>: before the current stdin file position). Without -s option, xxd starts at the current file position.</p>
+<p>跳过多少字节</p>
+</li>
+<li><p><code>u</code> 使用大写的十六进制字母，默认是小写的</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.commandlinux.com/man-page/man1/xxd.1.html" target="_blank" rel="noopener">XXD</a></p>
+
                 
             </div>
         </article>
@@ -292,6 +343,83 @@
 <p>[8] <a href="https://blog.csdn.net/fym0121/article/details/8001190/" target="_blank" rel="noopener">验证证书链</a></p>
 <p>[9] <a href="https://www.cnblogs.com/274914765qq/p/4467025.html" target="_blank" rel="noopener">openssl 证书操作</a></p>
 <p>[10] <a href="https://mp.weixin.qq.com/s/zQ8NxK4zsRBA5D8AHJErdA" target="_blank" rel="noopener">深入剖析 RSA 密钥原理及实践</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PBE/">PBE</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-05-16</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/%E5%BE%AE%E5%8D%9A-%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95.png" alt="微博-密码算法"></p>
+<h1 id="基于口令的密码"><a href="#基于口令的密码" class="headerlink" title="基于口令的密码"></a>基于口令的密码</h1><p><strong>基于口令的密码（Password Based Encryption, PBE）</strong> 是一种根据口令生成密钥，并使用该密钥进行加密的方法。加密和解密使用同一个密钥（即使用对称密码算法），PKCS #5 (RFC 2898)  规范描述了其实现细节，广泛使用的密码工具都对其提供了实现，如 Java 的 <code>javax.crypto</code> 包，密码软件 <code>PGP</code>, openssl 等。</p>
+<h2 id="PBE-的意义"><a href="#PBE-的意义" class="headerlink" title="PBE 的意义"></a>PBE 的意义</h2><p>要确保消息的机密性？ —-&gt; 使用密钥 (CEK) 进行加密</p>
+<p>如何确保密钥的机密性？—-&gt; 用另一个密钥 (KEY) 对密钥进行加密</p>
+<p>如何确保另一个密钥 (KEY) 的机密性？ —-&gt; 继续使用第三个密钥？死循环 ？</p>
+<p><strong>使用口令和盐来生成密钥 (KEK) 吧，盐可以和加密后的密钥（CEK）一起保存在磁盘上，密钥（KEK）就可以丢掉了</strong></p>
+<p><strong>口令就记在脑子里吧</strong></p>
+<p>如果不保存一般使用的密钥，靠人类记忆没有规律，冗长的密钥是十分困难的。</p>
+<h2 id="PBE-的加密与解密"><a href="#PBE-的加密与解密" class="headerlink" title="PBE 的加密与解密"></a>PBE 的加密与解密</h2><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/pbe.png" alt="pbe"></p>
+<p>*   PBE 的加密过程</p>
+<p><strong>PBE 加密</strong></p>
+<ol>
+<li>生成 KEK, 使用伪随机数生成器生成 <strong>盐 (salt)</strong> ，盐就是一个随机数，用于防御字典攻击，将盐与用户输入的口令一起作为单向散列函数的输入，最终得到的散列值就是 KEK， 用来对密钥进行加密的密钥</li>
+<li>利用伪随机数生成器再生成会话密钥 CEK,  用 KEK 对 CEK 进行加密，并和盐保存在安全的地方。KEK 就可以丢弃了，因为只需要盐和口令就可以重建 KEK</li>
+<li>使用会话密钥对消息进行加密</li>
+</ol>
+<p><strong>PBE 解密</strong></p>
+<ol>
+<li>重建 KEK ,利用保存的盐和用户再次输入的口令作为散列函数的输入，得到 KEK</li>
+<li>利用 KEK 解密之前加密的 CEK, 得到会话密钥 CEK</li>
+<li>使用 CEK 对密文进行解密</li>
+</ol>
+<p><strong>盐的作用</strong></p>
+<p>盐是用来防御字典攻击的，字典攻击简单来说，就是攻击者提前准备好一组可能的口令，并计算好它们的摘要，当它们窃取加密后的会话密钥后，通过将准备好的候选摘要 KEK，尝试进行破解。主要是大量的用户使用了字典的词语来设置他们的密码，所以给了攻击者机会。当使用了盐后，KEK 的可能数量会随之增大，事先生成候选的 KEK 数量会变得很大，增加了破译的难度。</p>
+<p><strong>拉伸</strong></p>
+<p>生成 KEK 时，多次使用单向散列函数可以提高安全性，即将输出再次作为单向散列函数的输入，反复多次，一般建议最少 1000 次，目的也是增加攻击者破译的难度。这种多次迭代的方法称为拉伸 (stretching)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/passwordEncryption.png" alt="passwordEncryption"></p>
+<h2 id="PKCS-5"><a href="#PKCS-5" class="headerlink" title="PKCS #5"></a>PKCS #5</h2><p>RFC 8018 (Obsoletes 2898) Password-Based Cryptography Specification Version 2.1中详细描述了 PBE 的实现步骤。</p>
+<h3 id="PBKDF"><a href="#PBKDF" class="headerlink" title="PBKDF"></a>PBKDF</h3><p>PBKDF 即 Password Based Key Derivation Functions, 基于口令的密钥生成函数，仅包含密钥生成的定义，不包含加密和解密的过程。</p>
+<p><strong>PBKDF1</strong></p>
+<p>密钥生成过程中应用的是一个单向散列函数（hash function），如 MD2, MD5，SHA-1等， 与 PKCS #5 v1.5 中的定义兼容, 受限于单向散列函数输出的长度，生成密钥的长度也受到限制，只出于兼容性的需求使用。</p>
+<p> <strong>PBKDF2</strong></p>
+<p>密钥过程中应用的是一个伪随机数生成函数（pseudorandom function）, 如 HMAC with SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256，推荐在新的应用中使用</p>
+<h3 id="PBES"><a href="#PBES" class="headerlink" title="PBES"></a>PBES</h3><p>PBES 即 Password Based Encryption Schemes, 即 PBE 的策略，其实就是 PBKDF 与加密和解密过程相结合，完成密钥的生成，对消息的加密和解密。</p>
+<p><strong>PBES1</strong>  PBKDF1 与对称分组密码的结合</p>
+<p><strong>PBES2</strong>   PBKDF2 与对称分组密码的结合</p>
+<h2 id="How-to-encrypt-user-passwords"><a href="#How-to-encrypt-user-passwords" class="headerlink" title="How to encrypt user passwords"></a>How to encrypt user passwords</h2><p><a href="http://www.jasypt.org/howtoencryptuserpasswords.html" target="_blank" rel="noopener">jasypt-How to encrypt user passwords</a></p>
+<h2 id="使用-openssl-与-JCA-进行实践"><a href="#使用-openssl-与-JCA-进行实践" class="headerlink" title="使用 openssl 与 JCA 进行实践"></a>使用 openssl 与 JCA 进行实践</h2><h3 id="使用-openssl"><a href="#使用-openssl" class="headerlink" title="使用 openssl"></a>使用 openssl</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">guo@DESKTOP-4L69AND:/mnt/e/learning-dir/shell-learning$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | openssl enc -aes-128-cbc -e -base64 -pbkdf2 -iter 1000 -S 3631C9DA382CE487 -p</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入 password</span></span><br><span class="line">enter aes-128-cbc encryption password:</span><br><span class="line">Verifying - enter aes-128-cbc encryption password:</span><br><span class="line"></span><br><span class="line"><span class="comment"># Salt 盐</span></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line"></span><br><span class="line"><span class="comment"># pbkdf2 生成的密钥 secret key</span></span><br><span class="line">key=1004087F17C38D06C8B24CA69175984C</span><br><span class="line"></span><br><span class="line"><span class="comment"># iv 初始化向量</span></span><br><span class="line">iv =5FFD9210A708073E5AB718800F9958E6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加密后的密文 Salted__$&#123;salt&#125;$&#123;cipherText&#125;</span></span><br><span class="line">U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="同样使用-JCA-验证"><a href="#同样使用-JCA-验证" class="headerlink" title="同样使用 JCA 验证"></a>同样使用 JCA 验证</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.learn.something.security.crypto;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.SneakyThrows;</span><br><span class="line"><span class="keyword">import</span> org.apache.tomcat.util.buf.HexUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.crypto.*;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.IvParameterSpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.PBEKeySpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.PBEParameterSpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"><span class="keyword">import</span> java.security.AlgorithmParameters;</span><br><span class="line"><span class="keyword">import</span> java.security.spec.KeySpec;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> guo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/4/11</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PBECryptTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] plainText = <span class="string">"hello"</span>.getBytes(StandardCharsets.UTF_8);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// create key</span></span><br><span class="line">        <span class="keyword">char</span>[] password = <span class="string">"12345678"</span>.toCharArray();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// salt can be acquired by Random generator</span></span><br><span class="line">        <span class="keyword">byte</span>[] salt = HexUtils.fromHexString(<span class="string">"3631C9DA382CE487"</span>);</span><br><span class="line">        <span class="keyword">int</span> iter = <span class="number">1000</span>;</span><br><span class="line">        <span class="keyword">int</span> keyLength = <span class="number">128</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init algorithm</span></span><br><span class="line">        <span class="comment">// iv can be acquired by Random generator</span></span><br><span class="line">        <span class="keyword">byte</span>[] iv = HexUtils.fromHexString(<span class="string">"5FFD9210A708073E5AB718800F9958E6"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ==============================================================================</span></span><br><span class="line">        <span class="comment">// 1. use pbkdf2 to generate 128 bits key</span></span><br><span class="line">        <span class="comment">// 2. use key and AES to encrypt the message</span></span><br><span class="line">        <span class="keyword">byte</span>[] key = derivePbkdf2Key(password, salt, iter, keyLength);</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText1 = encryptTest(plainText, key, iv);</span><br><span class="line">        opensslOutput(salt, cipherText1);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// ==============================================================================</span></span><br><span class="line">        <span class="comment">// use PBE to encrypt the message so we don't have to care about the derived key</span></span><br><span class="line">        <span class="keyword">byte</span>[] cipherText2 = pbeEncryptTest(plainText, password, salt, iter, iv);</span><br><span class="line">        opensslOutput(salt, cipherText2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * openssl output format: Salted__$&#123;salt&#125;$&#123;cipherText&#125;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> salt</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cipherText</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">opensslOutput</span><span class="params">(<span class="keyword">byte</span>[] salt, <span class="keyword">byte</span>[] cipherText)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] finalBytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="string">"Salted__"</span>.length() + salt.length + cipherText.length];</span><br><span class="line">        System.arraycopy(<span class="string">"Salted__"</span>.getBytes(), <span class="number">0</span>, finalBytes, <span class="number">0</span>, <span class="string">"Salted__"</span>.length());</span><br><span class="line">        System.arraycopy(salt, <span class="number">0</span>, finalBytes, <span class="string">"Salted__"</span>.length(), salt.length);</span><br><span class="line">        System.arraycopy(cipherText, <span class="number">0</span>, finalBytes, salt.length + <span class="string">"Salted__"</span>.length(), cipherText.length);</span><br><span class="line">        System.out.println(<span class="string">"openssl output format: "</span> + Base64.getEncoder().encodeToString(finalBytes));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * pbkdf2</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] derivePbkdf2Key(<span class="keyword">char</span>[] password, <span class="keyword">byte</span>[] salt, <span class="keyword">int</span> iter, <span class="keyword">int</span> keyLength) &#123;</span><br><span class="line">        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(<span class="string">"PBKDF2WithHmacSHA256"</span>);</span><br><span class="line"></span><br><span class="line">        KeySpec pbeKeySpec = <span class="keyword">new</span> PBEKeySpec(password, salt, iter, keyLength);</span><br><span class="line">        SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] encodedKey = secretKey.getEncoded();</span><br><span class="line">        System.out.printf(<span class="string">"algorithm： %s, key(hex format): %s\n"</span>, secretKey.getAlgorithm(), HexUtils.toHexString(encodedKey));</span><br><span class="line">        <span class="keyword">return</span> encodedKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] encryptTest(<span class="keyword">byte</span>[] plainText, <span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv) &#123;</span><br><span class="line">        SecretKeySpec secretKey = <span class="keyword">new</span> SecretKeySpec(key, <span class="string">"AES"</span>);</span><br><span class="line"></span><br><span class="line">        AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        algorithmParameters.init(ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        Cipher cipher = Cipher.getInstance(<span class="string">"AES/CBC/PKCS5Padding"</span>);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, secretKey, algorithmParameters);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(plainText);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] pbeEncryptTest(<span class="keyword">byte</span>[] plainText, <span class="keyword">char</span>[] password, <span class="keyword">byte</span>[] salt, <span class="keyword">int</span> iter, <span class="keyword">byte</span>[] iv) &#123;</span><br><span class="line"></span><br><span class="line">        KeySpec pbeKeySpec = <span class="keyword">new</span> PBEKeySpec(password, salt, <span class="number">1000</span>, <span class="number">128</span>);</span><br><span class="line">        SecretKeyFactory factory = SecretKeyFactory.getInstance(<span class="string">"PBEWithHmacSHA256AndAES_128"</span>);</span><br><span class="line">        SecretKey secretKey = factory.generateSecret(pbeKeySpec);</span><br><span class="line"></span><br><span class="line">        Cipher cipher = Cipher.getInstance(<span class="string">"PBEWithHmacSHA256AndAES_128/CBC/PKCS5Padding"</span>);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        PBEParameterSpec parameterSpec = <span class="keyword">new</span> PBEParameterSpec(salt, <span class="number">1000</span>, ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);</span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(plainText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">algorithm： PBKDF2WithHmacSHA256, key(hex format): 1004087f17c38d06c8b24ca69175984c</span><br><span class="line">openssl output format: U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br><span class="line">openssl output format: U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><p>[1] <a href="https://item.jd.com/11942019.html" target="_blank" rel="noopener">图解密码技术</a></p>
+<p>[2] <a href="https://tools.ietf.org/html/rfc8018#appendix-B.1" target="_blank" rel="noopener">PKCS #5 rfc8018</a></p>
+<p>[3] <a href="http://www.jasypt.org/howtoencryptuserpasswords.html" target="_blank" rel="noopener">jasypt-How to encrypt user passwords</a></p>
+<p>[4] <a href="https://www.openssl.org/docs/man1.1.1/man1/enc.html" target="_blank" rel="noopener">openssl enc command</a></p>
+<p>[5] <a href="https://docs.oracle.com/en/java/javase/14/docs/specs/security/standard-names.html#secretkeyfactory-algorithms" target="_blank" rel="noopener">SecretKeyFactory Algorithms</a></p>
+<p>[6] <a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1304227859136546" target="_blank" rel="noopener">廖雪峰-口令加密算法</a></p>
+<p>[7] <a href="https://stackoverflow.com/questions/4513433/deriving-a-secret-from-a-master-key-using-jce-jca" target="_blank" rel="noopener">Deriving a secret from a master key using JCE/JCA</a></p>
 
                 
             </div>

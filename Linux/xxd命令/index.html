@@ -83,21 +83,86 @@
         <div class="posts">
     <article class="post-whole">
         <div class="post-title">
-            <h2 class="title">Linux/xxd命令</h2>
+            <h2 class="title">xxd命令</h2>
             <div class="post-meta">
                 <span class="post-time">2021-05-18</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
                 
                 <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
             </div>
         </div>
         <div class="post-toc" id="post-toc">
     <strong class="post-toc-title">目录</strong>
-    
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xxd-命令"><span class="toc-text">xxd 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选项"><span class="toc-text">选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
     <div class="back-to-top" id="back-to-top">
         <a href="javascript:void(0);">回到顶部</a>
     </div>
 </div>
         <div class="post-content">
+            <h1 id="xxd-命令"><a href="#xxd-命令" class="headerlink" title="xxd 命令"></a>xxd 命令</h1><p><code>xxd</code> 用来对指定的文件或来自标准输入的数据进行<strong>十六进制转储</strong>，也可以将将十六进制转换为原始的二进制格式，允许以邮件安全的 ASCII 表示传输二进制数据，<code>base64</code> 其实也可以达到相同的目的。也可以用来进行二进制文件 patching</p>
+<h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><p>如果没有指定输入文件或输出文件，或者指定为 <code>-</code> ，使用标准输入或标准输出</p>
+<ul>
+<li><code>-a | -autoskip</code> 开启自动跳过，以 <code>*</code> 代替空行（nul-lines），默认关闭</li>
+</ul>
+<ul>
+<li><code>-b | -bits</code> 切换到二进制位模式，而不是十六进制, <code>-r</code>, <code>-p</code>,<code>-i</code> 下不生效 </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101 01101100 01101100 01101111           hello</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-c cols | -cols cols</code> 输出的每行包含 cols 个字节，默认是 16 个 (-i: 12, -ps: 30, -b: 6).最大 256</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b -c 2</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101  he</span><br><span class="line">00000002: 01101100 01101100  ll</span><br><span class="line">00000004: 01101111           o</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-E | -EBCDIC</code> ASCII 表示切换为 EBCDIC（国际）编码 meaningless in combinations with -r, -p or -i</li>
+</ul>
+<ul>
+<li><code>-g bytes | -groupsize bytes</code> 每 bytes 个字节，添加一个空格进行分隔分组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 1</span><br><span class="line">00000000: 68 65 6c 6c 6f 0a                                hello.</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 2</span><br><span class="line">00000000: 6865 6c6c 6f0a                           hello.</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-p | -ps | -postscript | -plain</code>  以连续连续十六进制样式输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -p</span><br><span class="line">68656c6c6f0a</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-r | -revert</code> 将十六进制转为二进制。如果不是写到 stdout, xxd 在不截断的情况下将其写入输出文件。使用 <code>-r -p</code> 读取连续的十六进制输出（不包含行号信息，没有特定的列布局）</li>
+</ul>
+<ul>
+<li><p><code>-seek offset</code></p>
+<p>When used after <em>-r</em>: revert with &lt;<em>offset</em>&gt; added to file positions found in hexdump.</p>
+</li>
+</ul>
+<ul>
+<li><p><code>-s [+][-]seek</code> </p>
+<p>start at &lt;<em>seek</em>&gt; bytes abs. (or rel.) infile offset. <em>+</em> indicates that the seek is relative to the current stdin file position (meaningless when not reading from stdin). <em>-</em> indicates that the seek should be that many characters from the end of the input (or if combined with <em>+</em>: before the current stdin file position). Without -s option, xxd starts at the current file position.</p>
+<p>跳过多少字节</p>
+</li>
+<li><p><code>u</code> 使用大写的十六进制字母，默认是小写的</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.commandlinux.com/man-page/man1/xxd.1.html" target="_blank" rel="noopener">XXD</a></p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Linux/" title="Linux">Linux</a>
             
         </div>
         
@@ -106,9 +171,15 @@
 <div class="paginator">
     
         
+            <a class="prev" href="/Java/JOSE/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">JOSE</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
         
-            <a class="next" href="/Java/%E8%B4%A8%E6%95%B0%E7%9A%84%E5%88%A4%E6%96%AD/">
-                <span class="nav-default">Java/质数的判断</span>
+        
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/RSA/">
+                <span class="nav-default">RSA</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>

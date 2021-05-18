@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E6%BA%90%E7%A0%81/">Spring 源码</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20JSP/">Spring JSP</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,10 +98,64 @@
             </div>
             <div class="post-content">
                 
-                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ConfigurableWebApplicationContext</span> <span class="keyword">extends</span> <span class="title">WebApplicationContext</span>, <span class="title">ConfigurableApplicationContext</span></span></span><br></pre></td></tr></table></figure>
+                    <h1 id="Spring-提供的-JSP-标签库"><a href="#Spring-提供的-JSP-标签库" class="headerlink" title="Spring 提供的 JSP 标签库"></a>Spring 提供的 JSP 标签库</h1><h3 id="1-表单绑定标签库"><a href="#1-表单绑定标签库" class="headerlink" title="1 表单绑定标签库"></a>1 表单绑定标签库</h3><ul>
+<li>可以绑定一个模型的对象到注册表单，表单中的某些标签可以通过这个模型对象的属性进行填充。</li>
+<li>提供一个展现错误的标签</li>
+</ul>
+<h4 id="使用声明"><a href="#使用声明" class="headerlink" title="使用声明"></a>使用声明</h4><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%-- tags/form, 并且声明前缀为 sf，即 Spring Form--%&gt;</span><br><span class="line">&lt;%@ taglib uri=<span class="string">"http://www.springframework.org/tags/form"</span> prefix=<span class="string">"sf"</span> %&gt;</span><br></pre></td></tr></table></figure>
 
-<p>ConfigurableWebApplicationContext 提供了  configLocation 的属性，为 web application context 设置 config 文件的路径</p>
-<p>在 <code>public class ContextLoaderListener extends ContextLoader implements ServletContextListener</code> 中，在监听到 ServletContext 初始化时，会初始化一个 WebApplication 实例（实现了ConfigurableWebApplicationContext接口），会从 web.xml 中 配置的 Servlet Context 参数中寻找  <code>contextConfigLocation</code>， 填充  configLocation .</p>
+
+
+<p>具体的 JSP 表单</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;sf:form method=<span class="string">"POST"</span> commandName=<span class="string">"user"</span>&gt;</span><br><span class="line">    First Name: &lt;sf:input path=<span class="string">"firstName"</span> /&gt;&lt;br/&gt;</span><br><span class="line">    ......</span><br><span class="line">    Password: &lt;sf:password path=<span class="string">"password"</span> /&gt;&lt;br/&gt;</span><br><span class="line">&lt;/sf:form&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>sf:form</code> 标签会渲染一个 HTML <code>&lt;form&gt;</code> 标签， 通过 <code>commandName</code> 绑定模型中的一个对象，key 为 <code>user</code>, 这个对象的属性会被其他标签引用</p>
+<p><code>&lt;sf:input&gt;</code> 标签会渲染一个 HTML <code>&lt;input&gt;</code> 标签 ，<code>type</code> 为 text，<code>path</code> 的值，会被渲染成该 <code>&lt;input&gt;</code> 标签的 <code>value</code> 属性的值</p>
+<p>当然也可以在 <code>&lt;sf:input&gt;</code> 标签中指定 <code>type</code> 属性 </p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Email: &lt;sf:input path=<span class="string">"email"</span> type=<span class="string">"email"</span> /&gt;&lt;br/&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>控制器方法 — 注册 GET 方法， 模型中必须添加一个 User 对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/register"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">showRegistration</span><span class="params">(Model model)</span> </span>&#123;</span><br><span class="line">    model.addAttribute(<span class="keyword">new</span> User());</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"registerFormSpringForm"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在校验失败后，表单中会预先填充之前输入的值。是在 POST 方法，是直接返回的注册视图实现的， GET 方法中添加 User 对象，只是为了初始展示注册试图 JSP不报错</p>
+<h4 id="展现错误"><a href="#展现错误" class="headerlink" title="展现错误"></a>展现错误</h4><blockquote>
+<p>如果存在校验错误的话，请求中会包含错误的详细信息，这些信息是与模型数据放到一起的。我们所需要做的就是到模型中将这些数据抽取出来，并展现给用户。</p>
+</blockquote>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;%-- path 属性指定要显示模型对象属性 firstName 的错误信息 --%&gt;</span><br><span class="line">&lt;%-- cssClass 属性设置了 css 属性，将错误显示更加突出 --%&gt;</span><br><span class="line">&lt;sf:errors path=<span class="string">"firstName"</span> cssClass=<span class="string">"error"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果有验证错误的话， 会渲染成一个个HTML <code>&lt;span&gt;</code>标签，显示错误信息。</p>
+<p>为每个输入域设置<code>cssErrorClass</code>属性，着重显示需要修正的输入域, </p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;sf:label path="firstName" cssErrorClass="labelerror"&gt;FirstName:&lt;/sf:label&gt;</span><br><span class="line">&lt;sf:input path=<span class="string">"firstName"</span> cssErrorClass=<span class="string">"inputerror"</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>现在已经为文本标记和输入域设置了样式，在有校验错误的时候， HTML 最终的 <code>&lt;label&gt;</code> <code>&lt;input&gt;</code> 标签的 <code>class</code> 属性会被设置成相应的值，展示 CSS 样式</p>
+<h3 id="2-Spring-通用-JSP-标签库"><a href="#2-Spring-通用-JSP-标签库" class="headerlink" title="2 Spring 通用 JSP 标签库"></a>2 Spring 通用 JSP 标签库</h3><p>使用声明</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%-- tags, 并且声明前缀为 s，即 Spring--%&gt;</span><br><span class="line">&lt;%@ taglib uri=<span class="string">"http://www.springframework.org/tags"</span> prefix=<span class="string">"s"</span> %&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="3-JSTL"><a href="#3-JSTL" class="headerlink" title="3 JSTL"></a>3 JSTL</h4><p>JSTL 依赖</p>
+<p><a href="https://www.cnblogs.com/kouzikaile/p/7094571.html" target="_blank" rel="noopener">https://www.cnblogs.com/kouzikaile/p/7094571.html</a></p>
+<p><a href="https://blog.csdn.net/qq_22860341/article/details/79207665" target="_blank" rel="noopener">https://blog.csdn.net/qq_22860341/article/details/79207665</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">　　　　 <span class="comment">&lt;!-- jstl --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp.jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- jstl-api --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp.jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- jstl-impl --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.glassfish.web<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl-impl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="4-Apache-Tiles"><a href="#4-Apache-Tiles" class="headerlink" title="4 Apache Tiles"></a>4 Apache Tiles</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tiles<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tiles-extras<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>==使用Apache Tiles 需要添加以上依赖及JSTL依赖==</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>如果提示包找不到，可能需要将相应的依赖从右边一刀左边的的lib目录下（Put into Output Root）</p>
+<p>观察制品输出目录 Output directory 是否存在相应的包</p>
+<p><img src="C:%5CUsers%5Cguo%5CPictures%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE(18).png" alt=""></p>
 
                 
             </div>
@@ -192,7 +246,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BD%9C%E7%94%A8%E5%9F%9F/">Spring 作用域</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BA%8B%E5%8A%A1/">Spring 事务</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -206,7 +260,80 @@
             </div>
             <div class="post-content">
                 
-                    <p>Spring 作用域</p>
+                    <h2 id="声明式事务管理"><a href="#声明式事务管理" class="headerlink" title="声明式事务管理"></a>声明式事务管理</h2><p> While the Spring default behavior for declarative transaction management follows EJB convention (roll back is automatic only on unchecked exceptions), it is often useful to customize this behavior.</p>
+<h3 id="Using-Transactional"><a href="#Using-Transactional" class="headerlink" title="Using @Transactional"></a>Using @Transactional</h3><p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations</a></p>
+<blockquote>
+<p>You can apply the <code>@Transactional</code> annotation to an interface definition, a method on an interface, a class definition, or a public method on a class. However, the mere presence of the <code>@Transactional</code> annotation is not enough to activate the transactional behavior. The <code>@Transactional</code> annotation is merely metadata that can be consumed by some runtime infrastructure that is <code>@Transactional</code>-aware and that can use the metadata to configure the appropriate beans with transactional behavior. In the preceding example, the <code>&lt;tx:annotation-driven/&gt;</code> element switches on the transactional behavior.</p>
+</blockquote>
+<p><code>@Transactional</code> 注解只是配置事务行为的元数据，并不会激活这些事务行为，Spring 的事务框架会使用这些元数据为某些 bean 配置它们的事务行为，xml 文件中的 <code>&lt;tx:annotation-driven/&gt;</code> 和配置类（<code>@Configuration</code>）上的 <code>@EnableTransactionManagement</code>注解会激活这些事务行为。</p>
+<blockquote>
+<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> looks for <code>@Transactional</code> only on beans in the same application context in which they are defined. This means that, if you put annotation-driven configuration in a <code>WebApplicationContext</code> for a <code>DispatcherServlet</code>, it checks for <code>@Transactional</code> beans only in your controllers and not your services. See <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-servlet" target="_blank" rel="noopener">MVC</a> for more information.</p>
+</blockquote>
+<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> 只会在定义它们本身的上下文中寻找 <code>@Transactional</code> 注解的 bean， 如果是在 Web 应用的 <code>DispatcherServlet</code> 对应的 <code>WebApplicationContext</code> <code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code>只会在这个上下文中查找，这个上下文一般只会定义控制器以及试图解析器等 web 组件，而不是 service 类。</p>
+<blockquote>
+<p>In proxy mode (which is the default), only external method calls coming in through the proxy are intercepted. This means that self-invocation (in effect, a method within the target object calling another method of the target object) does not lead to an actual transaction at runtime even if the invoked method is marked with <code>@Transactional</code>. Also, the proxy must be fully initialized to provide the expected behavior, so you should not rely on this feature in your initialization code (that is, <code>@PostConstruct</code>).</p>
+</blockquote>
+<p>由于 Spring 事务是基于代理的，只有通过代理的外部方法调用才会被拦截，目标对象内部的方法调用（一个方法调用对象内部的另一个方法）是不会在运行时导致一个实际的事务发生的；另外，必须完全初始化代理以提供预期的行为，因此不应在初始化代码（即@PostConstruct）中依赖此功能。</p>
+<blockquote>
+<p>Consider using of AspectJ mode (see the <code>mode</code> attribute in the following table) if you expect self-invocations to be wrapped with transactions as well. In this case, there no proxy in the first place. Instead, the target class is woven (that is, its byte code is modified) to turn <code>@Transactional</code> into runtime behavior on any kind of method.</p>
+</blockquote>
+<p>如果想要实现内部调用的事务行为，可以考虑基于 AspectJ 的 AOP, 首先，不会有代理，目标类被编织以将 <code>@Transactional</code> 的运行时行为应用于任何方法上</p>
+<p><strong>使用基于代理的事务的 proxy 类型</strong></p>
+<ul>
+<li><p>class-based proxies </p>
+</li>
+<li><p>standard JDK interface-based proxies （default or omitted）</p>
+</li>
+</ul>
+<h4 id="Transactional-settings"><a href="#Transactional-settings" class="headerlink" title="@Transactional settings"></a>@Transactional settings</h4><p>默认的<code>@Transactional</code> 的设置：</p>
+<ul>
+<li><p>The propagation setting is <code>PROPAGATION_REQUIRED.</code> #  默认的传播行为</p>
+</li>
+<li><p>The isolation level is <code>ISOLATION_DEFAULT.</code> # 默认的事务隔离级别</p>
+</li>
+<li><p>The transaction is read-write. # 模式是读-写的事务</p>
+</li>
+<li><p>The transaction timeout defaults to the default timeout of the underlying transaction system, or to none if timeouts are not supported. # 超时时间</p>
+</li>
+<li><p>Any <code>RuntimeException</code> triggers rollback, and any checked <code>Exception</code> does not. # 触发回滚的规则（异常类别）</p>
+<p>fully-qualified class name </p>
+</li>
+</ul>
+<h2 id="编程式事务"><a href="#编程式事务" class="headerlink" title="编程式事务"></a>编程式事务</h2><h3 id="使用-TransactionTemplate"><a href="#使用-TransactionTemplate" class="headerlink" title="使用 TransactionTemplate"></a>使用 TransactionTemplate</h3><p><code>TransactionTemplate</code> 和 Spring 中其他模板类相似（如 <code>JdbcTemplate</code>），目的是为了减少应用代码中获取和释放事务相关资源的样板式代码</p>
+<p>（boilerplate acquisition and release transactional resources），这样应用就可以将关注点放在业务逻辑上。它使用一个回调方法。</p>
+<p>应用代码必须执行在一个事务上下文（transactional context）中,  并且使用 <code>TransactionTemplate</code>，仅需两个步骤：</p>
+<ol>
+<li>应用代码编写  <code>TransactionCallback</code> 实现，这个实现中包含了事务要包含的所有的操作，通常是匿名内部类的形式 。</li>
+<li>回调类实现的实例传入 <code>TransactionTemplate.execute(CallBack)</code> 方法中</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleService</span> <span class="keyword">implements</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// single TransactionTemplate shared amongst all methods in this instance</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TransactionTemplate transactionTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use constructor-injection to supply the PlatformTransactionManager</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleService</span><span class="params">(PlatformTransactionManager transactionManager)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.transactionTemplate = <span class="keyword">new</span> TransactionTemplate(transactionManager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">someServiceMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> TransactionCallback() &#123;</span><br><span class="line">            <span class="comment">// the code in this method executes in a transactional context</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">doInTransaction</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">                updateOperation1();</span><br><span class="line">                <span class="keyword">return</span> resultOfUpdateOperation2();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>无返回的事务可以实现 <code>TransactionCallbackWithoutResult</code> 接口</p>
+<p>事务的属性，如传播行为、隔离级别等可以通过  <code>TransactionTemplate</code> 提供的方法设置（程序中或XML中） </p>
+<blockquote>
+<p>Code within the callback can roll the transaction back by calling the <code>setRollbackOnly()</code> method on the supplied <code>TransactionStatus</code> object, as follows:</p>
+</blockquote>
+<p>也可以在回调方法中，调用 <code>TransactionStatus.setRollbackOnly()</code> 回滚事务,  这里取决于是否是新事务，来决定是否直接回滚。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">transactionTemplate.execute(<span class="keyword">new</span> TransactionCallbackWithoutResult() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            updateOperation1();</span><br><span class="line">            updateOperation2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SomeBusinessException ex) &#123;</span><br><span class="line">            status.setRollbackOnly();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用-PlatformTransactionManager"><a href="#使用-PlatformTransactionManager" class="headerlink" title="使用 PlatformTransactionManager"></a>使用 PlatformTransactionManager</h3><p>也可以提直接使用 <code>PlatformTransactionManager</code> 来管理事务，需要结合 Spring 事务抽象的其它对象： <code>TransactionDefinition</code>, <code>TransactionStatus</code>。 可以实现事务的初始化、回滚和提交。编程式事务也可以显示设置事务的名称，声明式的事务名称一般都是默认的全限定类名+方法名。</p>
+<p>Java </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DefaultTransactionDefinition def = <span class="keyword">new</span> DefaultTransactionDefinition();</span><br><span class="line"><span class="comment">// explicitly setting the transaction name is something that can be done only programmatically</span></span><br><span class="line">def.setName(<span class="string">"SomeTxName"</span>);</span><br><span class="line">def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line"></span><br><span class="line">TransactionStatus status = txManager.getTransaction(def);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// execute your business logic here</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (MyException ex) &#123;</span><br><span class="line">    txManager.rollback(status);</span><br><span class="line">    <span class="keyword">throw</span> ex;</span><br><span class="line">&#125;</span><br><span class="line">txManager.commit(status);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 <code>PlatformTransactionManager.rollback(TransactionStatus status)</code> 方法有如下的注释：</p>
+<blockquote>
+<p>Do not call rollback on a transaction if commit threw an exception. The transaction will already have been completed and cleaned up when commit  returns, even in case of a commit exception. Consequently, a rollback call after commit failure will lead to an IllegalTransactionStateException.</p>
+</blockquote>
+<p>不要在commit 时异常后进行回滚，commit 返回时（即使有提交异常），事务已经完成并且已经被清理。所以这时，如果调用 rollback 操作，会导致一个 <code>IllegalTransactionStateException</code>， 这也是上述示例代码中 commit 放在最后的原因</p>
+<blockquote>
+<p>If the transaction wasn’t a new one, omit the commit for proper participation in the surrounding transaction.</p>
+</blockquote>
+<p><strong>当调用了 commit 后，如果该事务不是一个新事务，则会忽略提交以正确参与周围的事务中。</strong></p>
 
                 
             </div>
@@ -376,94 +503,94 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BA%8B%E5%8A%A1/">Spring 事务</a></h2>
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E4%B8%8D%E5%90%8C%E5%B7%A5%E5%85%B7%E7%9A%84%E5%85%83%E5%AD%97%E7%AC%A6%E6%94%AF%E6%8C%81/">不同工具的元字符支持</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring/">Spring</a>
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="声明式事务管理"><a href="#声明式事务管理" class="headerlink" title="声明式事务管理"></a>声明式事务管理</h2><p> While the Spring default behavior for declarative transaction management follows EJB convention (roll back is automatic only on unchecked exceptions), it is often useful to customize this behavior.</p>
-<h3 id="Using-Transactional"><a href="#Using-Transactional" class="headerlink" title="Using @Transactional"></a>Using @Transactional</h3><p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#transaction-declarative-annotations</a></p>
-<blockquote>
-<p>You can apply the <code>@Transactional</code> annotation to an interface definition, a method on an interface, a class definition, or a public method on a class. However, the mere presence of the <code>@Transactional</code> annotation is not enough to activate the transactional behavior. The <code>@Transactional</code> annotation is merely metadata that can be consumed by some runtime infrastructure that is <code>@Transactional</code>-aware and that can use the metadata to configure the appropriate beans with transactional behavior. In the preceding example, the <code>&lt;tx:annotation-driven/&gt;</code> element switches on the transactional behavior.</p>
-</blockquote>
-<p><code>@Transactional</code> 注解只是配置事务行为的元数据，并不会激活这些事务行为，Spring 的事务框架会使用这些元数据为某些 bean 配置它们的事务行为，xml 文件中的 <code>&lt;tx:annotation-driven/&gt;</code> 和配置类（<code>@Configuration</code>）上的 <code>@EnableTransactionManagement</code>注解会激活这些事务行为。</p>
-<blockquote>
-<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> looks for <code>@Transactional</code> only on beans in the same application context in which they are defined. This means that, if you put annotation-driven configuration in a <code>WebApplicationContext</code> for a <code>DispatcherServlet</code>, it checks for <code>@Transactional</code> beans only in your controllers and not your services. See <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-servlet" target="_blank" rel="noopener">MVC</a> for more information.</p>
-</blockquote>
-<p><code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code> 只会在定义它们本身的上下文中寻找 <code>@Transactional</code> 注解的 bean， 如果是在 Web 应用的 <code>DispatcherServlet</code> 对应的 <code>WebApplicationContext</code> <code>@EnableTransactionManagement</code> and <code>&lt;tx:annotation-driven/&gt;</code>只会在这个上下文中查找，这个上下文一般只会定义控制器以及试图解析器等 web 组件，而不是 service 类。</p>
-<blockquote>
-<p>In proxy mode (which is the default), only external method calls coming in through the proxy are intercepted. This means that self-invocation (in effect, a method within the target object calling another method of the target object) does not lead to an actual transaction at runtime even if the invoked method is marked with <code>@Transactional</code>. Also, the proxy must be fully initialized to provide the expected behavior, so you should not rely on this feature in your initialization code (that is, <code>@PostConstruct</code>).</p>
-</blockquote>
-<p>由于 Spring 事务是基于代理的，只有通过代理的外部方法调用才会被拦截，目标对象内部的方法调用（一个方法调用对象内部的另一个方法）是不会在运行时导致一个实际的事务发生的；另外，必须完全初始化代理以提供预期的行为，因此不应在初始化代码（即@PostConstruct）中依赖此功能。</p>
-<blockquote>
-<p>Consider using of AspectJ mode (see the <code>mode</code> attribute in the following table) if you expect self-invocations to be wrapped with transactions as well. In this case, there no proxy in the first place. Instead, the target class is woven (that is, its byte code is modified) to turn <code>@Transactional</code> into runtime behavior on any kind of method.</p>
-</blockquote>
-<p>如果想要实现内部调用的事务行为，可以考虑基于 AspectJ 的 AOP, 首先，不会有代理，目标类被编织以将 <code>@Transactional</code> 的运行时行为应用于任何方法上</p>
-<p><strong>使用基于代理的事务的 proxy 类型</strong></p>
+                    <h2 id="grep-P"><a href="#grep-P" class="headerlink" title="grep -P"></a><strong>grep -P</strong></h2><p>pattern is a Perl regular expression. Based on  PRCE. (兼容Perl的正则表达式包)</p>
 <ul>
-<li><p>class-based proxies </p>
-</li>
-<li><p>standard JDK interface-based proxies （default or omitted）</p>
+<li>八进制</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\012b'</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>十六进制<ul>
+<li><code>\xFF</code> </li>
+<li>\x{…}</li>
+</ul>
 </li>
 </ul>
-<h4 id="Transactional-settings"><a href="#Transactional-settings" class="headerlink" title="@Transactional settings"></a>@Transactional settings</h4><p>默认的<code>@Transactional</code> 的设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\x&#123;0A&#125;b'</span></span><br></pre></td></tr></table></figure>
+
 <ul>
-<li><p>The propagation setting is <code>PROPAGATION_REQUIRED.</code> #  默认的传播行为</p>
+<li>元字符 <code>.</code> 不能匹配换行符, 其他 Unicode 换行符等可以匹配</li>
+<li><code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code>， java ， PHP 也是一样的, 但是 Perl 语言的正则引擎室支持 Unicode 字符（未验证）</li>
+</ul>
+<h2 id="grep-E-egrep"><a href="#grep-E-egrep" class="headerlink" title="grep -E / egrep"></a><strong>grep -E / egrep</strong></h2><ul>
+<li><p>不支持八进制、十六进制转义表示</p>
 </li>
-<li><p>The isolation level is <code>ISOLATION_DEFAULT.</code> # 默认的事务隔离级别</p>
+<li><p>元字符 <code>.</code> 可以匹配换行符(\n),  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
 </li>
-<li><p>The transaction is read-write. # 模式是读-写的事务</p>
-</li>
-<li><p>The transaction timeout defaults to the default timeout of the underlying transaction system, or to none if timeouts are not supported. # 超时时间</p>
-</li>
-<li><p>Any <code>RuntimeException</code> triggers rollback, and any checked <code>Exception</code> does not. # 触发回滚的规则（异常类别）</p>
-<p>fully-qualified class name </p>
+<li><p><code>\w</code> 可以匹配汉字</p>
 </li>
 </ul>
-<h2 id="编程式事务"><a href="#编程式事务" class="headerlink" title="编程式事务"></a>编程式事务</h2><h3 id="使用-TransactionTemplate"><a href="#使用-TransactionTemplate" class="headerlink" title="使用 TransactionTemplate"></a>使用 TransactionTemplate</h3><p><code>TransactionTemplate</code> 和 Spring 中其他模板类相似（如 <code>JdbcTemplate</code>），目的是为了减少应用代码中获取和释放事务相关资源的样板式代码</p>
-<p>（boilerplate acquisition and release transactional resources），这样应用就可以将关注点放在业务逻辑上。它使用一个回调方法。</p>
-<p>应用代码必须执行在一个事务上下文（transactional context）中,  并且使用 <code>TransactionTemplate</code>，仅需两个步骤：</p>
-<ol>
-<li>应用代码编写  <code>TransactionCallback</code> 实现，这个实现中包含了事务要包含的所有的操作，通常是匿名内部类的形式 。</li>
-<li>回调类实现的实例传入 <code>TransactionTemplate.execute(CallBack)</code> 方法中</li>
-</ol>
-<p>示例代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleService</span> <span class="keyword">implements</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// single TransactionTemplate shared amongst all methods in this instance</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TransactionTemplate transactionTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use constructor-injection to supply the PlatformTransactionManager</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleService</span><span class="params">(PlatformTransactionManager transactionManager)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.transactionTemplate = <span class="keyword">new</span> TransactionTemplate(transactionManager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">someServiceMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> TransactionCallback() &#123;</span><br><span class="line">            <span class="comment">// the code in this method executes in a transactional context</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">doInTransaction</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">                updateOperation1();</span><br><span class="line">                <span class="keyword">return</span> resultOfUpdateOperation2();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>无返回的事务可以实现 <code>TransactionCallbackWithoutResult</code> 接口</p>
-<p>事务的属性，如传播行为、隔离级别等可以通过  <code>TransactionTemplate</code> 提供的方法设置（程序中或XML中） </p>
-<blockquote>
-<p>Code within the callback can roll the transaction back by calling the <code>setRollbackOnly()</code> method on the supplied <code>TransactionStatus</code> object, as follows:</p>
-</blockquote>
-<p>也可以在回调方法中，调用 <code>TransactionStatus.setRollbackOnly()</code> 回滚事务,  这里取决于是否是新事务，来决定是否直接回滚。 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">transactionTemplate.execute(<span class="keyword">new</span> TransactionCallbackWithoutResult() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            updateOperation1();</span><br><span class="line">            updateOperation2();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SomeBusinessException ex) &#123;</span><br><span class="line">            status.setRollbackOnly();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'a严b'</span> | grep -z -E <span class="string">'a\wb'</span></span><br></pre></td></tr></table></figure>
 
 
+<p>对于字符组， 尤其是排除型字符组，都支持 <code>\n</code>, <code>\r</code>, Unicode 换行符，行分隔符，段分隔符都支持</p>
+<h2 id="Notepad"><a href="#Notepad" class="headerlink" title="Notepad++"></a>Notepad++</h2><p>Notepad++ 的 <code>匹配新行模式</code>， 应该是启用了 <code>点通配符模式 - dotALL（Perl中的单行模式）</code>, 以及 <code>多行模式 - 行锚点可以匹配行内的换行符前后的位置</code></p>
+<p>POSIX 规定，点号不能匹配 NUL (值为0的字符)， 具体工具可有有差异。</p>
+<p>grep: PCRE does not support \L, \l, \N{name}, \U, or \u</p>
+<p>PCRE(包括PHP)， java.util.regex <code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code></p>
+<h2 id="java-util-regex"><a href="#java-util-regex" class="headerlink" title="java.util.regex"></a>java.util.regex</h2><ul>
+<li><p>\w 严格等价于 [a-zA-Z0-9_]</p>
+</li>
+<li><p>\s 不匹配 Unicode 换行符</p>
+</li>
+<li><p>普通模式下 . 不能匹配 \n,  \r,  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
+</li>
+<li><p>字符组可以匹配换行符，包括 Unicode 的上述行终结符</p>
+</li>
+<li><p>支持字符组的计算 [[a-c]&amp;&amp;[a-z]]  [[a-c]OR[d-e]], 当然也可以使用环视来实现</p>
+</li>
+<li><p>多行模式下<code>(?:m)</code>，锚点可以匹配 Unicode 行终结符  Page.370 </p>
+</li>
+<li><p>$ 既可以匹配目标字符串的末尾，也可以匹配整个字符串末尾的换行符之前的位置 (这里的换行符也包括Unicode 的行终结符)</p>
+</li>
+<li><p>\Z 和普通模式下的 $ 的意义一样</p>
+</li>
+<li><p>\z 只匹配文本的末尾的位置</p>
+</li>
+<li><p>\A 总是与普通的 ^ 一样</p>
+</li>
+<li><p>\b 单词分界符 与 \B 非单词分界符对单词字符的定义仅限于 ASCII 字符，如果需要扩展，可以使用环视功能以及 Unicode 属性实现</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（?&lt;!\pL）(?=\pL)......(?&lt;=pL)(?!\pL)</span><br></pre></td></tr></table></figure>
 
-<h3 id="使用-PlatformTransactionManager"><a href="#使用-PlatformTransactionManager" class="headerlink" title="使用 PlatformTransactionManager"></a>使用 PlatformTransactionManager</h3><p>也可以提直接使用 <code>PlatformTransactionManager</code> 来管理事务，需要结合 Spring 事务抽象的其它对象： <code>TransactionDefinition</code>, <code>TransactionStatus</code>。 可以实现事务的初始化、回滚和提交。编程式事务也可以显示设置事务的名称，声明式的事务名称一般都是默认的全限定类名+方法名。</p>
-<p>Java </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DefaultTransactionDefinition def = <span class="keyword">new</span> DefaultTransactionDefinition();</span><br><span class="line"><span class="comment">// explicitly setting the transaction name is something that can be done only programmatically</span></span><br><span class="line">def.setName(<span class="string">"SomeTxName"</span>);</span><br><span class="line">def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line"></span><br><span class="line">TransactionStatus status = txManager.getTransaction(def);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// execute your business logic here</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (MyException ex) &#123;</span><br><span class="line">    txManager.rollback(status);</span><br><span class="line">    <span class="keyword">throw</span> ex;</span><br><span class="line">&#125;</span><br><span class="line">txManager.commit(status);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在 <code>PlatformTransactionManager.rollback(TransactionStatus status)</code> 方法有如下的注释：</p>
-<blockquote>
-<p>Do not call rollback on a transaction if commit threw an exception. The transaction will already have been completed and cleaned up when commit  returns, even in case of a commit exception. Consequently, a rollback call after commit failure will lead to an IllegalTransactionStateException.</p>
-</blockquote>
-<p>不要在commit 时异常后进行回滚，commit 返回时（即使有提交异常），事务已经完成并且已经被清理。所以这时，如果调用 rollback 操作，会导致一个 <code>IllegalTransactionStateException</code>， 这也是上述示例代码中 commit 放在最后的原因</p>
-<blockquote>
-<p>If the transaction wasn’t a new one, omit the commit for proper participation in the surrounding transaction.</p>
-</blockquote>
-<p><strong>当调用了 commit 后，如果该事务不是一个新事务，则会忽略提交以正确参与周围的事务中。</strong></p>
+<ul>
+<li><p>正则表达式中设定匹配模式，支持</p>
+<ul>
+<li><code>(?i)...(?-i)</code>, <code>(?i)</code> 开启模式，<code>(?-i)</code>关闭模式</li>
+<li><code>(?:(?i)very)</code>, <code>(?i)</code> 的作用范围只限于括号內部，闭括号后就失效</li>
+<li>支持模式修饰范围，<code>(?i:...)</code></li>
+</ul>
+</li>
+<li><p>文字文本模式（消除所有元字符的特殊含义进行匹配）, java.util.regex 的引擎支持 <code>\Q...\E</code> 序列，但是它只会消除除了 <code>\E</code> 之外的所有的元字符的特殊含义，直接在字符串两边加上，会有问题（原始字符串出现 <code>\E</code>， 会截断，只对前面的部分应用该模式）。请直接使用 <code>Pattern.quote</code> 方法或自己写一个处理方法。</p>
+</li>
+</ul>
+<p>Perl 中的锚点都不支持 Unicode 行终结符， 而 Java 的普通模式下的 <code>$</code> 以及多行模式下的 <code>^</code> 以及 <code>$</code> 都支持 Unicode 行终结符。</p>
+<p>基于 PCRE 的 grep -P  测试, 普通模式下，<code>$</code> 只匹配末尾，不匹配换行符之前的位置</p>
 
                 
             </div>
