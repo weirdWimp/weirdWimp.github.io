@@ -84,6 +84,101 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-01-23</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h2><p>Alice 向 Bob 发送邮件的场景， Alice 称为发送者（sender），Bob 称为接收者（receiver）, 更普遍的场景，发出消息的一方称为发送者，接受到消息的为接收者。</p>
+<p>信息从发送方的计算机发送到接受者的计算机，中间会经过多台计算机和通信设备进行中转，这个过程中就可能被恶意<strong>窃听者</strong>（eavesdropper）偷看到，窃听者不一定是人类，安装在通信设备的窃听器，邮件软件或服务器上的某些程序</p>
+<p>为了不让别人看到邮件的内容， Alice 要对邮件进行<strong>加密</strong>（encrypt）后再发送出去，加密前的消息称为<strong>明文</strong>（plaintext），加密后的消息称为<strong>密文</strong> (ciphertext). 明文被加密后就会变成看不懂的密文，密文被解密后，就会变回原来的明文。加密通过运用<strong>密码</strong> (cryptography) 技术, 保证消息的机密性 (confidentiality).</p>
+<h2 id="破译"><a href="#破译" class="headerlink" title="破译"></a>破译</h2><p><strong>解密</strong>：正当的接收者将密文还原成明文</p>
+<p><strong>破译</strong>/<strong>密码分析</strong>：cryptanalysis  接收者以外的人试图将将密文还原为明文</p>
+<p><strong>破译者</strong>：cryptanalyst 进行破译的人</p>
+<p>破译者不一定是坏人，如密码学研究者研究密码强度</p>
+<h2 id="对称密码与公钥密码"><a href="#对称密码与公钥密码" class="headerlink" title="对称密码与公钥密码"></a>对称密码与公钥密码</h2><p><strong>密码算法</strong>：解决复杂问题的步骤通常称为算法，明文生成密文的步骤，称为 <em>加密算法</em>，解密的步骤称为 <em>解密算法</em>。加密、解密的算法合在一起统称为密码算法.</p>
+<p><strong>密钥</strong> (key): 密码算法中的密钥,一般是遗传非常大的数字, 无论是在加密时还是解密时, 都需要密钥. 正如现实世界中的密钥不能随便丢弃一样, 密码算法中的密钥也要注意不被他人窃取.</p>
+<p><strong>对称密码</strong> (symmetric cryptography): 加密解密使用同一密钥的方式, 也称为 <strong>公共密钥密码</strong> (common-key cryptography), <strong>传统密码</strong> (conventional cryptography), <strong>私钥密码</strong> (secret-key cryptography), <strong>共享密钥密码</strong> (shared-key cryptography)</p>
+<p><strong>公钥密码</strong> (public-key cryptography): 加密解密使用不同密钥的方式, 所以也称为 <strong>非对称密码</strong> (asymmetric cryptography)</p>
+<p><strong>混合密码系统</strong>: 对称密码与公钥密码结合起来使用</p>
+<h2 id="其它密码技术"><a href="#其它密码技术" class="headerlink" title="其它密码技术"></a>其它密码技术</h2><ul>
+<li><p><strong>单向散列函数</strong> (one-way hash function)</p>
+<p>属于保证<strong>完整性</strong>的密码技术 (数据时正牌的,不是伪造的).  软件供应商发布软件的时候, 也会发布该软件的<strong>散列值</strong>. 如 MD5 等. </p>
+<p>散列值 (hash) 又称哈希值, 密码校验和 (cryptographic checksum), 指纹 (fingerprint), 消息摘要(message digest)</p>
+<blockquote>
+<p><em>MD5<em>信息摘要算法（英语：</em>MD5</em> Message-Digest Algorithm），一种被广泛使用的密码散列函数，可以产生出一个128位（16字节）的散列值（hash value），用于确保信息传输完整一致。</p>
+<p>– 百度百科</p>
+</blockquote>
+</li>
+<li><p><strong>消息认证码</strong> (message authentication code)</p>
+<p>不但 够确认消息是否被篡改，而且确认消息是否来自所期待的通信对象,  提供<strong>完整性</strong>和<strong>认证</strong>机制,  HMAC</p>
+</li>
+<li><p><strong>数字签名</strong></p>
+<p>伪装(spoofing):  消息是否来自真正所谓的发送者</p>
+<p>篡改: 消息再传输的过程中被别有用心的修改了</p>
+<p>否认: 消息的发送者否认自己发送过</p>
+</li>
+</ul>
+<p>  能够防止<strong>伪装</strong>, <strong>篡改</strong>, 和 <strong>否认</strong>等威胁的技术, 就是数字签名(digital signature), 发送者对消息的内容加上数字签名, 接受者可以对数字签名进行验证(verify).  能够保证<strong>完整性</strong>, <strong>提供认证</strong>并<strong>防止否认</strong>的技术</p>
+<ul>
+<li><p><strong>伪随机数生成器</strong> (Pseudo Random Number Generator, PRNG) </p>
+<p>模拟产生随机数列的算法</p>
+</li>
+</ul>
+<ul>
+<li><strong>隐写术与数字水印</strong></li>
+</ul>
+<p>  我们先准备一段话，<br>  很容易看懂的就可以，<br>  喜闻乐见的当然更好<br>  欢迎你尝试将另一句话嵌在这段话中，<br>  你会发现这其实就是一种隐写术</p>
+<p>  隐写术的目的时隐藏消息本身, 但是搞清楚了嵌入消息的方法, 也就可以搞清楚消息的内容. <strong>因此, 隐写术不能替代密码</strong>. </p>
+<blockquote>
+<p> 密码隐藏的是内容, 隐写术隐藏的时消息本身</p>
+</blockquote>
+<p>  <strong>数字水印技术</strong> 就是运用了隐写术, 将著作拥有者及购买者的信息嵌入文件中的技术</p>
+<h2 id="密码与信息安全常识"><a href="#密码与信息安全常识" class="headerlink" title="密码与信息安全常识"></a>密码与信息安全常识</h2><ul>
+<li><p><strong>不要使用保密的密码算法</strong></p>
+<p>1999 年， DVD 的密码算法被破解</p>
+<p>2007 年， NXP 的非接触式 IC 卡的密码算法被破解 </p>
+<p>RSA 公司开发的 RC4 密码算法曾经也是保密的，但最终还是有一位匿名人士开发并公开了与其等效的程序</p>
+<p>密码算法的秘密早晚会公诸于世; 开发高强度的密码算法是非常困难的</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>使用低强度的密码比不进行任何加密更危险</strong></p>
+<p>对于用户来说，安全感与密码的强度无关，而只是由“信息已经被加密了“这一事实产生的，而这通常会导致用<br>户在处理某些机密信息的时候麻痹大意</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>任何密码总有一天都会被破解</strong></p>
+<p>无论使用任何密码算法所生成的密文，只要将所有可能的密钥全部尝试一遍 就总有一天可以破译出来 因此 ，破译密文所需要花费的时间，与要保密的明文的价值之间的权衡就显得非常重要</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>密码只是信息安全的一部分</strong></p>
+<p>比如, 社会工程学 (social engineering) 攻击:</p>
+<p>办公室的电话响起: 您好, 我是 IT 部的, 由于需要对您的电脑进行安全检查, 请您将密码临时改为 XR2315. 实际拨打电话的有可能就是一名攻击者. 这些手段与密码的强度并没有关系.</p>
+<blockquote>
+<p>最脆弱的环节并不是密码, 而是人类自己</p>
+</blockquote>
+</li>
+</ul>
+<p>​     </p>
+<p>​       简单密码技术: 凯撒密码, ROT13</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
             </div>
             <div class="post-meta">
@@ -268,54 +363,6 @@
 
 <h4 id="开启新的会话（Session）"><a href="#开启新的会话（Session）" class="headerlink" title="开启新的会话（Session）"></a>开启新的会话（Session）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -j, --junk-session-cookies Ignore session cookies read from file</span></span><br><span class="line">curl -b googleCookie.txt http://www.google.com/files -j</span><br></pre></td></tr></table></figure>
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">Sed 命令行手册</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-12-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="print-delete-and-next"><a href="#print-delete-and-next" class="headerlink" title="print, delete, and next"></a>print, delete, and next</h2><table>
-<thead>
-<tr>
-<th>command</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>P</td>
-<td>打印 pattern space 中的一行</td>
-</tr>
-<tr>
-<td>D</td>
-<td>删除当前 pattern space 的一行,并重新开始新的循环</td>
-</tr>
-<tr>
-<td>N</td>
-<td>读取输入源的下一行，并追加到 pattern space，使用 newline 分隔，并继续当前循环的执行（execution of cycle）</td>
-</tr>
-</tbody></table>
-<p>一行指的是，使用行分隔符分隔</p>
-<p>sed 命令中，似乎有这样的规约：大写字母的命令总是与多行数据相关的；通常利用这些命令实现一个队列 <code>FIFO</code>.</p>
-<p>例子：移除文件中最后5行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  1 &#123; N;N;N;N &#125;     # ensure the pattern space contains *five* lines</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  N                 # append a sixth line onto the queue</span></span><br><span class="line"><span class="string">  P                 # Print the head of the queue</span></span><br><span class="line"><span class="string">  D                 # Remove the head of the queue</span></span><br><span class="line"><span class="string">'</span></span><br></pre></td></tr></table></figure>
-
-<p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
 
                 
             </div>

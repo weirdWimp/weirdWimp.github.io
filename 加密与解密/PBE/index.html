@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">PBE</h2>
             <div class="post-meta">
-                <span class="post-time">2021-04-11</span>
+                <span class="post-time">2021-05-16</span>
                 
                 <span class="post-category">
                     
@@ -141,7 +141,7 @@
 <p><strong>PBES1</strong>  PBKDF1 与对称分组密码的结合</p>
 <p><strong>PBES2</strong>   PBKDF2 与对称分组密码的结合</p>
 <h2 id="How-to-encrypt-user-passwords"><a href="#How-to-encrypt-user-passwords" class="headerlink" title="How to encrypt user passwords"></a>How to encrypt user passwords</h2><p><a href="http://www.jasypt.org/howtoencryptuserpasswords.html" target="_blank" rel="noopener">jasypt-How to encrypt user passwords</a></p>
-<h2 id="使用-openssl-与-JCA-进行实践"><a href="#使用-openssl-与-JCA-进行实践" class="headerlink" title="使用 openssl 与 JCA 进行实践"></a>使用 openssl 与 JCA 进行实践</h2><h3 id="使用-openssl"><a href="#使用-openssl" class="headerlink" title="使用 openssl"></a>使用 openssl</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">guo@DESKTOP-4L69AND:/mnt/e/learning-dir/shell-learning$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | openssl enc -aes-128-cbc -e -base64 -pbkdf2 -iter 1000 -S 3631C9DA382CE487 -p</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入 password</span></span><br><span class="line">enter aes-128-cbc encryption password:</span><br><span class="line">Verifying - enter aes-128-cbc encryption password:</span><br><span class="line"></span><br><span class="line"><span class="comment"># Slat 盐</span></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line"></span><br><span class="line"><span class="comment"># pbkdf2 生成的密钥 secret key</span></span><br><span class="line">key=1004087F17C38D06C8B24CA69175984C</span><br><span class="line"></span><br><span class="line"><span class="comment"># iv 初始化向量</span></span><br><span class="line">iv =5FFD9210A708073E5AB718800F9958E6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加密后的密文 Salted__$&#123;salt&#125;$&#123;cipherText&#125;</span></span><br><span class="line">U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br></pre></td></tr></table></figure>
+<h2 id="使用-openssl-与-JCA-进行实践"><a href="#使用-openssl-与-JCA-进行实践" class="headerlink" title="使用 openssl 与 JCA 进行实践"></a>使用 openssl 与 JCA 进行实践</h2><h3 id="使用-openssl"><a href="#使用-openssl" class="headerlink" title="使用 openssl"></a>使用 openssl</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">guo@DESKTOP-4L69AND:/mnt/e/learning-dir/shell-learning$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | openssl enc -aes-128-cbc -e -base64 -pbkdf2 -iter 1000 -S 3631C9DA382CE487 -p</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入 password</span></span><br><span class="line">enter aes-128-cbc encryption password:</span><br><span class="line">Verifying - enter aes-128-cbc encryption password:</span><br><span class="line"></span><br><span class="line"><span class="comment"># Salt 盐</span></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line"></span><br><span class="line"><span class="comment"># pbkdf2 生成的密钥 secret key</span></span><br><span class="line">key=1004087F17C38D06C8B24CA69175984C</span><br><span class="line"></span><br><span class="line"><span class="comment"># iv 初始化向量</span></span><br><span class="line">iv =5FFD9210A708073E5AB718800F9958E6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加密后的密文 Salted__$&#123;salt&#125;$&#123;cipherText&#125;</span></span><br><span class="line">U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br></pre></td></tr></table></figure>
 
 
 
@@ -174,15 +174,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Java/JOSE/">
+            <a class="prev" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%AA%8C%E8%AF%81/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Java/JOSE</span>
+                <span class="nav-default">创建证书并验证</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/AES/">
-                <span class="nav-default">AES</span>
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/SpringBoot%20Https/">
+                <span class="nav-default">SpringBoot Https</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
