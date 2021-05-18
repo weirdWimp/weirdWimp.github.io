@@ -209,6 +209,21 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br></pre></td></tr></table></figure>
 
 
+
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="PKCS-1-公钥-ASN-1-格式"><a href="#PKCS-1-公钥-ASN-1-格式" class="headerlink" title="PKCS#1 公钥 ASN.1 格式"></a>PKCS#1 公钥 ASN.1 格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RSAPublicKey ::&#x3D; SEQUENCE &#123;</span><br><span class="line">    modulus INTEGER , -- n</span><br><span class="line">    publicExponent INTEGER -- e</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PKCS-1-私钥-ASN-1-格式"><a href="#PKCS-1-私钥-ASN-1-格式" class="headerlink" title="PKCS#1 私钥 ASN.1 格式"></a>PKCS#1 私钥 ASN.1 格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">RSAPrivateKey ::&#x3D; SEQUENCE &#123;</span><br><span class="line">    version Version ,</span><br><span class="line">    modulus INTEGER , -- n</span><br><span class="line">    publicExponent INTEGER , -- e</span><br><span class="line">    privateExponent INTEGER , -- d</span><br><span class="line">    prime1 INTEGER , -- p</span><br><span class="line">    prime2 INTEGER , -- q</span><br><span class="line">    exponent1 INTEGER , -- d mod (p-1)</span><br><span class="line">    exponent2 INTEGER , -- d mod (q-1)</span><br><span class="line">    coefficient INTEGER , -- (inverse of q) mod p</span><br><span class="line">    otherPrimeInfos OtherPrimeInfos OPTIONAL</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><p>[1] <a href="https://item.jd.com/11942019.html" target="_blank" rel="noopener">图解密码技术</a></p>
+<p>[2] <a href="https://mp.weixin.qq.com/s/zQ8NxK4zsRBA5D8AHJErdA" target="_blank" rel="noopener">深入剖析 RSA 密钥原理及实践 - [vivo互联网技术]</a></p>
+<p>[3] <a href="https://stackoverflow.com/questions/20119874/how-to-load-the-private-key-from-a-der-file-into-java-private-key-object" target="_blank" rel="noopener">how to load the private key from a .der file into java private key object - Stack Overflow</a></p>
+<p>[4] <a href="https://www.openssl.org/docs/man1.1.1/man1/openssl-rsa.html" target="_blank" rel="noopener">openssl rsa command</a></p>
+<p>[5] <a href="https://www.openssl.org/docs/man1.1.1/man1/openssl-pkcs8.html" target="_blank" rel="noopener">openssl pkcs8 command</a></p>
+
                 
             </div>
         </article>
