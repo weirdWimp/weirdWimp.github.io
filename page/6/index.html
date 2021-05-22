@@ -84,6 +84,31 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E5%9B%BE%E5%BA%8A%E6%B5%8B%E8%AF%95/">图床测试</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-11-28</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Description</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128011943682.png" alt="image-20201128011943682"></p>
+<p>真是一件麻烦的事情呢，竟然使用了 Redis 作为图片去重的校验…</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128012358249.png" alt="image-20201128012358249"></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
             </div>
             <div class="post-meta">
@@ -496,39 +521,6 @@
 <li><code>5.</code> 表示重复执行多少次</li>
 <li>Motions (光标的移动) 并不会改变任何事情，所以 <code>.</code> 并不会进行重复</li>
 </ul>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/WSL/">WSL</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-06</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Make-it-started-when-you-start-your-Windows"><a href="#Make-it-started-when-you-start-your-Windows" class="headerlink" title="Make it started when you start your Windows"></a>Make it started when you start your Windows</h2><p>wsl-ubuntun.vbs - 开机自启</p>
-<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
-
-
-
-<p>/etc/init.wsl</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+w <span class="string">"R"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找视频文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -ZP <span class="string">"\.(MP4|mkv|mov|mp4|wmv)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> video/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找图片文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -P <span class="string">"\.(JPG|jpg|png|jpeg|gif|raw)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> ./picture</span><br></pre></td></tr></table></figure>
-
 
                 
             </div>
