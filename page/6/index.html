@@ -84,6 +84,31 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">新词汇</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-11-29</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="login-shell"><a href="#login-shell" class="headerlink" title="login shell"></a>login shell</h2><p>The goal here is to separate the users having a login shell from the others:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  \=(/usr/sbin/nologin|/bin/false)$= &#123; H;d; &#125;</span></span><br><span class="line"><span class="string">              # Append matching lines to the hold buffer</span></span><br><span class="line"><span class="string">              # and continue to next cycle</span></span><br><span class="line"><span class="string">  p           # Print other lines</span></span><br><span class="line"><span class="string">  $ &#123; g;p &#125;   # On the last line,</span></span><br><span class="line"><span class="string">              # get and print the content of the hold buffer</span></span><br></pre></td></tr></table></figure>
+
+<p>What is a <strong>login shell</strong> ?</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/%E5%9B%BE%E5%BA%8A%E6%B5%8B%E8%AF%95/">图床测试</a></h2>
             </div>
             <div class="post-meta">
@@ -484,43 +509,6 @@
                 
                     <p>symbolic links</p>
 <p>fork</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Powerful%20Commands/">Vim Powerful Commands</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Vim-Versatile-commands"><a href="#Vim-Versatile-commands" class="headerlink" title="Vim Versatile commands"></a>Vim Versatile commands</h2><ul>
-<li><p><code>.</code></p>
-<ul>
-<li><p>通过 Normal Mode （命令行模式）下的 <code>.</code> 命令来重复上一次的修改操作. 上一次的修改意味着很多操作：Normal Mode 下删除一个或多个字符，单词，行， 如 <code>x</code>, <code>dw</code>, <code>d$</code>, <code>dd</code> 等；比如改变缩进的命令：<code>&gt;&gt;</code>, <code>&lt;&lt;</code> 等. </p>
-</li>
-<li><p>命令行模式下大多数命令对文本做出的修改，都可以使用 <code>.</code> 来重复；Insert Mode （编辑模式） 下做出的修改的重复取决于进入该模式的命令，加入，你通过 <code>A</code> 进入 Insert Mode, 在末尾添加了单词 <code>end</code>，按下 <code>Esc</code>,  <code>.</code> 命令会在末尾重复添加单词 <code>end</code>.</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1. You are now in Normal Mode, you have the text like those below:</span></span><br><span class="line"></span><br><span class="line">This is </span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Press A to enter Insert Mode and write text `end`</span></span><br><span class="line">This is end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Press Esc to enter Normal Mode and press .(period), things will happen like this:</span></span><br><span class="line">This is end end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. mode dot, mode ` end`</span></span><br><span class="line">This is end end end</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>5.</code> 表示重复执行多少次</li>
-<li>Motions (光标的移动) 并不会改变任何事情，所以 <code>.</code> 并不会进行重复</li>
-</ul>
 
                 
             </div>

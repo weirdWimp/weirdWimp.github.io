@@ -84,6 +84,357 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-07-05</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Linux-常用命令"><a href="#Linux-常用命令" class="headerlink" title="Linux 常用命令"></a>Linux 常用命令</h1><p>[TOC]</p>
+<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><ul>
+<li><code>CTRL</code> + <code>K</code> 光标处剪切文本至本行结束</li>
+<li><code>CTRL</code> + <code>Y</code> 粘贴文本</li>
+<li><code>CTRL</code> + <code>E</code> 将光标移动到本行的末尾</li>
+<li><code>CTRL</code> + <code>A</code> 将光标移动到本行的开头</li>
+<li><code>ALT</code> + <code>F</code> 跳转到下一个空格处</li>
+<li><code>ALT</code> + <code>B</code> 回到前一个空格处</li>
+<li><code>ALT</code> + <code>Backspace</code> 删除前一个词</li>
+<li><code>CTRL</code> + <code>w</code> 剪切光标前一个词 </li>
+</ul>
+<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><p>查找命令</p>
+<ul>
+<li><strong>Usage</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [path...] [expression]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>path  制定查找的目录，默认是当前目录</p>
+</li>
+<li><p>expression 包含 operators， options， tests， and  actions.</p>
+<ul>
+<li><p>tests: </p>
+<ul>
+<li>-name Pattern 指定文件名的模式</li>
+<li>-mmin N 过去N分钟更新过的普通文件</li>
+</ul>
+</li>
+<li><p>actions: </p>
+<ul>
+<li>-delete</li>
+<li>-print 默认</li>
+<li>-ls </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">"*.txt"</span> -ls</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>同样用来查找文件，是 <code>find -name</code> 的另一种说法，但是它搜索的是包含所有本地文件信息的数据库。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，<strong>先使用updatedb命令，手动更新数据库</strong>。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate ~/m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写，搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate -i ~/m</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><p>只能用来搜索程序名，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis grep</span><br><span class="line"><span class="comment"># 打印： grep: /bin/grep /usr/share/man/man1/grep.1.gz /usr/share/info/grep.info.gz</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="which"><a href="#which" class="headerlink" title="which"></a>which</h4><p>在 <strong>PATH</strong> 变量指定的路径中，搜索某个命令的位置，并返回第一个搜索结果。</p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> grep</span><br><span class="line"><span class="comment"># 打印： /bin/grep</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>用来区分某个命令是 shell 自带的，还是由外部的二进制文件提供的。如果是一个外部命令， -p 显示该命令的路径。</p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br><span class="line"><span class="comment"># cd is a shell builtin</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> wget</span><br><span class="line"><span class="comment"># wget is /usr/bin/wget</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> -p wget</span><br><span class="line">/usr/bin/wget</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h4><p>wget 是一个通过指定 URL 下载文件的工具，比如下载一些软件或者从远程服务器恢复备份到本地服务器。支持HTTP, HTTPS 和 FTP 协议，可以使用 HTTP 代理。可以在后台执行，支持断点下载</p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><p><strong>wget <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
+<p><strong>下载整个页面</strong>。 </p>
+<p><code>-x</code> 建立服务器上一样的目录</p>
+<p><code>-nd</code>下载的所有内容会出现在本地当前目录</p>
+</li>
+<li><p><strong>wget -r  <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
+<p>递归下载。下载服务器上的所有目录和文件。</p>
+<p><code>-l number</code> 指定下载的层次。</p>
+</li>
+<li><p><strong>wget -c <a href="http://prefix/dir/file" target="_blank" rel="noopener">http://prefix/dir/file</a></strong></p>
+<p>断点续传，服务器必须支持。</p>
+<p><code>-t</code> 表示重试次数 <code>-t 0</code> 表示无穷次重试，直到连接成功。</p>
+<p> <code>-T</code> 表示超时等待时间，超过指定的时间就算超时。</p>
+</li>
+<li><p><strong>wget -i download.txt</strong></p>
+<p>批量下载。多个需要下载的文件的 URL 可以写在一个文件中，每行一个。（URL 指向文件就下载文件，指向网站就下载首页）</p>
+</li>
+<li><p><strong>wget -m -reject=git <a href="http://prefix/dir" target="_blank" rel="noopener">http://prefix/dir</a></strong></p>
+<p>选择性下载</p>
+<p><code>-reject=list</code> 拒绝接受的文件类型</p>
+<p><code>-accept=list</code> 接受的文件类型</p>
+</li>
+<li><p><strong>wget -http-user=USER -http-passwd=PASS URL</strong></p>
+<p>密码和认证。 只能处理利用用户名/密码方式限制访问的网站</p>
+</li>
+<li><p><strong>wget -proxy-user=USER -proxy-passwd=PASS URL</strong></p>
+<p>代理进行下载。需要创建 .wgetrc 文件设置代理服务器：</p>
+<p>http-proxy=11.11.11.11:8080</p>
+<p>ftp-proxy=11.11.11.11:8080</p>
+<p>-proxy=on/off 使用或关闭代理</p>
+</li>
+<li><p><strong>wget -O rename.zip URL</strong></p>
+<p>重命名下载的文件。wget默认会以最后一个符合”/”的后面的字符来命令。</p>
+</li>
+<li><p><strong>wget –limit-rate=300k URL</strong></p>
+<p>限速下载</p>
+</li>
+<li><p><strong>wget -b URL</strong></p>
+<p>后台下载。</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在下载的下载进度。</span></span><br><span class="line">tail -f wget-log</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>wget -tries=40 URL</strong></p>
+<p>增加重试次数，默认重试20次？</p>
+</li>
+<li><p><strong>wget -mirror URL</strong></p>
+<p>镜像下载。下载整个网站到本地。</p>
+<p><code>-p</code> 下载所有为了html页面显示正常的文件<br><code>–convert-links</code> 下载后，转换成本地的链接<br><code>-P ./LOCAL</code> 保存所有文件和目录到本地指定目录</p>
+</li>
+<li><p><strong>wget -o download.log URL</strong></p>
+<p>保存下载日志到文件中。</p>
+</li>
+<li><p><strong>wget -Q5m -i files.txt</strong></p>
+<p>限制下载的文件大小，超出后推出下载。</p>
+</li>
+<li><p><strong>wget -r -A.pdf URL</strong></p>
+<p>只下载指定格式的文件。</p>
+</li>
+<li><p><strong>wget FTP-URL</strong> </p>
+</li>
+<li><p><strong>wget –ftp-user=USER –ftp-password=PASS URL</strong></p>
+<p>wget FTP 下载。</p>
+</li>
+</ul>
+<p>下载jdk</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget后需要加参数–no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie;”</span></span><br><span class="line"></span><br><span class="line">wget --no-cookies --header <span class="string">"Cookie: oraclelicense=accept-securebackup-cookie;"</span> http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>用于打包、拆包、压缩、解压<strong>。</strong></p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><p><strong>-c</strong> </p>
+<p>建立一个打包文件</p>
+</li>
+<li><p><strong>-x</strong></p>
+<p>解开一个打包文件</p>
+</li>
+<li><p><strong>-t</strong></p>
+<p>查看 tar 包里的文件</p>
+</li>
+<li><p><strong>-z</strong></p>
+<p>gzip 工具，用于压缩成或解压 .tar.gz 格式的文件 (格式的名字只是为了标记，以免解压时用了错误的压缩工具)</p>
+</li>
+<li><p><strong>-j</strong></p>
+<p>zip2 工具，用于压缩成或解压 .tar.bz2 格式的文件</p>
+</li>
+<li><p><strong>-v</strong></p>
+<p>显示打包、拆包、压缩或解压过程。</p>
+</li>
+<li><p><strong>-f</strong></p>
+<p>使用文件名，后面立即接文件名</p>
+</li>
+<li><p><strong>-p</strong></p>
+<p>保持原文件的属性</p>
+</li>
+<li><p><strong>-P</strong></p>
+<p>使用绝对路径来压缩。</p>
+</li>
+<li><p><strong>-N 2001/03/11</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -N 2017/01/23 -zcvf index.html hello.txt world.txt</span><br></pre></td></tr></table></figure>
+
+<p>  设定日期，后面接的日期还要新的文件才会被打包。</p>
+<ul>
+<li><strong>–exclude file</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude hello.txt -zcvf b.tar.gz index.html hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>  剔除不需要进行打包的文件</p>
+<p>可以作为命令行参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf - *.txt | tar -xf - -C dir/</span><br><span class="line"></span><br><span class="line"><span class="comment"># tar cvf - files/ | ssh user@example.com "tar xv -C Documents/"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>虽然 tar 命令提供了排除 VCS 的选项, 但是使用起来却有点问题, 简单点, 可以直接使用排序选项, <code>*</code> 默认应该是排除了 <code>.</code> 开头的文件, 所以 <code>.gitignore .git/</code> 都没有包含在最终的包中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar  --exclude <span class="string">"target"</span> --exclude <span class="string">"*.iml"</span> -cvf spring-boot-demo-source.tar *</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p>cat 命令用于显示文件的内容</p>
+<p><strong>参数或使用范例</strong></p>
+<ul>
+<li><strong>显示整个文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>从键盘创建一个文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; file</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p>  只能创建新文件，不能编辑已有文件。 <code>Ctrl</code> + <code>d</code>  结束输入</p>
+<ul>
+<li><strong>合并文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 合并文件输出到另一个文件中</span></span><br><span class="line">cat file1 file2 &gt; file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并文件并输出到屏幕</span></span><br><span class="line">cat file1 file2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-n 行编号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n|number file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-b 行编号，空白行不编号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -b file</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>Global Search Regular Expression(RE) and Print out the line</p>
+<p>全局正则表达式搜索，用于文本搜索（支持正则表达式），并把匹配的行打印出来。</p>
+<ul>
+<li><strong>常规用法</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep match_pattern file</span><br><span class="line"></span><br><span class="line">grep <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>多文件搜索</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"match_pattern"</span> file_1 file_2 file_3 ...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>-v 反转查找</strong></p>
+<p>即打印不匹配该模式的所有行</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-E 使用正则表达式</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">"[1-9]+"</span> file</span><br><span class="line"></span><br><span class="line">egrep <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-o 只输出文件中匹配到的部分</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o -E <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-c 文件中包含匹配模式的行数</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-n 输出包含匹配字符串所在的行号</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-b 匹配模式位于的字符或字节偏移</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般与 -o 一起使用，从第一个字符开始计算，起始值为 0 </span></span><br><span class="line">grep -b -o <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-l 搜索匹配模式出现在哪些文件中</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">"text"</span> file1 file2 file3 ...</span><br><span class="line"><span class="comment"># 只输出文件名，不指定 -l, 输出文件名及相应的匹配行</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-r 多级目录中对文本进行递归搜索</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"text"</span> . -r -n</span><br><span class="line"><span class="comment"># . 表示当前目录</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-i 忽略匹配模式中字符的大小写</strong>、</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>-e 制定多个匹配模式</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">"text1"</span> <span class="string">"text2"</span> file</span><br><span class="line"><span class="comment"># 这个当然也可以直接用正则表达式写</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>搜索结果中包括或者排除指定文件</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此参数的格式为 Ubuntun 下的格式，搜索文件只包括 txt，html,php 文件 </span></span><br><span class="line">grep --include=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索文件不包括 txt，html,php 文件</span></span><br><span class="line">grep --exclude=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除 fileList 文件列表里的文件</span></span><br><span class="line">grep <span class="string">"text"</span> . -r  --exclude-from=fileList</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>-q 静默输出</strong></p>
+</li>
+<li><p><strong>打印匹配某个结果之后或之前的 n 行</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示匹配某个结果之后的3行，使用 -A 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -A 3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果之前的3行，使用 -B 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -B 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果的前三行和后三行，使用 -C 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -C 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果匹配结果有多个，会用“--”作为各匹配结果之间的分隔符：</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"a\nb\nc\na\nb\nc"</span> | grep a -A 1</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">--</span><br><span class="line">a</span><br><span class="line">b</span><br></pre></td></tr></table></figure>
+
+<h4 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h4><p>  stat 命令用于显示文件的大小、所有者、用户组、索引节点号、权限、修改和访问时间等重要的统计信息。这是一个非常有用的命令，可以显示比 <code>ls -l</code> 更多的细节。 </p>
+<ul>
+<li><strong>example</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c 用于格式化输出， %n 表示文件的名称 %a 表示数字格式的权限</span></span><br><span class="line"><span class="built_in">stat</span> -c <span class="string">'%n %a'</span> *</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls * <span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<p>  <a href="https://linux.cn/article-9601-1.html" target="_blank" rel="noopener">https://linux.cn/article-9601-1.html</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E5%AE%89%E8%A3%85MacOS/">安装MacOS</a></h2>
             </div>
             <div class="post-meta">
@@ -239,29 +590,6 @@
 <li>修改文件名，避免此种情况发生</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/DateAndTime/">DateAndTime</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-06-07</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">java.util public class Date</span><br><span class="line">extends Object</span><br><span class="line">implements java.io.Serializable, Cloneable, Comparable&lt;Date&gt;</span><br><span class="line"></span><br><span class="line">The class Date represents a specific instant in time, with millisecond precision.</span><br><span class="line">Prior to JDK 1.1, the class Date had two additional functions. </span><br><span class="line"></span><br><span class="line">It allowed the interpretation of dates as year, month, day, hour, minute, and second values. It also allowed the formatting and parsing of date strings. Unfortunately, the API for these functions was not amenable to internationalization.</span><br><span class="line"></span><br><span class="line">As of JDK 1.1, the Calendar class should be used to convert between dates and time fields and the DateFormat class should be used to format and parse date strings. The corresponding methods in Date are deprecated.</span><br><span class="line"></span><br><span class="line">Although the Date class is intended to reflect coordinated universal time (UTC), it may not do so exactly, depending on the host environment of the Java Virtual Machine. Nearly all modern operating systems assume that 1 day &#x3D; 24 × 60 × 60 &#x3D; 86400 seconds in all cases. In UTC, however, about once every year or two there is an extra second, called a &quot;leap second.&quot;</span><br><span class="line"></span><br><span class="line">The leap second is always added as the last second of the day, and always on December 31 or June 30. For example, the last minute of the year 1995 was 61 seconds long, thanks to an added leap second. Most computer clocks are not accurate enough to be able to reflect the leap-second distinction.</span><br><span class="line"></span><br><span class="line">Some computer standards are defined in terms of Greenwich mean time (GMT), which is equivalent to universal time (UT). GMT is the &quot;civil&quot; name for the standard; UT is the &quot;scientific&quot; name for the same standard. The distinction between UTC and UT is that UTC is based on an atomic clock and UT is based on astronomical observations, which for all practical purposes is an invisibly fine hair to split. Because the earth&#39;s rotation is not uniform (it slows down and speeds up in complicated ways), UT does not always flow uniformly. Leap seconds are introduced as needed into UTC so as to keep UTC within 0.9 seconds of UT1, which is a version of UT with certain corrections applied. There are other time and date systems as well; for example, the time scale used by the satellite-based global positioning system (GPS) is synchronized to UTC but is not adjusted for leap seconds. An interesting source of further information is the U.S. Naval Observatory, particularly the Directorate of Time at:</span><br><span class="line">       http:&#x2F;&#x2F;tycho.usno.navy.mil</span><br><span class="line">   </span><br><span class="line">and their definitions of &quot;Systems of Time&quot; at:</span><br><span class="line">       http:&#x2F;&#x2F;tycho.usno.navy.mil&#x2F;systime.html</span><br><span class="line">   </span><br><span class="line">In all methods of class Date that accept or return year, month, date, hours, minutes, and seconds values, the following representations are used:</span><br><span class="line">A year y is represented by the integer y - 1900.</span><br><span class="line">A month is represented by an integer from 0 to 11; 0 is January, 1 is February, and so forth; thus 11 is December.</span><br><span class="line">A date (day of month) is represented by an integer from 1 to 31 in the usual manner.</span><br><span class="line">An hour is represented by an integer from 0 to 23. Thus, the hour from midnight to 1 a.m. is hour 0, and the hour from noon to 1 p.m. is hour 12.</span><br><span class="line">A minute is represented by an integer from 0 to 59 in the usual manner.</span><br><span class="line">A second is represented by an integer from 0 to 61; the values 60 and 61 occur only for leap seconds and even then only in Java implementations that actually track leap seconds correctly. Because of the manner in which leap seconds are currently introduced, it is extremely unlikely that two leap seconds will occur in the same minute, but this specification follows the date and time conventions for ISO C.</span><br><span class="line">In all cases, arguments given to methods for these purposes need not fall within the indicated ranges; for example, a date may be specified as January 32 and is interpreted as meaning February 1.</span><br><span class="line">Since:</span><br><span class="line">JDK1.0</span><br><span class="line">See Also:</span><br><span class="line">DateFormat, Calendar, TimeZone</span><br><span class="line">  &lt; 1.8 &gt;</span><br></pre></td></tr></table></figure>
 
 
                 
