@@ -84,6 +84,80 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/xxd%E5%91%BD%E4%BB%A4/">xxd命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-05-18</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="xxd-命令"><a href="#xxd-命令" class="headerlink" title="xxd 命令"></a>xxd 命令</h1><p><code>xxd</code> 用来对指定的文件或来自标准输入的数据进行<strong>十六进制转储</strong>，也可以将将十六进制转换为原始的二进制格式，允许以邮件安全的 ASCII 表示传输二进制数据，<code>base64</code> 其实也可以达到相同的目的。也可以用来进行二进制文件 patching</p>
+<h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><p>如果没有指定输入文件或输出文件，或者指定为 <code>-</code> ，使用标准输入或标准输出</p>
+<ul>
+<li><code>-a | -autoskip</code> 开启自动跳过，以 <code>*</code> 代替空行（nul-lines），默认关闭</li>
+</ul>
+<ul>
+<li><code>-b | -bits</code> 切换到二进制位模式，而不是十六进制, <code>-r</code>, <code>-p</code>,<code>-i</code> 下不生效 </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101 01101100 01101100 01101111           hello</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-c cols | -cols cols</code> 输出的每行包含 cols 个字节，默认是 16 个 (-i: 12, -ps: 30, -b: 6).最大 256</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b -c 2</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101  he</span><br><span class="line">00000002: 01101100 01101100  ll</span><br><span class="line">00000004: 01101111           o</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-E | -EBCDIC</code> ASCII 表示切换为 EBCDIC（国际）编码 meaningless in combinations with -r, -p or -i</li>
+</ul>
+<ul>
+<li><code>-g bytes | -groupsize bytes</code> 每 bytes 个字节，添加一个空格进行分隔分组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 1</span><br><span class="line">00000000: 68 65 6c 6c 6f 0a                                hello.</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 2</span><br><span class="line">00000000: 6865 6c6c 6f0a                           hello.</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-p | -ps | -postscript | -plain</code>  以连续连续十六进制样式输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -p</span><br><span class="line">68656c6c6f0a</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>-r | -revert</code> 将十六进制转为二进制。如果不是写到 stdout, xxd 在不截断的情况下将其写入输出文件。使用 <code>-r -p</code> 读取连续的十六进制输出（不包含行号信息，没有特定的列布局）</li>
+</ul>
+<ul>
+<li><p><code>-seek offset</code></p>
+<p>When used after <em>-r</em>: revert with &lt;<em>offset</em>&gt; added to file positions found in hexdump.</p>
+</li>
+</ul>
+<ul>
+<li><p><code>-s [+][-]seek</code> </p>
+<p>start at &lt;<em>seek</em>&gt; bytes abs. (or rel.) infile offset. <em>+</em> indicates that the seek is relative to the current stdin file position (meaningless when not reading from stdin). <em>-</em> indicates that the seek should be that many characters from the end of the input (or if combined with <em>+</em>: before the current stdin file position). Without -s option, xxd starts at the current file position.</p>
+<p>跳过多少字节</p>
+</li>
+<li><p><code>u</code> 使用大写的十六进制字母，默认是小写的</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.commandlinux.com/man-page/man1/xxd.1.html" target="_blank" rel="noopener">XXD</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%88%9B%E5%BB%BA%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%AA%8C%E8%AF%81/">创建证书并验证</a></h2>
             </div>
             <div class="post-meta">
@@ -329,65 +403,6 @@
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://www.oss.com/asn1/resources/asn1-made-simple/introduction.html" target="_blank" rel="noopener">What is ASN1</a></p>
 <p>[2] <a href="https://blog.csdn.net/fengbingchun/article/details/106487696" target="_blank" rel="noopener">ASN.1简介及OpenSSL中ASN.1接口使用举例</a></p>
 <p>[3] <a href="https://blog.csdn.net/jf223355/article/details/103511644" target="_blank" rel="noopener">openssl 密钥生成和解析</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/AES/">AES</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-04-17</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="AES-Advanced-Encryption-Standard"><a href="#AES-Advanced-Encryption-Standard" class="headerlink" title="AES - Advanced Encryption Standard"></a>AES - Advanced Encryption Standard</h2><p>AES 是取代 DES 称为新标准的一种<strong>对称密码算法</strong></p>
-<h3 id="AES-的选拔"><a href="#AES-的选拔" class="headerlink" title="AES 的选拔"></a>AES 的选拔</h3><p>AES 由 <strong>NIST</strong> (National Institute of Standards and Technology, 国家标准技术研究所) 组织公开竞选，最终所选拔的密码算法，成为美国的国家标准，即联邦信息处理标准（<strong>FIPS</strong>）, 但最终成为一个世界性的标准。</p>
-<p>AES 选拔对全世界公开，参加者提供密码算法的详细规格书、算法强度的证明和实现代码，由全世界的企业和密码学家共同完成评审。2000 年， Rijndael  算法被 NIST 从<strong>最终候选算法</strong>名单中选定成为 AES 标准。</p>
-<p>被选为 AES 密码算法必须无条件地免费供全世界使用。</p>
-<h3 id="Rijndael-密码算法"><a href="#Rijndael-密码算法" class="headerlink" title="Rijndael 密码算法"></a>Rijndael 密码算法</h3><p>两位比利时密码学家设计，也属于*<em>分组密码算法 *</em>(block cipher)</p>
-<p><strong>分组长度</strong>: 128 比特位</p>
-<p><strong>密钥长度</strong>: 128、192 和 256 比特</p>
-<h4 id="Rijndael-的加密和解密"><a href="#Rijndael-的加密和解密" class="headerlink" title="Rijndael 的加密和解密"></a>Rijndael 的加密和解密</h4><p>和 DES 一样，Rijndael  算法由多轮构成，其中每一轮分为 SubBytes、ShiftRows、MixColumns 和 AddRoundKey 个步骤。并且使用了一种称为 SPN 结构。</p>
-<h5 id="1-SubBytes-逐字节替换"><a href="#1-SubBytes-逐字节替换" class="headerlink" title="1. SubBytes-逐字节替换"></a>1. SubBytes-逐字节替换</h5><p>Rijndael  的分组是 128 比特位，即 16 字节。对 16 个字节进行 SubBytes 处理，就是将每个字节所代表的无符号整数值（0-255）作为索引，从一个拥有 256 个值的替换表 (S-Box, S盒) 中查找对应的值。简单来说，就是每个字节查表映射为新的值。</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-SubBytes.png" alt="SubBytes"></p>
-<h5 id="2-ShiftRows-平移行"><a href="#2-ShiftRows-平移行" class="headerlink" title="2. ShiftRows-平移行"></a>2. ShiftRows-平移行</h5><p>将以 4 字节为单位的行 (row) 按照一定的规则向左平移，且每一行平移的字节数是不同的。图示为对其中一行进行处理的情形：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-ShiftRows.png" alt="ShiftRows"></p>
-<h5 id="3-MixColumns-混合列"><a href="#3-MixColumns-混合列" class="headerlink" title="3. MixColumns-混合列"></a>3. MixColumns-混合列</h5><p>对一个 4 字节的值进行比特运算，将其变为另一个 4 字节的值，图示为对其中一列（column）进行处理的情形：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-MixColumns.png" alt="MixColumns"></p>
-<h5 id="4-AddRoundKey-轮密钥异或运算"><a href="#4-AddRoundKey-轮密钥异或运算" class="headerlink" title="4. AddRoundKey-轮密钥异或运算"></a>4. AddRoundKey-轮密钥异或运算</h5><p>将 MixColumns 的输出与轮密钥进行 XOR，图示为对其中一个字节进行处理的情形：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-AddRoundKey.png" alt="AddRoundKey"></p>
-<p>输入的所有比特在一轮中都会被加密，相比于 DES 的 Feistel 网络相比（每一轮只加密一半输入的比特位），加密所需的轮数更少，一般重复进行10 到 14 轮，而且其中的步骤，可以分别以字节、行和列为单位进行并行计算。</p>
-<p>注：<strong>并行计算也是衡量密码算法的一个重要指标，并行意味着加密解密的速度块</strong>。</p>
-<p>加密的过程： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SubBytes  --&gt; SbiftRows --&gt; MixColumns --&gt; AddRoundKey</span><br></pre></td></tr></table></figure>
-
-<p>解密，就是按照相反的顺序来进行就可以：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AddRoundKey --&gt; InvMixColumns --&gt; InvShiftRows --&gt; InvSubBytes</span><br><span class="line"></span><br><span class="line">* Inv 表示逆运算</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Rijndael 的算法背后有着严谨的数学结构，明文到密文的过程可以全部用数学公式来表达，此外，轮密钥的计算也涉及到稍微复杂的过程，没有在这里涉及。</p>
-<h2 id="使用-openssl-和-JCA-进行加密解密的验证"><a href="#使用-openssl-和-JCA-进行加密解密的验证" class="headerlink" title="使用 openssl 和 JCA 进行加密解密的验证"></a>使用 openssl 和 JCA 进行加密解密的验证</h2><h3 id="opesnssl-加密和解密"><a href="#opesnssl-加密和解密" class="headerlink" title="opesnssl 加密和解密"></a>opesnssl 加密和解密</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 openssl 加密 'hello' 字符串</span></span><br><span class="line">$ openssl enc -aes-128-cbc -e -base64 -salt -p &lt;&lt;&lt; hello</span><br><span class="line"></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line">key=421990ECB00E9A9B8372D0E46727F6AA</span><br><span class="line">iv =5973EAA7D1C1D5240B78CB8A4458D663</span><br><span class="line">U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw=</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 openssl 进行解密</span></span><br><span class="line">$ openssl enc -aes-128-cbc -d -base64 -salt -p &lt;&lt;&lt; U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw=</span><br><span class="line"></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line">key=421990ECB00E9A9B8372D0E46727F6AA</span><br><span class="line">iv =5973EAA7D1C1D5240B78CB8A4458D663</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="使用-JCA-Java-Cryptography-Architecture-进行验证"><a href="#使用-JCA-Java-Cryptography-Architecture-进行验证" class="headerlink" title="使用 JCA (Java Cryptography Architecture) 进行验证"></a>使用 JCA (Java Cryptography Architecture) 进行验证</h3><p>openssl 会生成 8 个比特的 salt，并以  <code>Salted__${salt}</code>  附加在加密的密文前，一共占 16 个字节，验证如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw="</span> | base64 -d | hexdump -C</span><br><span class="line">00000000  53 61 6c 74 65 64 5f 5f  36 31 c9 da 38 2c e4 87  |Salted__61..8,..|</span><br><span class="line">00000010  b0 4f 31 42 5a 2b 01 82  21 cf 1c 00 60 2d 6c dc  |.O1BZ+..!...`-l.|</span><br><span class="line">00000020</span><br></pre></td></tr></table></figure>
-
-<p>所以实际加密后密文的 16 进制为：<code>b04f31425a2b018221cf1c00602d6cdc</code></p>
-<p>使用 JCA 进行解密验证：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AESCryptoTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES = <span class="string">"AES"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES_CBC_PKCS_5_PADDING = <span class="string">"AES/CBC/PKCS5Padding"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String keyHex = <span class="string">"421990ECB00E9A9B8372D0E46727F6AA"</span>;</span><br><span class="line">        String ivHex = <span class="string">"5973EAA7D1C1D5240B78CB8A4458D663"</span>;</span><br><span class="line">        String cipherTextHex = <span class="string">"b04f31425a2b018221cf1c00602d6cdc"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] key = HexUtils.fromHexString(keyHex);</span><br><span class="line">        <span class="keyword">byte</span>[] iv = HexUtils.fromHexString(ivHex);</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText = HexUtils.fromHexString(cipherTextHex);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] clearText = aesDecrypt(key, iv, cipherText);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> String(clearText, StandardCharsets.UTF_8));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] aesDecrypt(<span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv, <span class="keyword">byte</span>[] cipherText) &#123;</span><br><span class="line">        <span class="comment">// constructor a secret key</span></span><br><span class="line">        SecretKeySpec secretKey = <span class="keyword">new</span> SecretKeySpec(key, AES);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init algorithm parameters with iv</span></span><br><span class="line">        AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance(AES);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        algorithmParameters.init(ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init a AES cipher with key and iv</span></span><br><span class="line">        Cipher cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, secretKey, algorithmParameters);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// decrypt</span></span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(cipherText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最终输出 hello</span></span><br></pre></td></tr></table></figure>
-
 
                 
             </div>

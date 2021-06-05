@@ -174,45 +174,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20AOP/">Spring AOP</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Spring提供了4种类型的AOP支持：</p>
-<ul>
-<li>基于代理的经典Spring AOP；</li>
-<li>纯POJO切面；</li>
-<li><code>@AspectJ</code>注解驱动的切面；</li>
-<li>注入式AspectJ切面（适用于Spring各版本）。</li>
-</ul>
-<p>Spring AOP构建在动态代理基础之上，因此，Spring对AOP的支持局限于方法拦截。</p>
-<p>引入了简单的声明式AOP和基于注解的AOP之后，Spring经典的AOP看起来就显得非常笨重和过于复杂，直接使用 ProxyFactory Bean会让人感觉厌烦</p>
-<p>Spring借鉴了AspectJ的切面，以提供注解驱动的AOP</p>
-<p>方法拦截可以满足绝大部分的需求。如果需要方法拦截之外的连接点拦截功能，那么我们可以利用Aspect来补充Spring AOP的功能。</p>
-<p>在Spring AOP中，要使用AspectJ的切点表达式语言来定义切点</p>
-<p>《AspectJ in Action》第二版（Manning，2009，<a href="http://www.manning.com/laddad2/）。" target="_blank" rel="noopener">www.manning.com/laddad2/）。</a></p>
-<p><code>&lt;aop:aspectj-autoproxy&gt;</code>元素，它能够自动代理AspectJ注解的通知类</p>
-<p>如下的XML代码片段与之前基于AspectJ的引入功能是相同：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">aop:declare-parents</span></span></span><br><span class="line"><span class="tag">    <span class="attr">types-matching</span>=<span class="string">"concert.Performance+"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">implement-interface</span>=<span class="string">"concert.Encoreable"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">default-impl</span>=<span class="string">"concert.DefaultEncoreable"</span></span></span><br><span class="line"><span class="tag">    /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p> <code>&lt;aop:declare-parents&gt;</code>声明了此切面所通知的bean要在它的对象层次结构中拥有新的父类型。具体到本例中，类型匹配<code>Performance</code>接口（由<code>types-matching</code>属性指定）的那些bean在父类结构中会增加<code>Encoreable</code>接口（由<code>implement-interface</code>属性指定）</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Spring%20JDBC/">Spring JDBC</a></h2>
             </div>
             <div class="post-meta">
@@ -252,6 +213,29 @@
 <p><strong>@Repository 注解</strong></p>
 <p><code>@Repository</code>注解，这会为我们做两件事情。首先，<code>@Repository</code>是Spring的另一种构造性注解，它能够像其他注解一样被Spring的组件扫描所扫描到, 表明在组件扫描的时候会自动创建。这样就不必明确声明<code>HibernateSpitterRepository</code> bean了，只要这个Repository类在组件扫描所涵盖的包中即可。    </p>
 <p>除了帮助减少显式配置以外，<code>@Repository</code>还有另外一个用处。让我们回想一下模板类，它有一项任务就是捕获平台相关的异常，然后使用Spring统一非检查型异常的形式重新抛出。</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Servlet/">Servlet</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ResourceBundle</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
