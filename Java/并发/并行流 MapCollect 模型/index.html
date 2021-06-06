@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">并行流 MapCollect 模型</h2>
             <div class="post-meta">
-                <span class="post-time">2021-06-05</span>
+                <span class="post-time">2021-06-06</span>
                 
                 <span class="post-category">
                     
@@ -110,7 +110,7 @@
 <blockquote>
 <p>For concurrent collectors, an implementation is free to (but not required to) implement reduction concurrently. A concurrent reduction is one where the accumulator function is called concurrently from multiple threads, using the same concurrently-modifiable result container, rather than keeping the result isolated during accumulation. A concurrent reduction should only be applied if the collector has the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collector.Characteristics.html#UNORDERED" target="_blank" rel="noopener"><code>Collector.Characteristics.UNORDERED</code></a> characteristics or if the originating data is unordered.</p>
 </blockquote>
-<p>对于<strong>并行收集器</strong> concurrent collectors 的实现, 可以自由实现规约的并行化过程.  <strong>并行规约</strong> concurrent reduction 指的是的 accumulator 函数可以被多个线程同时调用, 且使用同一个<strong>支持并发修改</strong>的结果容器 (支持并发修改, 普通的 ArrayList 显然不支持并发修改), 而不是在累加函数执行过程中保持独立的结果容器 (即每个拆后的任务拥有一个结果容器). 并行规约只有该流具有 UNORDERED 特征，或者背后的数据源本身是无序的才可以应用该优化.</p>
+<p>对于<strong>并行收集器</strong> concurrent collectors 的实现, 可以自由实现规约的并行化过程.  <strong>并行规约</strong> concurrent reduction 指的是的 accumulator 函数可以被多个线程同时调用, 且使用同一个<strong>支持并发修改</strong>的结果容器 (支持并发修改, 普通的 ArrayList 显然不支持并发修改), 而不是在累加函数执行过程中保持独立的结果容器 (即每个拆后的任务拥有一个结果容器). 并行规约只有该流具有 <strong>UNORDERED</strong> 特征，或者背后的数据源本身是无序的才可以应用该优化 (当然，也要指定 <strong>CONCURRENT</strong> 特征). </p>
 <h2 id="流的串行执行过程"><a href="#流的串行执行过程" class="headerlink" title="流的串行执行过程"></a>流的串行执行过程</h2><p>首先是串行实现过程, 对一个数字流进行转换并收集到一个 List 中:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; collectResult = IntStream.rangeClosed(<span class="number">1</span>, <span class="number">20</span>)</span><br><span class="line">        .mapToObj(String::valueOf)</span><br><span class="line">        .collect(</span><br><span class="line">    			<span class="comment">// 这里可以替换为 Collectors.toList(), 这里是为了打印每个函数执行线程的上下文</span></span><br><span class="line">                Collector.of(</span><br><span class="line">                        () -&gt; &#123;</span><br><span class="line">                            List&lt;String&gt; strings = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                            System.out.println(Thread.currentThread() + <span class="string">" create supplier "</span>);</span><br><span class="line">                            <span class="keyword">return</span> strings;</span><br><span class="line">                        &#125;, (l, e) -&gt; &#123;</span><br><span class="line">                            System.out.println(Thread.currentThread() + <span class="string">" accumulate "</span> + e);</span><br><span class="line">                            l.add(e);</span><br><span class="line">                        &#125;, (left, right) -&gt; &#123;</span><br><span class="line">                            System.out.println(Thread.currentThread() + <span class="string">" combine"</span>);</span><br><span class="line">                            left.addAll(right);</span><br><span class="line">                            <span class="keyword">return</span> left;</span><br><span class="line">                        &#125;, Collector.Characteristics.IDENTITY_FINISH));</span><br></pre></td></tr></table></figure>
 
@@ -163,8 +163,8 @@
             </a>
         
         
-            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/RSA/">
-                <span class="nav-default">RSA</span>
+            <a class="next" href="/Linux/Unsplash%20%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC/">
+                <span class="nav-default">Unsplash 图片下载脚本</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
