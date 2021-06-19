@@ -83,13 +83,13 @@
         <div class="posts">
     <article class="post-whole">
         <div class="post-title">
-            <h2 class="title">速查表</h2>
+            <h2 class="title">Map</h2>
             <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
+                <span class="post-time">2021-06-06</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
@@ -104,162 +104,15 @@
     </div>
 </div>
         <div class="post-content">
-            <p><a href="https://ihateregex.io/cheatsheet/#" target="_blank" rel="noopener"># cheatsheet</a></p>
-<p>tiny regex cheatsheet</p>
-<table>
-<thead>
-<tr>
-<th>expr</th>
-<th>usage</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>/hello/</td>
-<td>looks for the string between the forward slashes (case-sensitive)</td>
-</tr>
-<tr>
-<td>/hello/i</td>
-<td>looks for the string between the forward slashes (case-insensitive)</td>
-</tr>
-<tr>
-<td>/hello/g</td>
-<td>looks for multiple occurrences of string between the forward slashes</td>
-</tr>
-<tr>
-<td>/h.llo/</td>
-<td>the ‘.’ matches any one character other than a new line character… matches ‘hello’, ‘hallo’ but not ‘h llo’</td>
-</tr>
-<tr>
-<td>/h.*llo/</td>
-<td>the “*” matches any character(s) zero or more times… matches “hello”, “heeeeeello”, “hllo”, “hwarwareallo”</td>
-</tr>
-<tr>
-<td>/\d/</td>
-<td>matches any digit</td>
-</tr>
-<tr>
-<td>/\D/</td>
-<td>matches any non-digit</td>
-</tr>
-<tr>
-<td>/\w/</td>
-<td>matches any word character (a-z, A-Z, 0-9, _)</td>
-</tr>
-<tr>
-<td>/\W/</td>
-<td>matches any non-word character</td>
-</tr>
-<tr>
-<td>/\s/</td>
-<td>matches any white space character (\r (carriage return),\n (new line), \t (tab), \f (form feed))</td>
-</tr>
-<tr>
-<td>/\S/</td>
-<td>matches any non-white space character</td>
-</tr>
-<tr>
-<td>/[abcd]/</td>
-<td>matches any character in square brackets</td>
-</tr>
-<tr>
-<td>/[ch]at/</td>
-<td>matches cat or hat</td>
-</tr>
-<tr>
-<td>/[^abcd]/</td>
-<td>matches anything except the characters in square brackets</td>
-</tr>
-<tr>
-<td>/[a-z]/</td>
-<td>matches all lowercase letters (a to z)</td>
-</tr>
-<tr>
-<td>/[A-Z]/</td>
-<td>matches all uppercase letters (A to Z)</td>
-</tr>
-<tr>
-<td>/[0-9]/</td>
-<td>matches all digits</td>
-</tr>
-<tr>
-<td>/[a-zA-Z]/</td>
-<td>matches all lowercase and uppercase letters</td>
-</tr>
-<tr>
-<td>/[^a-zA-Z]/</td>
-<td>matches non-letters</td>
-</tr>
-<tr>
-<td>/[a-zA-Z0-9]/</td>
-<td>matches all lowercase, uppercase letters and numbers</td>
-</tr>
-<tr>
-<td>/(hello){4}/</td>
-<td>matches “hellohellohellohello”</td>
-</tr>
-<tr>
-<td>/hello{3}/</td>
-<td>matches “hellooo” and “helloooo” but not “helloo”</td>
-</tr>
-<tr>
-<td>/(hello){1,3}/</td>
-<td>matches “hello” that occur between 1 and 3 times (inclusive)</td>
-</tr>
-<tr>
-<td>/(hello){3,}/</td>
-<td>matches “hello” that occur atleast 3 times</td>
-</tr>
-<tr>
-<td>/ab*c/</td>
-<td>matches zero or more repetitions of “b” (matches “abc”, “abbbbc”, “ac”)</td>
-</tr>
-<tr>
-<td>/ab+c/</td>
-<td>matches one or more repetitions of “b” (matches “abc”, “abbbbc”, but not “ac”)</td>
-</tr>
-<tr>
-<td>/^/</td>
-<td>matches beginning of a line</td>
-</tr>
-<tr>
-<td>/$/</td>
-<td>matches end of a line</td>
-</tr>
-<tr>
-<td>/(hard)?work/</td>
-<td>matches “work” or “hardwork”</td>
-</tr>
-<tr>
-<td>/(?:hard)?work/</td>
-<td>matches “work” or “hardwork” but is a non-capturing group</td>
-</tr>
-<tr>
-<td>/i am a (cat|dog|whale) person/</td>
-<td>matches “i am a cat person”, “i am a dog person” and “i am a whale person”</td>
-</tr>
-<tr>
-<td>/z(?=a)/</td>
-<td>positive lookahead… matches the “z” before the “a” in pizza but not the first “z”</td>
-</tr>
-<tr>
-<td>/z(?!a)/</td>
-<td>negative lookahead… matches the first “z” but not the “z” before the “a”</td>
-</tr>
-<tr>
-<td>/(?&lt;=[aeiou])\w/</td>
-<td>positive lookbehind… matches any word character that is preceded by a vowel</td>
-</tr>
-<tr>
-<td>/(?&lt;![aeiou])\w/</td>
-<td>negative lookbehind… matches any word character that is not preceded by a vowel</td>
-</tr>
-</tbody></table>
+            <p>Map</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">   </span><br><span class="line">  <span class="comment">// 返回与 key 之前关联的值, 如果 key 存在，返回与 key 关联的 value</span></span><br><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">putIfAbsent</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       V v = get(key);</span><br><span class="line">       <span class="keyword">if</span> (v == <span class="keyword">null</span>) &#123;</span><br><span class="line">           v = put(key, value);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> v;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回与 key 关联的当前值（要么是已经存在的，或者是 mappingFunction 函数计算得到的新值）, 如果 mappingFunction 计算的新值为 		null，该方法也返回 null</span></span><br><span class="line">   <span class="function"><span class="keyword">default</span> V <span class="title">computeIfAbsent</span><span class="params">(K key,</span></span></span><br><span class="line"><span class="function"><span class="params">           Function&lt;? <span class="keyword">super</span> K, ? extends V&gt; mappingFunction)</span> </span>&#123;</span><br><span class="line">       Objects.requireNonNull(mappingFunction);</span><br><span class="line">       V v;</span><br><span class="line">       <span class="keyword">if</span> ((v = get(key)) == <span class="keyword">null</span>) &#123;</span><br><span class="line">           V newValue;</span><br><span class="line">           <span class="keyword">if</span> ((newValue = mappingFunction.apply(key)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">               put(key, newValue);</span><br><span class="line">               <span class="keyword">return</span> newValue;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> v;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
 
         </div>
         
         <div class="post-tag">
             
-            <a class="tag" href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式">正则表达式</a>
+            <a class="tag" href="/tags/Java/" title="Java">Java</a>
             
         </div>
         
@@ -268,15 +121,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Spring%20Boot/SpringApplication/">
+            <a class="prev" href="/Java/%E5%B9%B6%E8%A1%8C%E6%B5%81%20MapCollect%20%E6%A8%A1%E5%9E%8B/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">SpringApplication</span>
+                <span class="nav-default">并行流 MapCollect 模型</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Spring/Spring%20%E4%BD%9C%E7%94%A8%E5%9F%9F/">
-                <span class="nav-default">Spring 作用域</span>
+            <a class="next" href="/Linux/Hexo%20%E5%8D%9A%E5%AE%A2%E5%90%8C%E6%AD%A5%E8%84%9A%E6%9C%AC/">
+                <span class="nav-default">Hexo 博客同步脚本</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
