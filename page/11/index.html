@@ -231,50 +231,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/1%20%E8%BF%90%E8%A1%8C%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE/">1 运行前的配置</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="1-运行前的配置"><a href="#1-运行前的配置" class="headerlink" title="1 运行前的配置"></a>1 运行前的配置</h1><h2 id="1-1-用户信息配置"><a href="#1-1-用户信息配置" class="headerlink" title="1.1 用户信息配置"></a>1.1 用户信息配置</h2><p>Git 自带一个 <code>git config</code> 的工具来设置 Git 外观和行为的配置参数。有三个不同级别的设置，分别对应不同的文件夹和作用域。</p>
-<ol>
-<li>如果使用带有<code>--system</code> 选项的 <code>git config</code> 时，他会从文件 <code>/etc/gitconfig</code> 文件中进行配置变量的读写。==包含对系统上每一个用户及他们仓库的通用配置==。</li>
-</ol>
-<ol start="2">
-<li>如果使用带有 <code>--global</code> 选现的 <code>git config</code> 时，他会从文件 <code>~/.gitconfig</code> 或 <code>~/.config/git/config</code> 文件中进行配置变量的读写。==只针对当前用户==。</li>
-</ol>
-<ol start="3">
-<li>当前使用仓库的 Git 目录中的 config 文件（.git/config）: ==只针对该仓库== </li>
-</ol>
-<p>每一个级别覆盖上一个级别的配置。所以 <code>.git/config</code> 的配置变量会覆盖 <code>/etc/gitconfig</code> 中的配置变量。</p>
-<p> 在 Windows 系统中，Git 会查找 <code>$HOME</code> 目录下（一般情况是 <code>C:\Users\$USER</code>）的 <code>.gitconfig</code> 文件。 Git 同样也会寻找 <code>/etc/gitconfig</code> 文件，但只限于 MSys 的根目录下，即安装 Git 时所选的目标位置。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为当前用户配置用户名</span></span><br><span class="line">git config --global user.name Guo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为当前用户配置邮箱</span></span><br><span class="line">git config --global user.email email@company.com</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-2-文本编辑器"><a href="#1-2-文本编辑器" class="headerlink" title="1.2 文本编辑器"></a>1.2 文本编辑器</h2><p>既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，通常是 Vim。 如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-3-检查配置信息"><a href="#1-3-检查配置信息" class="headerlink" title="1.3 检查配置信息"></a>1.3 检查配置信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global user.name</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Pro-Git-Note/2%20%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">2 基础操作</a></h2>
             </div>
             <div class="post-meta">
@@ -692,6 +648,50 @@
 
 <p>可以看出，Git 只是简单地将别名替换为对应的命令。 然而，你可能想要执行外部命令，而不是一个 Git 子命令。 如果是那样的话，可以在命令前面加入 <code>!</code> 符号。 如果你自己要写一些与 Git 仓库协作的工具的话，那会很有用。 我们现在演示将 <code>git visual</code> 定义为 <code>gitk</code> 的别名：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.visual <span class="string">'!gitk'</span></span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Pro-Git-Note/1%20%E8%BF%90%E8%A1%8C%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE/">1 运行前的配置</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="1-运行前的配置"><a href="#1-运行前的配置" class="headerlink" title="1 运行前的配置"></a>1 运行前的配置</h1><h2 id="1-1-用户信息配置"><a href="#1-1-用户信息配置" class="headerlink" title="1.1 用户信息配置"></a>1.1 用户信息配置</h2><p>Git 自带一个 <code>git config</code> 的工具来设置 Git 外观和行为的配置参数。有三个不同级别的设置，分别对应不同的文件夹和作用域。</p>
+<ol>
+<li>如果使用带有<code>--system</code> 选项的 <code>git config</code> 时，他会从文件 <code>/etc/gitconfig</code> 文件中进行配置变量的读写。==包含对系统上每一个用户及他们仓库的通用配置==。</li>
+</ol>
+<ol start="2">
+<li>如果使用带有 <code>--global</code> 选现的 <code>git config</code> 时，他会从文件 <code>~/.gitconfig</code> 或 <code>~/.config/git/config</code> 文件中进行配置变量的读写。==只针对当前用户==。</li>
+</ol>
+<ol start="3">
+<li>当前使用仓库的 Git 目录中的 config 文件（.git/config）: ==只针对该仓库== </li>
+</ol>
+<p>每一个级别覆盖上一个级别的配置。所以 <code>.git/config</code> 的配置变量会覆盖 <code>/etc/gitconfig</code> 中的配置变量。</p>
+<p> 在 Windows 系统中，Git 会查找 <code>$HOME</code> 目录下（一般情况是 <code>C:\Users\$USER</code>）的 <code>.gitconfig</code> 文件。 Git 同样也会寻找 <code>/etc/gitconfig</code> 文件，但只限于 MSys 的根目录下，即安装 Git 时所选的目标位置。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为当前用户配置用户名</span></span><br><span class="line">git config --global user.name Guo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为当前用户配置邮箱</span></span><br><span class="line">git config --global user.email email@company.com</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-2-文本编辑器"><a href="#1-2-文本编辑器" class="headerlink" title="1.2 文本编辑器"></a>1.2 文本编辑器</h2><p>既然用户信息已经设置完毕，你可以配置默认文本编辑器了，当 Git 需要你输入信息时会调用它。 如果未配置，Git 会使用操作系统默认的文本编辑器，通常是 Vim。 如果你想使用不同的文本编辑器，例如 Emacs，可以这样做：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.editor emacs</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-3-检查配置信息"><a href="#1-3-检查配置信息" class="headerlink" title="1.3 检查配置信息"></a>1.3 检查配置信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global user.name</span><br></pre></td></tr></table></figure>
 
 
                 
