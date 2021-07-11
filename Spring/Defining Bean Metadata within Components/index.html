@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">Defining Bean Metadata within Components</h2>
             <div class="post-meta">
-                <span class="post-time">2021-07-10</span>
+                <span class="post-time">2021-07-11</span>
                 
                 <span class="post-category">
                     
@@ -133,7 +133,7 @@
 
 
 <p>对静态 <code>@Bean</code> 方法的调用，并不会被容器拦截，即使是定义在 <code>@Configuration</code> 类中，这是由于技术的限制：CGLIB 子类只能覆盖非静态方法，所以在某个 <code>@Bean</code> 方法中，对这些静态 <code>@Bean</code> 方法的调用遵循标准的 Java 语义，返回一个新的实例对象.</p>
-<h2 id="Bean-方法的可见性"><a href="#Bean-方法的可见性" class="headerlink" title="@Bean 方法的可见性"></a>@Bean 方法的可见性</h2><p><code>@Bean</code> 方法的 Java 语言可见性不会对 Spring 容器中生成的 bean 定义产生直接影响。在非 <code>@Configurtation</code> 类中, 可以自由定义方法的可见性 (无论是静态的还是非静态的), 但是在 <code>@Configuration</code> 类中, 一般的 <code>@Bean</code> 方法式需要可覆盖的 (代理子类), 所以不能被声明为 <code>private</code> 和 <code>final</code>.</p>
+<h2 id="Bean-方法的可见性"><a href="#Bean-方法的可见性" class="headerlink" title="@Bean 方法的可见性"></a>@Bean 方法的可见性</h2><p><code>@Bean</code> 方法的 Java 语言可见性不会对 Spring 容器中生成的 bean 定义产生直接影响。在非 <code>@Configurtation</code> 类中, 可以自由定义方法的可见性 (无论是静态的还是非静态的), 但是在 <code>@Configuration</code> 类中, 一般的 <code>@Bean</code> 方法式需要是可覆盖的 (代理子类), 所以不能被声明为 <code>private</code> 和 <code>final</code>.</p>
 <p><code>@Bean</code> 方法可以被声明在给定的 component 或者 configuration 类的基类中, 或者是这些类所实现的接口的默认方法上 (Java 8 default method). 这样在组合复杂的配置时, 可以具有更多的灵活性.</p>
 <h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factorybeans-annotations" target="_blank" rel="noopener">Core Technologies (spring.io) - Defining Bean Metadata within Components</a></p>
 
@@ -149,6 +149,12 @@
 </div>
 <div class="paginator">
     
+        
+            <a class="prev" href="/Spring/Spring%20Enviroment/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Spring Enviroment</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
         
         
             <a class="next" href="/Spring/Spring%20%E4%BD%9C%E7%94%A8%E5%9F%9F/">

@@ -84,6 +84,108 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Stream/">Stream</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-06-19</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Java 8 中引入了 Stream 流，上手使用流对开发人员来说都很简单（大多数场景下，只需要调用 <code>java.util.Collection#stream</code> 方法就可以创建一个流），这是因为流就是一个 DSL (Domain Specific Language，领域特定语言)，抛开 Java 的上下文，使用流完成集合的操作，就像编写 SQL 语句一样流畅（fluent），简洁。</p>
+<p>JDK 8 中关于 <code>java.util.stream</code> 包的介绍，即关于引入流的一些介绍，包括了对流的认识与使用的注意事项。</p>
+<h2 id="流与集合的区别"><a href="#流与集合的区别" class="headerlink" title="流与集合的区别"></a>流与集合的区别</h2><ol>
+<li><strong>流不是一个存储数据的数据结构</strong>，流的数据来自于背后绑定的数据源 (data source)，可以是一个集合，一个数组，I/O 信道 (I/O Channel), 一个数据生成函数（可以生成一个无限流，Lazy 模式，需要时生成数据），流通过一个计算操作管道  (pipeline of computational operations) 传输数据源中的数据。</li>
+</ol>
+<ol start="2">
+<li><strong>天生的函数式特质</strong>，流上的操作生成一个结果，并不修改它背后的数据源. 这句话的意思其实就是因为流不改变作为创建它本身的数据源，无副作用（side affect），符合函数式编程。例如对一个流应用  <code>filter</code> 操作，会生成一个只包含满足指定条件元素的流，并不会删除数据源中的元素。</li>
+</ol>
+<ol start="3">
+<li><strong>懒加载</strong> (Laziness-seeking)，许多流操作，如 <code>filter</code>，<code>map</code>，<code>distinct</code> 操作都可以懒惰地实现 (implemented lazily), 给了对这些操作进行优化的机会,  例如流的截断操作 (limit) 和短路操作 (如 findFirst), 使得并不需要遍历流中的所有元素就可以返回结果（流的中间操作 (intermediate) 都是 lazy 的）；还有组成流管道的众多操作，可以被作为一个整体，对流中的元素仅应用一次，减少中间状态的使用。</li>
+</ol>
+<ol start="4">
+<li><strong>可能是无界的</strong>，Java 中肯定无法包含一个的无限元素的 ArrayList，或者在特定大小的内存下，比如一个所有偶数的列表，但是流可以做到，其实就是因为流是懒加载的，通过生成器函数，在需要时才生成下一个遍历的元素，流的 <code>limit</code>，<code>findFirst</code> 操作可以在一个无限流上进行截断操作有限的数据。</li>
+</ol>
+<ol start="5">
+<li><strong>可消费的</strong> (Consumable). 流中的元素只在流的生命周期中可以访问，和 Iterator 一样，如果需要重新遍历数据源中的元素，需要生成一个新的流。</li>
+</ol>
+<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><p>中间操作可以被进一步分为无状态 (stateless) 和有状态 (stateful) 的操作。无状态的操作，如 <code>filter</code>，<code>map</code> ，处理新元素时不需要保留之前已经处理过元素的任何状态，每一个元素的处理都是独立的。有状态的操作，例如 <code>distinct</code>, <code>sorted</code>, 就需要保留之前已经处理过元素的一些状态。</p>
+<p>有状态的操作可能要遍历整个流才能生成一个结果，例如，只有遍历完流的所有元素，才能完成对流的排序操作。在并行计算下，一些包含保留状态的中间操作的流管道可能需要多次处理数据或者需要缓存大量的数据。而仅包含无状态的流管道，可以一次性处理，无论是在串行还是并行情况下，都需要进行很少的数据缓存。</p>
+<h2 id="短路操作"><a href="#短路操作" class="headerlink" title="短路操作"></a>短路操作</h2><p>一些操作也可以被看作<strong>短路操作</strong> <code>short-circuiting</code>，对于中间操作，短路操作意味着可以将一个无限流转换为一个有限流；对于终端操作，短路操作意味着对于一个无限流，可以在有限的时间内结束对流的处理。</p>
+<h2 id="并行流"><a href="#并行流" class="headerlink" title="并行流"></a>并行流</h2><p>所有的流可以以串行或者并行的方式执行，串行的流就是将显示的外部迭代变为内部迭代，流的并行也就是对数据进行递归划分，使用 ForkJoin 公用池的工作线程来执行。默认创建的流都是串行流，对于集合类，可以使用 <code>Collection.parallelStream()</code> 创建并行流，对于其它流，可以使用 <code>BaseStream.parallel</code> 方法指定该流为并行流，<code>BaseStream.sequential</code> 方法指定为串行流。</p>
+<p><strong>除了一些显示标识为结果不确定的一些操作（例如 <code>findAny</code>），流的串行执行和并行执行结果应该保持一致。</strong></p>
+<p>大多数流操作都接受描述用户指定行为的参数，通常是 lambda 表达式。为了使得最终的结果正确，这些<strong>行为参数</strong>应该是<strong>无干扰</strong>（non-interfering）的，大多数场景下应该是<strong>无状态</strong>的（stateless）。</p>
+<h3 id="Non-interference"><a href="#Non-interference" class="headerlink" title="Non-interference"></a>Non-interference</h3><p>流可以让我么你在不同的数据源上可能并行的执行一些聚合操作，甚至包括非线程安全的集合，如 <code>ArrayList</code>。但是只有在六管道执行的时候哦，阻止对数据源的干扰才能做到。流的执行，基本都是通过调用终端操作触发，当终端操作结束后，流的执行也就结束了。对于大多数数据源，保持非干扰性，意味着确保流管道在执行的过程中完全保持不对数据源进行修改。例外就是数据源本身是一个并发集合，本身就被设计为使用在并发场景下。并发的流数据源，它们的 <code>Spliterator</code> 应该具有 <code>CONCURRENT</code> 的特征。</p>
+<p>因此，如果流的数据源是不支持并发的， 应用于流管道的行为参数就不应该修改流的数据源。如果行为参数本身或者间接导致了流数据源的修改，则称该行为会干扰非并发数据源的流。这种约束适用于所有的流. 对于行为良好的流的数据源，可以在终端操作开始之前修改数据源，这些修改将反映在涵盖的元素中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; l = <span class="keyword">new</span> ArrayList(Arrays.asList(<span class="string">"one"</span>, <span class="string">"two"</span>));</span><br><span class="line">Stream&lt;String&gt; sl = l.stream();</span><br><span class="line">l.add(<span class="string">"three"</span>);</span><br><span class="line">String s = sl.collect(joining(<span class="string">" "</span>)); <span class="comment">// 最终 s 的结果为 'one two three'</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>JDK 集合类返回的流和 JDK 中包含的大多数类返回的流都是 well-behave.</p>
+<h3 id="Stateless-behaviors"><a href="#Stateless-behaviors" class="headerlink" title="Stateless behaviors"></a>Stateless behaviors</h3><p>如果行为参数是有状态的, 那么流的计算结果可能是不确定的或者不正确的. <strong>一个有状态的行为指的是它的结果取决于任何在流的执行期间有可能改变的任何状态.</strong> </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Set&lt;Integer&gt; seen = Collections.synchronizedSet(<span class="keyword">new</span> HashSet&lt;&gt;());</span><br><span class="line"></span><br><span class="line">stream.parallel().map(e -&gt; &#123; <span class="keyword">if</span> (seen.add(e)) <span class="keyword">return</span> <span class="number">0</span>; <span class="keyword">else</span> <span class="keyword">return</span> e; &#125;)...</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中的流是一个并行流, 针对一个相同的元素, 每次调用 map 返回的结果可能是不同的, 这是因为线程的调度是不确定的, 而无状态的行为就会保证行为的结果总是一样的.</p>
+<p>同样,应该注意的是, 在行为参数中方位可变的状态,会造成安全和性能方面的问题，如果你尝试使用同步机制来进行访问，那意味着要在数据竞争的情况下损失一定的性能。所以最好的办好就是使用无状态的行为参数。</p>
+<h3 id="Side-effects"><a href="#Side-effects" class="headerlink" title="Side-effects"></a>Side-effects</h3><p>不鼓励在流的计算中使用具有副作用的行为参数，因为它们通常会导致在不知情的情况下违反无状态要求，并危害线程安全。</p>
+<p>如果行为参数具有副作用，除非显示声明，不能保证这些副作用对其它线程的可见性，也不能保证同一个流的同一个元素的不同的操作的执行是在同一个线程中. 这些副作用的影响顺序也可能令人意外. </p>
+<p>即使一个流被限制为它的计算结果于流绑定的数据源元素的顺序一致, (如 <code>IntStream.range(0,5).parallel().map(x -&gt; x*2).toArray()</code> 的结果必须是 <code>[0, 2, 4, 6, 8]</code>), 也不保证映射器函数应用于单个元素的顺序，或者对于给定元素在哪个线程中执行任何行为参数。</p>
+<p>使用流提供的 reduce 操作, 可以让一些倾向于使用副作用的计算可以更安全、更有效. 当然, <code>forEach</code>, <code>peek</code>  这样的操作必定是副作用的, 使用时需要注意. 一些具有副作用的语句, 如处于 debug 使用 <code>println</code> , 通常没有什么危害性.</p>
+<h4 id="将具有副作用的操作转换为无副作用"><a href="#将具有副作用的操作转换为无副作用" class="headerlink" title="将具有副作用的操作转换为无副作用"></a>将具有副作用的操作转换为无副作用</h4><p>before</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    stream.filter(s -&gt; pattern.matcher(s).matches())</span><br><span class="line">          .forEach(s -&gt; results.add(s));  <span class="comment">// Unnecessary use of side-effects!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行在并行流的情况下, ArrayList 不是线程安全的, 会导致不正确的结果或者抛出异常, 添加同步机制,会导致数据竞争</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>after</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     List&lt;String&gt;results =</span><br><span class="line">         stream.filter(s -&gt; pattern.matcher(s).matches())</span><br><span class="line">               .collect(Collectors.toList());  <span class="comment">// No side-effects!</span></span><br><span class="line"><span class="comment">// 使用无副作用的 toList 收集器, 更安全</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="Ordering"><a href="#Ordering" class="headerlink" title="Ordering"></a>Ordering</h3><p>流是否有序 (<strong>encounter order</strong>, 遇到每个元素的顺序), 取决于绑定的数据源以及中间操作, 特定的流数据源 (例如 <code>List</code> 或者数组) 本来就是有序的, 而其它的 (如 <code>HashSet</code>) 是无序的. 一些中间操作, 如 <code>sorted</code>, 会将一个无序的流变为有序的, 其它的操作可能与之相反, 将一个有序流变为无需流, 如 <code>BaseStream.unordered</code>. 此外, 一些终端操作可能忽略有序性, 如 <code>forEach</code> 操作.</p>
+<p><strong>如果流是有序的，则大多数操作都被限制为按元素遇到的顺序对元素进行操作</strong>, 如果流的源是一个包含 [1, 2, 3] 的 <code>List</code>，那么执行 <code>map(x -&gt; x*2)</code> 的结果一定是 [2, 4, 6].  但是，如果源没有定义的相遇顺序，则值 [2, 4, 6] 的任何排列都将是有效结果。</p>
+<p>对串行流, 一个流是否有序, 并不会影响性能, 影响的是确定性. 如果一个流是有序的, 相同数据源的生成流的重复执行会生成一致的结果, 如果是无序的, 则可能会生成不一致的结果.</p>
+<p>对于并行流, 如果流是无序的, 可以更高效地执行. 一些特定的聚合操作, 如 <code>distinct</code>, <code>Collectors.groupingBy</code>, 如果流是无序的, 可以被更高效的实现. 类似地,  与遇到顺序相关的操作，例如 <code>limit</code>，可能需要缓存以确保正确排序，从而破坏了并行性的好处。</p>
+<p>如果某个流是有序的, 但是用户并不关心流中元素被处理地顺序, 使用 <code>unordered()</code> 显式将流变为无序, 可能会提高某些有状态或终端操作的并行性能. 然而，大多数流管道，例如计算一个整数流的总和，即使流是有序的, 仍然可以有效地并行化。</p>
+<p>这里的有序和无序指的是流中的元素的顺序是确定的还是不确定的.</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/Map/">Map</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-06-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Map</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">   </span><br><span class="line">  <span class="comment">// 返回与 key 之前关联的值, 如果 key 存在，返回与 key 关联的 value</span></span><br><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">putIfAbsent</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       V v = get(key);</span><br><span class="line">       <span class="keyword">if</span> (v == <span class="keyword">null</span>) &#123;</span><br><span class="line">           v = put(key, value);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> v;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回与 key 关联的当前值（要么是已经存在的，或者是 mappingFunction 函数计算得到的新值）, 如果 mappingFunction 计算的新值为 		null，该方法也返回 null</span></span><br><span class="line">   <span class="function"><span class="keyword">default</span> V <span class="title">computeIfAbsent</span><span class="params">(K key,</span></span></span><br><span class="line"><span class="function"><span class="params">           Function&lt;? <span class="keyword">super</span> K, ? extends V&gt; mappingFunction)</span> </span>&#123;</span><br><span class="line">       Objects.requireNonNull(mappingFunction);</span><br><span class="line">       V v;</span><br><span class="line">       <span class="keyword">if</span> ((v = get(key)) == <span class="keyword">null</span>) &#123;</span><br><span class="line">           V newValue;</span><br><span class="line">           <span class="keyword">if</span> ((newValue = mappingFunction.apply(key)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">               put(key, newValue);</span><br><span class="line">               <span class="keyword">return</span> newValue;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> v;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Hexo%20%E5%8D%9A%E5%AE%A2%E5%90%8C%E6%AD%A5%E8%84%9A%E6%9C%AC/">Hexo 博客同步脚本</a></h2>
             </div>
             <div class="post-meta">
@@ -225,65 +327,6 @@
 <p>[3] <a href="https://stackoverflow.com/questions/20119874/how-to-load-the-private-key-from-a-der-file-into-java-private-key-object" target="_blank" rel="noopener">how to load the private key from a .der file into java private key object - Stack Overflow</a></p>
 <p>[4] <a href="https://www.openssl.org/docs/man1.1.1/man1/openssl-rsa.html" target="_blank" rel="noopener">openssl rsa command</a></p>
 <p>[5] <a href="https://www.openssl.org/docs/man1.1.1/man1/openssl-pkcs8.html" target="_blank" rel="noopener">openssl pkcs8 command</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Quartz%20Stateful%20Job%20/">Quartz Stateful Job</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-05-22</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Quartz-Stateful-Job"><a href="#Quartz-Stateful-Job" class="headerlink" title="Quartz Stateful Job"></a>Quartz Stateful Job</h1><p>如果想在 Quartz 定时任务的每次执行过程中，对  JobDetail 的 JobDataMap 中的属性值进行更新，也就是 stateful 的任务，如不使用 <code>@PersistJobDataAfterExecution</code>  注解，稍后会涉及到，最初肯定是想获取上下文的 JobDetail.JobDataMap 引用，调用 put 方法进行覆盖：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduleJob</span> <span class="keyword">implements</span> <span class="title">Job</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(JobExecutionContext jobExecutionContext)</span> <span class="keyword">throws</span> JobExecutionException </span>&#123;</span><br><span class="line">        <span class="comment">// 在构造 JobDetail, 初始化 JobDataMap 包含属性 `name`，值为 `Jason`</span></span><br><span class="line">        JobDataMap dataMap = jobExecutionContext.getJobDetail().getJobDataMap();</span><br><span class="line">        String name = dataMap.getString(<span class="string">"name"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"dataMap:"</span> + dataMap.hashCode());</span><br><span class="line">        System.out.println(<span class="string">"executionContext:"</span> + jobExecutionContext.hashCode());</span><br><span class="line">        System.out.println(LocalDateTime.now() + <span class="string">" This is hi from "</span> + name);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 想要在每次任务执行时进行更新属性 name 的值</span></span><br><span class="line">        dataMap.put(<span class="string">"name"</span>, name + <span class="string">" la"</span>);</span><br><span class="line">        System.out.println(dataMap.getString(<span class="string">"name"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果是，每次执行时，获取到的 name 属性值还是 Jason，为此，对获取到的 <code>dataMap</code> 进行了 hashCode 值的打印，结果每次输出都是一样的，自认为每次 Job 执行时获取到的 JobDataMap 应用都指向同一个对象，为什么每次 put 不成功？</p>
-<p>这个问题的答案在于，获取到的 JobDataMap 不是同一个对象，但返回的 hashCode 一样，是因为 JobDataMap 内部封装了一个 HashMap，HashMap  hashCode 方法是对其中包含的每一个 Node(Entry) 中的 &lt;K,V&gt; 计算 HashCode 的值的加和，所以如果不同 HashMap 对象，存储相同的 K,V, 这两个 HashMap 的 hashCode 是相等，但实际上是两个不同的对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java.util.AbstractMap#hashCode</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">0</span>;</span><br><span class="line">        Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();</span><br><span class="line">        <span class="keyword">while</span> (i.hasNext())</span><br><span class="line">            h += i.next().hashCode();</span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>再回到如何更新 JobDetail 中 JobDataMap 中的值，通过 <strong>debug</strong>,  Job 每次执行的流程是，由 <code>QuartzSchedulerThread</code> 线程创建 <code>JobRunShell</code> 时，由于未使用持久化，使用默认的 <code>RAMJobStore</code>，每次执行时，从 JobStore 中获取执行时的上下文数据，并将其封装在 <code>TriggerFiredBundle</code> 对象中，并且再初始化该对象时，返回 JobDetail 对象的一个克隆对象，对应的 JobDataMap  也是原始 JobDataMap 的一个克隆对象（浅拷贝 shallow copy ），最后将这些数据封装在 <code>JobExecutionContext</code> 中， <code>JobShell（Runnanle 对象）</code> 由工作线程执行。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// org.quartz.simpl.RAMJobStore#triggersFired</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> List&lt;TriggerFiredResult&gt; <span class="title">triggersFired</span><span class="params">(List&lt;OperableTrigger&gt; firedTriggers)</span> </span>&#123;</span><br><span class="line"> 	  <span class="comment">//... 前面代码省略</span></span><br><span class="line">     TriggerFiredBundle bndle = <span class="keyword">new</span> TriggerFiredBundle(retrieveJob(</span><br><span class="line">                       tw.jobKey), trigger, cal,</span><br><span class="line">                       <span class="keyword">false</span>, <span class="keyword">new</span> Date(), trigger.getPreviousFireTime(), prevFireTime,</span><br><span class="line">                       trigger.getNextFireTime());</span><br><span class="line">      <span class="comment">//... 后面代码省略</span></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// org.quartz.simpl.RAMJobStore#retrieveJob</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> JobDetail <span class="title">retrieveJob</span><span class="params">(JobKey jobKey)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">synchronized</span>(lock) &#123;</span><br><span class="line">           JobWrapper jw = jobsByKey.get(jobKey);</span><br><span class="line">           <span class="keyword">return</span> (jw != <span class="keyword">null</span>) ? (JobDetail)jw.jobDetail.clone() : <span class="keyword">null</span>;</span><br><span class="line">       &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// org.quartz.impl.JobDetailImpl#clone</span></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       JobDetailImpl copy;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           copy = (JobDetailImpl) <span class="keyword">super</span>.clone();</span><br><span class="line">           <span class="keyword">if</span> (jobDataMap != <span class="keyword">null</span>) &#123;</span><br><span class="line">               copy.jobDataMap = (JobDataMap) jobDataMap.clone();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">catch</span> (CloneNotSupportedException ex) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IncompatibleClassChangeError(<span class="string">"Not Cloneable."</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> copy;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码解释了为什么每次在 Job 执行时，对 JobDetail.JobDataMap 的字符串属性进行更新时，不起效，因为每次获取都是不同的 JobDataMap 对象，对克隆对象做的更新不能反映到原始的对象中，但是对引用类型的属性进行更新，可以生效，因为原始的克隆是浅拷贝（比如，在 JobDataMap 中使用一个 ArrayList, 并在每次任务执行时添加元素到这个 List 中）。</p>
-<p>那么要如何实现对 JobDetail 中的 JobDataMap 进行更新，使得每次都可以更新一个状态，保存在里面呢？答案是使用 <code>@PersistJobDataAfterExecution</code> 注解，在 Job 执行结束时，会触发 JobStore 的 <code>triggeredJobComplete</code> 方法，做一些收尾工作, 其中会判断如果  JobClass 类上使用了该注解，会更新 JobStore 中保存的 JobDetial 和其 JobDataMap。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//org.quartz.simpl.RAMJobStore#triggeredJobComplete</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">triggeredJobComplete</span><span class="params">(OperableTrigger trigger,</span></span></span><br><span class="line"><span class="function"><span class="params">            JobDetail jobDetail, CompletedExecutionInstruction triggerInstCode)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">                    <span class="keyword">if</span> (jd.isPersistJobDataAfterExecution()) &#123;</span><br><span class="line">                    JobDataMap newData = jobDetail.getJobDataMap();</span><br><span class="line">                    <span class="keyword">if</span> (newData != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        newData = (JobDataMap)newData.clone();</span><br><span class="line">                        newData.clearDirtyFlag();</span><br><span class="line">                    &#125;</span><br><span class="line">                    jd = jd.getJobBuilder().setJobData(newData).build();</span><br><span class="line">                    jw.jobDetail = jd;</span><br><span class="line">                &#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/JOSE/">JOSE</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-05-18</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Jose JSON 对象的加密与签名</p>
 
                 
             </div>

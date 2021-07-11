@@ -84,6 +84,112 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/SpringBoot%20Https/">SpringBoot Https</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-05-16</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Spring-Boot-中使用-https"><a href="#Spring-Boot-中使用-https" class="headerlink" title="Spring Boot 中使用 https"></a>Spring Boot 中使用 https</h1><p>在 Spring Boot 中了指定证书路径以及相关的信息后, 启动应用后, 通过 https 访问, 可以在左上角 <code>不安全</code> 处点击查看服务器证书信息</p>
+<h3 id="证书基本信息"><a href="#证书基本信息" class="headerlink" title="证书基本信息"></a>证书基本信息</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210219213950292.png" alt="image-20210219213950292"></p>
+<h3 id="证书详细信息"><a href="#证书详细信息" class="headerlink" title="证书详细信息"></a>证书详细信息</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210219214017725.png" alt="image-20210219214017725"></p>
+<h3 id="证书路径-Certificate-Path-证书链-Certificate-chain"><a href="#证书路径-Certificate-Path-证书链-Certificate-chain" class="headerlink" title="证书路径 Certificate Path/证书链 Certificate chain"></a>证书路径 Certificate Path/证书链 Certificate chain</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210219214038926.png" alt="image-20210219214038926"></p>
+<p><a href="https://zhuanlan.zhihu.com/p/31385073" target="_blank" rel="noopener">Spring Boot 使用 SSL-HTTPS</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/ASN.1/">ASN.1</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-04-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="ASN-1"><a href="#ASN-1" class="headerlink" title="ASN.1"></a>ASN.1</h1><h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>ASN.1 (Abstract Syntax Notation dot one) ，用来描述通信协议中传输的数据，定义了抽象数据类型规范的形式, 具有健壮性, 准确性, 独立于编程语言,独立于硬件和操作系统, 可以通过简单类型组成复杂的数据类型。</p>
+<p>例如定义联系人 Contact 类型的语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Contact ::&#x3D; SEQUENCE &#123;</span><br><span class="line">name VisibleString,</span><br><span class="line">phone NumericString</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>上述的例子中定义了一个联系人的结构, 具有这样结构的联系人 name = ‘Josn Smith’, phone = 987 6543210可以通过 AS1.1 的<strong>编码规则</strong> (后面会讲到) 序列化为二进制或文本格式, 便于进行传输</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">        JSON Encoding Rules (JER)  </span><br><span class="line">&#123; &quot;name&quot; : &quot;John Smith&quot;, &quot;phone&quot; : &quot;987 6543210&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>完整定义的示例</strong></p>
+<p>购买订单类型的 ASN.1 定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">-- 所有的定义都需要包含在一个模块(module)中, module 是以 &#39;BEGIN&#39; 关键字开始, &#39;END&#39; 关键字结束</span><br><span class="line">-- ASN.1 中一个 Tag 是消息中每个组件的一个内部标识符(internal identification). Tag 都是唯一的, 可以直接指定,但最好还是使用 AUTOMATIC TAGS, 易于阅读和理解, 较少歧义性和冲突性的可能</span><br><span class="line"></span><br><span class="line">MyShopPurchaseOrders DEFINITIONS AUTOMATIC TAGS ::&#x3D; BEGIN</span><br><span class="line"></span><br><span class="line">PurchaseOrder ::&#x3D; SEQUENCE &#123;</span><br><span class="line">dateOfOrder DATE,</span><br><span class="line">customer    CustomerInfo,</span><br><span class="line">items       ListOfItems</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CustomerInfo ::&#x3D; SEQUENCE &#123;</span><br><span class="line">companyName    VisibleString (SIZE (3..50)),</span><br><span class="line">billingAddress Address,</span><br><span class="line">contactPhone   NumericString (SIZE (7..12))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Address::&#x3D; SEQUENCE &#123;</span><br><span class="line">street  VisibleString (SIZE (5 .. 50)) OPTIONAL,</span><br><span class="line">city    VisibleString (SIZE (2..30)),</span><br><span class="line">state   VisibleString (SIZE(2) ^ FROM (&quot;A&quot;..&quot;Z&quot;)),</span><br><span class="line">zipCode NumericString (SIZE(5 | 9))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ListOfItems ::&#x3D; SEQUENCE (SIZE (1..100)) OF Item</span><br><span class="line"></span><br><span class="line">Item ::&#x3D; SEQUENCE &#123;</span><br><span class="line">itemCode        INTEGER (1..99999),</span><br><span class="line">color           VisibleString (&quot;Black&quot; | &quot;Blue&quot; | &quot;Brown&quot;),</span><br><span class="line">power           INTEGER (110 | 220),</span><br><span class="line">deliveryTime    INTEGER (8..12 | 14..19),</span><br><span class="line">quantity        INTEGER (1..1000),</span><br><span class="line">unitPrice       REAL (1.00 .. 9999.00),</span><br><span class="line">isTaxable       BOOLEAN</span><br><span class="line">&#125;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ASN-1-基础数据类型"><a href="#ASN-1-基础数据类型" class="headerlink" title="ASN.1 基础数据类型"></a>ASN.1 基础数据类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-- BOOLEAN</span><br><span class="line">doorOpen BOOLEAN ::&#x3D; TRUE</span><br><span class="line"></span><br><span class="line">-- INTEGER</span><br><span class="line">speed INTEGER (0..60) ::&#x3D; 40</span><br><span class="line"></span><br><span class="line">--VisibleString</span><br><span class="line">LineOfText ::&#x3D; VisibleString</span><br><span class="line"></span><br><span class="line">--IA5String</span><br><span class="line">TextWithLayout ::&#x3D; IA5String</span><br><span class="line"></span><br><span class="line">--MORE ARE NOT LISTED HERE</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.oss.com/asn1/resources/asn1-made-simple/types.html" target="_blank" rel="noopener">Most Common ASN.1 Types</a></p>
+<h2 id="Constaints-约束"><a href="#Constaints-约束" class="headerlink" title="Constaints 约束"></a>Constaints 约束</h2><p>ASN.1 的 schema 定义中可以包含约束, 用来限制给定字段或类型的有效值集合, 通过使用约束, 也可以生成一个更紧凑的编码, 例如 <code>INTEGER(0..200)</code> 的值用一个字节进行编码就够了</p>
+<h4 id="基础约束"><a href="#基础约束" class="headerlink" title="基础约束"></a>基础约束</h4><p>字母表约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ardToReadChars ::&#x3D; IA5String (FROM(&quot;8BI10OD5S&quot;))</span><br></pre></td></tr></table></figure>
+
+<p>模式(类似于正则表达式)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LicensePlate ::&#x3D; IA5String (PATTERN &quot;[0-9]#4(-[A-Z]#2)?&quot;) -- NNNN[-NN]</span><br></pre></td></tr></table></figure>
+
+<p>值的大小,长度约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LicensePlate ::&#x3D; IA5String (SIZE (4..7))</span><br><span class="line">CarPark ::&#x3D; SEQUENCE SIZE (1..25) OF LicensePlate</span><br></pre></td></tr></table></figure>
+
+<p>值取值范围约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CarSpeed ::&#x3D; INTEGER (0..200)</span><br></pre></td></tr></table></figure>
+
+<p>单值约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WarningColors ::&#x3D; UTF8String (&quot;Red&quot; | &quot;Yellow&quot;)</span><br><span class="line">InfoColors ::&#x3D; UTF8String (&quot;Blue&quot; | &quot;White&quot;)</span><br><span class="line">CitySpeedLimit ::&#x3D; INTEGER (25 | 30 | 40)</span><br><span class="line">HighwaySpeedLimit ::&#x3D; INTEGER (40 | 50 | 60 | 70)</span><br></pre></td></tr></table></figure>
+
+<p>包含子类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SignColors ::&#x3D; UTF8String (InfoColors UNION WarningColors)</span><br><span class="line">SpeedLimitSigns ::&#x3D; INTEGER (CitySpeedLimit | HighwaySpeedLimit | 10 | 65)</span><br><span class="line">RuralSpeedLimit ::&#x3D; INTEGER (CitySpeedLimit INTERSECTION HighwaySpeedLimit)</span><br></pre></td></tr></table></figure>
+
+<p>编码约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">PerInside ::&#x3D; OCTET STRING (</span><br><span class="line">                    CONTAINING Doc </span><br><span class="line">                    ENCODED BY &#123; joint-iso-itu-t asn1(1) </span><br><span class="line">                                 packed-encoding(3) </span><br><span class="line">                                 basic(0) </span><br><span class="line">                                 unaligned(1)&#125;) </span><br><span class="line"></span><br><span class="line"> pdf OBJECT IDENTIFIER ::&#x3D; &#123; iso(1) </span><br><span class="line">                             member-body(2) </span><br><span class="line">                             us(840) </span><br><span class="line">                             adobe(113583) </span><br><span class="line">                             acrobat(1)&#125;</span><br><span class="line"></span><br><span class="line"> Doc ::&#x3D; OCTET STRING (ENCODED BY pdf)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>更复杂的字段条件依赖约束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Schema DEFINITIONS AUTOMATIC TAGS ::&#x3D; BEGIN</span><br><span class="line"></span><br><span class="line">Address ::&#x3D; SEQUENCE &#123;</span><br><span class="line">   street-address UTF8String,</span><br><span class="line">   country UTF8String -- see a note below, </span><br><span class="line">   postal-code UTF8String</span><br><span class="line">&#125; ((WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;USA&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9]#5(-[0-9]#4)?&quot;)</span><br><span class="line">    &#125; </span><br><span class="line">  | WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;Canada&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9][A-Z][0-9] </span><br><span class="line">                                [A-Z][0-9][A-Z]&quot;)</span><br><span class="line">    &#125;  </span><br><span class="line">  | WITH COMPONENTS &#123;</span><br><span class="line">       ..., </span><br><span class="line">       country (&quot;Netherlands&quot;), </span><br><span class="line">       postal-code (PATTERN &quot;[0-9]#4 [A-Z]#2&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  ))</span><br><span class="line"></span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Encoding-Rules-编码规则"><a href="#Encoding-Rules-编码规则" class="headerlink" title="Encoding Rules - 编码规则"></a>Encoding Rules - 编码规则</h2><p>编码规则描述了应该将 ASN.1 中定义的值如何进行编码以进行传输（被转换为字节进行传输，或者反之，将字节转为 ASN.1 中的值） ，并且不受机器，编程语言，应用程序表示的影响。每一种编码规则都有其特点，例如在压缩方面的，解码速度方面的。任何一种编码规则都能表示要进行交换的信息，只是使用场景不同</p>
+<h3 id="BER-DER-CER"><a href="#BER-DER-CER" class="headerlink" title="BER, DER, CER"></a>BER, DER, CER</h3><p>BER (Basic Encoding Rules) 是最古老的编码规则，使用 TLV (Tag-Length-Value) 的格式对所有的信息进行编码，即先发送一个标签（Tag）表明数据的类型，如 SEQUENCE，接着是数据的长度（Length）, 然年后是实际的数据，DER (Distinguished Encoding Rules) 以及 CER (Canonical Encoding Rules) 是 BER 的子集，消除了 BER 提供的一些灵活性。DER 通常使用在于安全相关的应用中，例如 X.509 数字证书。</p>
+<h3 id="OER"><a href="#OER" class="headerlink" title="OER"></a>OER</h3><p>OER (Octet Encoding Rules) - 最快的 ASN.1 编码规则，与 PER (Packed Encoding Rules) 一样，通过利用 ASN.1 的 schema 的信息表示的优势来限制包含类每个编码消息的信息数量，生成紧凑的编码输出。聚焦于编码与解码的速度。</p>
+<h3 id="PER"><a href="#PER" class="headerlink" title="PER"></a>PER</h3><p>PER (Packed Encoding Rules) 最紧凑的编码规则，与 BER 不同的是，PER 不会发送 TLV 中的标签 T, 是应为消息中的组件的顺序是一致的，如果 TLV 中的值 V 是大小固定的，也不会发送长度 L. PER 同样使用的 ASN.1 定义之外的的信息来减少冗余的数据（V）. 因此，PER 编码的消息更加紧凑，能够节省带宽.</p>
+<h3 id="XER-E-XER"><a href="#XER-E-XER" class="headerlink" title="XER,E-XER"></a>XER,E-XER</h3><p>XER (XML Encodind Rules), E-XER(Extended XER) 使用 XML 文本格式来进行编码, 格式为 <code>&lt;start-tag&gt; value &lt;end-tag&gt;</code>. XER 与 E-XER 的区别在于 E-XER 生成的默认编码更适合与 XSD(XML Schema Definition) 引擎进行信息交换. 相同的 ASN.1 数据可以使用多个编码规则, 这意味着来自于手机的 PER 编码的消息可以转换为 E-XER 编码, 用于在一个 web 浏览器中进行展示和操作</p>
+<h3 id="JER"><a href="#JER" class="headerlink" title="JER"></a>JER</h3><p>JER (JSON Encoding Rules), 基于 JSON 格式的编码规则, 相比 XER, E-XER, 更加紧凑, 易于使用. 基于 RFC-7159 中的 JSON 规范.</p>
+<p>通过JER，ASN.1用户可以轻松调试ASN.1协议并进行故障排除.</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://www.oss.com/asn1/resources/asn1-made-simple/introduction.html" target="_blank" rel="noopener">What is ASN1</a></p>
+<p>[2] <a href="https://blog.csdn.net/fengbingchun/article/details/106487696" target="_blank" rel="noopener">ASN.1简介及OpenSSL中ASN.1接口使用举例</a></p>
+<p>[3] <a href="https://blog.csdn.net/jf223355/article/details/103511644" target="_blank" rel="noopener">openssl 密钥生成和解析</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/AES/">AES</a></h2>
             </div>
             <div class="post-meta">
@@ -348,226 +454,6 @@
 <p>在日本总务省和经济产业省 2013 年发布的《电子政府相关技术采购中参考的密码清单》中，“电子政府推荐使用的密码清单” 项中将 3-key Triple DES 作为 64 比特分组密码列了出来，但考虑到 IST SP 800-67 的规定，以及其事实性标准的地位，又在脚注中给出了“目前暂且允许使用”的描述</p>
 </blockquote>
 <h4 id="使用-openssl-通过-3DES-进行加密和解密"><a href="#使用-openssl-通过-3DES-进行加密和解密" class="headerlink" title="使用 openssl 通过 3DES 进行加密和解密"></a>使用 openssl 通过 3DES 进行加密和解密</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加密</span></span><br><span class="line">$ cat seq.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">$ openssl enc -e -des3 -a -salt -<span class="keyword">in</span> seq.txt -out encrypted.txt</span><br><span class="line">enter des-ede3-cbc encryption password:</span><br><span class="line">Verifying - enter des-ede3-cbc encryption password:</span><br><span class="line"></span><br><span class="line">$ cat encrypted.txt</span><br><span class="line">U2FsdGVkX1+HbjKWGlQzlIM7EM/TFhzn8wzKBBWn91TBdUSH3bOCeQ==</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密</span></span><br><span class="line">openssl enc -d -des3 -a -salt -<span class="keyword">in</span> encrypted.txt -out decrypted.txt</span><br><span class="line">enter des-ede3-cbc decryption password:</span><br><span class="line"></span><br><span class="line">$ cat decrypted.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/OAuth/">OAuth</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-03-17</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>OpenID Connect</p>
-<p>User Managed Access (UMA)</p>
-<p>资源拥有者向授权服务器进行身份认证，可以自由选择: 用户名/密码、加密证书、安全令牌、联合单点登录或其它方式</p>
-<p>授权服务器可以保存授权决策，后续可以跳过授权环节，沿用前一次的授权决策</p>
-<p>也可以通过客户端白名单或者黑名单的内部策略来否决用户的决策</p>
-<p>令牌内省</p>
-<p>记忆授权决策</p>
-<p>授权码许可类型</p>
-<p>隐式许可类型</p>
-<p>客户端凭据许可类型</p>
-<p>授权服务器和资源服务共享令牌数据库是一种简单可行的机制，但是如果授权服务器要对多个资源服务进行保护，这种共享就不合适，可以使用：结构化令牌和令牌内省</p>
-<h3 id="结构化令牌-JWT"><a href="#结构化令牌-JWT" class="headerlink" title="结构化令牌 - JWT"></a>结构化令牌 - JWT</h3><h4 id="签名的-JWT"><a href="#签名的-JWT" class="headerlink" title="签名的 JWT"></a>签名的 JWT</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/JWT.png" alt="JWT"></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JWT 头部，描述令牌剩余部分的信息</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"typ"</span>: <span class="string">"JWT"</span>, <span class="comment">// 表明令牌的第二部分（载荷）的类型</span></span><br><span class="line">    <span class="attr">"alg"</span>: <span class="string">"none"</span> <span class="comment">// none 表示未签名的令牌</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 载荷， JWT 的载荷可以是任意的 JSON 对象</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"sub"</span>: <span class="string">"1234567890"</span>, <span class="comment">// 令牌主体, 令牌是关于谁的，一般设为资源拥有者的唯一标识</span></span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"John Doe"</span>,  <span class="comment">// 特定于当前应用的新增字段，用户名称</span></span><br><span class="line">    <span class="attr">"admin"</span>: <span class="literal">true</span>        <span class="comment">// 特定于当前应用的新增字段，是否为管理员</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 载荷， JWT 提供的一些可选的声明，可以为特定的应用新增字段</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"iss"</span>: <span class="string">""</span>,      <span class="comment">// 令牌颁发者，令牌的创建者，一般设为授权服务器的 URL</span></span><br><span class="line">    <span class="attr">"sub"</span>: <span class="string">""</span>,      <span class="comment">// 令牌主体, 令牌是关于谁的，一般设为资源拥有者的唯一标识</span></span><br><span class="line">    <span class="attr">"aud"</span>: <span class="string">""</span>,      <span class="comment">// 令牌的受众，令牌的接收者，包含受保护资源的 URI 或者能够接受该令牌的受保护资源，可以是字符串数组</span></span><br><span class="line">    <span class="attr">"exp"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌的过期时间戳，令牌什么时候过期，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"nbf"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌的生效时间戳，令牌从什么时候生效，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"iat"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌颁发的时间戳，令牌何时被创建，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"jti"</span>: <span class="string">""</span>       <span class="comment">// 令牌的唯一标识符。令牌颁发者创建的每一个令牌中唯一，密码随机值，这个值相当于向结构化令牌中加入了一个攻击者无法获得的随机熵组件，有利于防止令牌猜测攻击和重放攻击</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>通过 JOSE 库得到最终代签名的令牌 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImF1dGhzZXJ2ZXIifQ.eyJpc3MiOiJodH</span><br><span class="line">RwOi8vbG9jYWxob3N0OjkwMDEvIiwic3ViIjoiOVhFMy1KSTM0LTAwMTMyQSIsImF1ZCI6Imh0d</span><br><span class="line">HA6Ly9sb2NhbGhvc3Q6OTAwMi8iLCJpYXQiOjE0NjcyNTE5NjksImV4cCI6MTQ2NzI1MjI2OSwi</span><br><span class="line">anRpIjoidURYMWNwVnYifQ.nK-tYidfd6IHW8iwJ1ZHcPPnbDdbjnveunKrpOihEb0JD5wfjXoY</span><br><span class="line">jpToXKfaSFPdpgbhy4ocnRAfKfX6tQfJuFQpZpKmtFG8OVtWpiOYlH4Ecoh3soSkaQyIy4L6p8o</span><br><span class="line">3gmgl9iyjLQj4B7Anfe6rwQlIQi79WTQwE9bd3tgqic5cPBFtPLqRJQluvjZerkSdUo7Kt8XdyG</span><br><span class="line">yfTAiyrsWoD1H0WGJm6IodTmSUOH7L08k-mGhUHmSkOgwGddrxLwLcMWWQ6ohmXaVv_Vf-9yTC2</span><br><span class="line">STHOKuuUm2w_cRE1sF7JryiO7aFRa8JGEoUff2moaEuLG88weOT_S2EQBhYB0vQ8A</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/OAuth2.0/">OAuth2.0</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-03-13</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><ul>
-<li><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
-</li>
-<li><p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
-</li>
-</ul>
-<p><strong>其它配置：</strong></p>
-<ul>
-<li>重定向 url</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/callback</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>授权端点</p>
-</li>
-<li><p>令牌端点</p>
-</li>
-<li><p>资源服务器， 受保护的资源端点</p>
-</li>
-</ul>
-<h3 id="授权码许可方式获取访问令牌"><a href="#授权码许可方式获取访问令牌" class="headerlink" title="授权码许可方式获取访问令牌"></a>授权码许可方式获取访问令牌</h3><ol>
-<li>将用户重定向至授权服务器的授权端点，并在请求的 URL 中包含适当的查询参数，如请求权限范围，重定向 URL （回调 URL, 即授权服务器返回授权码给客户端的端点），client_id 等。</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># `code` 授权码许可类型</span></span><br><span class="line"><span class="attr">response_type</span>: <span class="string">'code',</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端标识 ID</span></span><br><span class="line"><span class="attr">client_id</span>: <span class="string">client.client_id,</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端接收授权码的端点</span></span><br><span class="line"><span class="attr">redirect_uri</span>: <span class="string">client.redirect_uris[0]</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="2">
-<li>在授权<strong>服务器授权端点</strong>，用户对客户端进行授权（可能包含必要用户身份认证），授权结束，根据客户端传过来的重定向 URL 重定向至客户端端点, 并且携带了授权服务器生成的授权码</li>
-</ol>
-<ol start="3">
-<li>客户端拿到授权码，使用 <strong>POST</strong> 请求，并使用 Http Basic 认证（client_id作为用户名，client_secret 作为密码），将授权码以表单形式放入请求体中，发送至<strong>服务器令牌端点</strong></li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 请求头部，使用表单，使用 Http Basic 认证</span></span><br><span class="line"><span class="keyword">var</span> headers = &#123;</span><br><span class="line"><span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line"><span class="string">'Authorization'</span>: <span class="string">'Basic '</span> + encodeClientCredentials(client.client_id,</span><br><span class="line">client.client_secret)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 授权码许可类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'authorization_code',</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权码</span></span><br><span class="line"><span class="attr">code</span>: <span class="string">code,</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 此处不需要执行重定向</span></span><br><span class="line"><span class="comment"># 这里是 OAuth 规范约定必须指定和请求授权时相同的重定向 url</span></span><br><span class="line"><span class="attr">redirect_uri</span>: <span class="string">client.redirect_uris[0]</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>请求成功时，授权服务器返回一个包含访问令牌等信息的 JSON 对象</li>
-</ol>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>	<span class="comment">// Bearer 令牌，持有该类型的令牌，就可以向受保护资源出示</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>客户端解析 JSON 对象，获取访问令牌值，并将其保存起来，以便以后使用</li>
-</ol>
-<h3 id="使用-state-参数添加跨站保护"><a href="#使用-state-参数添加跨站保护" class="headerlink" title="使用  state 参数添加跨站保护"></a>使用  state 参数添加跨站保护</h3><p>为了避免恶意调用客户端重定向 URL 端点 （<code>client.redirect_uris[0]</code>），破解令牌，请求授权端点前，客户端生成一个随机字符串，并添加在请求授权端点的请求参数中 （state），授权端点在返回授权码时，会带着这个字符串，客户端进行比较，如果相同，表明是自己之前发送的授权请求，否则，应向客户提示异常。</p>
-<h3 id="使用令牌访问受保护资源"><a href="#使用令牌访问受保护资源" class="headerlink" title="使用令牌访问受保护资源"></a><strong>使用令牌访问受保护资源</strong></h3><p>bearer 令牌，它意味着无论是谁，只要持有该令牌就可以向受保护资源出示</p>
-<p>使用令牌向受保护资源发出调用请求，令牌的使用的方式有三种：</p>
-<ol>
-<li>HTTP Authorization 头部（OAuth 规范推荐）</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">'Authorization': 'Bearer ' + access_token</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>使用表单格式的请求体参数 （必须使得资源端点支持 POST 请求和表单）</p>
-</li>
-<li><p>使用 URL 编码的查询参数 （可能使得令牌暴漏在请求日志中）</p>
-</li>
-</ol>
-<h3 id="刷新访问令牌"><a href="#刷新访问令牌" class="headerlink" title="刷新访问令牌"></a>刷新访问令牌</h3><p>无需用户参与下获取新访问令牌的方法</p>
-<p><strong>步骤</strong></p>
-<p>1.授权服务器的令牌端点会将刷新令牌与访问令牌一起返回给客户端</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>2.客户端发送访问令牌失效时（使用令牌获取资源失败），使用刷新令牌重新请求访问令牌</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># POST 请求, 同时头部也要添加 Basic 认证信息，并使用表单形式</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'refresh_token',</span></span><br><span class="line"><span class="attr">refresh_token</span>: <span class="string">refresh_token</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>如果刷新令牌有效，返回新的访问令牌和刷新令牌</strong></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"IqTnLQKcSY62klAuNTVevPdyEnbY82PB"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果刷新令牌无效，提示错误, 回到最开始没有获取访问令牌的情况，提示用户重新进行获取与令牌的授权</p>
-<h2 id="受保护的资源端"><a href="#受保护的资源端" class="headerlink" title="受保护的资源端"></a>受保护的资源端</h2><p><strong>使用 OAuth 保护 Web API</strong></p>
-<ol>
-<li>从传入的请求中解析出令牌</li>
-<li>通过授权服务器验证令牌</li>
-<li>根据令牌的权限范围做出响应，令牌的权限范围有多种</li>
-</ol>
-<p><strong>资源服务器如何对请求中传过来的令牌进行验证？</strong></p>
-<ol>
-<li>授权服务器与资源服务器共享令牌数据库</li>
-<li>使用令牌内省（token introspection）的 Web 协议，由授权服务器提供接口，让资源服务器能在运行时检查令牌的状态</li>
-<li>令牌内包含资源服务器能直接解析并理解的信息，如 JWT, 使用受加密保护的 JSON 对象携带声明信息</li>
-</ol>
-<p><strong>权限范围 scope</strong></p>
-<ol>
-<li><p>不同的权限范围对应不同的操作，如 GET\POST\DELETE 分别对应的 read write delete 权限</p>
-</li>
-<li><p>不同的权限范围对应不同的数据结果，例如，同一个 API 对权限范围不同的客户端返回不同的子集，如有一个销售统计 API, 每个大区只能请求自己大区的数据</p>
-</li>
-<li><p>不同的用户对应不同的数据结果</p>
-</li>
-</ol>
-<blockquote>
-<p>资源服务器可以根据令牌及其附属信息（如权限范围）直接做出授权决策。资源服务器还可以将访问令牌中的权限范围与其他访问控制信息结合起来，用于决定是否响应 API 调用以及响应什么内容。</p>
-</blockquote>
-<p>资源服务器如何设计权限是比较灵活的，而且可以和其他控制信息结合，也是属于灵活的一种体现。客户端绝不会知道授权的用户与具体的权限范围，令牌本身就代表了资源拥有者的授权与权限范文，在资源服务器端，通过验证令牌以及获取令牌对应的访问权限，用户，以及其它控制信息，做出是否有要相应的决策以及相应什么内容。</p>
-<h2 id="授权服务器"><a href="#授权服务器" class="headerlink" title="授权服务器"></a>授权服务器</h2><p>授权服务器对用户进行身份认证、注册并管理客户端、颁发令牌。</p>
-<h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ol>
-<li>客户端将用户重定向至授权服务器授权端点 <code>/authorize</code>，并携带了必要的查询参数</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">https://api.weibo.com/oauth2/authorize?</span></span><br><span class="line">client_id=3129654709&amp;													//客户端 id</span><br><span class="line">redirect_uri=https://www.douyu.com/member/oauth/signin/weibo&amp;			//重定向客户端 uri</span><br><span class="line">state=96b2a0b5a31566c5f63b2322f987736a&amp;								//state 防止恶意调用客户端重定向 uri</span><br><span class="line">response_type=code&amp;													//授权码许可类型</span><br><span class="line">approval_prompt=force&amp;													//授权提示？</span><br><span class="line">scope=foo bar															//客户端期望的权限范围</span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="2">
-<li>授权服务器验证客户端身份（client id），检查传入的 redirect_url 与注册时的是否一致；验证请求的权限范围是否符合要求（提前为每个客户端限定了权限范围），如果都满足要求，生成一个随机字符串 ,  并将其与客户端请求的查询参数保存为一个映射；渲染一个授权表单，提供授权或拒绝授权，以及权限范围的选择, 并将随机字符串 ，嵌入到表单中（表示未完成授权，为授权页面提供了简单的防跨站请求伪造保护，防止对服务器端授权端点的恶意请求）</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 提交的表单数据</span><br><span class="line"><span class="keyword">POST</span> <span class="string">/approve</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost:9001</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)</span><br><span class="line">Gecko/20100101 Firefox/39.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Referer</span>: http://localhost:9001/authorize?response_type=code&amp;scope=foo&amp;client_id=</span><br><span class="line">oauth-client-1&amp;redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&amp;state=</span><br><span class="line"><span class="attribute">GKckoHfwMHIjCpEwXchXvsGFlPOS266u</span></span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"></span><br><span class="line">//reqid 即授权服务器生成的随机值，approve 表示用户的授权许可</span><br><span class="line">reqid=tKVUYQSM&amp;approve=Approve</span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="3">
-<li>用户同意授权，表单提交到授权码生成端点 <code>/approve</code>，对提交表单的请求验证 （随机值），权限范围进行验证（表单请求可能会被篡改，所以需要再次验证），生成授权码 code，存储在授权服务器上，并保存与之对应的权限范围（在令牌端点可以取出来，与访问令牌形成对应关系），客户端请求，并将其通过客户端请求授权时的重定向 uri 重定向到客户端，并且在查询参数上应用了客户端的 state 值（对客户端提供跨站保护，虽然不要求客户端传递该参数，但是要求授权服务器只要收到该参数就返回它）</li>
-</ol>
-<h3 id="令牌颁发"><a href="#令牌颁发" class="headerlink" title="令牌颁发"></a>令牌颁发</h3><p>客户端身份认证，client_id, client_secret</p>
-<p>授权许可类型 grant_type 检查， 如 <code>authorization_code</code></p>
-<p>如果是授权许可码类型，取出授权许可码 code， 并查询之前保存的 code 与客户端请求信息缓存，验证它确实是为该客户端生成的（对比 client_id）</p>
-<p>客户端匹配成功，生成一个访问令牌，并将其保存</p>
-<p>向客户端返回访问令牌，令牌类型</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">access_token</span>: access_token,</span><br><span class="line"><span class="attribute">token_type</span>: 'Bearer'</span><br></pre></td></tr></table></figure>
-
-<p>支持刷新令牌，刷新令牌只在授权服务器上使用，访问令牌只在受保护的资源上使用</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">refresh_token</span>: refresh_token,</span><br><span class="line"><span class="attribute">client_id</span>: clientId</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="授权许可类型"><a href="#授权许可类型" class="headerlink" title="授权许可类型"></a>授权许可类型</h2><p>除了授权码许可类型外的许可类型</p>
-<h3 id="1-隐式许可类型"><a href="#1-隐式许可类型" class="headerlink" title="1 隐式许可类型"></a>1 隐式许可类型</h3><p>直接运行在浏览器内的客户端，此时，客户端没有必要再通过授权码获取访问令牌，因为授权码是通过浏览器（前端信道）发送给客户端的，对于浏览器来说是可见的（如果是 web 应用，是直接发送给客户端服务器的）。直接请求<strong>授权端点</strong>， 而不是令牌端点来获取访问令牌，其它流程与授权码许可类型相似，客户端 id 检查，授权端点检查权限范围，资源拥有者身份认证，并验证对请求的批准，生成令牌，在授权端点响应中，将令牌附在客户端重定向 URI 片段中 。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 隐式许可类型下，客户端访问授权端点时的 response_type</span></span><br><span class="line"><span class="attr">response_type</span>=<span class="string">token</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权端点响应重定向时的 URI, 附件了 access_token 和 token_type</span></span><br><span class="line"><span class="attr">GET</span> <span class="string">/callback#access_token=987tghjkiu6trfghjuytrghj&amp;token_type=Bearer</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>限使用隐式许可类型的限制</strong></p>
-<ul>
-<li>无法持有客户端密钥，无法对浏览器隐藏密钥</li>
-<li>只使用授权端点，而不是用令牌端点 （不要求客户端在授权端点的身份认证），影响安全等级</li>
-<li>不可用于获取刷新令牌，浏览器内的应用运行的特点：短暂，没有必要</li>
-</ul>
-<h3 id="2-客户端凭据许可类型"><a href="#2-客户端凭据许可类型" class="headerlink" title="2 客户端凭据许可类型"></a>2 客户端凭据许可类型</h3><p>后端系统通信的场景，并不代表某个特定用户，没有明确的资源拥有者。这种场景下，相当于没有用户对客户端授权。</p>
-<p>客户端凭据许可类型，只使用后端信道，客户端代表自己从令牌端点获取令牌，此时客户端向授权服务器的<strong>令牌端点</strong>发出令牌请求。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端身份认证 head：客户端 ID 和密钥</span></span><br><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端凭据许可类型的授权类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'client_credientials'</span></span><br><span class="line"><span class="comment"># 也可以使用 scope 指定请求的权限范围，与授权码或隐式许可流程在 授权端点 上使用的 scope 参数一样</span></span><br><span class="line"><span class="attr">scope</span>: <span class="string">foo</span></span><br></pre></td></tr></table></figure>
-
-<p>客户端直接向授权服务器进行身份认证，授权服务器向客户端颁发访问令牌，客户端能随时获取新令牌，无需单独的资源拥有者参与，因此也没有必要使用刷新令牌</p>
-<p><strong>特点</strong></p>
-<ul>
-<li><p>客户端凭据类型没有任何直接的用户交互，是为可信的后端系统直接访问服务准备的</p>
-<p>因此对于交互式与非交互式客户端，最好进行区分，指定不同的权限范围</p>
-</li>
-</ul>
-<h3 id="3-资源拥有者凭据类型"><a href="#3-资源拥有者凭据类型" class="headerlink" title="3 资源拥有者凭据类型"></a>3 资源拥有者凭据类型</h3><p>客户端通过后端信道使用用户名和密码换取访问令牌, 资源拥有者直接与客户端进行交互, 而不是授权服务器, 只使用<strong>令牌端点</strong>. 授权服务器验证客户端的身份, 从收到的请求中取出用户名和密码，并与本地存储的用户信息对比, 验证权限范围, 如果都匹配，则授权服务器向客户端颁发令牌, 刷新访问令牌。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端收集用户的用户名和密码,发送至授权服务器的令牌端点</span></span><br><span class="line"><span class="attr">grant_type</span>=<span class="string">password</span></span><br><span class="line"><span class="attr">scope</span>=<span class="string">foo bar</span></span><br><span class="line"><span class="attr">username</span>=<span class="string">alice</span></span><br><span class="line"><span class="meta">&amp;password</span>=<span class="string">secret</span></span><br></pre></td></tr></table></figure>
-
-<p>虽然这种模式下客户端直接获取了用户的认证信息, 但是后续的请求受保护资源使用的是访问令牌, 比每次请求都直接使用用户凭据要好的多, 但这仍然是一种不不好的许可类型, 请不要在现实中使用.</p>
-<h3 id="4-断言许可类型"><a href="#4-断言许可类型" class="headerlink" title="4 断言许可类型"></a>4 断言许可类型</h3><p>官方扩展许可类型，客户端得到一条结构化的且被加密保护的信息-<strong>断言</strong>， 使用断言向授权服务器换取令牌。断言必须由信任的认证机构提供. 这种许可类型只使用后端信道, 没有明确的资源拥有者参与. 断言一般来自第三方, 客户端可以不知道断言本身的含义. 客户端向授权服务器的<strong>令牌端点</strong>发送 HTTP POST 请求, 将断言作为参数传递给服务器. 客户端一样要进行身份认证</p>
-<p>两种标准化的断言: 安全断言标记语言 (SAML); JSON Web Token (JWT)</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">urn:ietf:params:oauth:grant-type:jwt-bearer</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例断言</span></span><br><span class="line"><span class="attr">assertion</span>=<span class="string">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0xIn0.eyJpc3MiOiJodHRwOi8vdHJ1c3QuZXhhbXBsZS5uZXQvIiwic3ViIjoib2F1dGgtY2xpZW50LTEiLCJzY29wZSI6ImZvbyBiYXIgYmF6IiwiYXVkIjoiaHR0cDovL2F1dGhzZXJ2ZXIuZXhhbXBsZS5uZXQvdG9rZW4iLCJpYXQiOjE0NjU1ODI5NTYsImV4cCI6MTQ2NTczMzI1NiwianRpIjoiWDQ1cDM1SWZPckRZTmxXOG9BQ29Xb1djMDQ3V2J3djIifQ.HGCeZh79Va-7meazxJEtm07ZyptdLDu_Ocfw82F1zAT2p6Np6Ia_vEZTKzGhI3HdqXsUG3uDILBv337VNweWYE7F9ThNgDVD90UYGzZN5VlLf9bzjnB2CDjUWXBhgepSyaSfKHQhfyjoLnb2uHg2BUb5YDNYk5oqaBT_tyN7k_PSopt1XZyYIAf6-5VTweEcUjdpwrUUXGZ0fla8s6RIFNosqt5e6j0CsZ7Eb_zYEhfWXPo0NbRXUIG3KN6DCA-ES6D1TW0Dm2UuJLb-LfzCWsA1W_sZZz6jxbclnP6c6Pf8upBQIC9EvXqCseoPAykyR48KeW8tcd5ki3_tPtI7vA</span></span><br></pre></td></tr></table></figure>
-
-<p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌. 断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
-<p>基于 OAuth 的身份认证协议：OpenID Connect</p>
-
                 
             </div>
         </article>
