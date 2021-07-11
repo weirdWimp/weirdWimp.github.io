@@ -84,35 +84,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/ANSI%20Color/">ANSI Color</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-06-25</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>From Wicked Cool Shell Scripts, 2nd Edition</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">initializeANSI</span></span> () &#123;</span><br><span class="line"></span><br><span class="line">    esc=<span class="string">"\033"</span> <span class="comment"># 如果无效，直接敲 ESC 键。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 前景色：</span></span><br><span class="line">    blackf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[30m"</span>; redf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[31m"</span>; greenf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[32m"</span></span><br><span class="line">    yellowf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[33m"</span> bluef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[34m"</span>; purplef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[35m"</span></span><br><span class="line">    cyanf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[36m"</span>; whitef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[37m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 背景色：</span></span><br><span class="line">    blackb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[40m"</span>; redb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[41m"</span>; greenb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[42m"</span></span><br><span class="line">    yellowb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[43m"</span> blueb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[44m"</span>; purpleb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[45m"</span></span><br><span class="line">    cyanb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[46m"</span>; whiteb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[47m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 粗体、斜体、下划线以及样式切换：</span></span><br><span class="line">    boldon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[1m"</span>; boldoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[22m"</span></span><br><span class="line">    italicson=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[3m"</span>; italicsoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[23m"</span></span><br><span class="line">    ulon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[4m"</span>; uloff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[24m"</span></span><br><span class="line">    invon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[7m"</span>; invoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[27m"</span></span><br><span class="line">    reset=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[0m"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">initializeANSI</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span>This is a phrase in yellow<span class="variable">$&#123;redb&#125;</span> and red<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string"><span class="variable">$&#123;boldon&#125;</span>This is bold<span class="variable">$&#123;ulon&#125;</span> this is italics<span class="variable">$&#123;reset&#125;</span> bye-bye</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;italicson&#125;</span>This is italics<span class="variable">$&#123;italicsoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;ulon&#125;</span>This is ul<span class="variable">$&#123;uloff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;invon&#125;</span>This is inv<span class="variable">$&#123;invoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span><span class="variable">$&#123;redb&#125;</span>Warning I <span class="variable">$&#123;yellowb&#125;</span><span class="variable">$&#123;redf&#125;</span>Warning II<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string">"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Add snippets for shell common comment</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"Print to shellNote"</span>: &#123;</span><br><span class="line">		<span class="attr">"prefix"</span>: <span class="string">"shell"</span>,</span><br><span class="line">		<span class="attr">"body"</span>: [</span><br><span class="line">			<span class="string">" # Description: $1"</span>,</span><br><span class="line">			<span class="string">" # Author:      Your Name"</span>,</span><br><span class="line">			<span class="string">" # Date:        $&#123;CURRENT_YEAR&#125;-$&#123;CURRENT_MONTH&#125;-$&#123;CURRENT_DATE&#125;"</span></span><br><span class="line">		],</span><br><span class="line">		<span class="attr">"description"</span>: <span class="string">"shel script comment"</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Bash%E8%84%9A%E6%9C%AC%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">Bash脚本基本语法</a></h2>
             </div>
             <div class="post-meta">
@@ -267,6 +238,72 @@
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useJDBCCompliantTimezoneShift</span><br><span class="line"></span><br><span class="line">Should the driver use JDBC-compliant rules when converting TIME&#x2F;TIMESTAMP&#x2F;DATETIME values&#39; time zone information for those JDBC arguments which take a java.util.Calendar argument? This is part of the legacy date-time code, thus the property has an effect only when &quot;useLegacyDatetimeCode&#x3D;true.&quot;</span><br><span class="line"></span><br><span class="line">Default: false</span><br><span class="line"></span><br><span class="line">Since version: 5.0.0</span><br></pre></td></tr></table></figure>
 
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Maven/">Maven</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p><strong>groupId</strong>     此元素指示创建项目的组织或组的唯一标识符。 groupId是项目的关键标识符之一，通常基于组织的完全限定域名。 例如，org.apache.maven.plugins 是所有Maven插件的指定groupId。</p>
+<p>${basedir} represents the directory containing <code>pom.xml</code></p>
+<p><a href="http://repo.maven.apache.org/maven2" target="_blank" rel="noopener">http://repo.maven.apache.org/maven2</a></p>
+<p>Note that you can use the <executions> element to gain more control over the order of particular goals.</p>
+<p><strong>Project Inheritance - 项目继承</strong></p>
+<p>Introduce your own parent POMs by specifying the parent element in the POM</p>
+<p>子模块会继承父项目的配置项</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.mycompany.app<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-app<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">relativePath</span>&gt;</span>../parent/pom.xml<span class="tag">&lt;/<span class="name">relativePath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-module<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>备注：</p>
+<ul>
+<li><p>子模块未指定 <code>groupId</code> 和 <code>vsersion</code>, 将会从父 POM 中继承</p>
+</li>
+<li><p>如果父项目没有安装在 repository 中或者父项目与子模块的目录层级不是下面这种：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line"> |-- my-module</span><br><span class="line"> |   `-- pom.xml          <span class="comment"># 子模块的POM</span></span><br><span class="line"> `-- pom.xml              <span class="comment"># 父POM</span></span><br></pre></td></tr></table></figure>
+
+<p>  那么就需要通过 <code>relativePath</code> 标签指定父 POM 的路径，相对路径，相对于子模块的 POM 的路径</p>
+<p><strong>Project Aggregation - 项目聚合（集成）</strong></p>
+<p>Instead of specifying the parent POM from the module, it specifies the modules from the parent POM</p>
+<p>父项目中知道自己有哪些子模块，在父项目中调用了 Maven 命令， 这些 Maven 命令也会在子模块中执行。</p>
+<ul>
+<li>在父 POM 中指定 <code>packaging</code> 的值为 “pom”</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在父 POM 中指定子模块(子PMO)的目录 -<strong>相对路径</strong>，相对于父 POM 的路径</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>my-module<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>../my-module<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><em>Dependency mediation</em></p>
+<p>这将确定在遇到多个版本作为依赖项时将选择哪个版本的工件。 Maven选择“最接近的定义”。 也就是说，它在依赖树中使用与项目最接近的依赖项版本。 您可以通过在项目的POM中明确声明它来保证版本。 请注意，如果两个依赖项版本在依赖关系树中处于相同深度，则第一个声明将获胜。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate \</span><br><span class="line">-DgroupId=com.mycompany.app \ </span><br><span class="line">-DartifactId=my-app \</span><br><span class="line">-DarchetypeArtifactId=maven-archetype-quickstart \</span><br><span class="line">-DarchetypeVersion=1.4 \</span><br><span class="line">-DinteractiveMode=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>URI is not registered (Settings | Languages &amp; Frameworks | Schemas and DTDs)</p>
+<p>assembly 3.1 和 2.5 的版本竟然会之执行不一样，</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--禁止传递依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">useTransitiveDependencies</span>&gt;</span>true<span class="tag">&lt;/<span class="name">useTransitiveDependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3.1 版本， useTransitiveDependencies 设置为 true， scope 为 provided 的依赖不会拉进来？</p>
 
                 
             </div>
