@@ -84,38 +84,26 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E9%97%AE%E9%A2%98/">问题</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Linux/">Linux</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
-<p>allocation table - 分配表</p>
-<p>stack frame - 栈帧</p>
-<p>heap - 堆</p>
-<p>reachable object - 可达对象/活性对象</p>
-<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
-<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
-<p>对象的预期生命周期称为 <code>代</code></p>
-<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
-<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
-<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
-<p> Eden 区 / Nursery 区</p>
-<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
-<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
-<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
-<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
-<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
-<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
+                    <h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><p>1 ~/.bashrc ~/.profile /etc/bashrc /etc/profile<br>当通过Xshell连接时（SSH）或 <code>ssh ip</code> 时，会依次执行： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 登陆shell？</span></span><br><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /etc/profile</span></span><br><span class="line"><span class="comment"># This is /home/root/.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/root/.profile</span></span><br></pre></td></tr></table></figure>
+
+<p> 当通过 su 切换用户时，会执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is /etc/bash.bashrc</span></span><br><span class="line"><span class="comment"># This is /home/guo/.bashrc</span></span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -123,37 +111,85 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E6%B3%9B%E5%9E%8B/">泛型</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">配置网络与SSH</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Linux/">Linux</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>参考 Comparator 接口的静态方法 comparing</p>
-<blockquote>
-<p>Producer Extends, Consumer Super</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T, E extends Comparable&lt;? <span class="keyword">super</span> E&gt;&gt; <span class="function">Comparator&lt;T&gt; <span class="title">comparing</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends E&gt; keyGenerator)</span> </span>&#123;</span><br><span class="line">    Comparator&lt;T&gt; comparator1 = <span class="keyword">new</span> Comparator&lt;T&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 假设 keyGenerator 的定义接受一个 T 的父类型, 如 FatherT</span></span><br><span class="line">            <span class="comment">// 此时 o1 是 T 类型的，是可以作为 keyGenerator.apply(FatherT fatherT) 的参数的</span></span><br><span class="line">            <span class="comment">// 会进行向上转换，是合理有效的，任何父类引用都可以指向子类对象（父类的方法都会被子类继承，所以是合理的）</span></span><br><span class="line">            <span class="keyword">return</span> keyGenerator.apply(o1).compareTo(keyGenerator.apply(o2));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// lambda 表达式写法</span></span><br><span class="line">    Comparator&lt;T&gt; comparator = (c1, c2) -&gt; keyGenerator.apply(c1).compareTo(keyGenerator.apply(c2));</span><br><span class="line">    <span class="keyword">return</span> comparator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <p>[TOC]</p>
+<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>vmware 桥接模式下：</p>
+<p>各种网络模式参考 <a href="https://www.linuxidc.com/Linux/2016-09/135521.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-09/135521.htm</a></p>
+<p>/etc/sysconfig/network-scripts 下一般会有一个网络配置文件，如：ifcfg-eno16777736</p>
+<p>修改该文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet          </span><br><span class="line">BOOTPROTO=static          <span class="comment">#静态IP地址配置</span></span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_PEERDNS=yes</span><br><span class="line">IPV6_PEERROUTES=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">NAME=eno16777736</span><br><span class="line">UUID=7617ff93-0c8f-4272-a28e-ac8cf0807026</span><br><span class="line">DEVICE=eno16777736</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.2.110        <span class="comment">#虚拟机的话，与主机同一网段</span></span><br><span class="line">NETMASK=255.255.255.0       <span class="comment">#子网掩码</span></span><br><span class="line">GATEWAY=192.168.2.1         <span class="comment">#网关</span></span><br><span class="line">DNS1=192.168.2.1            <span class="comment">#DNS</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/network restart</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
 
 
 
-<p>如果要返回一个 T 类型的 Comparator, 也就是 Comparator<T>, 其负载类型为 T，comparing 是可以传入一个 Functinon&lt;? super T, ? extends E&gt; 的实例的，Functinon  的负载类型的第一个参数类型可以为 T 的任何父类型，也就是此 Functinon 的 apply() 方法可以接受任何 T 的父类对象。</p>
-<p>在返回一个 Comparator<T> 对象时，Functinon 函数会接受一个 T 对象实例，此时，会发生向上转换:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法签名接受一个 Father 对象</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printField</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">    System.out.pritln(father.getField());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Son = <span class="keyword">new</span> Son();</span><br><span class="line">    <span class="comment">// 传入一个子类 Son 对象</span></span><br><span class="line">    printField(son);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dateTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Function&lt;Circle, Integer&gt; circleFunc = circle -&gt; circle.getR().length();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 当左边的类型为 CircleSubClass 时， keyGenerator 的负载类型可以是 CircleSubClass 的任何父类型</span></span><br><span class="line">    <span class="comment">// 当右边 keyGenerator 的负载类型是 Circle 时，左边的 Comparator 负载类型可以是 Circle 的任何子类</span></span><br><span class="line">    Comparator&lt;CircleSubClass&gt; comparing = comparing(circleFunc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="CentOS中修改主机名"><a href="#CentOS中修改主机名" class="headerlink" title="CentOS中修改主机名"></a>CentOS中修改主机名</h4><h5 id="CentOS-6"><a href="#CentOS-6" class="headerlink" title="CentOS 6"></a>CentOS 6</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos6 ~]$ hostname                                              <span class="comment"># 查看当前的hostnmae</span></span><br><span class="line">centos6.magedu.com</span><br><span class="line">[root@centos6 ~]$ vim /etc/sysconfig/network                            <span class="comment"># 编辑network文件修改hostname行（重启生效）</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/sysconfig/network                            <span class="comment"># 检查修改</span></span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=centos66.magedu.com</span><br><span class="line">[root@centos6 ~]$ hostname centos66.magedu.com                          <span class="comment"># 设置当前的hostname(立即生效）</span></span><br><span class="line">[root@centos6 ~]$ vim /etc/hosts                                        <span class="comment"># 编辑hosts文件，给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/hosts                                        <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4 centos66.magedu.com</span><br><span class="line">::1 localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>centos6以及其他有些发行版本，主机名的配置文件是<code>/etc/sysconfig/network</code>, 用 <code>hostname newname</code> 也只是暂时生效，修改了内核的值，重启丢失。 所以可以结合临时加修改配置文件这种方式修改主机名。</p>
+<h5 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]$ hostnamectl <span class="built_in">set</span>-hostname centos77.magedu.com       <span class="comment"># 使用这个命令会立即生效且重启也生效</span></span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ hostname  <span class="comment"># 查看下</span></span><br><span class="line">centos77.magedu.com</span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ vim /etc/hosts   <span class="comment"># 编辑下hosts文件， 给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos7 ~]$ cat /etc/hosts                                           <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 centos77.magedu.com</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>在centos7中，主机名的配置文件为 /etc/hostname, 在该文件中配置了新的主机名后，不会立即生效，需要重启进行生效；因为系统内核已经中的主机名还没有更新，还是旧的指。 可以使用修改CentOS6的策略，也可以通过 <code>hostnamectl set-hostname newname</code> 来更改主机名，内核和配置文件中的主机名都被更新了，不用重启。</p>
+<p>至于<code>/etc/hosts</code> 文件，同Windows下的hosts文件一样，只是起到本地DNS的作用一样，路由的作用。或者也可以说起别名。</p>
+<h4 id="SSH-服务配置"><a href="#SSH-服务配置" class="headerlink" title="SSH 服务配置"></a>SSH 服务配置</h4><p>首先查看是否有安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list installed | grep openssh-server</span><br></pre></td></tr></table></figure>
+
+<p>没有安装的话，用yum进行安装 <code>yum install openssh-server</code></p>
+<p>SSH 服务的配置文件是 /etc/ssh/sshd_config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">ListenAddress ::</span><br><span class="line"></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<p>重启或开启SSH服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service   <span class="comment">#自启动服务</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum instatll net-tools –y    <span class="comment">#如果没有netstat服务，安装netstat工具</span></span><br><span class="line"></span><br><span class="line">netstat -an | grep 22</span><br></pre></td></tr></table></figure>
+
+
+
+<p>必要时关闭防火墙或开放22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key </p>
+<h4 id="RPM"><a href="#RPM" class="headerlink" title="RPM"></a>RPM</h4><p><a href="https://www.cnblogs.com/zengkefu/p/5666947.html" target="_blank" rel="noopener">https://www.cnblogs.com/zengkefu/p/5666947.html</a></p>
+<p>ntpdate cn.pool.ntp.org</p>
+<p>\1.  安装ntpdate工具</p>
+<p> # yum -y install ntp ntpdate</p>
+<p> \2.  设置系统时间与网络时间同步</p>
+<p> # ntpdate cn.pool.ntp.org</p>
+<p> \3.  将系统时间写入硬件时间</p>
+<p> # hwclock –systohc</p>
+<p> 4.强制系统时间写入CMOS中防止重启失效</p>
+<p> 　　hwclock -w<br> 　　或clock -w</p>
+<p>本文来自 紫漪 的CSDN 博客 ，全文地址请点击：<a href="https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy" target="_blank" rel="noopener">https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy</a> </p>
+<p>sudo passwd root 更改密码，要在root用户下</p>
+<p>sudo su - root</p>
+<p>apt list –installed|grep jdk java</p>
+<p>/opt/zookeeper-3.4.6/bin/zkServer.sh start</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.9.0.1/config/server.properties</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
+<p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
                 
             </div>
         </article>
