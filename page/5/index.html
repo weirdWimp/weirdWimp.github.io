@@ -84,6 +84,121 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/JCA/">JCA</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-04-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>JSSE Java Secure Socket Extension</p>
+<p>JGSS Java Generic Security Services - kerberos</p>
+<p>SASL Simple Authentication and Security Layer</p>
+<p>JCE 使用和 JCA 一样的架构，JCE 应该被看做是 JCA 的一部分.</p>
+<p><strong>JDK 中的 JCA 包含两个组件：</strong></p>
+<ul>
+<li>定义密码服务以及提供支持的框架</li>
+<li>实际提供实现的 provider， 如 Sun, SunRsaSign, SunJCE</li>
+</ul>
+<h2 id="JCA-设计原则"><a href="#JCA-设计原则" class="headerlink" title="JCA 设计原则"></a><strong>JCA 设计原则</strong></h2><ul>
+<li>实现独立性与互操作性</li>
+<li>算法独立性与可扩展</li>
+</ul>
+<p>使用密码服务，例如数字签名，消息摘要等，并不需要担心实现的细节，甚至是组成这些基础概念的的算法。完全的算法独立性是做不到的，这里的意思就是不可能完全抽象出一个接口，屏蔽使用的细节，做到算法的独立性。JCA 提供了标准化的，特定类型相关算法的 API. 并且当有多个实现时，允许开发者指定特定的实现。</p>
+<p><strong>算法的独立性</strong></p>
+<p>通过密码引擎（cryptographic engines）， 以及提供这些密码引擎功能的定义类实现独立性。这些类被称为 <strong>引擎类</strong>，如 <code>MessageDigest</code>, <code>Signature</code>, <code>KeyFactory</code>, <code>KeyPairGenerator</code>, <code>Cipher</code> 等类</p>
+<p><strong>实现的独立性</strong></p>
+<p>使用基于 procider 的架构实现的， provider（Cryptograpic Service Provider）在这里指的是实现一个或多个密码服务（如数字签名算法，消息摘要算法等）的包或一组包。应用程序可能只是简单的从安装的众多 provider 中请求实现了某个特定服务的特定类型对象，如实现了 DSA 签名算法的 <code>Signature</code> 对象，当然也可以自己指定从哪个特定的 provider 中获取。provider 对应用程序的使用是透明的。</p>
+<p><strong>可互操作性</strong></p>
+<p>的事项也可以正常工作，一个 provider 提供的某个服务实现产生的密钥，可以用于另一个 provider 相同服务提供的实现。再比如证书以及证书的验证等。其实就是算法都是相同的，JCA 对输入，输出进行了标准化，所以不同的 provider 实现都要遵循相同的标准，又是实现相同的算法，当然可以互相操作了<strong>。</strong></p>
+<p><strong>算法的可扩展性</strong></p>
+<p>只要是现有引擎类支持，该引擎类类的新算法可以很容易的被添加。比如，现在有一种新的消息摘要算法，实现之后就可以提供 provider ，应用中使用相同的引擎类 <code>MessageDigest</code> 类获取该新算法的实例，就可以使用了。</p>
+<h2 id="Cryptographic-Service-Providers"><a href="#Cryptographic-Service-Providers" class="headerlink" title="Cryptographic Service Providers"></a>Cryptographic Service Providers</h2><p><code>java.security.Provider</code> 类是所有 provider 的基类，每一个 CSP 包含了这个类的一个实例，其中包含了 provider 的名称以及所有它实现的安全服务/算法的列表。 当需要某个特定算法的实例时，JCA 框架会查询所有的 provider，如果有匹配，就会创建它的实例。</p>
+<p>providers 的包提供了一些广为人知的密码算法的具体实现。每一个 JDK 都默认安装并配置了一个或多个 provider。额外的 provider 可以被静态或动态的安装。客户端可以配置它们的运行时环境来指定 provider 的优先级顺序。就是 provider 被搜索的顺序。</p>
+<p>使用 JCA，可以直接请求某个特定类型的对象和特定的算法，如 <code>MessageDigest</code>, 使用 <code>SHA-256</code> 摘要算法，这会从安装的 provider 中获得一个该算法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>);</span><br></pre></td></tr></table></figure>
+
+<p> 如果需要，当然也可以指定某个具体的 provider</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>,<span class="string">"providerName"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>JDK 中的密码服务实现分布在几个不同的 provider 中（Sun, SunJSSE, SunJCE, SunRsaSing）, 其它 Java 运行时环境可能不包含这些 provider ，所以只有在确定某个 provider 安装的情况下，才可以指定使用哪个 provider 的实现。JCA 提供了 API 可以用户查询安装的 provider 以及它们提供的安全服务/算法。JCA 使得第三方的 provider 的添加也是很容易的, 如 BouncyCastle。</p>
+<h3 id="Provider-具体是怎么实现的"><a href="#Provider-具体是怎么实现的" class="headerlink" title="Provider 具体是怎么实现的"></a>Provider 具体是怎么实现的</h3><p>有如下的代码，目的是获取一个 AES 密码算法的实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cipher c = Cipher.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">c.init(ENCRYPT_MODE, key);</span><br></pre></td></tr></table></figure>
+
+<p>具体的流程大概如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">调用引擎类 Cipher 的静态工厂方法 getInstance</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">JCA 框架查询每一个安装的 provider， 并获取 Provider 类的一个实例（Provider视作是提供的算法的一个数据库）</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">最终找到一个合适的 CSP(provider)，并指向了继承了 CipherSPI 的实现类 AESCipher，创建 AESCipher 的实例</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">AESCIpher 实例被封装在一个新创建的 Cipher 实例, Cipher 实例返回</span><br></pre></td></tr></table></figure>
+
+<p>当调用 <code>init</code> 方法时，Cipher 实例会将请求委托给 AESCiphrt对象对应的 <code>engineInit</code> 方法</p>
+<h3 id="KeyStore"><a href="#KeyStore" class="headerlink" title="KeyStore"></a>KeyStore</h3><p>keystore 是一种用来管理密钥和证书的数据库。应用在需要数据认证，加密以及签名时，就可以使用 keystore，在程序中，可以通过 <code>KeyStore</code> 类（位于 java.security 包下）。</p>
+<p><strong>keystore 类型/格式</strong></p>
+<ul>
+<li>pkcs12 - 基于 RSA PKCS12 （Personal Information Exchange Syntax Standard）标准, JDK9 默认以及推荐的格式</li>
+<li>jks - 私有格式</li>
+<li>jceks - 私有格式</li>
+<li>pkcs11 - 基于 RSA PKCS11 标准，支持对密码令牌的访问，如硬件安全模块和智能卡</li>
+</ul>
+<p>应用可以从不同的 provider 中选择不同类型的 keystore 实现。 KeyStore 类提供了接口来访问和修改一个 keystore 中的信息。这个类代表了一个内存中密钥和证书的集合，主要用来管理两种类型的条目:</p>
+<ul>
+<li><p>密钥 - Key</p>
+<p>密钥类型的条目保存了非常敏感的密钥信息，<strong>必须进行保护以避免未经授权的访问</strong>。通常，是一个私密的密钥 (secret key) 或者是一个私钥（private key）以及对其公钥进行认证的证书链。私钥以及证书链被一个指定的实体使用数字签名来进行自认证。例如：软件供应商对 JAR 文件进行数字签名，作为软件发布的一部分</p>
+</li>
+<li><p>受信任的证书 - Trusted Certificate Entry</p>
+<p>这种类型的条目仅包含了一个个公钥证书(从属于其它实体),  被称为受信任的证书,因为 keystore 的拥有者新人证书中的公钥确实是属于证书 <code>subject(owner)</code> 所标识的实体</p>
+</li>
+</ul>
+<p>keystore 中的每一个条目都通过一个<strong>别名</strong> (alias) 字符串表示. 对于私钥及其关联的证书链，这些字符串区分实体进行身份验证的不同方式。</p>
+<p><strong>示例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use openssl tool to create pkcs12 file:</span></span><br><span class="line"><span class="comment">     * $ openssl pkcs12 -export -in con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * con_key_crt.pem is a simple concatenation of sub_ca_key.pem and sub_ca.crt:</span></span><br><span class="line"><span class="comment">     * $ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">keyStoreTest</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (InputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"D:\\idea-workspace\\sub_ca.p12"</span>)) &#123;</span><br><span class="line">            KeyStore keyStore = KeyStore.getInstance(<span class="string">"pkcs12"</span>);</span><br><span class="line">            <span class="comment">// 此处的密码用于验证 keystore 的完整性</span></span><br><span class="line">            keyStore.load(in, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 打印所有的 alias 别名, 此例中只有一个 myKeyEntry (openssl -name 选项)</span></span><br><span class="line">            Enumeration&lt;String&gt; aliases = keyStore.aliases();</span><br><span class="line">            <span class="keyword">while</span> (aliases.hasMoreElements()) &#123;</span><br><span class="line">                System.out.println(<span class="string">"alias:"</span> + aliases.nextElement());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取 RSA 私钥</span></span><br><span class="line">            Key key = keyStore.getKey(<span class="string">"myKeyEntry"</span>, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line">            System.out.println(key.getAlgorithm());</span><br><span class="line"></span><br><span class="line">            KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">            RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(key, RSAPrivateKeySpec<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            System.out.println(privateKeySpec.getModulus());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取证书</span></span><br><span class="line">            Certificate certificate = keyStore.getCertificate(<span class="string">"myKeyEntry"</span>);</span><br><span class="line">            System.out.println(certificate.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PKCS12 文件的生成详细内容见 PKCS 一章中的介绍,这里解析的 keystore 就是使用 openssl 创建的 PKCS12 文件, 包含了私钥及证书</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Engine-Classes-and-Algorithoms"><a href="#Engine-Classes-and-Algorithoms" class="headerlink" title="Engine Classes and Algorithoms"></a>Engine Classes and Algorithoms</h2><p>引擎类提供了到某一个具体类型的安全服务的接口， 与 provider 及算法是独立的，提供了以下功能：</p>
+<ul>
+<li><p>密码服务操作（加密解密、数字签名，消息摘要等）</p>
+</li>
+<li><p>密码材料（cryotographic material）的生成或转换（密钥和算法初始化参数）</p>
+</li>
+<li><p>封装密码数据的对象（keystore 或证书），可以在抽象层的上层使用</p>
+</li>
+</ul>
+<p><strong>可用的引擎类：</strong></p>
+<ul>
+<li>SecureRandom 用来生成随机数或伪随机数</li>
+<li>MessageDigest 用来计算数据的消息摘要（hash, 单向散列函数）</li>
+<li>Signature 通过密钥进行初始化，用来对数据进行签名以及验证数字签名</li>
+<li>Cipher 通过密钥初始化，用来对数据进行加密，解密，有不同类型的密码算法：对称、非对称、PBE 等</li>
+<li>Mac Message Authentication Codes 同样也是用来生成 hash 值的，但是要用到密钥，用来保护数据的完整性</li>
+<li>KeyFactory 用来将非透明 <code>Key</code> 类型的密钥转换为特定密钥标准形式，反之亦然</li>
+<li>SecretKeyFactory 用来将非透明 <code>SecretKey</code> 类型的密钥转换为特定密钥标准形式，SecretKeyFactory 是 KeyFactory 的特殊形式，专门用来生成秘密的堆成密码的密钥</li>
+<li>KeyPairGenerator 用来生成一个新的公钥，私钥对，适用于特定的算法</li>
+<li>KeyGeneraor 用来生成特定算法的密钥</li>
+<li>KeyAgreement 使用在通信的两端，用来协商创建一个特定的密钥，使用在特定的密码操作中</li>
+<li>AlgorithmParameters 用来存储的特定算法的参数，包含参数编码和解码</li>
+<li>AlgorithmParameterGeneraor 用来生成适用于特定算法的一组 AlgorithmParameters</li>
+<li>KeyStore 用来创建以及管理一个 keystore. 一个 keystore 是一个存储密钥的数据库，keystore 中的私钥还关联了一个与其相关的证书链，用来认证对应的公钥。keystore 可能包含来自信任实体的证书</li>
+<li>CertificateFactory 用来创建公钥证书和 CRLs (Certificate Revtocation Lists) 证书撤回列表</li>
+<li>CertPathBuilder 用来创建一个证书链（也称之为证书路径）</li>
+<li>CertPathVlidator 用来对证书链进行验证</li>
+<li>CertStore 用来从一个 repository 中检索证书和 CRLs</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://docs.oracle.com/en/java/javase/11/security/java-cryptography-architecture-jca-reference-guide.html#GUID-2BCFDD85-D533-4E6C-8CE9-29990DEB0190" target="_blank" rel="noopener">Java Cryptography Architecture (JCA) Reference Guide</a></p>
+<p>[2] <a href="https://docs.oracle.com/en/java/javase/14/docs/specs/security/standard-names.html#keystore-types" target="_blank" rel="noopener">Java Security Standard Algorithm Names</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">对称密码</a></h2>
             </div>
             <div class="post-meta">
@@ -489,150 +604,6 @@
 <p>[4] <a href="https://tools.ietf.org/html/rfc7292" target="_blank" rel="noopener">PKCS #12</a></p>
 <p>[5] <a href="https://www.cryptomathic.com/news-events/blog/introduction-to-digital-signatures-and-pkcs-7" target="_blank" rel="noopener">Introduction to Digital Signatures and PKCS #7</a></p>
 <p>[6] <a href="https://www.openssl.org/docs/man1.1.1/man1/asn1parse.html" target="_blank" rel="noopener">openssl-man-asn1parse</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">hexdump命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-01-24</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="hexdump-命令"><a href="#hexdump-命令" class="headerlink" title="hexdump 命令"></a>hexdump 命令</h1><p><strong>一点感想</strong>：自从学习 Shell 脚本编程以来，有时候会觉得，使用图形化界面的工具实现一个稍微复杂的操作过于麻烦，并且如果你学习过 Vim 的基本操作和哲学思想后，就会了解命令行的组合可以比图形界面上有限的菜单，按钮能做更过的事情，即实现高度的定制化。</p>
-<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>hexdump 工具可以将指定的文件或标准输入，以用户指定的格式进行展示，打印到控制台，提供了很多选项（options），如打印出对应字符的八进制，十六进制</p>
-<h2 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h2><h4 id="b-八进制"><a href="#b-八进制" class="headerlink" title="-b 八进制"></a>-b 八进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-b One-byte octal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, zero-filled, bytes of input data, <span class="keyword">in</span> octal, per line.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后将输入的每个字节以八进制展示 (占 3 位，不足 3 位的用 0 填充)，并以空格分隔</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -b</span><br><span class="line"></span><br><span class="line">0000000 150 145 154 154 157</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="c-字符"><a href="#c-字符" class="headerlink" title="-c 字符"></a>-c 字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-c      One-byte character display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, space-filled, characters of input data per line.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后展示输入的每个字符 (占 3 位，不足 3 位的用空格填充)，并以空格分隔</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -c</span><br><span class="line">0000000   h   e   l   l   o</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="C-十六进制-ASCII字符"><a href="#C-十六进制-ASCII字符" class="headerlink" title="-C  十六进制+ASCII字符"></a>-C  十六进制+ASCII字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-C Canonical hex+ASCII display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, two column, hexadecimal bytes, followed by the same sixteen bytes <span class="keyword">in</span> %_p format enclosed <span class="keyword">in</span> ``|<span class="string">''</span> characters.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后展示每个字节的十六进制，随后是包含在两个 <code>|</code> 中的对应的字符，<strong>非打印字符以</strong> <code>.</code> 展示</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -C</span><br><span class="line">00000000  68 65 6c 6c 6f                                    |hello|</span><br><span class="line">00000005</span><br></pre></td></tr></table></figure>
-
-<p><code>-C</code> 选项应该是比较常用的，比较方便对比字符与对应的十六进制</p>
-<h4 id="d-两个字节的十进制"><a href="#d-两个字节的十进制" class="headerlink" title="-d 两个字节的十进制"></a>-d 两个字节的十进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-d      Two-byte decimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight space-separated, five column, zero-filled, two-byte units of input data, <span class="keyword">in</span> unsigned decimal, per line.</span><br></pre></td></tr></table></figure>
-
-<p>每行首先以十六进制展示输入偏移量，然后将输入数据中的每两个字节作为一个单元，并展示他们组合成的无符号十进制数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -d</span><br><span class="line">0000000   25960   27756   00111</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>：两个字节组合的顺序与字符的顺序相反，例如 <code>he</code>, <code>h</code> 的十六进制是 <code>0x68</code>，<code>e</code> 的十六进制是 <code>0x65</code>， 但是字节组合的顺序是 <code>0x6568</code>, 对应的十进制就是上面结果中的 2590</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $((16<span class="comment">#6568))</span></span><br><span class="line">25960</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="x-两个字节的十六进制"><a href="#x-两个字节的十六进制" class="headerlink" title="-x 两个字节的十六进制"></a>-x 两个字节的十六进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-x      Two-byte hexadecimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight, space separated, four column, zero-filled, two-byte quantities of input data, <span class="keyword">in</span> hexadecimal, per line.</span><br></pre></td></tr></table></figure>
-
-<p>和 <code>-d</code> 类似</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -x</span><br><span class="line">0000000    6568    6c6c    006f</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="n-只处理-n-个字节"><a href="#n-只处理-n-个字节" class="headerlink" title="-n 只处理 n 个字节"></a>-n 只处理 n 个字节</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-n length Interpret only length bytes of input.</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="v-展示所有的字符"><a href="#v-展示所有的字符" class="headerlink" title="-v 展示所有的字符"></a>-v 展示所有的字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-v      Cause hexdump to display all input data.  Without the -v option, any number of groups of output lines, <span class="built_in">which</span> would be identical to the immediately preceding group of output lines (except <span class="keyword">for</span> the input offsets), are</span><br><span class="line">        replaced with a line comprised of a single asterisk.</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h2><h4 id="e-格式化字符串"><a href="#e-格式化字符串" class="headerlink" title="-e 格式化字符串"></a>-e 格式化字符串</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-e format_string</span><br><span class="line">           Specify a format string to be used <span class="keyword">for</span> displaying data.</span><br></pre></td></tr></table></figure>
-
-<p>指定格式化字符串</p>
-<h4 id="f-包含格式化字符串的文件"><a href="#f-包含格式化字符串的文件" class="headerlink" title="-f 包含格式化字符串的文件"></a>-f 包含格式化字符串的文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f format_file</span><br><span class="line">        Specify a file that contains one or more newline separated format strings.  Empty lines and lines whose first non-blank character is a <span class="built_in">hash</span> mark (<span class="comment">#) are ignored.</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>一个<strong>格式化字符串</strong>由任意多个格式化单元（format unit）组成，每个格式化单元以空格分隔。一个格式化单元最多由三个部分组成：<strong>迭代次数</strong>（iteration count），<strong>字节个数</strong> (byte count)，<strong>以及格式字符串</strong> (format)</p>
-<p><strong>迭代次数</strong>：可选的正整数，默认为1， 表示格式字符串要被应用多少次</p>
-<p><strong>字节个数</strong>: 可选的正整数. 如果指定了，它定义了每次应用格式字符串时，需要使用多少个字节</p>
-<p>​    如果指定了迭代次数和（或）字节个数，需要使用 <code>/</code> 来加以区分，如 <code>1/4</code>，<code>/4</code></p>
-<p><strong>格式字符串</strong>：必须指定，并且要包含在双引号中 <code>&quot;&quot;</code>, 类似于 <code>fprintf</code> 中的格式字符串， 支持单个字符的转义序列：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NUL                  \0</span><br><span class="line">&lt;alert character&gt;    \a</span><br><span class="line">&lt;backspace&gt;          \b</span><br><span class="line">&lt;form-feed&gt;          \f</span><br><span class="line">&lt;newline&gt;            \n</span><br><span class="line">&lt;carriage <span class="built_in">return</span>&gt;    \r</span><br><span class="line">&lt;tab&gt;                \t</span><br><span class="line">&lt;vertical tab&gt;       \v</span><br></pre></td></tr></table></figure>
-
-
-
-<p>如包含一个格式化单元的格式化字符串：<code>&#39;4/1 &quot;%_p&quot;&#39;</code> ， 4 表示迭代次数，1表示每次使用一个字节，<code>%_p</code> 为格式字符串</p>
-<p>也支持额外的转换字符串：</p>
-<ul>
-<li><p><code>_a[dox]</code> 展示输入偏移量 <code>d</code>,<code>o</code>,<code>x</code> 分表表示十进制，八进制和十六进制</p>
-</li>
-<li><p><code>_A[dox]</code> 与 <code>_a[dox]</code> 行为一致，但是只执行一次，当所有的输入数据都被处理了</p>
-</li>
-<li><p><code>_c</code>  以默认的字符集打印出输入字符，非打印字符以八进制展示（占 3 位，不足三位用 0 填充），如果该字符支持转义序列，则会以转义序列的形式展示，如 <code>\n</code></p>
-</li>
-<li><p><code>_p</code> 以默认的字符集打印出输入字符. 非打印字符会被展示成 <code>.</code></p>
-</li>
-<li><p><code>_u</code> 打印出 <code>ASCII</code> 字符，控制字符会被展示成如下的名称（小写）：</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">000 NUL  001 SOH  002 STX  003 ETX  004 EOT  005 ENQ</span><br><span class="line">006 ACK  007 BEL  008 BS   009 HT   00A LF   00B VT</span><br><span class="line">00C FF   00D CR   00E SO   00F SI   010 DLE  011 DC1</span><br><span class="line">012 DC2  013 DC3  014 DC4  015 NAK  016 SYN  017 ETB</span><br><span class="line">018 CAN  019 EM   01A SUB  01B ESC  01C FS   01D GS</span><br><span class="line">01E RS   01F US   07F DEL</span><br></pre></td></tr></table></figure>
-
-
-
-<p>每个格式字符串需要使用字节个数等于所有格式化单元使用的字节个数加起来，每个格式化单元使用的字节个数 = 迭代次数 * 字节个数 （或者没有指定字节个数，格式单元需要的字节个数）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"ABCDEFGH"</span> | hexdump -e <span class="string">'4/1 "%_p"'</span></span><br></pre></td></tr></table></figure>
-
-<p>上述中的格式化字符串需要使用的字节个数 = 4 * 1</p>
-<p>输入数据，是以 “数据块”（blocks） 的形式处理的，一个数据块定义为所有格式化字符使用的最大字节数</p>
-<h4 id="指定格式化字符串的列子"><a href="#指定格式化字符串的列子" class="headerlink" title="指定格式化字符串的列子"></a>指定格式化字符串的列子</h4><p><strong>打印输入数据的十六进制</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X "'</span> ; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>打印输入数据的十六进制及字符</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% <span class="built_in">echo</span> hello | hexdump -e <span class="string">'8/1 "%02X ""\t"" "'</span> -e <span class="string">'8/1 "%c""\n"'</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A        hello</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>打印十六进制，并加上前缀 <code>x</code></strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hex with preceding 'x'</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'"x" 1/1 "%02X" " "'</span> ; <span class="built_in">echo</span></span><br><span class="line">x68 x65 x6C x6C x6F x0A</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>打印十六进制，每行一个字节</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># one hex byte per line</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X\n"'</span></span><br><span class="line">68</span><br><span class="line">65</span><br><span class="line">6C</span><br><span class="line">6C</span><br><span class="line">6F</span><br><span class="line">0A</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>带偏移量</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># byte# &amp; ASCII with control chars</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#  "'</span> -e <span class="string">'/1 " _%_u\_\n"'</span></span><br><span class="line">0<span class="comment">#   _h_</span></span><br><span class="line">1<span class="comment">#   _e_</span></span><br><span class="line">2<span class="comment">#   _l_</span></span><br><span class="line">3<span class="comment">#   _l_</span></span><br><span class="line">4<span class="comment">#   _o_</span></span><br><span class="line">5<span class="comment">#   _lf_</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>每行只打印一个字节对应的十六进制，以及对应的 ASCII 字符，行首打印偏移量，即序号</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"ABCDEFG"</span> | hexdump -e <span class="string">'/1 "%02_ad#  "'</span> -e <span class="string">'/1 "%02X "'</span> -e <span class="string">'/1 " %_u\n"'</span></span><br><span class="line">00<span class="comment">#  41  A</span></span><br><span class="line">01<span class="comment">#  42  B</span></span><br><span class="line">02<span class="comment">#  43  C</span></span><br><span class="line">03<span class="comment">#  44  D</span></span><br><span class="line">04<span class="comment">#  45  E</span></span><br><span class="line">05<span class="comment">#  46  F</span></span><br><span class="line">06<span class="comment">#  47  G</span></span><br><span class="line">07<span class="comment">#  0A  lf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># lf 表示 LF 换行符</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>7C1C分隔符示例</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># char.dat</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"A\u007c\u001cB\u007c\u001cC"</span> &gt; char.dat</span><br><span class="line"></span><br><span class="line">cat char.dat | hexdump -v -e <span class="string">'"%02_ad#\t"'</span> -e <span class="string">'/1 "0x%02X\t"'</span> -e <span class="string">'/1 "%_p\n"'</span></span><br><span class="line">00<span class="comment">#     0x41    A</span></span><br><span class="line">01<span class="comment">#     0x7C    |</span></span><br><span class="line">02<span class="comment">#     0x1C    .</span></span><br><span class="line">03<span class="comment">#     0x42    B</span></span><br><span class="line">04<span class="comment">#     0x7C    |</span></span><br><span class="line">05<span class="comment">#     0x1C    .</span></span><br><span class="line">06<span class="comment">#     0x43    C</span></span><br><span class="line">07<span class="comment">#     0x0A    .</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a table of byte#, hex, decimal, octal, ASCII</span></span><br><span class="line">% <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#    "'</span> -e <span class="string">'/1    "%02X hex"'</span> -e <span class="string">'/1 " = %03i dec"'</span> -e <span class="string">'/1 " = %03o oct"'</span> -e <span class="string">'/1 " = _%c\_\n"'</span></span><br><span class="line">           0<span class="comment">#    68 hex = 104 dec = 150 oct = _h_</span></span><br><span class="line">           1<span class="comment">#    65 hex = 101 dec = 145 oct = _e_</span></span><br><span class="line">           2<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           3<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           4<span class="comment">#    6F hex = 111 dec = 157 oct = _o_</span></span><br><span class="line">           5<span class="comment">#    0A hex = 010 dec = 012 oct = _</span></span><br></pre></td></tr></table></figure>
-
 
                 
             </div>
