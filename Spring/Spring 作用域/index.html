@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">Spring 作用域</h2>
             <div class="post-meta">
-                <span class="post-time">2021-07-10</span>
+                <span class="post-time">2021-07-17</span>
                 
                 <span class="post-category">
                     
@@ -111,6 +111,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"scope2"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScopeController2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实际注入的是 Spring CGLIB 为 RequestScopeEntity 创建的一个代理对象，</span></span><br><span class="line"><span class="comment">     * 可以通过打印该对象的 Class 对象的名称来验证，针对每个请求，都会创建一个</span></span><br><span class="line"><span class="comment">     * 实际的 RequestScopeEntity 对象，然后将对这个代理对象方法的调用委托给</span></span><br><span class="line"><span class="comment">     * 新创建的 RequestScopeEntity 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RequestScopeEntity requestScopeEntity;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"user"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">userInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        requestScopeEntity.doRequestBusiness();</span><br><span class="line">        <span class="keyword">int</span> scopeEntityHash = requestScopeEntity.hashCode();</span><br><span class="line">        log.info(<span class="string">"[scope2], requestScopeEntity:[&#123;&#125;], class:[&#123;&#125;]"</span>, scopeEntityHash, requestScopeEntity.getClass().getSimpleName());</span><br><span class="line">        <span class="keyword">return</span> scopeEntityHash;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+
+<p>注入点可以声明为 <code>ObjectFactory&lt;MyTargetBean&gt;</code>， 或者是 <code>Provider&lt;MyTargetBean&gt;</code>， <code>Provider&lt;MyTargetBean&gt;</code> （JSR330）</p>
+<p>代理模式，装饰器模式，适配器模式</p>
+
         </div>
         
         <div class="post-tag">
@@ -124,15 +128,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Spring/Defining%20Bean%20Metadata%20within%20Components/">
+            <a class="prev" href="/Spring/Spring%20AOP%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Defining Bean Metadata within Components</span>
+                <span class="nav-default">Spring AOP 源码分析</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Java/%E5%B9%B6%E8%A1%8C%E6%B5%81%20MapCollect%20%E6%A8%A1%E5%9E%8B/">
-                <span class="nav-default">并行流 MapCollect 模型</span>
+            <a class="next" href="/Spring/Spring%20Enviroment/">
+                <span class="nav-default">Spring Enviroment</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>

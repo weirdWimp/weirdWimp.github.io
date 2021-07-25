@@ -84,6 +84,142 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">对称密码</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-04-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="一次性密码本"><a href="#一次性密码本" class="headerlink" title="一次性密码本"></a>一次性密码本</h2><p>一次性密码本也称为<strong>维纳密码</strong>（Vernam Cipher），特点：无条件安全，理论上是 ”无法破译” 的。</p>
+<h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>将明文与一串<strong>随机</strong>的比特序列进行 <strong>XOR</strong> 运算，随机不是随便臆想出一个随机的序列，抛硬币的过程可以看作随机的过程，比如出现正面，可以看作比特位 1， 反面看作比特位 0. 密码学中有专门的随机数生成硬件和伪随机数生成器软件。</p>
+<p>例如, 明文 midnight 的 ASCII 比特序列为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">"midnight"</span> | hexdump -e <span class="string">'/1 "%02X "'</span> | xargs -n 1 | <span class="keyword">while</span> <span class="built_in">read</span> dec; <span class="keyword">do</span> <span class="built_in">echo</span>  <span class="string">"ibase=16;obase=2;<span class="variable">$dec</span>"</span> | bc | tr <span class="string">"\n"</span> <span class="string">" "</span> | sed <span class="string">'s/^/0/g'</span>; <span class="keyword">done</span>; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 ====&gt; midnight</span><br></pre></td></tr></table></figure>
+
+<p>产生一个和明文长度相同的 64 位比特序列，作为一次性密码本的密钥:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 ====&gt; 密钥</span><br></pre></td></tr></table></figure>
+
+<p>加密，即进行异或运算</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 明文</span><br><span class="line">⊕</span><br><span class="line">	01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 密钥</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">	00100000 00100100 00110000 00010000 00000110 00000110 00101000 01100000 密文</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>解密就是加密的反向运算，即用密文和密钥进行 X0R 运算，就可以得到明文</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	00100000 00100100 00110000 00010000 00000110 00000110 00101000 01100000 密文</span><br><span class="line">⊕</span><br><span class="line">	01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 密钥</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">	01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 明文</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一次性密码本是无法破译的"><a href="#一次性密码本是无法破译的" class="headerlink" title="一次性密码本是无法破译的"></a>一次性密码本是无法破译的</h3><p>只要遍历密钥空间，总能找到进行加密解密的密钥（运算能力无穷大，可以在有限时间内），然后对密文界面，无法破译指的是<strong>没有办法判断解密后的内容是否是正确的的明文</strong>， 所有可能密钥的解密，可能会出现类似于 midnight, onenight 的单词，也可能会出现其他不规则的字符组合，作为一个破译者，没有办法定义哪一个是正确的明文。明文就对应着密钥，所以一次性密码本无法破译。</p>
+<h3 id="一次性密码本存在的问题"><a href="#一次性密码本存在的问题" class="headerlink" title="一次性密码本存在的问题"></a>一次性密码本存在的问题</h3><ul>
+<li><p>密钥配送</p>
+<p>可以安全的发送密钥，那为什么不直接用来安全的发送明文？</p>
+</li>
+<li><p>密钥保存</p>
+<p>密钥与明文一样长，保存明文转换为保存密钥的问题</p>
+</li>
+<li><p>密钥重用</p>
+<p>不能重用用过的随机比特序列，否则，获取所有的机密通信将被全部解密</p>
+</li>
+<li><p>密钥同步</p>
+<p>密钥长度与明文长度相同，明文过长，密钥的传输与通信不能有任何差错（比特位的丢失，错位等），否则，将不能解密</p>
+</li>
+</ul>
+<h2 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h2><p>DES (Data Encryption Standard) 是 1997 年美国联邦信息处理标准中采用的一种对称密码。DES 已经可以在短时间内被破译，所以除了兼容性，不应该再使用 DES 来直接加密</p>
+<h3 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h3><p>DES 属于<strong>分组密码</strong>（block cipher），以 64 比特位为一个单位来进行加密的，密钥长度为 64 位，实际只有 56 位，每隔 7 位会设置一个错误校验位，所以 DES 的密钥长度为 56 位.     (分组密码的模式)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126210108366.png" alt="image-20210126210108366"></p>
+<h3 id="DES-的结构"><a href="#DES-的结构" class="headerlink" title="DES 的结构"></a>DES 的结构</h3><p>DES 的基本结构由 Horst Feistel 设计, 所以也称为 Feistel  网络, Feistel 结构, Feistel  密码, 并且应用到了其它的密码算法中. Feistel  中将每一次加密过程, 称为<strong>轮</strong> (round), DES 是一种 16 轮循环的 Feistel  网络.</p>
+<h4 id="一轮的过程"><a href="#一轮的过程" class="headerlink" title="一轮的过程"></a>一轮的过程</h4><h5 id="加密的过程"><a href="#加密的过程" class="headerlink" title="加密的过程"></a>加密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126211458134.png" alt="image-20210126211458134"></p>
+<p>Feistel  网络中一轮的过程如上图所示, 输入被等分为左右两半,分别进行处理, 写作左侧和右侧, 加密后的左半部分写作”加密后的左侧”, 右侧称为右侧.</p>
+<p>Feistel  网络中每一轮都需要使用一个不同的密钥, 所以这个密钥只在一轮中使用, 因此称为 <strong>子密钥</strong> (subkey)</p>
+<p><strong>具体的步骤:</strong></p>
+<p>(1) 将输入的数据等分为左右两部分<br>(2) 将输入的右侧直接发送到输出的右侧<br>(3) 将输入的右侧发送到轮函数<br>(4) 轮函数根据右侧数据和子密钥，计算出 一串看上去是随机 的比特序列<br>(5) 将上一步得到的比特序列与左侧数据进行 XOR 运算， 将结果作为加密后的左侧</p>
+<p>每一轮, 右侧部分是没有被加密的,因此需要使用不同的子密钥重复多轮, 每两轮之间将左侧和右侧的数据进行对调. 最后一轮结束后不需要对调。3 轮的Feistel  网络如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213116336.png" alt="image-20210126213116336"></p>
+<h5 id="解密的过程"><a href="#解密的过程" class="headerlink" title="解密的过程"></a>解密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213750078.png" alt="image-20210126213750078"></p>
+<p>用相同的子密钥运行两次 Feistel 网络就能够将数据还原， 利用的其实 XOR 异或的性质 (两个相同的数异或为 0)， 多轮的情况是一样的：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126214210806.png" alt="image-20210126214210806"></p>
+<h4 id="Feistel-网络的性质"><a href="#Feistel-网络的性质" class="headerlink" title="Feistel 网络的性质"></a>Feistel 网络的性质</h4><ul>
+<li><p><strong>加密时无论使用任何函数作为轮函数都可以正确解密</strong></p>
+<p>即便使用的轮函数的输出结果无法逆计算出输入的值（即该函数不存在反函数）也没有问题，可以被设计得任意复杂；Feistel 网络实际上就是从加密算法中抽取出“密码的本质部分”并将其封装成一个轮函数</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>可解密性</strong></p>
+<p>在 Feistel 网络的一轮中， 右半边部分没有进行任何处理，看起来时一种浪费，但却保证了可解密性，是解密过程中所必须的信息；</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>加密和解密可以用相同的结构来实现</strong></p>
+<p>由于加密解密可以用相同的结构来实现，因此用于实现 DES 算法的硬件设备的设计变得容易</p>
+</li>
+</ul>
+<h4 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h4><p>三重 DES (triple - DES) 是为了增加 DES 的强度， 将 DES 重复 3 次的一种密码算法，也称为 TDEA (Triple Date Ecnryption Algorithm), 通常称为 3DES。</p>
+<p><strong>三重 DES 的加密过程：</strong></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221848991.png" alt="image-20210126221848991"></p>
+<p>明文经过三次 DES 处理变为密文，所以三重 DES 的密钥长度是 56 * 3=168 比特. 三重 DES 并不是进行三次加密，而是 <code>加密 --&gt; 解密--&gt; 加密</code> 的过程， 此方法由 IBM 公司设计，目的是兼容普通的 DES， 当三重 DES 使用的所有密钥都相同时，三重 DES 就相等于普通的 DES , 因为 <code>加密--&gt;解密</code> 就变为明文了。因此<strong>三重 DES 对 DES 具备向下兼容性</strong></p>
+<p><strong>DES-EDE2</strong>： 密钥1和密钥3使用相同的密钥，密钥2使用不同的密钥</p>
+<p><strong>DES-EDE3</strong>:   密钥1，密钥2，密钥3全部使用不同的比特序列</p>
+<p><strong>三重 DES 的解密过程：</strong></p>
+<p>三重 DES 的解密过程和加密正好相反，以密钥3，密钥2，密钥1的顺序执行 <code>解密--&gt;加密--&gt;解密</code> 的操作</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221714656.png" alt="image-20210126221714656"></p>
+<h4 id="关于-DES-与-3DES-的使用"><a href="#关于-DES-与-3DES-的使用" class="headerlink" title="关于 DES 与 3DES 的使用"></a>关于 DES 与 3DES 的使用</h4><p>由于 DES 的密文已经可以在短时间内被破译，处理解密以前的密文，不应该再使用 DES 了。三重 DES 由于处理速度不高，很少被用于新的用途。</p>
+<blockquote>
+<p>在日本总务省和经济产业省 2013 年发布的《电子政府相关技术采购中参考的密码清单》中，“电子政府推荐使用的密码清单” 项中将 3-key Triple DES 作为 64 比特分组密码列了出来，但考虑到 IST SP 800-67 的规定，以及其事实性标准的地位，又在脚注中给出了“目前暂且允许使用”的描述</p>
+</blockquote>
+<h4 id="使用-openssl-通过-3DES-进行加密和解密"><a href="#使用-openssl-通过-3DES-进行加密和解密" class="headerlink" title="使用 openssl 通过 3DES 进行加密和解密"></a>使用 openssl 通过 3DES 进行加密和解密</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加密</span></span><br><span class="line">$ cat seq.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">$ openssl enc -e -des3 -a -salt -<span class="keyword">in</span> seq.txt -out encrypted.txt</span><br><span class="line">enter des-ede3-cbc encryption password:</span><br><span class="line">Verifying - enter des-ede3-cbc encryption password:</span><br><span class="line"></span><br><span class="line">$ cat encrypted.txt</span><br><span class="line">U2FsdGVkX1+HbjKWGlQzlIM7EM/TFhzn8wzKBBWn91TBdUSH3bOCeQ==</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密</span></span><br><span class="line">openssl enc -d -des3 -a -salt -<span class="keyword">in</span> encrypted.txt -out decrypted.txt</span><br><span class="line">enter des-ede3-cbc decryption password:</span><br><span class="line"></span><br><span class="line">$ cat decrypted.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/OAuth/">OAuth</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-03-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>OpenID Connect</p>
+<p>User Managed Access (UMA)</p>
+<p>资源拥有者向授权服务器进行身份认证，可以自由选择: 用户名/密码、加密证书、安全令牌、联合单点登录或其它方式</p>
+<p>授权服务器可以保存授权决策，后续可以跳过授权环节，沿用前一次的授权决策</p>
+<p>也可以通过客户端白名单或者黑名单的内部策略来否决用户的决策</p>
+<p>令牌内省</p>
+<p>记忆授权决策</p>
+<p>授权码许可类型</p>
+<p>隐式许可类型</p>
+<p>客户端凭据许可类型</p>
+<p>授权服务器和资源服务共享令牌数据库是一种简单可行的机制，但是如果授权服务器要对多个资源服务进行保护，这种共享就不合适，可以使用：结构化令牌和令牌内省</p>
+<h3 id="结构化令牌-JWT"><a href="#结构化令牌-JWT" class="headerlink" title="结构化令牌 - JWT"></a>结构化令牌 - JWT</h3><h4 id="签名的-JWT"><a href="#签名的-JWT" class="headerlink" title="签名的 JWT"></a>签名的 JWT</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/JWT.png" alt="JWT"></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JWT 头部，描述令牌剩余部分的信息</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"typ"</span>: <span class="string">"JWT"</span>, <span class="comment">// 表明令牌的第二部分（载荷）的类型</span></span><br><span class="line">    <span class="attr">"alg"</span>: <span class="string">"none"</span> <span class="comment">// none 表示未签名的令牌</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 载荷， JWT 的载荷可以是任意的 JSON 对象</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"sub"</span>: <span class="string">"1234567890"</span>, <span class="comment">// 令牌主体, 令牌是关于谁的，一般设为资源拥有者的唯一标识</span></span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"John Doe"</span>,  <span class="comment">// 特定于当前应用的新增字段，用户名称</span></span><br><span class="line">    <span class="attr">"admin"</span>: <span class="literal">true</span>        <span class="comment">// 特定于当前应用的新增字段，是否为管理员</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 载荷， JWT 提供的一些可选的声明，可以为特定的应用新增字段</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"iss"</span>: <span class="string">""</span>,      <span class="comment">// 令牌颁发者，令牌的创建者，一般设为授权服务器的 URL</span></span><br><span class="line">    <span class="attr">"sub"</span>: <span class="string">""</span>,      <span class="comment">// 令牌主体, 令牌是关于谁的，一般设为资源拥有者的唯一标识</span></span><br><span class="line">    <span class="attr">"aud"</span>: <span class="string">""</span>,      <span class="comment">// 令牌的受众，令牌的接收者，包含受保护资源的 URI 或者能够接受该令牌的受保护资源，可以是字符串数组</span></span><br><span class="line">    <span class="attr">"exp"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌的过期时间戳，令牌什么时候过期，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"nbf"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌的生效时间戳，令牌从什么时候生效，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"iat"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌颁发的时间戳，令牌何时被创建，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"jti"</span>: <span class="string">""</span>       <span class="comment">// 令牌的唯一标识符。令牌颁发者创建的每一个令牌中唯一，密码随机值，这个值相当于向结构化令牌中加入了一个攻击者无法获得的随机熵组件，有利于防止令牌猜测攻击和重放攻击</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>通过 JOSE 库得到最终代签名的令牌 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImF1dGhzZXJ2ZXIifQ.eyJpc3MiOiJodH</span><br><span class="line">RwOi8vbG9jYWxob3N0OjkwMDEvIiwic3ViIjoiOVhFMy1KSTM0LTAwMTMyQSIsImF1ZCI6Imh0d</span><br><span class="line">HA6Ly9sb2NhbGhvc3Q6OTAwMi8iLCJpYXQiOjE0NjcyNTE5NjksImV4cCI6MTQ2NzI1MjI2OSwi</span><br><span class="line">anRpIjoidURYMWNwVnYifQ.nK-tYidfd6IHW8iwJ1ZHcPPnbDdbjnveunKrpOihEb0JD5wfjXoY</span><br><span class="line">jpToXKfaSFPdpgbhy4ocnRAfKfX6tQfJuFQpZpKmtFG8OVtWpiOYlH4Ecoh3soSkaQyIy4L6p8o</span><br><span class="line">3gmgl9iyjLQj4B7Anfe6rwQlIQi79WTQwE9bd3tgqic5cPBFtPLqRJQluvjZerkSdUo7Kt8XdyG</span><br><span class="line">yfTAiyrsWoD1H0WGJm6IodTmSUOH7L08k-mGhUHmSkOgwGddrxLwLcMWWQ6ohmXaVv_Vf-9yTC2</span><br><span class="line">STHOKuuUm2w_cRE1sF7JryiO7aFRa8JGEoUff2moaEuLG88weOT_S2EQBhYB0vQ8A</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/OAuth2.0/">OAuth2.0</a></h2>
             </div>
             <div class="post-meta">
@@ -497,159 +633,6 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a table of byte#, hex, decimal, octal, ASCII</span></span><br><span class="line">% <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#    "'</span> -e <span class="string">'/1    "%02X hex"'</span> -e <span class="string">'/1 " = %03i dec"'</span> -e <span class="string">'/1 " = %03o oct"'</span> -e <span class="string">'/1 " = _%c\_\n"'</span></span><br><span class="line">           0<span class="comment">#    68 hex = 104 dec = 150 oct = _h_</span></span><br><span class="line">           1<span class="comment">#    65 hex = 101 dec = 145 oct = _e_</span></span><br><span class="line">           2<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           3<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           4<span class="comment">#    6F hex = 111 dec = 157 oct = _o_</span></span><br><span class="line">           5<span class="comment">#    0A hex = 010 dec = 012 oct = _</span></span><br></pre></td></tr></table></figure>
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-01-23</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h2><p>Alice 向 Bob 发送邮件的场景， Alice 称为发送者（sender），Bob 称为接收者（receiver）, 更普遍的场景，发出消息的一方称为发送者，接受到消息的为接收者。</p>
-<p>信息从发送方的计算机发送到接受者的计算机，中间会经过多台计算机和通信设备进行中转，这个过程中就可能被恶意<strong>窃听者</strong>（eavesdropper）偷看到，窃听者不一定是人类，安装在通信设备的窃听器，邮件软件或服务器上的某些程序</p>
-<p>为了不让别人看到邮件的内容， Alice 要对邮件进行<strong>加密</strong>（encrypt）后再发送出去，加密前的消息称为<strong>明文</strong>（plaintext），加密后的消息称为<strong>密文</strong> (ciphertext). 明文被加密后就会变成看不懂的密文，密文被解密后，就会变回原来的明文。加密通过运用<strong>密码</strong> (cryptography) 技术, 保证消息的机密性 (confidentiality).</p>
-<h2 id="破译"><a href="#破译" class="headerlink" title="破译"></a>破译</h2><p><strong>解密</strong>：正当的接收者将密文还原成明文</p>
-<p><strong>破译</strong>/<strong>密码分析</strong>：cryptanalysis  接收者以外的人试图将将密文还原为明文</p>
-<p><strong>破译者</strong>：cryptanalyst 进行破译的人</p>
-<p>破译者不一定是坏人，如密码学研究者研究密码强度</p>
-<h2 id="对称密码与公钥密码"><a href="#对称密码与公钥密码" class="headerlink" title="对称密码与公钥密码"></a>对称密码与公钥密码</h2><p><strong>密码算法</strong>：解决复杂问题的步骤通常称为算法，明文生成密文的步骤，称为 <em>加密算法</em>，解密的步骤称为 <em>解密算法</em>。加密、解密的算法合在一起统称为密码算法.</p>
-<p><strong>密钥</strong> (key): 密码算法中的密钥,一般是遗传非常大的数字, 无论是在加密时还是解密时, 都需要密钥. 正如现实世界中的密钥不能随便丢弃一样, 密码算法中的密钥也要注意不被他人窃取.</p>
-<p><strong>对称密码</strong> (symmetric cryptography): 加密解密使用同一密钥的方式, 也称为 <strong>公共密钥密码</strong> (common-key cryptography), <strong>传统密码</strong> (conventional cryptography), <strong>私钥密码</strong> (secret-key cryptography), <strong>共享密钥密码</strong> (shared-key cryptography)</p>
-<p><strong>公钥密码</strong> (public-key cryptography): 加密解密使用不同密钥的方式, 所以也称为 <strong>非对称密码</strong> (asymmetric cryptography)</p>
-<p><strong>混合密码系统</strong>: 对称密码与公钥密码结合起来使用</p>
-<h2 id="其它密码技术"><a href="#其它密码技术" class="headerlink" title="其它密码技术"></a>其它密码技术</h2><ul>
-<li><p><strong>单向散列函数</strong> (one-way hash function)</p>
-<p>属于保证<strong>完整性</strong>的密码技术 (数据时正牌的,不是伪造的).  软件供应商发布软件的时候, 也会发布该软件的<strong>散列值</strong>. 如 MD5 等. </p>
-<p>散列值 (hash) 又称哈希值, 密码校验和 (cryptographic checksum), 指纹 (fingerprint), 消息摘要(message digest)</p>
-<blockquote>
-<p><em>MD5<em>信息摘要算法（英语：</em>MD5</em> Message-Digest Algorithm），一种被广泛使用的密码散列函数，可以产生出一个128位（16字节）的散列值（hash value），用于确保信息传输完整一致。</p>
-<p>– 百度百科</p>
-</blockquote>
-</li>
-<li><p><strong>消息认证码</strong> (message authentication code)</p>
-<p>不但 够确认消息是否被篡改，而且确认消息是否来自所期待的通信对象,  提供<strong>完整性</strong>和<strong>认证</strong>机制,  HMAC</p>
-</li>
-<li><p><strong>数字签名</strong></p>
-<p>伪装(spoofing):  消息是否来自真正所谓的发送者</p>
-<p>篡改: 消息再传输的过程中被别有用心的修改了</p>
-<p>否认: 消息的发送者否认自己发送过</p>
-</li>
-</ul>
-<p>  能够防止<strong>伪装</strong>, <strong>篡改</strong>, 和 <strong>否认</strong>等威胁的技术, 就是数字签名(digital signature), 发送者对消息的内容加上数字签名, 接受者可以对数字签名进行验证(verify).  能够保证<strong>完整性</strong>, <strong>提供认证</strong>并<strong>防止否认</strong>的技术</p>
-<ul>
-<li><p><strong>伪随机数生成器</strong> (Pseudo Random Number Generator, PRNG) </p>
-<p>模拟产生随机数列的算法</p>
-</li>
-</ul>
-<ul>
-<li><strong>隐写术与数字水印</strong></li>
-</ul>
-<p>  我们先准备一段话，<br>  很容易看懂的就可以，<br>  喜闻乐见的当然更好<br>  欢迎你尝试将另一句话嵌在这段话中，<br>  你会发现这其实就是一种隐写术</p>
-<p>  隐写术的目的时隐藏消息本身, 但是搞清楚了嵌入消息的方法, 也就可以搞清楚消息的内容. <strong>因此, 隐写术不能替代密码</strong>. </p>
-<blockquote>
-<p> 密码隐藏的是内容, 隐写术隐藏的时消息本身</p>
-</blockquote>
-<p>  <strong>数字水印技术</strong> 就是运用了隐写术, 将著作拥有者及购买者的信息嵌入文件中的技术</p>
-<h2 id="密码与信息安全常识"><a href="#密码与信息安全常识" class="headerlink" title="密码与信息安全常识"></a>密码与信息安全常识</h2><ul>
-<li><p><strong>不要使用保密的密码算法</strong></p>
-<p>1999 年， DVD 的密码算法被破解</p>
-<p>2007 年， NXP 的非接触式 IC 卡的密码算法被破解 </p>
-<p>RSA 公司开发的 RC4 密码算法曾经也是保密的，但最终还是有一位匿名人士开发并公开了与其等效的程序</p>
-<p>密码算法的秘密早晚会公诸于世; 开发高强度的密码算法是非常困难的</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>使用低强度的密码比不进行任何加密更危险</strong></p>
-<p>对于用户来说，安全感与密码的强度无关，而只是由“信息已经被加密了“这一事实产生的，而这通常会导致用<br>户在处理某些机密信息的时候麻痹大意</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>任何密码总有一天都会被破解</strong></p>
-<p>无论使用任何密码算法所生成的密文，只要将所有可能的密钥全部尝试一遍 就总有一天可以破译出来 因此 ，破译密文所需要花费的时间，与要保密的明文的价值之间的权衡就显得非常重要</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>密码只是信息安全的一部分</strong></p>
-<p>比如, 社会工程学 (social engineering) 攻击:</p>
-<p>办公室的电话响起: 您好, 我是 IT 部的, 由于需要对您的电脑进行安全检查, 请您将密码临时改为 XR2315. 实际拨打电话的有可能就是一名攻击者. 这些手段与密码的强度并没有关系.</p>
-<blockquote>
-<p>最脆弱的环节并不是密码, 而是人类自己</p>
-</blockquote>
-</li>
-</ul>
-<p>​     </p>
-<p>​       简单密码技术: 凯撒密码, ROT13</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-01-16</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
-<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
-<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
-<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
-<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
-<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
-<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
-<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
-<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
-<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
-<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
-<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
-<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
-<p>维基百科 - initialization-on-demand holder</p>
-<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
-<p>分为以下几个阶段：</p>
-<ol>
-<li><strong>加载</strong></li>
-</ol>
-<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
-<ol>
-<li><strong>验证</strong></li>
-</ol>
-<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
-<ol>
-<li><strong>准备和解析</strong></li>
-</ol>
-<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
-<ol>
-<li><strong>初始化</strong></li>
-</ol>
-<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
 
                 
             </div>
