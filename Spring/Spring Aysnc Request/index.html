@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Spring Aysnc Request</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-08-07</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Compare-to-WebFlux"><span class="toc-text">Compare to WebFlux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CORS"><span class="toc-text">CORS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HandlerInterceptor"><span class="toc-text">HandlerInterceptor</span></a></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="Compare-to-WebFlux"><a href="#Compare-to-WebFlux" class="headerlink" title="Compare to WebFlux"></a>Compare to WebFlux</h2><p>Servlet API 最初是为通过 Filter-Servlet 链进行单次传递而构建的。 Servlet 3.0 中添加的异步请求处理允许应用程序退出 Filter-Servlet 链，但将响应保持打开状态以供进一步处理。 Spring MVC 异步支持是围绕该机制构建的。当控制器返回 DeferredResult 时，Filter-Servlet 链退出，Servlet 容器线程被释放。稍后，当设置了 DeferredResult 时，会进行 ASYNC 分派 (dispatch)（到相同的 URL），在此期间再次映射控制器，但不是调用它，而是使用 DeferredResult 值（就像控制器返回它一样）来恢复处理.</p>
+<p>相比之下，Spring WebFlux 既不是建立在 Servlet API 上，也不需要这样的异步请求处理特性，因为它是异步设计的。异步处理内置于所有框架契约中，并且在请求处理的所有阶段都得到内在的支持。</p>
+<p>从编程模型的角度来看，Spring MVC 和 Spring WebFlux 都支持异步和响应式类型作为控制器方法中的返回值。 Spring MVC 甚至支持流，包括反应式背压。但是，对响应的单个写入仍然是阻塞的（并且在单独的线程上执行），这与 WebFlux 不同，后者依赖于非阻塞 I/O，并且每次写入不需要额外的线程。</p>
+<p>另一个根本区别是 Spring MVC 不支持控制器方法参数中的异步或反应类型（例如，@RequestBody、@RequestPart 等），也没有明确支持异步和反应类型作为模型属性。 Spring WebFlux 确实支持所有这些。</p>
+<h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>出于安全原因，浏览器禁止对当前来源之外的资源进行 AJAX 调用。 例如，您可以在一个选项卡中拥有您的银行帐户，而在另一个选项卡中拥有 evil.com。 来自 evil.com 的脚本不应该能够使用您的凭据向您的银行 API 发出 AJAX 请求 — 例如从您的帐户中取款！</p>
+<p>跨域资源共享 (CORS) 是大多数浏览器实现的 W3C 规范，它允许您指定授权的跨域请求类型，而不是使用基于 IFRAME 或 JSONP 的安全性较低且功能较弱的解决方法。</p>
+<p>CORS 规范区分了预检请求、简单请求和实际请求。要了解 CORS 的工作原理，您可以阅读本文等，或查看规范以获取更多详细信息。</p>
+<p>Spring MVC HandlerMapping 实现为 CORS 提供了内置支持。成功将请求映射到处理程序后，HandlerMapping 实现会检查给定请求和处理程序的 CORS 配置并采取进一步行动。预检请求被直接处理，而简单和实际的 CORS 请求被拦截、验证，并设置了所需的 CORS 响应标头。</p>
+<p>为了启用跨域请求（即 Origin 标头存在且与请求的主机不同），您需要有一些显式声明的 CORS 配置。如果未找到匹配的 CORS 配置，则拒绝预检请求。没有将 CORS 标头添加到简单和实际 CORS 请求的响应中，因此浏览器会拒绝它们。</p>
+<p>每个 HandlerMapping 都可以使用基于 URL 模式的 CorsConfiguration 映射进行单独配置。在大多数情况下，应用程序使用 MVC Java 配置或 XML 命名空间来声明此类映射，这会导致将单个全局映射传递给所有 HandlerMappping 实例。</p>
+<p>您可以将 HandlerMapping 级别的全局 CORS 配置与更细粒度的处理程序级别 CORS 配置相结合。例如，带注释的控制器可以使用类或方法级别的 @CrossOrigin 注释（其他处理程序可以实现 CorsConfigurationSource）。</p>
+<p>结合全局和局部配置的规则一般是相加的 —— 例如，所有全局和所有本地起源。对于那些只能接受单个值的属性，例如allowCredentials 和 maxAge，本地覆盖全局值。有关更多详细信息，请参阅 CorsConfiguration#combine(CorsConfiguration)。</p>
+<h2 id="HandlerInterceptor"><a href="#HandlerInterceptor" class="headerlink" title="HandlerInterceptor"></a>HandlerInterceptor</h2><p>允许自定义处理程序执行链的工作流接口。应用程序可以为某些处理程序组注册任意数量的现有或自定义拦截器，以添加常见的预处理行为，而无需修改每个处理程序实现。<br>HandlerInterceptor 在适当的 HandlerAdapter 触发处理程序本身的执行之前被调用。这种机制可以用于预处理方面的大领域，例如用于授权检查或常见的处理程序行为，如语言环境或主题更改。它的主要目的是允许分解出重复的处理程序代码。</p>
+<p>在异步处理场景中，处理程序可能会在单独的线程中执行，而主线程退出而不呈现或调用 postHandle 和 afterCompletion 回调。当并发处理程序执行完成时，请求被分派回来以继续渲染模型，并再次调用此合约的所有方法。有关更多选项和详细信息，请参阅 org.springframework.web.servlet.AsyncHandlerInterceptor</p>
+<p>通常每个 HandlerMapping bean 定义一个拦截器链，共享它的粒度。为了能够将某个拦截器链应用于一组处理程序，需要通过一个 HandlerMapping bean 映射所需的处理程序。</p>
+<p>拦截器本身被定义为应用程序上下文中的 bean，映射 bean 定义通过其“拦截器”属性（在 XML 中：<ref> 的 <list>）引用。</p>
+<p>HandlerInterceptor 基本上类似于 Servlet 过滤器，但与后者相反，它只允许自定义预处理和禁止执行处理程序本身的选项，以及自定义后处理。过滤器更强大，例如它们允许交换传递给链的请求和响应对象。请注意，过滤器在 web.xml 中配置，即应用程序上下文中的 HandlerInterceptor。</p>
+<p>作为基本准则，与细粒度处理程序相关的预处理任务是 HandlerInterceptor 实现的候选对象，尤其是分解出的公共处理程序代码和授权检查。另一方面，过滤器非常适合请求内容和视图内容处理，例如多部分表单和 GZIP 压缩。这通常显示何时需要将过滤器映射到某些内容类型（例如图像）或所有请求。</p>
+<p>WebMvcConfigurer</p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Spring/" title="Spring">Spring</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">配置网络与SSH</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Spring/Spring%20Initialization/">
+                <span class="nav-default">Spring Initialization</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
