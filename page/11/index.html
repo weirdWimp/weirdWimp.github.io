@@ -84,6 +84,179 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-09-01</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>事务的隔离级别</p>
+<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
+<blockquote>
+<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
+</blockquote>
+<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
+<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
+<ul>
+<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
+<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
+</ul>
+<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resultType</code></td>
+<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
+</tr>
+</tbody></table>
+<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
+<p>需要试验一下，映射方法有多个参数</p>
+<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
+<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
+</ol>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Mysql/MRR%20and%20BAK%20Algorithm/">MRR and BAK Algorithm</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-09-01</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="1-Multi-Range-Read-Optimization-多范围索引扫描读优化"><a href="#1-Multi-Range-Read-Optimization-多范围索引扫描读优化" class="headerlink" title="1 Multi-Range Read Optimization 多范围索引扫描读优化"></a>1 <strong>Multi-Range Read Optimization 多范围索引扫描读优化</strong></h3><p>在次级索引上使用范围扫描（range scan）读取行时，当表很大且没有存储再存储引擎的缓存中时，就可能会导致对基础表的的许多磁盘的随机访问。 Mysql 试图通过 <strong>Multi-Range Read</strong> (<strong>MRR</strong>)  优化来减少范围扫描时的随机磁盘访问</p>
+<h4 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a><strong>步骤：</strong></h4><ol>
+<li>首先只扫描索引。并收集相关行的键（keys for the relevent rows）</li>
+<li>对这些键进行排序，使用键排序的顺序访基表检索数据行</li>
+</ol>
+<p>优化的动机就是减少随机磁盘访问，实现对基表的更多的顺序扫描</p>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a><strong>优点：</strong></h4><ol>
+<li>MRR 基于索引对，使得数据行的访问是顺序执行的，而不是随机的。Server 获取满足查询条件的索引对 (<strong>index tuple</strong>)，根据数据行键（row ID）进行排序，使用排序的结果顺序访问完整的数据行。使得数据访问更高效，较低磁盘IO消耗</li>
+<li>MRR 允许批量处理对键访问的请求，这些请求用于需要通过索引对访问数据行的操作，比如范围索引扫描和使用索引连接属性的等值连接。MRR 迭代索引范围序列，获得满足条件的索引对。将这些结果进行聚合，访问对应的数据行。并且没有获取所有的索引对后才进行数据行的读取</li>
+</ol>
+<p>MRR 不支持虚拟列上的次级索引.</p>
+<h4 id="哪些场景下可以利用-MRR-优化"><a href="#哪些场景下可以利用-MRR-优化" class="headerlink" title="哪些场景下可以利用 MRR 优化:"></a><strong>哪些场景下可以利用 MRR 优化</strong>:</h4><ul>
+<li><p>场景 A</p>
+<p>InnoDB, MyISAM 表的索引范围扫描或者等值连接操作 (<strong>equi-join operations</strong>)</p>
+<ol>
+<li>部分索引对被存储 (accumulated) 在缓存区中</li>
+<li>缓冲区中的索引对通过数据行ID进行排序</li>
+<li>根据排序的索引对的顺序访问数据行</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>场景 B</p>
+<p>MRR 可以用于 NDB 表，用于多范围索引扫描，或者用于通过属性执行等值连接。</p>
+<ol>
+<li>部分范围(可能是单键范围)缓存在查询提交的中心节点上的缓冲区中 (A portion of ranges, possibly single-key ranges, is accumulated in a buffer on the central node<br>where the query is submitted)</li>
+<li>这些范围查询被发送到执行节点来访问数据</li>
+<li>数据行被打包发送回中心节点</li>
+<li>将接收到的包 (带有数据行) 存放在缓冲区中</li>
+<li>从缓冲区中返回结果行</li>
+</ol>
+</li>
+</ul>
+<h4 id="如何判断当前查询使用了-MRR-优化"><a href="#如何判断当前查询使用了-MRR-优化" class="headerlink" title="如何判断当前查询使用了 MRR 优化"></a><strong>如何判断当前查询使用了 MRR 优化</strong></h4><p>  执行计划的 <code>Extra</code> 列为 <code>Using MRR</code></p>
+<p>  InnoDB, MyISAM 如果需要进行全表扫描时, 不会使用 MRR 优化.  例如: 如果仅仅基于索引对中的信息就可以获取查询结构, 即 <strong>覆盖索引</strong>, MRR 不会提供任何优化.</p>
+<h4 id="如何开启-MRR"><a href="#如何开启-MRR" class="headerlink" title="如何开启 MRR"></a><strong>如何开启 MRR</strong></h4><p>  <code>optimizer_switch</code> 系统变量提供了使用 MRR 优化的开关, <code>mrr</code> 标志表示 MRR 是否已开启 (on), 默认开启, <code>mrr_cost_based</code> 标志表示控制查询优化器是否尝试基于性能的选择, 使用或不适用 MRR, 默认开启 (on). 如果希望尽可能的使用 MRR , 将其置为 off</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> @@optimizer_switch;</span><br><span class="line"></span><br><span class="line">index_merge=on,</span><br><span class="line">index_merge_union=on,</span><br><span class="line">index_merge_sort_union=on,</span><br><span class="line">index_merge_intersection=on,</span><br><span class="line">engine_condition_pushdown=on,</span><br><span class="line">index_condition_pushdown=on,</span><br><span class="line">mrr=on,</span><br><span class="line">mrr_cost_based=on,</span><br><span class="line">block_nested_loop=on,</span><br><span class="line">batched_key_access=off,</span><br><span class="line">materialization=on,</span><br><span class="line">semijoin=on,</span><br><span class="line">loosescan=on,</span><br><span class="line">firstmatch=on,</span><br><span class="line">duplicateweedout=on,</span><br><span class="line">subquery_materialization_cost_based=on,</span><br><span class="line">use_index_extensions=on,</span><br><span class="line">condition_fanout_filter=on,</span><br><span class="line">derived_merge=on</span><br></pre></td></tr></table></figure>
+
+<p>  <code>read_rnd_buffer_size</code> 系统变量表明可以为缓冲区分配的内存字节大小.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 默认 262144B = 256KB</span></span><br><span class="line"><span class="keyword">SELECT</span> @@read_rnd_buffer_size /<span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">256.0000</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_info;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user_info`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`uid`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`upd_time`</span> <span class="built_in">timestamp</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`user_info_uid_index`</span> (<span class="string">`uid`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">22000001</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure>
+
+
+
+<p>  使用 <code>in</code> 的范围查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_info <span class="keyword">where</span> uid <span class="keyword">in</span> (<span class="string">'204-42-7061'</span>,<span class="string">'735-14-7777'</span>,<span class="string">'321-09-5846'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+-----------------------+</span></span><br><span class="line">| id | select_type | table     | partitions | type  | possible_keys       | key                 | key_len | ref  | rows | filtered | Extra                 |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+-----------------------+</span></span><br><span class="line">|  1 | SIMPLE      | user_info | NULL       | range | user_info_uid_index | user_info_uid_index | 194     | NULL |    3 |   100.00 | Using index condition |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+-----------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span>, <span class="number">1</span> <span class="keyword">warning</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p>  <img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200705144752910.png" alt="image-20200705144752910"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- in 的条件查询有 400 多个,后面的省略了</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_info <span class="keyword">where</span> uid <span class="keyword">in</span> (<span class="string">'204-42-7061'</span>,<span class="string">'735-14-7777'</span>,<span class="string">'321-09-5846'</span>,<span class="string">'736-50-3975'</span>,<span class="string">'176-55-0702'</span>,<span class="string">'466-84-4864'</span>,<span class="string">'157-95-0925'</span>,<span class="string">'358-76-6422'</span>,<span class="string">'275-11-5932'</span>,<span class="string">'316-90-4137'</span>,<span class="string">'868-03-2935'</span>,<span class="string">'020-06-6077'</span>,<span class="string">'726-08-5008'</span>,<span class="string">'475-65-1649'</span>,<span class="string">'059-97-0370'</span>,<span class="string">'503-92-8111'</span>,<span class="string">'385-02-6790'</span>,<span class="string">'451-49-1154'</span>,<span class="string">'020-16-2354'</span>,<span class="string">'588-93-7398'</span>,<span class="string">'657-12-6885'</span>,<span class="string">'155-98-3036'</span>,<span class="string">'838-63-2477'</span>,<span class="string">'780-33-4522'</span>,<span class="string">'033-70-3319'</span>,<span class="string">'529-49-3149'</span>,<span class="string">'006-93-6411'</span>,<span class="string">'749-94-6620'</span>,<span class="string">'717-17-1261'</span>,<span class="string">'377-55-0697'</span>,<span class="string">'525-59-2422'</span>,<span class="string">'565-14-3063'</span>,<span class="string">'686-91-9092'</span>,<span class="string">'381-99-6716'</span>,<span class="string">'228-22-7720'</span>,<span class="string">'431-62-1403'</span>,<span class="string">'222-46-8484'</span>,<span class="string">'556-13-2704'</span>,<span class="string">'053-34-8148'</span>,<span class="string">'128-05-3170'</span>,<span class="string">'599-38-5086'</span>,<span class="string">'722-22-2334'</span>, ...)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+----------------------------------+</span></span><br><span class="line">| <span class="keyword">id</span> | select_type | <span class="keyword">table</span>     | <span class="keyword">partitions</span> | <span class="keyword">type</span>  | possible_keys       | <span class="keyword">key</span>                 | key_len | <span class="keyword">ref</span>  | <span class="keyword">rows</span> | filtered | Extra                            |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+----------------------------------+</span></span><br><span class="line">|  <span class="number">1</span> | SIMPLE      | user_info | <span class="literal">NULL</span>       | <span class="keyword">range</span> | user_info_uid_index | user_info_uid_index | <span class="number">194</span>     | <span class="literal">NULL</span> |  <span class="number">435</span> |   <span class="number">100.00</span> | <span class="keyword">Using</span> <span class="keyword">index</span> condition; Using MRR |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+----------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p>  <img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200705145000247.png" alt="image-20200705145000247"></p>
+<h3 id="2-Block-Nested-Loop-and-Batched-Key-Access-Joins"><a href="#2-Block-Nested-Loop-and-Batched-Key-Access-Joins" class="headerlink" title="2 Block Nested-Loop and Batched Key Access Joins"></a>2 <strong>Block Nested-Loop and Batched Key Access Joins</strong></h3><p>MySQL 中可以使用 <code>Batched Key Access (BKA)</code> 连接算法来同时使用索引来访问被连接的表, 同样也使用一个连接缓冲区. BKA 算法支持内连接, 外连接, 以及半连接 (semijoin operations), 包括前内外连接. BKA 算法由于更高效的表扫描, 可以提升连接的性能. 同时, <code>Block Nested-Loop(BNL)</code> 连接算法也可以被扩展应用与的外连接等操作.</p>
+<p>Join Buffer Management for Block Nested-Loop and Batched Key Access Algorithms</p>
+<p>Block Nested-Loop Algorithm for Outer Joins and Semijoins</p>
+<h4 id="Batched-Key-Access-Joins"><a href="#Batched-Key-Access-Joins" class="headerlink" title="Batched Key Access Joins"></a><strong>Batched Key Access Joins</strong></h4><p>Batched Key Access (BKA) 连接算法用于连接表, 当第二个连接操作数( the second join operand - 被驱动表) 表生成的行可以使用索引访问时, 可以使用应用 BKA 算法. </p>
+<ol>
+<li>和 BNL 算法一样, BKA 连接算法会使用一个连接缓冲区 (join buffer) 来缓存连接操作中驱动表行的感兴趣的列. </li>
+<li>然后 BKA 算法会构建缓冲区中所有行的键 (keys 索引) 来访问被连接的表</li>
+<li>以批量的方式将这些 keys 提交给数据库引擎进行索引查询</li>
+<li>提交的 keys 通过 MRR 接口进行处理, 以优化的方式, 使用索引进行查询</li>
+<li>获取由这些 keys 匹配的行, 返回给 BKA 连接算法, 每一个匹配的行同时带了一个指向连接缓冲区中行的引用</li>
+</ol>
+<p>使用 BKA 时, <code>join_buffer_size</code> 定义的时每次发给存储引擎的批量 keys 的大小</p>
+<h4 id="开启-BKA"><a href="#开启-BKA" class="headerlink" title="开启  BKA"></a><strong>开启  BKA</strong></h4><p><code>optimizer_switch</code> 系统变量的 <code>batched_key_access</code> 需要置为 <code>on</code>, BKA 同时使用 MRR, <code>mrr</code> 也需要置为 <code>on</code>. 并且由于目前对于使用 MRR 所进行的优化效果过于悲观, 需要将  <code>mrr_cost_based</code> 置为 <code>off</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_switch=<span class="string">'mrr=on,mrr_cost_based=off,batched_key_access=on'</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="如何判断当前连接查询使用了-BKA-算法"><a href="#如何判断当前连接查询使用了-BKA-算法" class="headerlink" title="如何判断当前连接查询使用了 BKA 算法"></a><strong>如何判断当前连接查询使用了 BKA 算法</strong></h4><p>执行计划的 <code>Extra</code> 列为 <code>Using join buffer (Batched Key Access)</code>, 同时, 连接类型 <code>type</code> 是 <code>ref</code> 或者 <code>eq_ref</code></p>
+<h4 id="MRR-的执行由由两种场景"><a href="#MRR-的执行由由两种场景" class="headerlink" title="MRR 的执行由由两种场景"></a><strong>MRR 的执行由由两种场景</strong></h4><ul>
+<li>传统的基于磁盘的存储引擎, 如 InnoDB 和 MyISAM, 对于这些引擎. 来自连接缓冲区的所有行的键一次性提交给 MRR. 特定于引擎的 MRR 函数对提交的键进行索引查找, 从他们中获取行 id (或主键), 然后获取所有行 id 对应的行数据. 返回的每一行都带了一个关联引用 (用于访问连接缓冲区中的行).  MRR 读取行时使用了行 id的顺序进行读取 (顺序访问而不是随机访问).</li>
+<li>远程存储引擎, 如 NDB, MySQL Server (SQL 节点)将连接缓冲区的部分行的键及其关联引用发送到 NDB 集群的数据节点. SQL 节点收到数据节点返回的包(一个或多个), 其中包含了匹配的行以及相应的关联引用. BKA 算法利用这些行并构建新的连接行. 然后想数据节点发送行的键, 知道所有的连接操作匹配已经完成.</li>
+</ul>
+<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h4><p>开启 BKA </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_switch=<span class="string">'mrr=on,mrr_cost_based=off,batched_key_access=on'</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_score;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user_score`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`uid`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`score`</span> <span class="built_in">float</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">15</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure>
+
+
+
+<p>连接查询, 并且被驱动表的连接类型是 <code>ref</code>, <code>eq_ref</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_score a <span class="keyword">left</span> <span class="keyword">join</span>  user_info b <span class="keyword">on</span> a.uid = b.uid;</span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------------+---------------------+---------+-------------------+------+----------+----------------------------------------+</span></span><br><span class="line">| id | select_type | table | partitions | type | possible_keys       | key                 | key_len | ref               | rows | filtered | Extra                                  |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------------+---------------------+---------+-------------------+------+----------+----------------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | a     | NULL       | ALL  | NULL                | NULL                | NULL    | NULL              |    6 |   100.00 | NULL                                   |</span><br><span class="line">|  1 | SIMPLE      | b     | NULL       | ref  | user_info_uid_index | user_info_uid_index | 194     | learning_db.a.uid |    1 |   100.00 | Using join buffer (Batched Key Access) |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------------+---------------------+---------+-------------------+------+----------+----------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200705152742898.png" alt="image-20200705152742898"></p>
+<p><strong>关掉 BKA, 还原默认设置</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_switch=<span class="string">'mrr=on,mrr_cost_based=on,batched_key_access=off'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_score a <span class="keyword">left</span> <span class="keyword">join</span>  user_info b <span class="keyword">on</span> a.uid = b.uid;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200705154158520.png" alt="image-20200705154158520"></p>
+<p>*<em>被驱动表的连接类型不是 <code>ref</code>, <code>eq_ref</code> *</em> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_info a <span class="keyword">left</span> <span class="keyword">join</span> user_score b <span class="keyword">on</span> a.uid = b.uid;</span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+----------+----------+----------------------------------------------------+</span></span><br><span class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows     | filtered | Extra                                              |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+----------+----------+----------------------------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | a     | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 21919807 |   100.00 | NULL                                               |</span><br><span class="line">|  1 | SIMPLE      | b     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |        6 |   100.00 | Using where; Using join buffer (Block Nested Loop) |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+----------+----------+----------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200705153949927.png" alt="image-20200705153949927"></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Mysql/TimeStamp/">TimeStamp</a></h2>
             </div>
             <div class="post-meta">
@@ -320,581 +493,6 @@
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/%E8%BF%9E%E6%8E%A5/">连接</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-08-01</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="问题还原"><a href="#问题还原" class="headerlink" title="问题还原"></a>问题还原</h2><p>表结构及索引情况</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; desc user_info</span><br><span class="line"></span><br><span class="line">Field	Type	Null	Key	Default	Extra</span><br><span class="line">id	int(11)	NO	PRI	\N	auto_increment</span><br><span class="line">uid	varchar(64)	NO	MUL	\N	</span><br><span class="line">name	varchar(255)	YES		\N	</span><br><span class="line"></span><br><span class="line">&gt; desc user_scode </span><br><span class="line">Field	Type	Null	Key	Default	Extra</span><br><span class="line">id	int(11)	NO	PRI	\N	auto_increment</span><br><span class="line">uid	varchar(64)	NO	MUL	\N	</span><br><span class="line">score	float	YES		\N</span><br></pre></td></tr></table></figure>
-
-<p>表的大小和 user_score 表的数据</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_info</span><br><span class="line"> <span class="comment">-- 22000000</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_score </span><br><span class="line"> <span class="comment">-- 6</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">id</span>	uid			score</span><br><span class="line"><span class="number">9</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">10</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">11</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">12</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span></span><br><span class="line"><span class="number">14</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.254</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_score us <span class="keyword">join</span> user_info ui  <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.id = <span class="number">13</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">id	uid	score	id	uid	name</span><br><span class="line">13	899-99-9904	1.23	20419033	899-99-9904	Julissa Rolfson</span><br><span class="line"></span><br><span class="line">1 row retrieved starting from 1 in 9 s 63 ms (execution: 9 s 31 ms, fetching: 32 ms)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行计划</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	100	\N</span><br><span class="line">1	SIMPLE	ui	\N	ALL	\N	\N	\N	\N	21614208	100	Using where</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_info;</span><br><span class="line"></span><br><span class="line">Table	<span class="keyword">Create</span> <span class="keyword">Table</span></span><br><span class="line">user_info	<span class="string">"CREATE TABLE `user_info` (</span></span><br><span class="line"><span class="string">  `id` int(11) NOT NULL AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">  `uid` varchar(64) NOT NULL,</span></span><br><span class="line"><span class="string">  `name` varchar(255) DEFAULT NULL,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`),</span></span><br><span class="line"><span class="string">  KEY `index_uid` (`uid`) USING BTREE</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB AUTO_INCREMENT=22000001 DEFAULT CHARSET=utf8"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_score;</span><br><span class="line">Table	<span class="keyword">Create</span> <span class="keyword">Table</span></span><br><span class="line">user_score	<span class="string">"CREATE TABLE `user_score` (</span></span><br><span class="line"><span class="string">  `id` int(11) NOT NULL AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">  `uid` varchar(64) NOT NULL,</span></span><br><span class="line"><span class="string">  `score` float DEFAULT NULL,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`),</span></span><br><span class="line"><span class="string">  KEY `index_uid` (`uid`)</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200510120118147.png" alt="image-20200510120118147"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">'13'</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">'899-99-9904'</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">'1.23'</span> <span class="keyword">AS</span> <span class="string">`score`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_score`</span> <span class="string">`us`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_info`</span> <span class="string">`ui`</span> <span class="keyword">where</span> ((<span class="string">'899-99-9904'</span> = <span class="keyword">convert</span>(<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">using</span> utf8mb4)))</span><br></pre></td></tr></table></figure>
-
-
-
-<p>字符集不一致的问题导致索引失效.</p>
-<p>修改字符集：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> user_score <span class="keyword">CONVERT</span> <span class="keyword">TO</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_score us <span class="keyword">join</span> user_info ui  <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.id = <span class="number">13</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">id</span>	uid	score	<span class="keyword">id</span>	uid	<span class="keyword">name</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span>	<span class="number">20419033</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	Julissa Rolfson</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="keyword">row</span> retrieved <span class="keyword">starting</span> <span class="keyword">from</span> <span class="number">1</span> <span class="keyword">in</span> <span class="number">47</span> ms (execution: <span class="number">0</span> ms, fetching: <span class="number">47</span> ms)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行计划：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	100	\N</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br></pre></td></tr></table></figure>
-
-
-
-<ol>
-<li>如果存在 JOIN 连接等操作的表，在建表的时候就应该留心之前系统的规范是什么，建表的默认字符集或者规定的字符集是什么， 而不应该依靠于自己的喜好和认知去建立</li>
-<li>索引列参加计算会导致索引失效，所以非索引常量等值条件的查询，或者较复杂涉及连接的查询，都应该提前分析是否会使用索引，语句的效率，测试执行时间，查看执行计划，看看是否符合预期</li>
-</ol>
-<p>原文地址： <a href="https://mp.weixin.qq.com/s/Cimeyo4cVQsF-MfHBsNgGg?1=a" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Cimeyo4cVQsF-MfHBsNgGg?1=a</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select * from  user_info ui straight_join user_score us  on ui.uid &#x3D; us.uid  where us.id &#x3D; 13</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[HY000][1003] <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`upd_time`</span> <span class="keyword">AS</span> <span class="string">`upd_time`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info`</span> <span class="string">`ui`</span> <span class="keyword">straight_join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score`</span> <span class="string">`us`</span> <span class="keyword">where</span> ((<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> = <span class="number">13</span>) <span class="keyword">and</span> (<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> = <span class="keyword">convert</span>(<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">using</span> utf8mb4)))</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>在字符集编码相同的情况下，强制使得 <code>user_info</code> 表作为驱动表的情况：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">straight_join</span> user_score us  <span class="keyword">on</span> ui.uid = us.uid  <span class="keyword">where</span> us.id = <span class="number">13</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ALL	index_uid	\N	\N	\N	21919807	100	\N</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	50	Using where</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h2><p>备注：使用的 Mysql版本为 5.7 ，参考的Mysql官方使用手册也是 5.7 的</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">version()</span>: <span class="string">5.7.29-0ubuntu0.18.04.1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Reference</span> <span class="string">Manual: MySQL 5.7 Reference Manual Including MySQL NDB Cluster 7.5 and NDB Cluster 7.6</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>外连接 Outer Joins 包含 <code>LEFT JOIN</code> 和 <code>RIGHT JOIN</code></p>
-<p>在外连接 <code>A LEFT JOIN B</code> 中将 B 表的筛选条件写在连接条件 （JOIN CONDITION, <code>on A.col = B.col</code>）和写在 WHERE 字句中的结果</p>
-<p>此例中，<code>user_info_temp</code> 表中有一条 <code>uid</code> 为 <code>&#39;899-99-9905&#39;</code> 的行，<code>user_score_temp</code> 中有两条 uid 为 <code>&#39;899-99-9905&#39;</code> 的数据</p>
-<h3 id="B-表的筛选条件写在连接条件中"><a href="#B-表的筛选条件写在连接条件中" class="headerlink" title="B 表的筛选条件写在连接条件中"></a>B 表的筛选条件写在连接条件中</h3><p><strong>sql 语句:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>  user_info_temp ui <span class="keyword">left</span> <span class="keyword">join</span> user_score_temp us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">and</span> us.uid = <span class="string">'899-99-9905'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行计划：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ALL	\N	\N	\N	\N	5	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using where</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 这里应该使用了 Indexed Nested Loop Join 连接算法, 会使用 B 表中连接字段的索引</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">id	uid	name	id	uid	score</span><br><span class="line">5042849	899-99-9926	Leif Streich V	\N	\N	\N</span><br><span class="line">8018366	899-99-9948	Hulda Rodriguez	\N	\N	\N</span><br><span class="line">20107227	899-99-9921	Sarita Kassulke IV	\N	\N	\N</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	12	899-99-9905	1.1</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	13	899-99-9905	1.23</span><br><span class="line">21439863	899-99-9926	Stuart Daugherty	\N	\N	\N</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="B-表的筛选条件写在-WHERE-字句中"><a href="#B-表的筛选条件写在-WHERE-字句中" class="headerlink" title="B 表的筛选条件写在 WHERE 字句中"></a>B 表的筛选条件写在 WHERE 字句中</h3><p><strong>sql 语句:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>  user_info_temp ui <span class="keyword">left</span> <span class="keyword">join</span> user_score_temp us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.uid = <span class="string">'899-99-9905'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行计划：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using index condition</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	uid	name	id	uid	score</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	12	899-99-9905	1.1</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	13	899-99-9905	1.23</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h3><p>出现不同结果的原因是，写在连接条件中，会作为连接前筛选 B 表的条件，B 表中满足条件的有两条, 再做外连接; 而写在 WHERE 字句中，是作为连接后的结果的筛选条件的, 只筛选出结果中 B 表的列满足条件的结果.</p>
-<p>Mysql 手册 - <strong>8.2.1.8 Outer Join Optimization</strong> 节中对外连接的步骤有如下描述：</p>
-<blockquote>
-<p>The LEFT JOIN condition is used to decide how to retrieve rows from table <em>B</em>. (In other words, any<br>condition in the WHERE clause is not used.)</p>
-</blockquote>
-<p>也就是说, 连接条件决定了如何从 B 表中进行检索数据, WHERE 子句中 B 的条件此时是不会使用的. </p>
-<p>还需要注意一点的是,  B 表的筛选条件写在 WHERE 字句中, 此时, Mysql 应该是将其转换为一个 <code>INNER JOIN</code> 了,  执行计划中的两个步骤都是用的索引, 而且在控制台中对应打印出了如下的结果:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[HY000][1003] <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`ui`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`us`</span> <span class="keyword">where</span> ((<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span>) <span class="keyword">and</span> (<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> = <span class="string">'899-99-9905'</span>))</span><br></pre></td></tr></table></figure>
-
-
-
-<p>其中并没有出现 <code>left join</code> , 而是被转换成了 <code>join</code>,  大概想下, 这时的外连接其实是等价于内连接的, 如果 B 的常量等值条件要满足, B 表对应的那一行必然和 A 表中的某一行关联的上, 不能关联上, 则都为 <code>NULL</code> (前提是 B 的条件列声明为 <code>NOT NULL</code>),  所以是等价于内连接的.  </p>
-<p><strong>因此, 在这种情况下, 写成内连接更能表达清楚本来的意图</strong>.</p>
-<p>Mysql 手册 - <strong>8.2.1.8 Outer Join Optimization</strong> 中的相关描述:</p>
-<blockquote>
-<p>For a LEFT JOIN, if the WHERE condition is always false for the generated NULL row, the LEFT JOIN<br>is changed to an inner join. </p>
-</blockquote>
-<p>如果 t2.column 为 null， t2.column2=5 这个条件总是 false</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t2 <span class="keyword">ON</span> (column1) <span class="keyword">WHERE</span> t2.column2=<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
-
-<p>因此，可以安全的等价为一个内连接：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1, t2 <span class="keyword">WHERE</span> t2.column2=<span class="number">5</span> <span class="keyword">AND</span> t1.column1=t2.column1;</span><br></pre></td></tr></table></figure>
-
-<p>在进行转换后，查询优化器（optimizer）就可以根据情况，做出一个较优的查询计划，比如，使用 <code>t2</code> 作为驱动表</p>
-<p><strong>不能进行转换的情况</strong></p>
-<p>所以如果 B 的条件列可以是 <code>NULL</code> （没有声明为 <code>NOT NUll</code>）,  而且条件为 <code>B.col is NULL</code> , 这时, 就不能等价于内连接了, 因为满足 <code>B.col is NULL</code> 的情况有两种, 一种是本来就没有关联上,  另一种是关联上了, 这一列的值本来就是 <code>NULL</code>,  就不满足 <code>WHERE condition is always false for the generated NULL row</code></p>
-<h3 id="外连接的简化"><a href="#外连接的简化" class="headerlink" title="外连接的简化"></a>外连接的简化</h3><ul>
-<li>解析阶段，右连接会被转换为只包含左连接</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(T1, ...) RIGHT JOIN (T2, ...) ON P(T1, ..., T2, ...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(T2, ...) LEFT JOIN (T1, ...) ON P(T1, ..., T2, ...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_info_temp a <span class="keyword">right</span> <span class="keyword">join</span> user_score_temp b <span class="keyword">on</span> a.uid = b.uid;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show warnings;</span><br><span class="line"></span><br><span class="line">| Note  | 1003 | <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`b`</span> <span class="keyword">left</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`a`</span> <span class="keyword">on</span>((<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span>)) <span class="keyword">where</span> <span class="number">1</span> |</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>所有 <code>T1 INNER JOIN T2 ON P(T1, T2)</code> 形式的内连接表达式，会被替换成，<code>T1,T2</code>,  <code>P(T1, T2)</code> 会作为 <code>WHERE</code> 条件进行结合</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_info_temp a <span class="keyword">join</span> user_score_temp b <span class="keyword">on</span> a.uid = b.uid;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show warnings; </span><br><span class="line"></span><br><span class="line">| Note  | 1003 | <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`a`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`b`</span> <span class="keyword">where</span> (<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span>) |</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>利用外连接的转换，获得更优的执行计划</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> P1(T1,T2)</span><br><span class="line"><span class="keyword">WHERE</span> P(T1,T2) <span class="keyword">AND</span> R(T2)</span><br></pre></td></tr></table></figure>
-
-<p>  如果此时 <code>R(2)</code> 这个限制条件能够极大的减少 <code>T2</code> 表中匹配的行数，但是还时按照当前的执行顺序，先访问 <code>T1</code>,  再访问 <code>T2</code> 表，就可能会产生一个不够高效的执行计划</p>
-<p>  如果此时，能够将这个外连接转换为内连接，可能会有一个更高效的执行计划。</p>
-<p>  <strong>什么样的情况下，一个外连接可以被转换为一个内连接？</strong></p>
-<blockquote>
-<p>MySQL converts the query to a query with no outer join operation if the WHERE condition is null-rejected.</p>
-<p>A condition is said to be null-rejected for an outer join operation if it evaluates to FALSE or UNKNOWN for any NULL-complemented row<br>generated for the operation.</p>
-<p>如果对于外连接操作的补足NULL行（A LEFT JOIN B –&gt; B.COL IS ALL NULL), 这些条件总是 <code>FALSE</code> 或者 <code>UNKNOW</code> 的，这些条件就是 <code>null-rejected</code> 的</p>
-</blockquote>
-<p>  考虑这样一个简单的外连接：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">T1 LEFT JOIN T2 ON T1.A=T2.A</span><br><span class="line"></span><br><span class="line"><span class="comment">-- null-rejected conditions: false for `null` rows</span></span><br><span class="line">T2.B IS NOT NULL</span><br><span class="line">T2.B &gt; 3</span><br><span class="line">T2.C &lt;= T1.C</span><br><span class="line">T2.B &lt; 2 OR T2.C &gt; 1</span><br><span class="line"></span><br><span class="line"><span class="comment">-- not null-rejected conditions: mignt be true for `null` rows</span></span><br><span class="line">T2.B IS NULL</span><br><span class="line">T1.B &lt; 3 OR T2.B IS NOT NULL</span><br><span class="line">T1.B &lt; 3 OR T2.B &gt; 3</span><br></pre></td></tr></table></figure>
-
-<p>  <strong>通用的检查规则</strong></p>
-<ul>
-<li><p><code>A IS NOT NULL</code> A 是左连接内表的一个属性</p>
-</li>
-<li><p>一个谓词(predicate)条件，其中包含了对左连接内表的引用，并且当这个谓词的某一个参数为 NULL 时，谓词返回的值为 <code>UNKNOWN</code></p>
-<p>什么是谓词？谓词就是返回值为真值(<code>TRUE</code>, )的函数，如 <code>= &lt; &gt; &lt;&gt;</code>比较谓词，<code>LIKE</code>谓词，<code>BETWEEN</code> 谓词，<code>IS NULL, IS NOT NULL</code>, <code>IN</code>谓词，<code>EXISTS</code></p>
-</li>
-<li><p>AND 进行连接条件，包含了一个 null-rejected 的条件</p>
-</li>
-<li><p>OR 连接的条件，并且所有条件都是 null-rejected</p>
-</li>
-<li><p><em>示例*</em></p>
-</li>
-</ul>
-<ol>
-<li>简单转换</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- before converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T1.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- after converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T1.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="2">
-<li>连续触发</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- before converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T2.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- first convertion</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T2.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- equivalent to the query</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A), T3</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span> <span class="keyword">AND</span> T3.B=T2.B</span><br><span class="line"></span><br><span class="line"><span class="comment">--second convertion: T3.B=T2.B is null-rejected for embeeded outer join</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (T1 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A), T3</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span> <span class="keyword">AND</span> T3.B=T2.B</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="MySQL-Optimizer-查询优化器"><a href="#MySQL-Optimizer-查询优化器" class="headerlink" title="MySQL Optimizer 查询优化器"></a>MySQL Optimizer 查询优化器</h3><p><strong>会根据当前表的信息给出执行计划，所以类似的查询语句可能在不同的情况下执行计划不同：</strong></p>
-<p>user_info 表和 user_score 两张表， user_info 表有 2200 百万数据，表 user_score 有 6 条数据，通过 uid 字段可以关联，且两张表的 uid 字段都设置了索引：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_info</span><br><span class="line"> <span class="comment">-- 22000000</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_score </span><br><span class="line"> <span class="comment">-- 6</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">id</span>	uid			score</span><br><span class="line"><span class="number">9</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">10</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">11</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">12</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span></span><br><span class="line"><span class="number">14</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.254</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ol>
-<li>当连接的筛选条件为 <code>uid = &#39;899-99-9904&#39;</code> 时，user_score 表中有两条可以关联的上，执行计划：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">join</span> user_score us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> ui.uid = <span class="string">'899-99-9904'</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using index condition</span><br></pre></td></tr></table></figure>
-
-<p>   <strong>可以看出，此时给出的执行计划， 驱动表 ui, 被驱动表 us 都是索引查询，使用的应该是 <code>Indexed Nested Loop Join</code> 连接算法。</strong></p>
-<ol start="2">
-<li>当连接的筛选条件为 <code>uid = &#39;899-99-9905&#39;</code> 时，user_score 表中有四条可以关联的上，执行计划：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">join</span> user_score us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> ui.uid = <span class="string">'899-99-9905'</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ALL	index_uid	\N	\N	\N	6	66.67	Using where; Using join buffer (Block Nested Loop)</span><br></pre></td></tr></table></figure>
-
-<p>   此时的执行计划， 连接算法使用的时 <code>Block Nested Loop Join</code> 连接算法 （参考 Mysql 使用手册 - <strong>8.2.1.6 Nested-Loop Join Algorithms</strong>），且 user_info 使用了索引；这时，会扫描 user_score  表一次，将 user_score 表中的每一条记录同 <code>Join Buffer</code> 连接缓冲区中的 user_info 表筛选出来的记录进行匹配，如果满足关联条件，返回。</p>
-<p>   猜想：此时，查询优化器可能是从 uid 的索引的情况来看，user_score  表中 <code>uid = &#39;899-99-9905&#39;</code> 的记录占据了整个表的大部分，而且表本身比较小，此时，做一次全表扫描的性能可能是会更好。</p>
-<p><strong>Mysql 查询优化器的工作是一个很复杂的工作流程、会考虑各种因素，参考表的统计信息，给出当前较优的执行计划。</strong></p>
-<p>Using filesort (JSON property: using_filesort)<br>MySQL must do an extra pass to find out how to retrieve the rows in sorted order. The sort is done<br>by going through all rows according to the join type and storing the sort key and pointer to the row for<br>all rows that match the WHERE clause. The keys then are sorted and the rows are retrieved in sorted<br>order. See Section 8.2.1.14, “ORDER BY Optimization”.</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">常用命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-07-05</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Linux-常用命令"><a href="#Linux-常用命令" class="headerlink" title="Linux 常用命令"></a>Linux 常用命令</h1><p>[TOC]</p>
-<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><ul>
-<li><code>CTRL</code> + <code>K</code> 光标处剪切文本至本行结束</li>
-<li><code>CTRL</code> + <code>Y</code> 粘贴文本</li>
-<li><code>CTRL</code> + <code>E</code> 将光标移动到本行的末尾</li>
-<li><code>CTRL</code> + <code>A</code> 将光标移动到本行的开头</li>
-<li><code>ALT</code> + <code>F</code> 跳转到下一个空格处</li>
-<li><code>ALT</code> + <code>B</code> 回到前一个空格处</li>
-<li><code>ALT</code> + <code>Backspace</code> 删除前一个词</li>
-<li><code>CTRL</code> + <code>w</code> 剪切光标前一个词 </li>
-</ul>
-<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><p>查找命令</p>
-<ul>
-<li><strong>Usage</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [path...] [expression]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>path  制定查找的目录，默认是当前目录</p>
-</li>
-<li><p>expression 包含 operators， options， tests， and  actions.</p>
-<ul>
-<li><p>tests: </p>
-<ul>
-<li>-name Pattern 指定文件名的模式</li>
-<li>-mmin N 过去N分钟更新过的普通文件</li>
-</ul>
-</li>
-<li><p>actions: </p>
-<ul>
-<li>-delete</li>
-<li>-print 默认</li>
-<li>-ls </li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">"*.txt"</span> -ls</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>同样用来查找文件，是 <code>find -name</code> 的另一种说法，但是它搜索的是包含所有本地文件信息的数据库。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，<strong>先使用updatedb命令，手动更新数据库</strong>。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate ~/m</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略大小写，搜索用户目录下所有以 m 开头的文件</span></span><br><span class="line">locate -i ~/m</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><p>只能用来搜索程序名，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis grep</span><br><span class="line"><span class="comment"># 打印： grep: /bin/grep /usr/share/man/man1/grep.1.gz /usr/share/info/grep.info.gz</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="which"><a href="#which" class="headerlink" title="which"></a>which</h4><p>在 <strong>PATH</strong> 变量指定的路径中，搜索某个命令的位置，并返回第一个搜索结果。</p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> grep</span><br><span class="line"><span class="comment"># 打印： /bin/grep</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>用来区分某个命令是 shell 自带的，还是由外部的二进制文件提供的。如果是一个外部命令， -p 显示该命令的路径。</p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br><span class="line"><span class="comment"># cd is a shell builtin</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> wget</span><br><span class="line"><span class="comment"># wget is /usr/bin/wget</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> -p wget</span><br><span class="line">/usr/bin/wget</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h4 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h4><p>wget 是一个通过指定 URL 下载文件的工具，比如下载一些软件或者从远程服务器恢复备份到本地服务器。支持HTTP, HTTPS 和 FTP 协议，可以使用 HTTP 代理。可以在后台执行，支持断点下载</p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><p><strong>wget <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
-<p><strong>下载整个页面</strong>。 </p>
-<p><code>-x</code> 建立服务器上一样的目录</p>
-<p><code>-nd</code>下载的所有内容会出现在本地当前目录</p>
-</li>
-<li><p><strong>wget -r  <a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a></strong></p>
-<p>递归下载。下载服务器上的所有目录和文件。</p>
-<p><code>-l number</code> 指定下载的层次。</p>
-</li>
-<li><p><strong>wget -c <a href="http://prefix/dir/file" target="_blank" rel="noopener">http://prefix/dir/file</a></strong></p>
-<p>断点续传，服务器必须支持。</p>
-<p><code>-t</code> 表示重试次数 <code>-t 0</code> 表示无穷次重试，直到连接成功。</p>
-<p> <code>-T</code> 表示超时等待时间，超过指定的时间就算超时。</p>
-</li>
-<li><p><strong>wget -i download.txt</strong></p>
-<p>批量下载。多个需要下载的文件的 URL 可以写在一个文件中，每行一个。（URL 指向文件就下载文件，指向网站就下载首页）</p>
-</li>
-<li><p><strong>wget -m -reject=git <a href="http://prefix/dir" target="_blank" rel="noopener">http://prefix/dir</a></strong></p>
-<p>选择性下载</p>
-<p><code>-reject=list</code> 拒绝接受的文件类型</p>
-<p><code>-accept=list</code> 接受的文件类型</p>
-</li>
-<li><p><strong>wget -http-user=USER -http-passwd=PASS URL</strong></p>
-<p>密码和认证。 只能处理利用用户名/密码方式限制访问的网站</p>
-</li>
-<li><p><strong>wget -proxy-user=USER -proxy-passwd=PASS URL</strong></p>
-<p>代理进行下载。需要创建 .wgetrc 文件设置代理服务器：</p>
-<p>http-proxy=11.11.11.11:8080</p>
-<p>ftp-proxy=11.11.11.11:8080</p>
-<p>-proxy=on/off 使用或关闭代理</p>
-</li>
-<li><p><strong>wget -O rename.zip URL</strong></p>
-<p>重命名下载的文件。wget默认会以最后一个符合”/”的后面的字符来命令。</p>
-</li>
-<li><p><strong>wget –limit-rate=300k URL</strong></p>
-<p>限速下载</p>
-</li>
-<li><p><strong>wget -b URL</strong></p>
-<p>后台下载。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看正在下载的下载进度。</span></span><br><span class="line">tail -f wget-log</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>wget -tries=40 URL</strong></p>
-<p>增加重试次数，默认重试20次？</p>
-</li>
-<li><p><strong>wget -mirror URL</strong></p>
-<p>镜像下载。下载整个网站到本地。</p>
-<p><code>-p</code> 下载所有为了html页面显示正常的文件<br><code>–convert-links</code> 下载后，转换成本地的链接<br><code>-P ./LOCAL</code> 保存所有文件和目录到本地指定目录</p>
-</li>
-<li><p><strong>wget -o download.log URL</strong></p>
-<p>保存下载日志到文件中。</p>
-</li>
-<li><p><strong>wget -Q5m -i files.txt</strong></p>
-<p>限制下载的文件大小，超出后推出下载。</p>
-</li>
-<li><p><strong>wget -r -A.pdf URL</strong></p>
-<p>只下载指定格式的文件。</p>
-</li>
-<li><p><strong>wget FTP-URL</strong> </p>
-</li>
-<li><p><strong>wget –ftp-user=USER –ftp-password=PASS URL</strong></p>
-<p>wget FTP 下载。</p>
-</li>
-</ul>
-<p>下载jdk</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget后需要加参数–no-cookies –header “Cookie: oraclelicense=accept-securebackup-cookie;”</span></span><br><span class="line"></span><br><span class="line">wget --no-cookies --header <span class="string">"Cookie: oraclelicense=accept-securebackup-cookie;"</span> http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>用于打包、拆包、压缩、解压<strong>。</strong></p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><p><strong>-c</strong> </p>
-<p>建立一个打包文件</p>
-</li>
-<li><p><strong>-x</strong></p>
-<p>解开一个打包文件</p>
-</li>
-<li><p><strong>-t</strong></p>
-<p>查看 tar 包里的文件</p>
-</li>
-<li><p><strong>-z</strong></p>
-<p>gzip 工具，用于压缩成或解压 .tar.gz 格式的文件 (格式的名字只是为了标记，以免解压时用了错误的压缩工具)</p>
-</li>
-<li><p><strong>-j</strong></p>
-<p>zip2 工具，用于压缩成或解压 .tar.bz2 格式的文件</p>
-</li>
-<li><p><strong>-v</strong></p>
-<p>显示打包、拆包、压缩或解压过程。</p>
-</li>
-<li><p><strong>-f</strong></p>
-<p>使用文件名，后面立即接文件名</p>
-</li>
-<li><p><strong>-p</strong></p>
-<p>保持原文件的属性</p>
-</li>
-<li><p><strong>-P</strong></p>
-<p>使用绝对路径来压缩。</p>
-</li>
-<li><p><strong>-N 2001/03/11</strong></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -N 2017/01/23 -zcvf index.html hello.txt world.txt</span><br></pre></td></tr></table></figure>
-
-<p>  设定日期，后面接的日期还要新的文件才会被打包。</p>
-<ul>
-<li><strong>–exclude file</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude hello.txt -zcvf b.tar.gz index.html hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>  剔除不需要进行打包的文件</p>
-<p>可以作为命令行参数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf - *.txt | tar -xf - -C dir/</span><br><span class="line"></span><br><span class="line"><span class="comment"># tar cvf - files/ | ssh user@example.com "tar xv -C Documents/"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>虽然 tar 命令提供了排除 VCS 的选项, 但是使用起来却有点问题, 简单点, 可以直接使用排序选项, <code>*</code> 默认应该是排除了 <code>.</code> 开头的文件, 所以 <code>.gitignore .git/</code> 都没有包含在最终的包中</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar  --exclude <span class="string">"target"</span> --exclude <span class="string">"*.iml"</span> -cvf spring-boot-demo-source.tar *</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p>cat 命令用于显示文件的内容</p>
-<p><strong>参数或使用范例</strong></p>
-<ul>
-<li><strong>显示整个文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>从键盘创建一个文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; file</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
-
-<p>  只能创建新文件，不能编辑已有文件。 <code>Ctrl</code> + <code>d</code>  结束输入</p>
-<ul>
-<li><strong>合并文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 合并文件输出到另一个文件中</span></span><br><span class="line">cat file1 file2 &gt; file </span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并文件并输出到屏幕</span></span><br><span class="line">cat file1 file2</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-n 行编号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n|number file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-b 行编号，空白行不编号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -b file</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>Global Search Regular Expression(RE) and Print out the line</p>
-<p>全局正则表达式搜索，用于文本搜索（支持正则表达式），并把匹配的行打印出来。</p>
-<ul>
-<li><strong>常规用法</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep match_pattern file</span><br><span class="line"></span><br><span class="line">grep <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>多文件搜索</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"match_pattern"</span> file_1 file_2 file_3 ...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>-v 反转查找</strong></p>
-<p>即打印不匹配该模式的所有行</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">"match_pattern"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-E 使用正则表达式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">"[1-9]+"</span> file</span><br><span class="line"></span><br><span class="line">egrep <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-o 只输出文件中匹配到的部分</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o -E <span class="string">"[1-9]+"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-c 文件中包含匹配模式的行数</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-n 输出包含匹配字符串所在的行号</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-b 匹配模式位于的字符或字节偏移</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般与 -o 一起使用，从第一个字符开始计算，起始值为 0 </span></span><br><span class="line">grep -b -o <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-l 搜索匹配模式出现在哪些文件中</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">"text"</span> file1 file2 file3 ...</span><br><span class="line"><span class="comment"># 只输出文件名，不指定 -l, 输出文件名及相应的匹配行</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-r 多级目录中对文本进行递归搜索</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">"text"</span> . -r -n</span><br><span class="line"><span class="comment"># . 表示当前目录</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-i 忽略匹配模式中字符的大小写</strong>、</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">"text"</span> file</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>-e 制定多个匹配模式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">"text1"</span> <span class="string">"text2"</span> file</span><br><span class="line"><span class="comment"># 这个当然也可以直接用正则表达式写</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>搜索结果中包括或者排除指定文件</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此参数的格式为 Ubuntun 下的格式，搜索文件只包括 txt，html,php 文件 </span></span><br><span class="line">grep --include=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索文件不包括 txt，html,php 文件</span></span><br><span class="line">grep --exclude=*.&#123;txt,html,php&#125; <span class="string">"text"</span> file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除 fileList 文件列表里的文件</span></span><br><span class="line">grep <span class="string">"text"</span> . -r  --exclude-from=fileList</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>-q 静默输出</strong></p>
-</li>
-<li><p><strong>打印匹配某个结果之后或之前的 n 行</strong></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示匹配某个结果之后的3行，使用 -A 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -A 3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果之前的3行，使用 -B 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -B 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示匹配某个结果的前三行和后三行，使用 -C 选项：</span></span><br><span class="line">seq 10 | grep <span class="string">"5"</span> -C 3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line"></span><br><span class="line"><span class="comment">#如果匹配结果有多个，会用“--”作为各匹配结果之间的分隔符：</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"a\nb\nc\na\nb\nc"</span> | grep a -A 1</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">--</span><br><span class="line">a</span><br><span class="line">b</span><br></pre></td></tr></table></figure>
-
-<h4 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h4><p>  stat 命令用于显示文件的大小、所有者、用户组、索引节点号、权限、修改和访问时间等重要的统计信息。这是一个非常有用的命令，可以显示比 <code>ls -l</code> 更多的细节。 </p>
-<ul>
-<li><strong>example</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c 用于格式化输出， %n 表示文件的名称 %a 表示数字格式的权限</span></span><br><span class="line"><span class="built_in">stat</span> -c <span class="string">'%n %a'</span> *</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls * <span class="string">""</span></span><br></pre></td></tr></table></figure>
-
-<p>  <a href="https://linux.cn/article-9601-1.html" target="_blank" rel="noopener">https://linux.cn/article-9601-1.html</a></p>
 
                 
             </div>
