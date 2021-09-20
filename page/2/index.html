@@ -84,6 +84,54 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">Sed 命令行手册</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-09-09</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="print-delete-and-next"><a href="#print-delete-and-next" class="headerlink" title="print, delete, and next"></a>print, delete, and next</h2><table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P</td>
+<td>打印 pattern space 中的一行</td>
+</tr>
+<tr>
+<td>D</td>
+<td>删除当前 pattern space 的一行,并重新开始新的循环</td>
+</tr>
+<tr>
+<td>N</td>
+<td>读取输入源的下一行，并追加到 pattern space，使用 newline 分隔，并继续当前循环的执行（execution of cycle）</td>
+</tr>
+</tbody></table>
+<p>一行指的是，使用行分隔符分隔</p>
+<p>sed 命令中，似乎有这样的规约：大写字母的命令总是与多行数据相关的；通常利用这些命令实现一个队列 <code>FIFO</code>.</p>
+<p>例子：移除文件中最后5行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  1 &#123; N;N;N;N &#125;     # ensure the pattern space contains *five* lines</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  N                 # append a sixth line onto the queue</span></span><br><span class="line"><span class="string">  P                 # Print the head of the queue</span></span><br><span class="line"><span class="string">  D                 # Remove the head of the queue</span></span><br><span class="line"><span class="string">'</span></span><br></pre></td></tr></table></figure>
+
+<p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Hexo%20%E5%8D%9A%E5%AE%A2%E5%90%8C%E6%AD%A5%E8%84%9A%E6%9C%AC/">Hexo 博客同步脚本</a></h2>
             </div>
             <div class="post-meta">
@@ -212,50 +260,6 @@
             <div class="post-content">
                 
                     <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">orig=(01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100)</span><br><span class="line">key=(01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;!orig[@]&#125;</span>"</span>;<span class="keyword">do</span></span><br><span class="line">    o=$(<span class="built_in">echo</span> -n $((2<span class="comment">#$&#123;orig[$i]&#125;)))</span></span><br><span class="line">    k=$(<span class="built_in">echo</span> -n $((2<span class="comment">#$&#123;key[$i]&#125;)))</span></span><br><span class="line">    <span class="built_in">echo</span> $((<span class="variable">$o</span> ^ <span class="variable">$k</span>)) | xargs -n 1 | <span class="keyword">while</span> <span class="built_in">read</span> dec; <span class="keyword">do</span> <span class="built_in">echo</span>  <span class="string">"ibase=10;obase=2;<span class="variable">$dec</span>"</span> | bc | tr <span class="string">"\n"</span> <span class="string">" "</span> | sed <span class="string">'s/^/0/g'</span>; <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E6%B5%81%E9%87%8F%E4%B8%8E%E7%AB%AF%E5%8F%A3/">查看网络流量与端口</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-08-15</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Linux 下常用的命令 <code>lsof</code> 和 <code>netstat</code> 都可以用来列出端口以及运行在端口上的服务。</p>
-<h2 id="验证环境"><a href="#验证环境" class="headerlink" title="验证环境"></a>验证环境</h2><p> 为了验证这两个命令，在本地的一台 Ununtun 机器上部署了一个简单的 Kafka broker，端口为 9092，局域网 ip 为 192.168.31.188。在我的开发环境中，ip 为 192.168.31.51 启动了一个 kafka 生产者，在每一次生产消息后会进行休眠一段时间</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">KafkaUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"pid:"</span> + getPid());</span><br><span class="line">        KafkaProducer&lt;String, String&gt; producer = createProducer();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            String time = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);</span><br><span class="line">            String message = <span class="string">"message at "</span> + time;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"message: "</span> + message);</span><br><span class="line">            ProducerRecord&lt;String, String&gt; record = <span class="keyword">new</span> ProducerRecord&lt;&gt;(<span class="string">"test"</span>, message);</span><br><span class="line">            producer.send(record, (r, e) -&gt; &#123;</span><br><span class="line">                <span class="keyword">if</span> (r != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    System.out.printf(<span class="string">"topic:%s, partition:%s, offset:%s\n"</span>, r.topic(), r.partition(), r.offset());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            threadSleep(Duration.ofMinutes(<span class="number">10</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        producer.flush();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> KafkaProducer&lt;String, String&gt; <span class="title">createProducer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"192.168.31.188:9092"</span>);</span><br><span class="line">        properties.put(<span class="string">"key.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">        properties.put(<span class="string">"value.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">        properties.put(<span class="string">"acks"</span>, <span class="string">"all"</span>);</span><br><span class="line">        KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(properties);</span><br><span class="line">        <span class="keyword">return</span> producer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">threadSleep</span><span class="params">(Duration duration)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">long</span> millis = duration.toMillis();</span><br><span class="line">            Thread.sleep(millis);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="comment">// ignore</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getPid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();</span><br><span class="line">        String name = runtime.getName(); <span class="comment">// format: "pid@hostname"</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Integer.parseInt(name.substring(<span class="number">0</span>, name.indexOf(<span class="string">'@'</span>)));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>启动时打印出了该程序的进程 PID: pid:23264, 此过程也可以通过 Windos 下的任务管理器查看，如果是 IDEA 中运行的，可以在 <code>进程</code> 的选项卡下的 IntelliJ IDEA 子进程下查看</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210815120804600.png" alt="image-20210815120804600"></p>
-<p>Windos 下也有 <code>netstat</code> 命令来查看端口占用和相关的进程，我们找到进程 ID 为 23264 的所有连接，可以看到目标列，即为 Kafka 的 broker 监听的地址 （192.168.31.188:9092）</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a 显示所有连接和侦听端口 -n 以数字形式显示地址和端口号 -o 显示拥有的与每个连接关联的进程 ID</span></span><br><span class="line">C:\Users\guo&gt;netstat <span class="literal">-ano</span> | findstr <span class="string">"23264"</span></span><br><span class="line">  协议    本地地址                外部地址                状态             PID</span><br><span class="line">  TCP    <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50281</span>        <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50280</span>        ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50282</span>        <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50283</span>        ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50283</span>        <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50282</span>        ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">192.168</span>.<span class="number">31.51</span>:<span class="number">50286</span>    <span class="number">192.168</span>.<span class="number">31.188</span>:<span class="number">9092</span>    ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">192.168</span>.<span class="number">31.51</span>:<span class="number">50288</span>    <span class="number">192.168</span>.<span class="number">31.188</span>:<span class="number">9092</span>    ESTABLISHED     <span class="number">23264</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><p>Linux 下的 <code>lsof</code>, 即 list open files, 列出已打开的文件， <code>-i</code> 选项列出打开的网络接口文件 ( -i select IPv[46] files)。在 kafka broker 所在机器下查看 9092 端口的使用情况，可以找到与之对应的连接：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n 以数字形式显示地址</span></span><br><span class="line">ph@guo-lenovo:~$ sudo lsof -i -n | grep 9092</span><br><span class="line">COMMAND      PID            USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME</span><br><span class="line">java      174961            root   95u  IPv6 2748921      0t0  TCP *:9092 (LISTEN)</span><br><span class="line">java      174961            root  100u  IPv6 2854156      0t0  TCP 192.168.31.188:9092-&gt;192.168.31.51:50286 (ESTABLISHED)</span><br><span class="line">java      174961            root  101u  IPv6 2854157      0t0  TCP 192.168.31.188:9092-&gt;192.168.31.51:50288 (ESTABLISHED)</span><br></pre></td></tr></table></figure>
-
-<p><code>192.168.31.188:9092-&gt;192.168.31.51:50286</code> 箭头前表示本地地址（Source/Local），箭头后表示外部地址（Target/Foreign）</p>
-<h3 id="打印所有开放的端口"><a href="#打印所有开放的端口" class="headerlink" title="打印所有开放的端口"></a>打印所有开放的端口</h3><p>根据输出的形式，可以以一个简单的脚本实现打印出当前所有的开放端口：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo lsof -i | grep -Eo <span class="string">":[0-9a-zA-Z]+-&gt;"</span> | grep -Eo <span class="string">"[0-9a-zA-Z]+"</span> | sort | uniq</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h2><p>Linux 下的 <code>netstat</code> 与 Windos 下的命令效果一样的：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -t tcp</span></span><br><span class="line"><span class="comment"># -n, --numeric  don't resolve names</span></span><br><span class="line"><span class="comment"># -p, --programs display PID/Program name for sockets</span></span><br><span class="line">ph@guo-lenovo:~$ netstat -tnp | grep 9092</span><br><span class="line">(Not all processes could be identified, non-owned process info</span><br><span class="line"> will not be shown, you would have to be root to see it all.)</span><br><span class="line">tcp6       0      0 192.168.31.188:9092     192.168.31.51:50288     ESTABLISHED -</span><br><span class="line">tcp6       0      0 192.168.31.188:9092     192.168.31.51:50286     ESTABLISHED -</span><br></pre></td></tr></table></figure>
 
 
                 

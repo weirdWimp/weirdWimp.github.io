@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Linux/Untitled/">Linux/Untitled</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-09-11</span>
+                <span class="post-time">2021-09-20</span>
                 
             </div>
             <div class="post-content">
@@ -102,7 +102,7 @@
                 <h2><a class="post-title-link" href="/Linux/Wicked%20Cook%20Shell%20Scripts/">Wicked Cook Shell Scripts</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-09-11</span>
+                <span class="post-time">2021-09-20</span>
                 
                 <span class="post-category">
                     
@@ -125,11 +125,44 @@
 <li>使用 <code>awk</code> 命令格式化输出</li>
 </ol>
 <p><code>sed</code> 命令真是一个非常有趣的命令！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$#</span> -gt 1 ]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$0</span> [dirname]"</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">elif</span> [[ <span class="variable">$#</span> -eq 1 ]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line">    <span class="comment"># if cd command failed because it is not a valid path</span></span><br><span class="line">    <span class="keyword">if</span> [[ $? -ne 0 ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># shell will extend '*' as all files and directories under the current directory</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> *; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [[ -d <span class="string">"<span class="variable">$file</span>"</span> ]]; <span class="keyword">then</span></span><br><span class="line">        size=$(ls <span class="string">"<span class="variable">$file</span>"</span> | wc -l | sed <span class="string">'s/[^[:digit:]]//g'</span>)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$file</span> (<span class="variable">$size</span> entr(y|ies))"</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        size=$(ls -sk <span class="variable">$file</span> | awk <span class="string">'&#123;print $1&#125;'</span>)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$file</span> (<span class="variable">$&#123;size&#125;</span>KB)"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span> | \</span><br><span class="line">sed -n \</span><br><span class="line">-e <span class="string">'$!N'</span> \</span><br><span class="line">-E -e <span class="string">'s/\n/\x0/g'</span> \</span><br><span class="line">-e <span class="string">'p'</span> | \</span><br><span class="line">awk -F <span class="string">"\0"</span> <span class="string">'&#123; printf "%-39s %-39s\n",$1,$2 &#125;'</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">### a bettern output fotmat</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## step 1: use sed to make things easy and right</span></span><br><span class="line"><span class="comment"># disable automatic priting</span></span><br><span class="line"><span class="comment"># append the next line of input into the pattern space, now we have two lines in sed's pattern space</span></span><br><span class="line"><span class="comment"># replace '\n' in pattern space, so we make two lines a line separated by '\0'</span></span><br><span class="line"><span class="comment"># print the content of pattern space</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### step 2: awk final output</span></span><br><span class="line"><span class="comment"># make the '\0' as field delimiter, and format the output</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$#</span> -gt 1 ]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$0</span> [dirname]"</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">elif</span> [[ <span class="variable">$#</span> -eq 1 ]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line">    <span class="comment"># if cd command failed because it is not a valid path</span></span><br><span class="line">    <span class="keyword">if</span> [[ $? -ne 0 ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># shell will extend '*' as all files and directories under the current directory</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> *; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [[ -d <span class="string">"<span class="variable">$file</span>"</span> ]]; <span class="keyword">then</span></span><br><span class="line">        size=$(ls <span class="string">"<span class="variable">$file</span>"</span> | wc -l | sed <span class="string">'s/[^[:digit:]]//g'</span>)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$file</span> (<span class="variable">$size</span> entr(y|ies))"</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        size=$(ls -sk <span class="variable">$file</span> | awk <span class="string">'&#123;print $1&#125;'</span>)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$file</span> (<span class="variable">$&#123;size&#125;</span>KB)"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span> | \</span><br><span class="line">sed -n \</span><br><span class="line">-e <span class="string">'$!N'</span> \</span><br><span class="line">-E -e <span class="string">'s/\n/\x0/g'</span> \</span><br><span class="line">-e <span class="string">'p'</span> | \</span><br><span class="line">awk -F <span class="string">"\0"</span> <span class="string">'&#123; printf "%-39s %-39s\n",$1,$2 &#125;'</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">### a bettern output fotmat</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## step 1: use sed to make things easy and right</span></span><br><span class="line"><span class="comment"># -n			disable automatic priting</span></span><br><span class="line"><span class="comment"># '$!N' 		append the next line of input into the pattern space, now we have two lines in sed's pattern space</span></span><br><span class="line"><span class="comment"># 's/\n/\x0/g'	replace '\n' in pattern space, so we make two lines a line separated by '\0'</span></span><br><span class="line"><span class="comment"># 'p'			print the content of pattern space</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### step 2: awk final output</span></span><br><span class="line"><span class="comment"># make the '\0' as field delimiter, and format the output</span></span><br></pre></td></tr></table></figure>
 
 <p>测试结果：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">guo@DESKTOP-4L69AND:/mnt/e/learning-dir/shell-learning/scripts$ sudo ./formatDir.sh /</span><br><span class="line">bin (171 entr(y|ies))                   boot (0 entr(y|ies))</span><br><span class="line">dev (210 entr(y|ies))                   dump-new.rdb (8KB)</span><br><span class="line">etc (189 entr(y|ies))                   home (1 entr(y|ies))</span><br><span class="line">init (620KB)                            lib (22 entr(y|ies))</span><br><span class="line">lib64 (1 entr(y|ies))                   media (0 entr(y|ies))</span><br><span class="line">mnt (8 entr(y|ies))                     opt (6 entr(y|ies))</span><br><span class="line">proc (46 entr(y|ies))                   root (0 entr(y|ies))</span><br><span class="line">run (11 entr(y|ies))                    sbin (220 entr(y|ies))</span><br><span class="line">snap (0 entr(y|ies))                    srv (0 entr(y|ies))</span><br><span class="line">sys (10 entr(y|ies))                    tmp (79 entr(y|ies))</span><br><span class="line">usr (8 entr(y|ies))                     var (13 entr(y|ies))</span><br><span class="line">zookeeper_server.pid (0KB)</span><br></pre></td></tr></table></figure>
 
+
+
+<h2 id="提醒工具"><a href="#提醒工具" class="headerlink" title="提醒工具"></a>提醒工具</h2><p>添加提醒</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="comment"># 简单的命令行提醒工具</span></span><br><span class="line"></span><br><span class="line">remindFile=<span class="string">"<span class="variable">$HOME</span>/.remind"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"enter note and end with ctrl-D:"</span> <span class="comment"># ctrl-D Terminate input, or exit shell 终止输入或退出 shell</span></span><br><span class="line">    cat - &gt;&gt;<span class="variable">$remindFile</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"<span class="variable">$@</span>"</span> &gt;&gt;<span class="variable">$remindFile</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
+
+<p>查询提醒</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="comment"># remindMe 查看提醒</span></span><br><span class="line"></span><br><span class="line">remindFile=<span class="string">"<span class="variable">$HOME</span>/.remind"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ ! -f <span class="variable">$remindFile</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"<span class="variable">$0</span>: You don't have a .remind file under your user home"</span> &gt;/dev/stderr</span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">    more <span class="variable">$remindFile</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    grep -i -- <span class="string">"<span class="variable">$@</span>"</span> <span class="variable">$remindFile</span> | <span class="variable">$&#123;PAGER:-more&#125;</span> <span class="comment"># 变量为空默认赋值，即使用 more 命令来展示内容；-- 将后面参数不再作为 grep 命令的参数来解析，出于安全执行命令考虑</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E5%9B%BE%E5%BA%8A%E6%B5%8B%E8%AF%95/">图床测试</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-09-11</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Description</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128011943682.png" alt="image-20201128011943682"></p>
+<p>真是一件麻烦的事情呢，竟然使用了 Redis 作为图片去重的校验…</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201128012358249.png" alt="image-20201128012358249"></p>
 
                 
             </div>
@@ -254,54 +287,6 @@
 <li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
 </li>
 </ol>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">Sed 命令行手册</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-09-09</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="print-delete-and-next"><a href="#print-delete-and-next" class="headerlink" title="print, delete, and next"></a>print, delete, and next</h2><table>
-<thead>
-<tr>
-<th>command</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>P</td>
-<td>打印 pattern space 中的一行</td>
-</tr>
-<tr>
-<td>D</td>
-<td>删除当前 pattern space 的一行,并重新开始新的循环</td>
-</tr>
-<tr>
-<td>N</td>
-<td>读取输入源的下一行，并追加到 pattern space，使用 newline 分隔，并继续当前循环的执行（execution of cycle）</td>
-</tr>
-</tbody></table>
-<p>一行指的是，使用行分隔符分隔</p>
-<p>sed 命令中，似乎有这样的规约：大写字母的命令总是与多行数据相关的；通常利用这些命令实现一个队列 <code>FIFO</code>.</p>
-<p>例子：移除文件中最后5行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  1 &#123; N;N;N;N &#125;     # ensure the pattern space contains *five* lines</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  N                 # append a sixth line onto the queue</span></span><br><span class="line"><span class="string">  P                 # Print the head of the queue</span></span><br><span class="line"><span class="string">  D                 # Remove the head of the queue</span></span><br><span class="line"><span class="string">'</span></span><br></pre></td></tr></table></figure>
-
-<p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
 
                 
             </div>
