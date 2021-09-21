@@ -84,7 +84,7 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/README/">README</a></h2>
+                <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
@@ -98,7 +98,12 @@
             </div>
             <div class="post-content">
                 
-                    <h1 id="Pro-Git-Note"><a href="#Pro-Git-Note" class="headerlink" title="Pro-Git-Note"></a>Pro-Git-Note</h1><p>Markdown notes for <a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener">Pro Git</a><br>Love the life you live.<br>Live the life you love.<br>Find your own thing.</p>
+                    <h1 id="远程分支"><a href="#远程分支" class="headerlink" title="远程分支"></a><strong>远程分支</strong></h1><p>远程分支 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加远程分支</span></span><br><span class="line">git add origin git@github.com:weirdWimp/log_demo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送本地分支到远程分支</span></span><br><span class="line">git push origin dev:remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在远程分支origin/remoteDev上创建本地分支dev，并且本地分支设置跟踪远程仓库origin的remoteDev分支</span></span><br><span class="line">git checkout -b dev origin/remoteDev</span><br><span class="line"></span><br><span class="line">git checkout --track origin/remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置已有本地分支跟踪远程分支</span></span><br><span class="line">git branch -u origin/serverfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line">git push origin --delete serverfix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git fetch origin</span><br><span class="line">git merge origin/master</span><br><span class="line">git push origin master:master</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rebased dev on refs/heads/dev</p>
 
                 
             </div>
@@ -158,33 +163,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/">远程分支</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="远程分支"><a href="#远程分支" class="headerlink" title="远程分支"></a><strong>远程分支</strong></h1><p>远程分支 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加远程分支</span></span><br><span class="line">git add origin git@github.com:weirdWimp/log_demo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送本地分支到远程分支</span></span><br><span class="line">git push origin dev:remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在远程分支origin/remoteDev上创建本地分支dev，并且本地分支设置跟踪远程仓库origin的remoteDev分支</span></span><br><span class="line">git checkout -b dev origin/remoteDev</span><br><span class="line"></span><br><span class="line">git checkout --track origin/remoteDev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置已有本地分支跟踪远程分支</span></span><br><span class="line">git branch -u origin/serverfix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line">git push origin --delete serverfix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git fetch origin</span><br><span class="line">git merge origin/master</span><br><span class="line">git push origin master:master</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Rebased dev on refs/heads/dev</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Container%20Extention%20Points/">Container Extention Points</a></h2>
             </div>
             <div class="post-meta">
@@ -210,6 +188,74 @@
 <p><code>PropertySourcesPlaceholderConfigurer</code>  :    实现 bean 属性的值，可以定义在外部 properties 文件中</p>
 <p><code>PropertyOverrideConfigurer</code> ： 事项 bean 的属性如果没有值的话，可以通过外部 properties 文件定义一个默认值</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PropertySource</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Scheduling/">Scheduling</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Cron-Expressions"><a href="#Cron-Expressions" class="headerlink" title="Cron Expressions"></a>Cron Expressions</h2><p>Cron expressions are comprised of 6 required fields and one optional field separated by white space. The fields respectively are described as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Allowed Values</th>
+<th>Allowed Special Characters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Seconds</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Minutes</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Hours</td>
+<td>0-23</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Day-of-month</td>
+<td>1-31</td>
+<td>, - * ? / L W</td>
+</tr>
+<tr>
+<td>Month</td>
+<td>0-11 or JAN-DEC</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Day-of-Week</td>
+<td>1-7 or SUN-SAT</td>
+<td>, - * ? / L #</td>
+</tr>
+<tr>
+<td>Year (Optional)</td>
+<td>empty, 1970-2199</td>
+<td>, - * /</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">The <span class="string">'*'</span> character is used to specify all values. For example, <span class="string">"*"</span> in the minute field means <span class="string">"every minute"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'?'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. It is used to specify <span class="string">'no specific value'</span>. This is useful when you need to specify something in one of the two fields, but not the other.</span><br><span class="line"></span><br><span class="line">The <span class="string">'-'</span> character is used to specify ranges For example <span class="string">"10-12"</span> in the hour field means <span class="string">"the hours 10, 11 and 12"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">','</span> character is used to specify additional values. For example <span class="string">"MON,WED,FRI"</span> in the day-of-week field means <span class="string">"the days Monday, Wednesday, and Friday"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'/'</span> character is used to specify increments. For example <span class="string">"0/15"</span> in the seconds field means <span class="string">"the seconds 0, 15, 30, and 45"</span>. And <span class="string">"5/15"</span> in the seconds field means <span class="string">"the seconds 5, 20, 35, and 50"</span>. Specifying <span class="string">'*'</span> before the <span class="string">'/'</span> is equivalent to specifying <span class="number">0</span> is the value to start with. Essentially, <span class="keyword">for</span> each field in the expression, there is a set of numbers that can be turned on or off. For seconds and minutes, the numbers range from <span class="number">0</span> to <span class="number">59</span>. For hours <span class="number">0</span> to <span class="number">23</span>, <span class="keyword">for</span> days of the month <span class="number">0</span> to <span class="number">31</span>, and <span class="keyword">for</span> months <span class="number">0</span> to <span class="number">11</span> (JAN to DEC). The <span class="string">"/"</span> character simply helps you turn on every <span class="string">"nth"</span> value in the given set. Thus <span class="string">"7/6"</span> in the month field only turns on month <span class="string">"7"</span>, it does NOT mean every <span class="number">6</span>th month, please note that subtlety.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> character is allowed <span class="keyword">for</span> the day-of-month and day-of-week fields. This character is <span class="keyword">short</span>-hand <span class="keyword">for</span> <span class="string">"last"</span>, but it has different meaning in each of the two fields. For example, the value <span class="string">"L"</span> in the day-of-month field means <span class="string">"the last day of the month"</span> - day <span class="number">31</span> <span class="keyword">for</span> January, day <span class="number">28</span> <span class="keyword">for</span> February on non-leap years. If used in the day-of-week field by itself, it simply means <span class="string">"7"</span> or <span class="string">"SAT"</span>. But <span class="keyword">if</span> used in the day-of-week field after another value, it means <span class="string">"the last xxx day of the month"</span> - <span class="keyword">for</span> example <span class="string">"6L"</span> means <span class="string">"the last friday of the month"</span>. You can also specify an offset from the last day of the month, such as <span class="string">"L-3"</span> which would mean the third-to-last day of the calendar month. When using the <span class="string">'L'</span> option, it is important not to specify lists, or ranges of values, as you<span class="string">'ll get confusing/unexpected results.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The '</span>W<span class="string">' character is allowed for the day-of-month field. This character is used to specify the weekday (Monday-Friday) nearest the given day. As an example, if you were to specify "15W" as the value for the day-of-month field, the meaning is: "the nearest weekday to the 15th of the month". So if the 15th is a Saturday, the trigger will fire on Friday the 14th. If the 15th is a Sunday, the trigger will fire on Monday the 16th. If the 15th is a Tuesday, then it will fire on Tuesday the 15th. However if you specify "1W" as the value for day-of-month, and the 1st is a Saturday, the trigger will fire on Monday the 3rd, as it will not '</span>jump<span class="string">' over the boundary of a month'</span>s days. The <span class="string">'W'</span> character can only be specified when the day-of-month is a single day, not a range or list of days.</span><br><span class="line"></span><br><span class="line">The <span class="string">'L'</span> and <span class="string">'W'</span> characters can also be combined <span class="keyword">for</span> the day-of-month expression to yield <span class="string">'LW'</span>, which translates to <span class="string">"last weekday of the month"</span>.</span><br><span class="line"></span><br><span class="line">The <span class="string">'#'</span> character is allowed <span class="keyword">for</span> the day-of-week field. This character is used to specify <span class="string">"the nth"</span> XXX day of the month. For example, the value of <span class="string">"6#3"</span> in the day-of-<span class="function">week field means the third Friday of the <span class="title">month</span> <span class="params">(day <span class="number">6</span> = Friday and <span class="string">"#3"</span> = the <span class="number">3</span>rd one in the month)</span>. Other examples: "2#1" </span>= the first Monday of the month and <span class="string">"4#5"</span> = the fifth Wednesday of the month. Note that <span class="keyword">if</span> you specify <span class="string">"#5"</span> and there is not <span class="number">5</span> of the given day-of-week in the month, then no firing will occur that month. If the <span class="string">'#'</span> character is used, there can only be one expression in the day-of-<span class="function">week <span class="title">field</span> <span class="params">(<span class="string">"3#1,6#3"</span> is not valid, since there are two expressions)</span>.</span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">The legal characters and the names of months and days of the week are not <span class="keyword">case</span> sensitive.</span></span><br><span class="line"><span class="function">NOTES:</span></span><br><span class="line"><span class="function">Support <span class="keyword">for</span> specifying both a day-of-week and a day-of-month value is not <span class="title">complete</span> <span class="params">(you<span class="string">'ll need to use the '</span>?<span class="string">' character in one of these fields).</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">Overflowing ranges is supported - that is, having a larger number on the left hand side than the right. You might do 22-2 to catch 10 o'</span>clock at night until <span class="number">2</span> o<span class="string">'clock in the morning, or you might have NOV-FEB. It is very important to note that overuse of overflowing ranges creates ranges that don'</span>t make sense and no effort has been made to determine which interpretation CronExpression chooses. An example would be <span class="string">"0 0 14-6 ? * FRI-MON"</span>.</span></span></span><br></pre></td></tr></table></figure>
+
+
                 
             </div>
         </article>
