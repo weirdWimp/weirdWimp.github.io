@@ -84,6 +84,39 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/WSL/">WSL</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-09-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Make-it-started-when-you-start-your-Windows"><a href="#Make-it-started-when-you-start-your-Windows" class="headerlink" title="Make it started when you start your Windows"></a>Make it started when you start your Windows</h2><p>wsl-ubuntun.vbs - 开机自启</p>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
+
+
+
+<p>/etc/init.wsl</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+w <span class="string">"R"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找视频文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -ZP <span class="string">"\.(MP4|mkv|mov|mp4|wmv)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> video/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找图片文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -P <span class="string">"\.(JPG|jpg|png|jpeg|gif|raw)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> ./picture</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/Thread%20%E7%BA%BF%E7%A8%8B/">Thread 线程</a></h2>
             </div>
             <div class="post-meta">
@@ -400,45 +433,6 @@
 
 <p>所以如果真的存在不同客户端时区问题，必要时修改 Mysql 的系统时区为含义明确的时区表示，而不是 <code>CST</code>, 客户端在使用的时候也不用指定 <code>useLegacyDatetimeCode=true&amp;useTimezone=true&amp;serverTimezone=时区</code>， 使用新的 <code>useLegacyDatetimeCode=false</code> 获取时区的方式就可以了，这种会查询 Mysql Server 的时区变量，作为 Server 的时区，因为会话默认也是取的系统时区，所以是一致的，没有什么问题。这时候会将正确的时间转换为客户端时区的时间。</p>
 <p><code>TIMESTAMP</code> 操作真的是很麻烦了，必要时可以采用 <a href="https://www.liaoxuefeng.com/article/978494994163392" target="_blank" rel="noopener">廖雪峰-如何正确的处理时间</a> 中策略，存储成 <code>long</code> 型的时间偏移量就好多了，需要比较的话，直接比较的是整数，显示时，再指定特定时区，就可以了。 </p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Ubuntu%20%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">Ubuntu 安装配置</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-08-09</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Ubuntu 国内镜像下载</p>
-<p><a href="http://mirrors.163.com/ubuntu-releases/" target="_blank" rel="noopener">http://mirrors.163.com/ubuntu-releases/</a></p>
-<p>创建 USB 启动盘</p>
-<p><a href="https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview" target="_blank" rel="noopener">https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview</a></p>
-<p>USB 启动盘工具</p>
-<p><a href="https://rufus.ie/" target="_blank" rel="noopener">https://rufus.ie/</a></p>
-<p>安装教程：</p>
-<p><a href="https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive" target="_blank" rel="noopener">https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive</a></p>
-<p>设置教程：</p>
-<p><a href="https://cloud.tencent.com/developer/article/1626258?fromSource=gwzcw.1293314.1293314.1293314&cps_key=ad1dd5b36e1c498308f7302ab4cdabb7" target="_blank" rel="noopener">写给工程师的 Ubuntu 20.04 最佳配置指南</a></p>
-<p><a href="https://blog.csdn.net/jackghq/article/details/54974141" target="_blank" rel="noopener">开启 SSH</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 ssh-serve</span></span><br><span class="line">sudo apt-get install openssh-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置允许 root 登录</span></span><br><span class="line">sudo vi /etc/ssh/sshd_config</span><br><span class="line">  PermitRootLogin yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 ssh 密钥对</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制到目标机器</span></span><br><span class="line">ssh-copy-id user@domain/ip</span><br></pre></td></tr></table></figure>
-
-
-
-<p>安装 Vim</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. </span></span><br><span class="line">sudo apt install vim</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 修改 /etc/vim/vimrc.tinyset compatible 设置成set nocompatible . 这是因为有时候系统会默认vim兼容vi，所以使用vi的命令。</span></span><br><span class="line">vi /etc/vim/vimrc.tinyset compatible</span><br><span class="line"><span class="built_in">set</span> nocompatible</span><br></pre></td></tr></table></figure>
-
 
                 
             </div>
