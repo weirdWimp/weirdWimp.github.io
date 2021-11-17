@@ -84,6 +84,69 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/xxd%E5%91%BD%E4%BB%A4/">xxd命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-08-29</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="xxd-命令"><a href="#xxd-命令" class="headerlink" title="xxd 命令"></a>xxd 命令</h1><p><code>xxd</code> 用来对指定的文件或来自标准输入的数据进行<strong>十六进制转储</strong>，也可以将将十六进制转换为原始的二进制格式，允许以邮件安全的 ASCII 表示传输二进制数据，<code>base64</code> 其实也可以达到相同的目的。也可以用来进行二进制文件 patching</p>
+<h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><p>如果没有指定输入文件或输出文件，或者指定为 <code>-</code> ，使用标准输入或标准输出</p>
+<ul>
+<li><p><code>-a | -autoskip</code> 开启自动跳过，以 <code>*</code> 代替空行（nul-lines），默认关闭</p>
+</li>
+<li><p><code>-b | -bits</code> 切换到二进制位模式，而不是十六进制, <code>-r</code>, <code>-p</code>,<code>-i</code> 下不生效 </p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101 01101100 01101100 01101111           hello</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-c cols | -cols cols</code> 输出的每行包含 cols 个字节，默认是 16 个 (-i: 12, -ps: 30, -b: 6).最大 256</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b -c 2</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101  he</span><br><span class="line">00000002: 01101100 01101100  ll</span><br><span class="line">00000004: 01101111           o</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-E | -EBCDIC</code> ASCII 表示切换为 EBCDIC（国际）编码 meaningless in combinations with -r, -p or -i</p>
+</li>
+<li><p><code>-g bytes | -groupsize bytes</code> 每 bytes 个字节，添加一个空格进行分隔分组</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 1</span><br><span class="line">00000000: 68 65 6c 6c 6f 0a                                hello.</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 2</span><br><span class="line">00000000: 6865 6c6c 6f0a                           hello.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-p | -ps | -postscript | -plain</code>  以连续连续十六进制样式输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -p</span><br><span class="line">68656c6c6f0a</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-r | -revert</code> 将十六进制转为二进制。如果不是写到 stdout, xxd 在不截断的情况下将其写入输出文件。使用 <code>-r -p</code> 读取连续的十六进制输出（不包含行号信息，没有特定的列布局）</p>
+</li>
+<li><p><code>-seek offset</code></p>
+<p>When used after <em>-r</em>: revert with &lt;<em>offset</em>&gt; added to file positions found in hexdump.</p>
+</li>
+<li><p><code>-s [+][-]seek</code> </p>
+<p>start at &lt;<em>seek</em>&gt; bytes abs. (or rel.) infile offset. <em>+</em> indicates that the seek is relative to the current stdin file position (meaningless when not reading from stdin). <em>-</em> indicates that the seek should be that many characters from the end of the input (or if combined with <em>+</em>: before the current stdin file position). Without -s option, xxd starts at the current file position.</p>
+<p>跳过多少字节</p>
+</li>
+<li><p><code>u</code> 使用大写的十六进制字母，默认是小写的</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.commandlinux.com/man-page/man1/xxd.1.html" target="_blank" rel="noopener">XXD</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/decode/">decode</a></h2>
             </div>
             <div class="post-meta">
@@ -269,33 +332,6 @@
 <p>HandlerInterceptor 基本上类似于 Servlet 过滤器，但与后者相反，它只允许自定义预处理和禁止执行处理程序本身的选项，以及自定义后处理。过滤器更强大，例如它们允许交换传递给链的请求和响应对象。请注意，过滤器在 web.xml 中配置，即应用程序上下文中的 HandlerInterceptor。</p>
 <p>作为基本准则，与细粒度处理程序相关的预处理任务是 HandlerInterceptor 实现的候选对象，尤其是分解出的公共处理程序代码和授权检查。另一方面，过滤器非常适合请求内容和视图内容处理，例如多部分表单和 GZIP 压缩。这通常显示何时需要将过滤器映射到某些内容类型（例如图像）或所有请求。</p>
 <p>WebMvcConfigurer</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20Initialization/">Spring Initialization</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-08-01</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContextInitializer</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">The context may or may not yet be refreshed. If it (a) is an implementation of ConfigurableWebApplicationContext and (b) has not already been refreshed (the recommended approach), then the following will occur:</span><br><span class="line">If the given context has not already been assigned an id, one will be assigned to it</span><br><span class="line">ServletContext and ServletConfig objects will be delegated to the application context</span><br><span class="line">customizeContext will be called</span><br><span class="line">Any ApplicationContextInitializer org.springframework.context.ApplicationContextInitializer ApplicationContextInitializers specified through the &quot;contextInitializerClasses&quot; init-param will be applied.</span><br><span class="line">refresh() will be called</span><br></pre></td></tr></table></figure>
-
-<img src="D:\Markdown 目录\Markdown 文档\工作\Spring\img-assets\image-20210801120000817.png" alt="image-20210801120000817" style="zoom:200%;" />
-
 
                 
             </div>

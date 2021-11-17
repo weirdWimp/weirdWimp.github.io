@@ -84,6 +84,207 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Redis/Scripting%20Redis%20with%20Lua/">Scripting Redis with Lua</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-06-05</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Scripting-Redis-with-Lua"><a href="#Scripting-Redis-with-Lua" class="headerlink" title="Scripting Redis with Lua"></a>Scripting Redis with Lua</h2><p>Redis 2.6 版本之前，如果想要一些 Redis 不能提供的功能，要么编写较复杂客户端代码实现，要么编辑 Redis 的 C 语言源码。 即使编辑源码并不困难，但是在商业环境中使用这样的版本，或者试图说服经理使用我们自己的 Redis 服务器版本，都是一件极具挑战的事。</p>
+<p>Redis 引入了基于 Lua 语言的服务端脚本的支持，可以使得用户在 Redis 中执行更多的操作，简化代码，提升新能。</p>
+<h3 id="Lua"><a href="#Lua" class="headerlink" title="Lua"></a>Lua</h3><p>由巴西里约热内卢教皇天主教大学 （The Pontifical Catholic University of Rio de Janeiro in Brazil）的一支团队进行设计，实现和维护，高效，轻量，的嵌入式脚本语言，支持过程式编程，面向对象编程，函数式编程，数据驱动编程和数据描述；动态类型，虚拟机字节码解释执行，自动内存管理。</p>
+<p>应用广泛： Adobe Photoshop Lightroom, 重点应用于嵌入式系统和游戏，如魔兽世界，愤怒的小鸟等</p>
+<h3 id="如何在-Redis-中使用-Lua-脚本"><a href="#如何在-Redis-中使用-Lua-脚本" class="headerlink" title="如何在 Redis 中使用 Lua 脚本"></a>如何在 Redis 中使用 Lua 脚本</h3><ol>
+<li>加载 Lua 脚本到 Redis 中</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; SCRIPT LOAD <span class="string">"Lua Script"</span></span><br></pre></td></tr></table></figure>
+
+<p>   Redis 会将字符串的 Lua 脚本存储起来，便于后续执行，并返回脚本的 <code>SHA1</code> hash 值，当我们想要执行脚本时，通过 <code>EVALSHA</code> 命令，带着这个 hash 值以及 Key 和 其他脚本需要的参数列表</p>
+<ol start="2">
+<li>执行脚本</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; EVALSHA sha1 numkeys key [key ...] arg [arg ...]</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>直接执行脚本</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; EVAL script numkeys key [key ...] arg [arg ...]</span><br></pre></td></tr></table></figure>
+
+<p>   Redis 会自动缓存该脚本，可以直接调用该脚本的 <code>SHA1</code> hash 值</p>
+<p><strong>简单示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT LOAD <span class="string">"return 'hello world!'"</span></span><br><span class="line"></span><br><span class="line">EVALSH sha1 0</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><h4 id="Lua-脚本返回的数据类型"><a href="#Lua-脚本返回的数据类型" class="headerlink" title="Lua 脚本返回的数据类型"></a><strong>Lua 脚本返回的数据类型</strong></h4><p>由于 Lua 允许数据传入和传出的方式的限制，Lua 中提供的某些数据类型不允许返回，或者在返回之前被更改。 </p>
+<table>
+<thead>
+<tr>
+<th>Lua value</th>
+<th>Redis return</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>true</td>
+<td>1</td>
+</tr>
+<tr>
+<td>false</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>nil</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>1.5 (浮点数)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1e30</td>
+<td>平台相关的最小整数值</td>
+</tr>
+<tr>
+<td>“string”</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Integer is returned unchanged</td>
+</tr>
+</tbody></table>
+<p><strong>由于可能产生歧义性，所以应该尽可能地返回字符串，然后手动执行解析</strong></p>
+<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>和单条命令或者 <code>MULTI/EXEC</code> 命令一样，是原子性地 （单条命令一次运行以个；<code>MULTI/EXEC</code> 实现了简单的事务）。执行 Lua 脚本， <code>EVAL</code> 和 <code>EVALSHA</code> 以应该被视作一个命令，只不过较为复杂而已。</p>
+<p>当执行 Lua 脚本时， Redis 不允许运行其他的读或写命令。如果编写的脚本永远不返回，就会阻塞其他客户端的执行。 Redis 提供了两种方式来停止脚本的运行。</p>
+<ul>
+<li><p>如果脚本只是执行了一系列的读操作，且执行时间已经超过了 Redis 配置的 <code>lua-time-limit</code> 时间， 那么可以执行 <code>SCRIPT KILL</code> 命令</p>
+</li>
+<li><p>如果已经执行了写命令，Kill 脚本可能会导致 Redis 处于不一致的状态，想要恢复的化，可以执行 <code>SHUTDOWN NOSAVE</code> 命令， Redis 会丢失上次快照后的所有变更; 或者丢失写到 AOF 文件的操作</p>
+</li>
+</ul>
+<p><strong>记得在部署生产前，一定要严格的测试 Lua 脚本</strong></p>
+<h3 id="应用到现实世界"><a href="#应用到现实世界" class="headerlink" title="应用到现实世界"></a>应用到现实世界</h3><h4 id="创一个脚本加载器"><a href="#创一个脚本加载器" class="headerlink" title="创一个脚本加载器"></a>创一个脚本加载器</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222323879.png" alt="image-20201103222323879"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222345132.png" alt="image-20201103222345132"></p>
+<p><strong>键值与参数列表</strong></p>
+<p>应该尽可能地将要操作地 Key 作为 Keys 列表的一部分，而脚本地其他输入作为参数列表的一部分，这是因为，如果内部实现了多服务器分片，就要对这些 Keys 进行校验，是否存在于同一分片上</p>
+<h4 id="转换为使用-Lua-脚本实现之前的功能"><a href="#转换为使用-Lua-脚本实现之前的功能" class="headerlink" title="转换为使用 Lua 脚本实现之前的功能"></a>转换为使用 Lua 脚本实现之前的功能</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222503976.png" alt="image-20201103222503976"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222524180.png" alt="image-20201103222524180"></p>
+<h4 id="应用到项目中例子"><a href="#应用到项目中例子" class="headerlink" title="应用到项目中例子"></a>应用到项目中例子</h4><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> incrres = redis.call(<span class="string">'incr'</span>, KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">if</span> (incrres == <span class="number">1</span>) <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">'expire'</span>, KEYS[<span class="number">1</span>], <span class="number">300</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"SUCCESS"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">"FALSE"</span></span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/RSA/">RSA</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-05-22</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h1><p>RSA 是一种公钥密码算法（非对称密码算法），由三位开发者的姓氏首字母进行命名。用于公钥密码和数字签名。</p>
+<h2 id="RSA-的加密"><a href="#RSA-的加密" class="headerlink" title="RSA 的加密"></a>RSA 的加密</h2><p>RSA 中，明文、密文、密钥都是数字，加密过程可用如下公式来表示：</p>
+<p>​                                                $密文 = 明文^E \mod  N$     (RSA 加密)</p>
+<p>即明文的 E 次方求 N 的余数，这个余数就是密文。 所以直到 E 和 N 就可以进行加密，E 和 N 就是 RSA 加密的密钥，E 和 N 的组合就是 <strong>公钥 (E, N)</strong>.E: Encryption, N: Number. E 和 N 是经过计算得来的，不是随意选取的。</p>
+<h2 id="RSA-的解密"><a href="#RSA-的解密" class="headerlink" title="RSA 的解密"></a>RSA 的解密</h2><p>RSA 的解密可以用如下公式来表示</p>
+<p>​                                            $明文 = 密文^D \mod N$      (RSA 解密)</p>
+<p>即密文的 D 次方求 N 的余数，这个余数就是明文，D 和 N 组合起来就是 RSA 的<strong>私钥  (D, N)</strong> . D: Decryption N:Number. D 是与 E 有着紧密的额联系的，否则是无法对 E 加密的密文通过 D 进行解密的。</p>
+<p>RSA 的加密和解密使用相同的形式，并且可以用公式化进行表示。</p>
+<h2 id="生成密钥对"><a href="#生成密钥对" class="headerlink" title="生成密钥对"></a>生成密钥对</h2><p>密钥对，即要生成加密使用的 <code>(E, N)</code> 和 解密的 <code>(D, N)</code>, 需要生成三个数：E, D, N</p>
+<h3 id="1-求-N"><a href="#1-求-N" class="headerlink" title="(1) 求 N"></a>(1) 求 N</h3><p>准备两个很大的质数 p 和 q, p, q 太小使得破译变的容易，太长，会导致计算事件变成，所以需要均衡。假设 p 和 q 都是 521 比特。</p>
+<p>如何生成质数？伪随机数算法 + 质数验证算法</p>
+<p>如何判断质数？费马测试、米勒拉宾测试</p>
+<pre><code>$ N = p\times q$ </code></pre><h3 id="2-求-L"><a href="#2-求-L" class="headerlink" title="(2) 求 L"></a>(2) 求 L</h3><p>L 在加密和解密过程中都不曾出现，只用于密钥对的生成过程。</p>
+<p>​                                       $ L = lcm(p-1, q-1)$    L 是 p-1, q-1 的最小公倍数， lcm - least common multiple</p>
+<h3 id="3-求-E"><a href="#3-求-E" class="headerlink" title="(3) 求 E"></a>(3) 求 E</h3><p>​                                    $ 1 &lt; E &lt; L$                 E 是一个比 1 大，比 L 小的数</p>
+<p>​                                    $gcd(E, L) = 1$           E 和 L 的最大公约数必须为 1 (<strong>E 和 L 互质</strong>),  gcd - greatest common divisor</p>
+<p>求 E 可使用伪随机数生成器，生成 (1, L) 区间内的候选数，在判断是否满足 $gcd(E, L) = 1$ ，求最大公约数可使用<strong>欧几里得辗转相除法</strong>。</p>
+<p><strong>至此，已经求出了 E, N, 生成了密钥对中的公钥</strong></p>
+<h3 id="4-求-D"><a href="#4-求-D" class="headerlink" title="(4) 求 D"></a>(4) 求 D</h3><p>D 由 E 计算而得， D, E , L 满足下列关系：</p>
+<p>​                                $1 &lt; D &lt;L$</p>
+<p>​                                $E\times D \mod L = 1$</p>
+<p>只要数 D 满足上述条件，则通过 E 和 N 进行加密的密文，就可以通过 D 和 N 进行解密。要保证存在满足条件的 D, 就需要保证 E 和 L 的最大公约数为 1  $gcd(E, L) = 1$ , 时钟运算下的倒数，只有某个数和模数（如 12）的最大公约数为1，数学上称为和模数互质，才存在对应的倒数。</p>
+<p>RSA 算法利用了求离散对数是困难的（通过密文求得明文进行破解），大整数的质因数分解是困难的（通过分解 N , 还原密钥生成的过程来进行破解）保证了机密性。</p>
+<p>时钟运算的乘方，时钟运算的除法，时钟运算的离散对数，大整数的质因数分解</p>
+<h2 id="RSA-的攻击"><a href="#RSA-的攻击" class="headerlink" title="RSA 的攻击"></a>RSA 的攻击</h2><ol>
+<li><p><strong>通过密文求得明文进行破解</strong></p>
+<p>$密文 = ?^E \mod  N$          密文可以通过窃取得到，E, N 都是公开的，求明文, 转化为离散对数问题</p>
+</li>
+</ol>
+<ol start="2">
+<li><p><strong>通过分解 N , 还原密钥生成的过程来进行破解</strong></p>
+<p>已知公钥的 E N, 从密钥生成的过程破解，对 N 进行质因数分解，期望得到 p 和 q，从而求出 D, 转化为大整数的质因数分解问题</p>
+</li>
+</ol>
+<ol start="3">
+<li><p><strong>中间人攻击 (man-in-the-middle attack)</strong></p>
+<p>针对于所有公钥密码算法，中间人拦截发送方和接收方之间的消息，拦截接收方发送给发送方的公钥，并将自己的公钥伪装成实际接收方的公钥发送给发送方，发送方使用中间人的公钥进行加密发送，被中间人进行拦截，并通过自己的私钥进行解密，截取消息。然后通过获取的接受方的公钥将篡改的消息进行加密发送给接收方。可以使用公钥证书解决该问题。</p>
+</li>
+</ol>
+<ol start="4">
+<li><p><strong>选择密文攻击 (Chosen Ciphertext Attack)</strong></p>
+<p>通过将任意数据发送给解密服务，获得提示，利用解密提示，进行破译。解决方法：对密文进行认证，判断密文是否是由直到明文的人通过合法的方式生成的, RSA-OAEP 就是基于这种思路的一种 RSA 改良算法</p>
+</li>
+</ol>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h4 id="使用-openssl-生成密钥，进行加密和解密"><a href="#使用-openssl-生成密钥，进行加密和解密" class="headerlink" title="使用 openssl 生成密钥，进行加密和解密"></a>使用 openssl 生成密钥，进行加密和解密</h4><h5 id="密钥的生成与查看"><a href="#密钥的生成与查看" class="headerlink" title="密钥的生成与查看"></a>密钥的生成与查看</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成私钥</span></span><br><span class="line">$ openssl genrsa -out rsa_private.pem 2048</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看私钥</span></span><br><span class="line">$ cat rsa_private.pem</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEowIBAAKCAQEA5kFKwnpv86aLqEoU2VQ1l9aYek/wRvWqE6k4k7kzxBLK9hJp</span><br><span class="line">aOOPyd2bz41fsQqVE0ezw6v9IR1WoEDA1WOqwquPoHaN9zGCBCbhcMSftGlj2E9x</span><br><span class="line">xMb2l0ViR/OHT/5PVFALOwKFB4GlUaruKvkpRWNN7IRd+tjH7WGyZPiGDvbRPlSz</span><br><span class="line">jnyJj9Rjl0TQ1DQ3WJCnOrIjGbThK7re5ShxmHrCO/mlaLCGoe33k5G8XtUyuiFq</span><br><span class="line">aXUtSHLIAOFJCrixQjYYWFcBRvuth8Fo6wW9t6dPxIBWplkeADN662lnEtzxuPK1</span><br><span class="line">Kt/N1cwful7VsZSDN+Frhjkd1DF9kwERZHBDBQIDAQABAoIBAHdBA85cCZWhAZ4k</span><br><span class="line">2E2DTsqYa5qVwnWOEQtjzpi8CDKaJSJzgMLBcZx0uZkyuIgCWhmFPnauoki/YDlZ</span><br><span class="line">sEYU+8EdiCLspDSOIK+zz3lPbQPMvdivtNXc0qSgW/m2CLQGm+GoH1jtwiaUICJ/</span><br><span class="line">LCF3sMduWlKQb/hWxJ2Oxw2CpjQi59QTB8z/gt+iCq+imv26qkpJLNhcvHrTMTpR</span><br><span class="line">V7cmoX2ACAqPO+PWmKlC5RdH4j89F+yCkhE+hCGKzqEiqC1M8XsuyVn1mxL50GK5</span><br><span class="line">/NHRBWsHc5ar5L0/pqiwx6ktSow7y2MXPttAEcX/MztpbiCgBCz4MVcF3AJ5F1qa</span><br><span class="line">uY7+9WECgYEA9a7iGKc1BNVe8Zxg4jlgBxNvPJyxtN5iL2Roub9KLgzyYPEa6gK+</span><br><span class="line">29b/wYUuYXNbJnPpOSe0dVqInp1gOmTMKAI7te+QKI1eiDxD0YgQsBhXIiBiEo0m</span><br><span class="line">TNHBUEizWMO6wdqqdut3eHAVgmigkeQx+7AT2G/drHFp5D/GvqWGkDkCgYEA7+yO</span><br><span class="line">L/T1U3w1EFfQVzIMt1N0+VLsdd4bDmnwOfH3/hTsJGxx+OFpTZLvIO34+HE5mZAH</span><br><span class="line">pbrvJQCLRhYuSdDeFlK30l2P4TxTeN8y7a07jAq4eQP1g2ANnOPIqepoA0VoxLYt</span><br><span class="line">IyzuGWwhv2mOWJpU5Rb8dhBaKwYE6Nu++L+eMS0CgYBqTsAats9kRgeNOINboEQD</span><br><span class="line">C8/IRG1IvCl0JFiEd1db0dJXTDy/IW0Ap2mHjV9iX44Dd4hlaN7XINOY/rQS0Gbe</span><br><span class="line">sQixUvXn9jP/c0RNODkwWXfqlmSZbmYyO1kQqkSgliELnNjCGGVbwfQst6UzO7C9</span><br><span class="line">HZWYw98BrRmK4GXZPLqbUQKBgFLZhjQrS7gbkRtmp4wkvV1lFWSvbPY6z28HyCvK</span><br><span class="line">Uc/Mm8rsI+NEu59NGQRvCOWJ+9D6epmRVtmZOX7nU+6rkLV2tQGQy4mE0nJP6P9I</span><br><span class="line">LeLrJM6tPk+ykKDXy8hZKLfQdSBQpH+cGVBwFatKoRwZly1Q5bdDaE+pEXLzxxuQ</span><br><span class="line">1+i1AoGBAOECFiG5hiv6NxNKndrZ/mbIcLqW/gbdd8Q0Ic/66jH9FmqIgZ68aN/v</span><br><span class="line">J1u7M/NnNcyktgN2vrJhZ6gZyi1lzyZO9/XEjqsPYrSu371Yr8az4jJCwskBttux</span><br><span class="line">whX63VoNZpJFldn1l6A9VI+kNkdZitjPKrOZ3F2dROtbuood5rjj</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 RSA 私钥的组成要素，参考附录中 PKCS1 的 ASN.1 表示</span></span><br><span class="line">$ openssl rsa -<span class="keyword">in</span> rsa_private.pem -text -noout</span><br><span class="line">RSA Private-Key: (2048 bit, 2 primes)</span><br><span class="line">modulus:</span><br><span class="line">    00:e6:41:4a:c2:7a:6f:f3:a6:8b:a8:4a:14:d9:54:</span><br><span class="line">    35:97:d6:98:7a:4f:f0:46:f5:aa:13:a9:38:93:b9:</span><br><span class="line">    33:c4:12:ca:f6:12:69:68:e3:8f:c9:dd:9b:cf:8d:</span><br><span class="line">    5f:b1:0a:95:13:47:b3:c3:ab:fd:21:1d:56:a0:40:</span><br><span class="line">    c0:d5:63:aa:c2:ab:8f:a0:76:8d:f7:31:82:04:26:</span><br><span class="line">    e1:70:c4:9f:b4:69:63:d8:4f:71:c4:c6:f6:97:45:</span><br><span class="line">    62:47:f3:87:4f:fe:4f:54:50:0b:3b:02:85:07:81:</span><br><span class="line">    a5:51:aa:ee:2a:f9:29:45:63:4d:ec:84:5d:fa:d8:</span><br><span class="line">    c7:ed:61:b2:64:f8:86:0e:f6:d1:3e:54:b3:8e:7c:</span><br><span class="line">    89:8f:d4:63:97:44:d0:d4:34:37:58:90:a7:3a:b2:</span><br><span class="line">    23:19:b4:e1:2b:ba:de:e5:28:71:98:7a:c2:3b:f9:</span><br><span class="line">    a5:68:b0:86:a1:ed:f7:93:91:bc:5e:d5:32:ba:21:</span><br><span class="line">    6a:69:75:2d:48:72:c8:00:e1:49:0a:b8:b1:42:36:</span><br><span class="line">    18:58:57:01:46:fb:ad:87:c1:68:eb:05:bd:b7:a7:</span><br><span class="line">    4f:c4:80:56:a6:59:1e:00:33:7a:eb:69:67:12:dc:</span><br><span class="line">    f1:b8:f2:b5:2a:df:<span class="built_in">cd</span>:d5:cc:1f:ba:5e:d5:b1:94:</span><br><span class="line">    83:37:e1:6b:86:39:1d:d4:31:7d:93:01:11:64:70:</span><br><span class="line">    43:05</span><br><span class="line">publicExponent: 65537 (0x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    77:41:03:ce:5c:09:95:a1:01:9e:24:d8:4d:83:4e:</span><br><span class="line">    ca:98:6b:9a:95:c2:75:8e:11:0b:63:ce:98:bc:08:</span><br><span class="line">    32:9a:25:22:73:80:c2:c1:71:9c:74:b9:99:32:b8:</span><br><span class="line">    88:02:5a:19:85:3e:76:ae:a2:48:bf:60:39:59:b0:</span><br><span class="line">    46:14:fb:c1:1d:88:22:ec:a4:34:8e:20:af:b3:cf:</span><br><span class="line">    79:4f:6d:03:cc:bd:d8:af:b4:d5:dc:d2:a4:a0:5b:</span><br><span class="line">    f9:b6:08:b4:06:9b:e1:a8:1f:58:ed:c2:26:94:20:</span><br><span class="line">    22:7f:2c:21:77:b0:c7:6e:5a:52:90:6f:f8:56:c4:</span><br><span class="line">    9d:8e:c7:0d:82:a6:34:22:e7:d4:13:07:cc:ff:82:</span><br><span class="line">    df:a2:0a:af:a2:9a:fd:ba:aa:4a:49:2c:d8:5c:bc:</span><br><span class="line">    7a:d3:31:3a:51:57:b7:26:a1:7d:80:08:0a:8f:3b:</span><br><span class="line">    e3:d6:98:a9:42:e5:17:47:e2:3f:3d:17:ec:82:92:</span><br><span class="line">    11:3e:84:21:8a:ce:a1:22:a8:2d:4c:f1:7b:2e:c9:</span><br><span class="line">    59:f5:9b:12:f9:d0:62:b9:<span class="built_in">fc</span>:d1:d1:05:6b:07:73:</span><br><span class="line">    96:ab:e4:bd:3f:a6:a8:b0:c7:a9:2d:4a:8c:3b:cb:</span><br><span class="line">    63:17:3e:db:40:11:c5:ff:33:3b:69:6e:20:a0:04:</span><br><span class="line">    2c:f8:31:57:05:dc:02:79:17:5a:9a:b9:8e:fe:f5:</span><br><span class="line">    61</span><br><span class="line">prime1:</span><br><span class="line">    00:f5:ae:e2:18:a7:35:04:d5:5e:f1:9c:60:e2:39:</span><br><span class="line">    60:07:13:6f:3c:9c:b1:b4:de:62:2f:64:68:b9:bf:</span><br><span class="line">    4a:2e:0c:f2:60:f1:1a:ea:02:be:db:d6:ff:c1:85:</span><br><span class="line">    2e:61:73:5b:26:73:e9:39:27:b4:75:5a:88:9e:9d:</span><br><span class="line">    60:3a:64:cc:28:02:3b:b5:ef:90:28:8d:5e:88:3c:</span><br><span class="line">    43:d1:88:10:b0:18:57:22:20:62:12:8d:26:4c:d1:</span><br><span class="line">    c1:50:48:b3:58:c3:ba:c1:da:aa:76:eb:77:78:70:</span><br><span class="line">    15:82:68:a0:91:e4:31:fb:b0:13:d8:6f:dd:ac:71:</span><br><span class="line">    69:e4:3f:c6:be:a5:86:90:39</span><br><span class="line">prime2:</span><br><span class="line">    00:ef:ec:8e:2f:f4:f5:53:7c:35:10:57:d0:57:32:</span><br><span class="line">    0c:b7:53:74:f9:52:ec:75:de:1b:0e:69:f0:39:f1:</span><br><span class="line">    f7:fe:14:ec:24:6c:71:f8:e1:69:4d:92:ef:20:ed:</span><br><span class="line">    f8:f8:71:39:99:90:07:a5:ba:ef:25:00:8b:46:16:</span><br><span class="line">    2e:49:d0:de:16:52:b7:d2:5d:8f:e1:3c:53:78:df:</span><br><span class="line">    32:ed:ad:3b:8c:0a:b8:79:03:f5:83:60:0d:9c:e3:</span><br><span class="line">    c8:a9:ea:68:03:45:68:c4:b6:2d:23:2c:ee:19:6c:</span><br><span class="line">    21:bf:69:8e:58:9a:54:e5:16:<span class="built_in">fc</span>:76:10:5a:2b:06:</span><br><span class="line">    04:e8:db:be:f8:bf:9e:31:2d</span><br><span class="line">exponent1:</span><br><span class="line">    6a:4e:c0:1a:b6:cf:64:46:07:8d:38:83:5b:a0:44:</span><br><span class="line">    03:0b:cf:c8:44:6d:48:bc:29:74:24:58:84:77:57:</span><br><span class="line">    5b:d1:d2:57:4c:3c:bf:21:6d:00:a7:69:87:8d:5f:</span><br><span class="line">    62:5f:8e:03:77:88:65:68:de:d7:20:d3:98:fe:b4:</span><br><span class="line">    12:d0:66:de:b1:08:b1:52:f5:e7:f6:33:ff:73:44:</span><br><span class="line">    4d:38:39:30:59:77:ea:96:64:99:6e:66:32:3b:59:</span><br><span class="line">    10:aa:44:a0:96:21:0b:9c:d8:c2:18:65:5b:c1:f4:</span><br><span class="line">    2c:b7:a5:33:3b:b0:bd:1d:95:98:c3:df:01:ad:19:</span><br><span class="line">    8a:e0:65:d9:3c:ba:9b:51</span><br><span class="line">exponent2:</span><br><span class="line">    52:d9:86:34:2b:4b:b8:1b:91:1b:66:a7:8c:24:bd:</span><br><span class="line">    5d:65:15:64:af:6c:f6:3a:cf:6f:07:c8:2b:ca:51:</span><br><span class="line">    cf:cc:9b:ca:ec:23:e3:44:bb:9f:4d:19:04:6f:08:</span><br><span class="line">    e5:89:fb:d0:fa:7a:99:91:56:d9:99:39:7e:e7:53:</span><br><span class="line">    ee:ab:90:b5:76:b5:01:90:cb:89:84:d2:72:4f:e8:</span><br><span class="line">    ff:48:2d:e2:eb:24:ce:ad:3e:4f:b2:90:a0:d7:cb:</span><br><span class="line">    c8:59:28:b7:d0:75:20:50:a4:7f:9c:19:50:70:15:</span><br><span class="line">    ab:4a:a1:1c:19:97:2d:50:e5:b7:43:68:4f:a9:11:</span><br><span class="line">    72:f3:c7:1b:90:d7:e8:b5</span><br><span class="line">coefficient:</span><br><span class="line">    00:e1:02:16:21:b9:86:2b:fa:37:13:4a:9d:da:d9:</span><br><span class="line">    fe:66:c8:70:ba:96:fe:06:dd:77:c4:34:21:cf:fa:</span><br><span class="line">    ea:31:fd:16:6a:88:81:9e:bc:68:df:ef:27:5b:bb:</span><br><span class="line">    33:f3:67:35:cc:a4:b6:03:76:be:b2:61:67:a8:19:</span><br><span class="line">    ca:2d:65:cf:26:4e:f7:f5:c4:8e:ab:0f:62:b4:ae:</span><br><span class="line">    df:bd:58:af:c6:b3:e2:32:42:c2:c9:01:b6:db:b1:</span><br><span class="line">    c2:15:fa:dd:5a:0d:66:92:45:95:d9:f5:97:a0:3d:</span><br><span class="line">    54:8f:a4:36:47:59:8a:d8:cf:2a:b3:99:dc:5d:9d:</span><br><span class="line">    44:eb:5b:ba:8a:1d:e6:b8:e3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从私钥中提取公钥，并通过 -RSAPublicKey_out 指定为 PKCS1 格式</span></span><br><span class="line">$ openssl rsa -<span class="keyword">in</span> rsa_private.pem -out rsa_public.pem -RSAPublicKey_out</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看公钥，公钥只需要包含 D,N 所以长度会相对较小</span></span><br><span class="line">$ cat rsa_public.pem</span><br><span class="line">-----BEGIN RSA PUBLIC KEY-----</span><br><span class="line">MIIBCgKCAQEA5kFKwnpv86aLqEoU2VQ1l9aYek/wRvWqE6k4k7kzxBLK9hJpaOOP</span><br><span class="line">yd2bz41fsQqVE0ezw6v9IR1WoEDA1WOqwquPoHaN9zGCBCbhcMSftGlj2E9xxMb2</span><br><span class="line">l0ViR/OHT/5PVFALOwKFB4GlUaruKvkpRWNN7IRd+tjH7WGyZPiGDvbRPlSzjnyJ</span><br><span class="line">j9Rjl0TQ1DQ3WJCnOrIjGbThK7re5ShxmHrCO/mlaLCGoe33k5G8XtUyuiFqaXUt</span><br><span class="line">SHLIAOFJCrixQjYYWFcBRvuth8Fo6wW9t6dPxIBWplkeADN662lnEtzxuPK1Kt/N</span><br><span class="line">1cwful7VsZSDN+Frhjkd1DF9kwERZHBDBQIDAQAB</span><br><span class="line">-----END RSA PUBLIC KEY-----</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 RSA 公钥的组成要素 D,N</span></span><br><span class="line">$ openssl rsa -<span class="keyword">in</span> rsa_public.pem -RSAPublicKey_in -text -noout</span><br><span class="line">RSA Public-Key: (2048 bit)</span><br><span class="line">Modulus:</span><br><span class="line">    00:e6:41:4a:c2:7a:6f:f3:a6:8b:a8:4a:14:d9:54:</span><br><span class="line">    35:97:d6:98:7a:4f:f0:46:f5:aa:13:a9:38:93:b9:</span><br><span class="line">    33:c4:12:ca:f6:12:69:68:e3:8f:c9:dd:9b:cf:8d:</span><br><span class="line">    5f:b1:0a:95:13:47:b3:c3:ab:fd:21:1d:56:a0:40:</span><br><span class="line">    c0:d5:63:aa:c2:ab:8f:a0:76:8d:f7:31:82:04:26:</span><br><span class="line">    e1:70:c4:9f:b4:69:63:d8:4f:71:c4:c6:f6:97:45:</span><br><span class="line">    62:47:f3:87:4f:fe:4f:54:50:0b:3b:02:85:07:81:</span><br><span class="line">    a5:51:aa:ee:2a:f9:29:45:63:4d:ec:84:5d:fa:d8:</span><br><span class="line">    c7:ed:61:b2:64:f8:86:0e:f6:d1:3e:54:b3:8e:7c:</span><br><span class="line">    89:8f:d4:63:97:44:d0:d4:34:37:58:90:a7:3a:b2:</span><br><span class="line">    23:19:b4:e1:2b:ba:de:e5:28:71:98:7a:c2:3b:f9:</span><br><span class="line">    a5:68:b0:86:a1:ed:f7:93:91:bc:5e:d5:32:ba:21:</span><br><span class="line">    6a:69:75:2d:48:72:c8:00:e1:49:0a:b8:b1:42:36:</span><br><span class="line">    18:58:57:01:46:fb:ad:87:c1:68:eb:05:bd:b7:a7:</span><br><span class="line">    4f:c4:80:56:a6:59:1e:00:33:7a:eb:69:67:12:dc:</span><br><span class="line">    f1:b8:f2:b5:2a:df:<span class="built_in">cd</span>:d5:cc:1f:ba:5e:d5:b1:94:</span><br><span class="line">    83:37:e1:6b:86:39:1d:d4:31:7d:93:01:11:64:70:</span><br><span class="line">    43:05</span><br><span class="line">Exponent: 65537 (0x10001)</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从私钥中提取 pkcs8 格式的公钥</span></span><br><span class="line">$ openssl rsa -<span class="keyword">in</span> rsa_private.pem -out rsa_public_pkcs8.pem -pubout</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加密</span></span><br><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | openssl rsautl -pubin -inkey rsa_public_pkcs8.pem -keyform PEM -encrypt -out cipher_text</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密</span></span><br><span class="line">$ cat cipher_text | openssl rsautl -inkey rsa_private.pem -keyform PEM -decrypt</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用-JCA-进行解密验证"><a href="#使用-JCA-进行解密验证" class="headerlink" title="使用 JCA 进行解密验证"></a>使用 JCA 进行解密验证</h4><p>使用这里的私钥进行解密前，需要将 PKCS1 格式的私钥转换成 PKCS8 格式的私钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pkcs8 命令用来处理 PKCS#8 格式的密钥</span></span><br><span class="line"><span class="comment"># -outform DER 指定输出为 ASN.1 的 DER 编码格式</span></span><br><span class="line"><span class="comment"># -nocrypt 不对输出的私钥进行加密（私钥属于私密信息，需要保证安全存储，这里为了在 Java 中使用，不进行加密，加密可使用 KeyStore 存储）</span></span><br><span class="line">openssl pkcs8 -<span class="keyword">in</span> rsa_private.pem -outform DER -topk8 -out rsa_private_pkcs8.der -nocrypt</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Java 中进行解密验证</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RSACryptTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        String pkcs8PrivateKeyPath = <span class="string">"E:\\learning-dir\\shell-learning\\rsa\\rsa_private_pkcs8.der"</span>;</span><br><span class="line">        String cipherTextPath = <span class="string">"E:\\learning-dir\\shell-learning\\rsa\\cipher_text"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] privateKeyBytes = Files.readAllBytes(Paths.get(pkcs8PrivateKeyPath));</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText = Files.readAllBytes(Paths.get(cipherTextPath));</span><br><span class="line"></span><br><span class="line">        PKCS8EncodedKeySpec keySpec = <span class="keyword">new</span> PKCS8EncodedKeySpec(privateKeyBytes);</span><br><span class="line">        KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);</span><br><span class="line"></span><br><span class="line">        Cipher cipher = Cipher.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, privateKey);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] clearText = cipher.doFinal(cipherText);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> String(clearText));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最终打印出解密的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="PKCS-1-公钥-ASN-1-格式"><a href="#PKCS-1-公钥-ASN-1-格式" class="headerlink" title="PKCS#1 公钥 ASN.1 格式"></a>PKCS#1 公钥 ASN.1 格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RSAPublicKey ::&#x3D; SEQUENCE &#123;</span><br><span class="line">    modulus INTEGER , -- n</span><br><span class="line">    publicExponent INTEGER -- e</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PKCS-1-私钥-ASN-1-格式"><a href="#PKCS-1-私钥-ASN-1-格式" class="headerlink" title="PKCS#1 私钥 ASN.1 格式"></a>PKCS#1 私钥 ASN.1 格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">RSAPrivateKey ::&#x3D; SEQUENCE &#123;</span><br><span class="line">    version Version ,</span><br><span class="line">    modulus INTEGER , -- n</span><br><span class="line">    publicExponent INTEGER , -- e</span><br><span class="line">    privateExponent INTEGER , -- d</span><br><span class="line">    prime1 INTEGER , -- p</span><br><span class="line">    prime2 INTEGER , -- q</span><br><span class="line">    exponent1 INTEGER , -- d mod (p-1)</span><br><span class="line">    exponent2 INTEGER , -- d mod (q-1)</span><br><span class="line">    coefficient INTEGER , -- (inverse of q) mod p</span><br><span class="line">    otherPrimeInfos OtherPrimeInfos OPTIONAL</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><p>[1] <a href="https://item.jd.com/11942019.html" target="_blank" rel="noopener">图解密码技术</a></p>
+<p>[2] <a href="https://mp.weixin.qq.com/s/zQ8NxK4zsRBA5D8AHJErdA" target="_blank" rel="noopener">深入剖析 RSA 密钥原理及实践 - [vivo互联网技术]</a></p>
+<p>[3] <a href="https://stackoverflow.com/questions/20119874/how-to-load-the-private-key-from-a-der-file-into-java-private-key-object" target="_blank" rel="noopener">how to load the private key from a .der file into java private key object - Stack Overflow</a></p>
+<p>[4] <a href="https://www.openssl.org/docs/man1.1.1/man1/openssl-rsa.html" target="_blank" rel="noopener">openssl rsa command</a></p>
+<p>[5] <a href="https://www.openssl.org/docs/man1.1.1/man1/openssl-pkcs8.html" target="_blank" rel="noopener">openssl pkcs8 command</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Java/Quartz%20Stateful%20Job%20/">Quartz Stateful Job</a></h2>
             </div>
             <div class="post-meta">
@@ -205,109 +406,6 @@
 <p>[8] <a href="https://blog.csdn.net/fym0121/article/details/8001190/" target="_blank" rel="noopener">验证证书链</a></p>
 <p>[9] <a href="https://www.cnblogs.com/274914765qq/p/4467025.html" target="_blank" rel="noopener">openssl 证书操作</a></p>
 <p>[10] <a href="https://mp.weixin.qq.com/s/zQ8NxK4zsRBA5D8AHJErdA" target="_blank" rel="noopener">深入剖析 RSA 密钥原理及实践</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PBE/">PBE</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-05-16</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/%E5%BE%AE%E5%8D%9A-%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95.png" alt="微博-密码算法"></p>
-<h1 id="基于口令的密码"><a href="#基于口令的密码" class="headerlink" title="基于口令的密码"></a>基于口令的密码</h1><p><strong>基于口令的密码（Password Based Encryption, PBE）</strong> 是一种根据口令生成密钥，并使用该密钥进行加密的方法。加密和解密使用同一个密钥（即使用对称密码算法），PKCS #5 (RFC 2898)  规范描述了其实现细节，广泛使用的密码工具都对其提供了实现，如 Java 的 <code>javax.crypto</code> 包，密码软件 <code>PGP</code>, openssl 等。</p>
-<h2 id="PBE-的意义"><a href="#PBE-的意义" class="headerlink" title="PBE 的意义"></a>PBE 的意义</h2><p>要确保消息的机密性？ —-&gt; 使用密钥 (CEK) 进行加密</p>
-<p>如何确保密钥的机密性？—-&gt; 用另一个密钥 (KEY) 对密钥进行加密</p>
-<p>如何确保另一个密钥 (KEY) 的机密性？ —-&gt; 继续使用第三个密钥？死循环 ？</p>
-<p><strong>使用口令和盐来生成密钥 (KEK) 吧，盐可以和加密后的密钥（CEK）一起保存在磁盘上，密钥（KEK）就可以丢掉了</strong></p>
-<p><strong>口令就记在脑子里吧</strong></p>
-<p>如果不保存一般使用的密钥，靠人类记忆没有规律，冗长的密钥是十分困难的。</p>
-<h2 id="PBE-的加密与解密"><a href="#PBE-的加密与解密" class="headerlink" title="PBE 的加密与解密"></a>PBE 的加密与解密</h2><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/pbe.png" alt="pbe"></p>
-<p>*   PBE 的加密过程</p>
-<p><strong>PBE 加密</strong></p>
-<ol>
-<li>生成 KEK, 使用伪随机数生成器生成 <strong>盐 (salt)</strong> ，盐就是一个随机数，用于防御字典攻击，将盐与用户输入的口令一起作为单向散列函数的输入，最终得到的散列值就是 KEK， 用来对密钥进行加密的密钥</li>
-<li>利用伪随机数生成器再生成会话密钥 CEK,  用 KEK 对 CEK 进行加密，并和盐保存在安全的地方。KEK 就可以丢弃了，因为只需要盐和口令就可以重建 KEK</li>
-<li>使用会话密钥对消息进行加密</li>
-</ol>
-<p><strong>PBE 解密</strong></p>
-<ol>
-<li>重建 KEK ,利用保存的盐和用户再次输入的口令作为散列函数的输入，得到 KEK</li>
-<li>利用 KEK 解密之前加密的 CEK, 得到会话密钥 CEK</li>
-<li>使用 CEK 对密文进行解密</li>
-</ol>
-<p><strong>盐的作用</strong></p>
-<p>盐是用来防御字典攻击的，字典攻击简单来说，就是攻击者提前准备好一组可能的口令，并计算好它们的摘要，当它们窃取加密后的会话密钥后，通过将准备好的候选摘要 KEK，尝试进行破解。主要是大量的用户使用了字典的词语来设置他们的密码，所以给了攻击者机会。当使用了盐后，KEK 的可能数量会随之增大，事先生成候选的 KEK 数量会变得很大，增加了破译的难度。</p>
-<p><strong>拉伸</strong></p>
-<p>生成 KEK 时，多次使用单向散列函数可以提高安全性，即将输出再次作为单向散列函数的输入，反复多次，一般建议最少 1000 次，目的也是增加攻击者破译的难度。这种多次迭代的方法称为拉伸 (stretching)</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/passwordEncryption.png" alt="passwordEncryption"></p>
-<h2 id="PKCS-5"><a href="#PKCS-5" class="headerlink" title="PKCS #5"></a>PKCS #5</h2><p>RFC 8018 (Obsoletes 2898) Password-Based Cryptography Specification Version 2.1中详细描述了 PBE 的实现步骤。</p>
-<h3 id="PBKDF"><a href="#PBKDF" class="headerlink" title="PBKDF"></a>PBKDF</h3><p>PBKDF 即 Password Based Key Derivation Functions, 基于口令的密钥生成函数，仅包含密钥生成的定义，不包含加密和解密的过程。</p>
-<p><strong>PBKDF1</strong></p>
-<p>密钥生成过程中应用的是一个单向散列函数（hash function），如 MD2, MD5，SHA-1等， 与 PKCS #5 v1.5 中的定义兼容, 受限于单向散列函数输出的长度，生成密钥的长度也受到限制，只出于兼容性的需求使用。</p>
-<p> <strong>PBKDF2</strong></p>
-<p>密钥过程中应用的是一个伪随机数生成函数（pseudorandom function）, 如 HMAC with SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256，推荐在新的应用中使用</p>
-<h3 id="PBES"><a href="#PBES" class="headerlink" title="PBES"></a>PBES</h3><p>PBES 即 Password Based Encryption Schemes, 即 PBE 的策略，其实就是 PBKDF 与加密和解密过程相结合，完成密钥的生成，对消息的加密和解密。</p>
-<p><strong>PBES1</strong>  PBKDF1 与对称分组密码的结合</p>
-<p><strong>PBES2</strong>   PBKDF2 与对称分组密码的结合</p>
-<h2 id="How-to-encrypt-user-passwords"><a href="#How-to-encrypt-user-passwords" class="headerlink" title="How to encrypt user passwords"></a>How to encrypt user passwords</h2><p><a href="http://www.jasypt.org/howtoencryptuserpasswords.html" target="_blank" rel="noopener">jasypt-How to encrypt user passwords</a></p>
-<h2 id="使用-openssl-与-JCA-进行实践"><a href="#使用-openssl-与-JCA-进行实践" class="headerlink" title="使用 openssl 与 JCA 进行实践"></a>使用 openssl 与 JCA 进行实践</h2><h3 id="使用-openssl"><a href="#使用-openssl" class="headerlink" title="使用 openssl"></a>使用 openssl</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">guo@DESKTOP-4L69AND:/mnt/e/learning-dir/shell-learning$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | openssl enc -aes-128-cbc -e -base64 -pbkdf2 -iter 1000 -S 3631C9DA382CE487 -p</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入 password</span></span><br><span class="line">enter aes-128-cbc encryption password:</span><br><span class="line">Verifying - enter aes-128-cbc encryption password:</span><br><span class="line"></span><br><span class="line"><span class="comment"># Salt 盐</span></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line"></span><br><span class="line"><span class="comment"># pbkdf2 生成的密钥 secret key</span></span><br><span class="line">key=1004087F17C38D06C8B24CA69175984C</span><br><span class="line"></span><br><span class="line"><span class="comment"># iv 初始化向量</span></span><br><span class="line">iv =5FFD9210A708073E5AB718800F9958E6</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加密后的密文 Salted__$&#123;salt&#125;$&#123;cipherText&#125;</span></span><br><span class="line">U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="同样使用-JCA-验证"><a href="#同样使用-JCA-验证" class="headerlink" title="同样使用 JCA 验证"></a>同样使用 JCA 验证</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.learn.something.security.crypto;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.SneakyThrows;</span><br><span class="line"><span class="keyword">import</span> org.apache.tomcat.util.buf.HexUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.crypto.*;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.IvParameterSpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.PBEKeySpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.PBEParameterSpec;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"><span class="keyword">import</span> java.security.AlgorithmParameters;</span><br><span class="line"><span class="keyword">import</span> java.security.spec.KeySpec;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> guo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/4/11</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PBECryptTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] plainText = <span class="string">"hello"</span>.getBytes(StandardCharsets.UTF_8);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// create key</span></span><br><span class="line">        <span class="keyword">char</span>[] password = <span class="string">"12345678"</span>.toCharArray();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// salt can be acquired by Random generator</span></span><br><span class="line">        <span class="keyword">byte</span>[] salt = HexUtils.fromHexString(<span class="string">"3631C9DA382CE487"</span>);</span><br><span class="line">        <span class="keyword">int</span> iter = <span class="number">1000</span>;</span><br><span class="line">        <span class="keyword">int</span> keyLength = <span class="number">128</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init algorithm</span></span><br><span class="line">        <span class="comment">// iv can be acquired by Random generator</span></span><br><span class="line">        <span class="keyword">byte</span>[] iv = HexUtils.fromHexString(<span class="string">"5FFD9210A708073E5AB718800F9958E6"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ==============================================================================</span></span><br><span class="line">        <span class="comment">// 1. use pbkdf2 to generate 128 bits key</span></span><br><span class="line">        <span class="comment">// 2. use key and AES to encrypt the message</span></span><br><span class="line">        <span class="keyword">byte</span>[] key = derivePbkdf2Key(password, salt, iter, keyLength);</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText1 = encryptTest(plainText, key, iv);</span><br><span class="line">        opensslOutput(salt, cipherText1);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// ==============================================================================</span></span><br><span class="line">        <span class="comment">// use PBE to encrypt the message so we don't have to care about the derived key</span></span><br><span class="line">        <span class="keyword">byte</span>[] cipherText2 = pbeEncryptTest(plainText, password, salt, iter, iv);</span><br><span class="line">        opensslOutput(salt, cipherText2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * openssl output format: Salted__$&#123;salt&#125;$&#123;cipherText&#125;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> salt</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cipherText</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">opensslOutput</span><span class="params">(<span class="keyword">byte</span>[] salt, <span class="keyword">byte</span>[] cipherText)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] finalBytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="string">"Salted__"</span>.length() + salt.length + cipherText.length];</span><br><span class="line">        System.arraycopy(<span class="string">"Salted__"</span>.getBytes(), <span class="number">0</span>, finalBytes, <span class="number">0</span>, <span class="string">"Salted__"</span>.length());</span><br><span class="line">        System.arraycopy(salt, <span class="number">0</span>, finalBytes, <span class="string">"Salted__"</span>.length(), salt.length);</span><br><span class="line">        System.arraycopy(cipherText, <span class="number">0</span>, finalBytes, salt.length + <span class="string">"Salted__"</span>.length(), cipherText.length);</span><br><span class="line">        System.out.println(<span class="string">"openssl output format: "</span> + Base64.getEncoder().encodeToString(finalBytes));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * pbkdf2</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] derivePbkdf2Key(<span class="keyword">char</span>[] password, <span class="keyword">byte</span>[] salt, <span class="keyword">int</span> iter, <span class="keyword">int</span> keyLength) &#123;</span><br><span class="line">        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(<span class="string">"PBKDF2WithHmacSHA256"</span>);</span><br><span class="line"></span><br><span class="line">        KeySpec pbeKeySpec = <span class="keyword">new</span> PBEKeySpec(password, salt, iter, keyLength);</span><br><span class="line">        SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] encodedKey = secretKey.getEncoded();</span><br><span class="line">        System.out.printf(<span class="string">"algorithm： %s, key(hex format): %s\n"</span>, secretKey.getAlgorithm(), HexUtils.toHexString(encodedKey));</span><br><span class="line">        <span class="keyword">return</span> encodedKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] encryptTest(<span class="keyword">byte</span>[] plainText, <span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv) &#123;</span><br><span class="line">        SecretKeySpec secretKey = <span class="keyword">new</span> SecretKeySpec(key, <span class="string">"AES"</span>);</span><br><span class="line"></span><br><span class="line">        AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        algorithmParameters.init(ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        Cipher cipher = Cipher.getInstance(<span class="string">"AES/CBC/PKCS5Padding"</span>);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, secretKey, algorithmParameters);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(plainText);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] pbeEncryptTest(<span class="keyword">byte</span>[] plainText, <span class="keyword">char</span>[] password, <span class="keyword">byte</span>[] salt, <span class="keyword">int</span> iter, <span class="keyword">byte</span>[] iv) &#123;</span><br><span class="line"></span><br><span class="line">        KeySpec pbeKeySpec = <span class="keyword">new</span> PBEKeySpec(password, salt, <span class="number">1000</span>, <span class="number">128</span>);</span><br><span class="line">        SecretKeyFactory factory = SecretKeyFactory.getInstance(<span class="string">"PBEWithHmacSHA256AndAES_128"</span>);</span><br><span class="line">        SecretKey secretKey = factory.generateSecret(pbeKeySpec);</span><br><span class="line"></span><br><span class="line">        Cipher cipher = Cipher.getInstance(<span class="string">"PBEWithHmacSHA256AndAES_128/CBC/PKCS5Padding"</span>);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        PBEParameterSpec parameterSpec = <span class="keyword">new</span> PBEParameterSpec(salt, <span class="number">1000</span>, ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);</span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(plainText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">algorithm： PBKDF2WithHmacSHA256, key(hex format): 1004087f17c38d06c8b24ca69175984c</span><br><span class="line">openssl output format: U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br><span class="line">openssl output format: U2FsdGVkX182McnaOCzkhx9oK2fDQKq6pIwPZD9892Q=</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><p>[1] <a href="https://item.jd.com/11942019.html" target="_blank" rel="noopener">图解密码技术</a></p>
-<p>[2] <a href="https://tools.ietf.org/html/rfc8018#appendix-B.1" target="_blank" rel="noopener">PKCS #5 rfc8018</a></p>
-<p>[3] <a href="http://www.jasypt.org/howtoencryptuserpasswords.html" target="_blank" rel="noopener">jasypt-How to encrypt user passwords</a></p>
-<p>[4] <a href="https://www.openssl.org/docs/man1.1.1/man1/enc.html" target="_blank" rel="noopener">openssl enc command</a></p>
-<p>[5] <a href="https://docs.oracle.com/en/java/javase/14/docs/specs/security/standard-names.html#secretkeyfactory-algorithms" target="_blank" rel="noopener">SecretKeyFactory Algorithms</a></p>
-<p>[6] <a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1304227859136546" target="_blank" rel="noopener">廖雪峰-口令加密算法</a></p>
-<p>[7] <a href="https://stackoverflow.com/questions/4513433/deriving-a-secret-from-a-master-key-using-jce-jca" target="_blank" rel="noopener">Deriving a secret from a master key using JCE/JCA</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/SpringBoot%20Https/">SpringBoot Https</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-05-16</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Spring-Boot-中使用-https"><a href="#Spring-Boot-中使用-https" class="headerlink" title="Spring Boot 中使用 https"></a>Spring Boot 中使用 https</h1><p>在 Spring Boot 中了指定证书路径以及相关的信息后, 启动应用后, 通过 https 访问, 可以在左上角 <code>不安全</code> 处点击查看服务器证书信息</p>
-<h3 id="证书基本信息"><a href="#证书基本信息" class="headerlink" title="证书基本信息"></a>证书基本信息</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210219213950292.png" alt="image-20210219213950292"></p>
-<h3 id="证书详细信息"><a href="#证书详细信息" class="headerlink" title="证书详细信息"></a>证书详细信息</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210219214017725.png" alt="image-20210219214017725"></p>
-<h3 id="证书路径-Certificate-Path-证书链-Certificate-chain"><a href="#证书路径-Certificate-Path-证书链-Certificate-chain" class="headerlink" title="证书路径 Certificate Path/证书链 Certificate chain"></a>证书路径 Certificate Path/证书链 Certificate chain</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210219214038926.png" alt="image-20210219214038926"></p>
-<p><a href="https://zhuanlan.zhihu.com/p/31385073" target="_blank" rel="noopener">Spring Boot 使用 SSL-HTTPS</a></p>
 
                 
             </div>

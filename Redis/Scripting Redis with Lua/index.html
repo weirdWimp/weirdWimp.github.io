@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Scripting Redis with Lua</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-06-05</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scripting-Redis-with-Lua"><span class="toc-text">Scripting Redis with Lua</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Lua"><span class="toc-text">Lua</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何在-Redis-中使用-Lua-脚本"><span class="toc-text">如何在 Redis 中使用 Lua 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Lua-脚本返回的数据类型"><span class="toc-text">Lua 脚本返回的数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#原子性"><span class="toc-text">原子性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用到现实世界"><span class="toc-text">应用到现实世界</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创一个脚本加载器"><span class="toc-text">创一个脚本加载器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#转换为使用-Lua-脚本实现之前的功能"><span class="toc-text">转换为使用 Lua 脚本实现之前的功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#应用到项目中例子"><span class="toc-text">应用到项目中例子</span></a></li></ol></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="Scripting-Redis-with-Lua"><a href="#Scripting-Redis-with-Lua" class="headerlink" title="Scripting Redis with Lua"></a>Scripting Redis with Lua</h2><p>Redis 2.6 版本之前，如果想要一些 Redis 不能提供的功能，要么编写较复杂客户端代码实现，要么编辑 Redis 的 C 语言源码。 即使编辑源码并不困难，但是在商业环境中使用这样的版本，或者试图说服经理使用我们自己的 Redis 服务器版本，都是一件极具挑战的事。</p>
+<p>Redis 引入了基于 Lua 语言的服务端脚本的支持，可以使得用户在 Redis 中执行更多的操作，简化代码，提升新能。</p>
+<h3 id="Lua"><a href="#Lua" class="headerlink" title="Lua"></a>Lua</h3><p>由巴西里约热内卢教皇天主教大学 （The Pontifical Catholic University of Rio de Janeiro in Brazil）的一支团队进行设计，实现和维护，高效，轻量，的嵌入式脚本语言，支持过程式编程，面向对象编程，函数式编程，数据驱动编程和数据描述；动态类型，虚拟机字节码解释执行，自动内存管理。</p>
+<p>应用广泛： Adobe Photoshop Lightroom, 重点应用于嵌入式系统和游戏，如魔兽世界，愤怒的小鸟等</p>
+<h3 id="如何在-Redis-中使用-Lua-脚本"><a href="#如何在-Redis-中使用-Lua-脚本" class="headerlink" title="如何在 Redis 中使用 Lua 脚本"></a>如何在 Redis 中使用 Lua 脚本</h3><ol>
+<li>加载 Lua 脚本到 Redis 中</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; SCRIPT LOAD <span class="string">"Lua Script"</span></span><br></pre></td></tr></table></figure>
+
+<p>   Redis 会将字符串的 Lua 脚本存储起来，便于后续执行，并返回脚本的 <code>SHA1</code> hash 值，当我们想要执行脚本时，通过 <code>EVALSHA</code> 命令，带着这个 hash 值以及 Key 和 其他脚本需要的参数列表</p>
+<ol start="2">
+<li>执行脚本</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; EVALSHA sha1 numkeys key [key ...] arg [arg ...]</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>直接执行脚本</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; EVAL script numkeys key [key ...] arg [arg ...]</span><br></pre></td></tr></table></figure>
+
+<p>   Redis 会自动缓存该脚本，可以直接调用该脚本的 <code>SHA1</code> hash 值</p>
+<p><strong>简单示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT LOAD <span class="string">"return 'hello world!'"</span></span><br><span class="line"></span><br><span class="line">EVALSH sha1 0</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><h4 id="Lua-脚本返回的数据类型"><a href="#Lua-脚本返回的数据类型" class="headerlink" title="Lua 脚本返回的数据类型"></a><strong>Lua 脚本返回的数据类型</strong></h4><p>由于 Lua 允许数据传入和传出的方式的限制，Lua 中提供的某些数据类型不允许返回，或者在返回之前被更改。 </p>
+<table>
+<thead>
+<tr>
+<th>Lua value</th>
+<th>Redis return</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>true</td>
+<td>1</td>
+</tr>
+<tr>
+<td>false</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>nil</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>1.5 (浮点数)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1e30</td>
+<td>平台相关的最小整数值</td>
+</tr>
+<tr>
+<td>“string”</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Integer is returned unchanged</td>
+</tr>
+</tbody></table>
+<p><strong>由于可能产生歧义性，所以应该尽可能地返回字符串，然后手动执行解析</strong></p>
+<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>和单条命令或者 <code>MULTI/EXEC</code> 命令一样，是原子性地 （单条命令一次运行以个；<code>MULTI/EXEC</code> 实现了简单的事务）。执行 Lua 脚本， <code>EVAL</code> 和 <code>EVALSHA</code> 以应该被视作一个命令，只不过较为复杂而已。</p>
+<p>当执行 Lua 脚本时， Redis 不允许运行其他的读或写命令。如果编写的脚本永远不返回，就会阻塞其他客户端的执行。 Redis 提供了两种方式来停止脚本的运行。</p>
+<ul>
+<li><p>如果脚本只是执行了一系列的读操作，且执行时间已经超过了 Redis 配置的 <code>lua-time-limit</code> 时间， 那么可以执行 <code>SCRIPT KILL</code> 命令</p>
+</li>
+<li><p>如果已经执行了写命令，Kill 脚本可能会导致 Redis 处于不一致的状态，想要恢复的化，可以执行 <code>SHUTDOWN NOSAVE</code> 命令， Redis 会丢失上次快照后的所有变更; 或者丢失写到 AOF 文件的操作</p>
+</li>
+</ul>
+<p><strong>记得在部署生产前，一定要严格的测试 Lua 脚本</strong></p>
+<h3 id="应用到现实世界"><a href="#应用到现实世界" class="headerlink" title="应用到现实世界"></a>应用到现实世界</h3><h4 id="创一个脚本加载器"><a href="#创一个脚本加载器" class="headerlink" title="创一个脚本加载器"></a>创一个脚本加载器</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222323879.png" alt="image-20201103222323879"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222345132.png" alt="image-20201103222345132"></p>
+<p><strong>键值与参数列表</strong></p>
+<p>应该尽可能地将要操作地 Key 作为 Keys 列表的一部分，而脚本地其他输入作为参数列表的一部分，这是因为，如果内部实现了多服务器分片，就要对这些 Keys 进行校验，是否存在于同一分片上</p>
+<h4 id="转换为使用-Lua-脚本实现之前的功能"><a href="#转换为使用-Lua-脚本实现之前的功能" class="headerlink" title="转换为使用 Lua 脚本实现之前的功能"></a>转换为使用 Lua 脚本实现之前的功能</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222503976.png" alt="image-20201103222503976"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222524180.png" alt="image-20201103222524180"></p>
+<h4 id="应用到项目中例子"><a href="#应用到项目中例子" class="headerlink" title="应用到项目中例子"></a>应用到项目中例子</h4><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> incrres = redis.call(<span class="string">'incr'</span>, KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">if</span> (incrres == <span class="number">1</span>) <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">'expire'</span>, KEYS[<span class="number">1</span>], <span class="number">300</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"SUCCESS"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">"FALSE"</span></span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Redis/" title="Redis">Redis</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Linux/Unsplash%20%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Unsplash 图片下载脚本</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/RSA/">
+                <span class="nav-default">RSA</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

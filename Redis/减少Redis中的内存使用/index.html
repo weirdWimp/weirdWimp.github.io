@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">减少Redis中的内存使用</h2>
+            <div class="post-meta">
+                <span class="post-time">2020-10-18</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#减少-Redis-中的内存使用"><span class="toc-text">减少 Redis 中的内存使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Short-structures-使用更短的结构"><span class="toc-text">Short structures 使用更短的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sharded-structures-分片的数据结构"><span class="toc-text">Sharded structures 分片的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Packing-bits-and-bytes-更紧凑的位和字节"><span class="toc-text">Packing bits and bytes 更紧凑的位和字节</span></a></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h1 id="减少-Redis-中的内存使用"><a href="#减少-Redis-中的内存使用" class="headerlink" title="减少 Redis 中的内存使用"></a>减少 Redis 中的内存使用</h1><h2 id="Short-structures-使用更短的结构"><a href="#Short-structures-使用更短的结构" class="headerlink" title="Short structures 使用更短的结构"></a>Short structures 使用更短的结构</h2><blockquote>
+<p>Redis stores a serialized version of the data, which must be decoded for every read, partially re-encoded for every write, and may require moving data around in memory.</p>
+</blockquote>
+<h2 id="Sharded-structures-分片的数据结构"><a href="#Sharded-structures-分片的数据结构" class="headerlink" title="Sharded structures 分片的数据结构"></a>Sharded structures 分片的数据结构</h2><h2 id="Packing-bits-and-bytes-更紧凑的位和字节"><a href="#Packing-bits-and-bytes-更紧凑的位和字节" class="headerlink" title="Packing bits and bytes 更紧凑的位和字节"></a>Packing bits and bytes 更紧凑的位和字节</h2><p>社交网站的所有用户都有位置信息，如何在 Redis 中使用更少的内存存储每一个用户的未知信息？而且要能够方便的进行聚合计算</p>
+<p>假设用户的 ID 都是连续的数组，且只存储国家，区域/州/省信息两级信息；并使用 ISO3 中的国家代码，如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 国家代码</span></span><br><span class="line">COUNTRIES = <span class="string">'''</span></span><br><span class="line"><span class="string">ABW AFG AGO AIA ALA ALB AND ARE ARG ARM ASM ATA ATF ATG AUS AUT AZE BDI</span></span><br><span class="line"><span class="string">BEL BEN BES BFA BGD BGR BHR BHS BIH BLM BLR BLZ BMU BOL BRA BRB BRN BTN</span></span><br><span class="line"><span class="string">'''</span>.splt()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 美国，加拿大州信息</span></span><br><span class="line">STATES = &#123;</span><br><span class="line"><span class="string">'CAN'</span>:<span class="string">'''AB BC MB NB NL NS NT NU ON PE QC SK YT'''</span>.split(),</span><br><span class="line"><span class="string">'USA'</span>:<span class="string">'''AA AE AK AL AP AR AS AZ CA CO CT DC DE FL FM GA GU HI IA ID</span></span><br><span class="line"><span class="string">IL IN KS KY LA MA MD ME MH MI MN MO MP MS MT NC ND NE NH NJ NM NV NY OH</span></span><br><span class="line"><span class="string">OK OR PA PR PW RI SC SD TN TX UT VA VI VT WA WI WV WY'''</span>.split(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最直接的方法是直接以字符串的方式直接存储国家和州代码，每个国家代码至少 3 个字节，州信息至少 2 个字节；</p>
+<p><strong>解决方法：以分片的形式存储定长大小的数据</strong></p>
+<p>实际存储的时候，并不存储实际的国家和州代码，而只存储其在 “表”（数组） 中的索引代表的字符，这样，只用两个字节就可以存储国家和州信息了（数组长度不会超过单个字节的十进制数字表示）。</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018210437144.png" alt="image-20201018210437144"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">(country, state)</span>:</span></span><br><span class="line">	cindex = bisect.bisect_left(COUNTRIES, country)</span><br><span class="line">	<span class="keyword">if</span> cindex &gt; len(COUNTRIES) <span class="keyword">or</span> COUNTRIES[cindex] != country:</span><br><span class="line">		cindex = <span class="number">-1</span></span><br><span class="line">	cindex += <span class="number">1</span></span><br><span class="line">	</span><br><span class="line">    sindex = <span class="number">-1</span></span><br><span class="line">	<span class="keyword">if</span> state <span class="keyword">and</span> country <span class="keyword">in</span> STATES:</span><br><span class="line">		states = STATES[country]</span><br><span class="line">		sindex = bisect.bisect_left(states, state)</span><br><span class="line">		<span class="keyword">if</span> sindex &gt; len(states) <span class="keyword">or</span> states[sindex] != state:</span><br><span class="line">			sindex = <span class="number">-1</span></span><br><span class="line">		sindex += <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> chr(cindex) + chr(sindex)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Redis 中 STRING 结构的值大小限制为 512 MB, 所有用户的信息存储在单个 STRING 的值中必然不可取， 通过进行分片，限制每个分片最多存储 2 百万个用户的位置信息，单个 Key 的值占用大概在 2 MB. 通过 <code>SETRANGE</code>, <code>GETRANGE</code> 命令就可以更新和获取单个用户的位置信息</p>
+<p>这里没有限制分片的个数，只限制了每个分片的大小，考虑的是用户 ID 都是有序的，通过 ID 和每个分片的大小，就可以计算每个 ID 所属的分片， 以及分片内的偏移量；为了知道当前一共由多少分片，就要存储当前的最大用户 ID.</p>
+<p>这样进行存储，要对这些信息进行聚合计算，比如统计所有用户的国家，州分布，就比较容易，遍历所有分片进行统计，当然由于每个分片 STRING 的值比较大，需要分批多次去读取，而不能直接去读取，会阻塞其它客户端</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211551176.png" alt="image-20201018211551176"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211628124.png" alt="image-20201018211628124"></p>
+<p>这里虽然使用的是多个字节存储的，但是某些情况下，<code>GETBIT</code>, <code>SETBIT</code> 命令来获取和设置单个二进制位可能更高效，更节省空间。存储 Boolean 型？</p>
+<p><strong>存储数据在 Redis 中的方式，会极大地影响所使用地内存。</strong></p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Redis/" title="Redis">Redis</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">新词汇</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Linux/Vim%20Editiong%20Basics/">
+                <span class="nav-default">Vim Editiong Basics</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

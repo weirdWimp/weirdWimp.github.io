@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Redis Transaction</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-11-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础-Redis-事务"><span class="toc-text">基础 Redis 事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-事务"><span class="toc-text">Redis 事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么-Redis-不实现典型的锁机制"><span class="toc-text">为什么 Redis 不实现典型的锁机制</span></a></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h2 id="基础-Redis-事务"><a href="#基础-Redis-事务" class="headerlink" title="基础 Redis 事务"></a>基础 Redis 事务</h2><p>有时，需要在同一时间操作多个数据结构，这就需要进行多次 Redis 命令调用。虽然存在一些命令能够在 key 之间移动元素，但是并没有一个命令能够在不同类型的 key 之间移动元素（例外就是通过 <code>ZUNIONSTORE</code> 敏玲 复制一个 <code>SET</code> 到 <code>ZSET</code>）。对于涉及多个 key 的操作（无论是相同类型还是不同类型），Redis 提供了 5 个命令对多个 key 进行操作，且不需要中断：<code>WATCH</code>,  <code>MULTI</code>,<code>EXEC</code>, <code>UNWATCH</code>, <code>DISCARD</code>.</p>
+<p><strong>Redis 最简单的事务就是使用 <code>MULTI</code> 和 <code>EXEC</code> 命令</strong>, 基础事务就意味着这两种命令提供了一种方式，<strong>使得一个客户端执行多个命令 A, B, C 时，不会被其它客户端打断</strong>，意思就是如果没有这种事务保证，A, B, C 命令一条一条执行时，执行完 A 命令，有可能其它客户端执行了 D 命令，然后这个客户端才去执行 B, A, B, C 的执行被打断了。这与关系数据库的事务时不同的，关系数据库的事务可以部分执行，然后回滚或是提交。在 Redis 中，作为 MULTI/EXEC 事务中一部分的每一个命令都是一个接一个执行的，直到所有命令全部完成，然后其它客户端才能执行它们的命令.</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20211117203044176.png" alt="image-20211117203044176"></p>
+<p>要在 Redis 中之执行一个事务的步骤:</p>
+<ol>
+<li>首先调用 <code>MULTI</code> 命令</li>
+<li>跟随一系列要执行的其它命令, Redis 会将该连接到来的这些命令存在队列中</li>
+<li>执行 <code>EXEC</code> 命令, Redis 会顺序地执行 2 步骤中地所有命令,并且不会被中断</li>
+</ol>
+<p>语义上, Redis 的 Python 客户端库使用一种称之为管道 <code>popeline</code> 的方式处理这种事务,在一个连接对象上调用 <code>pipeline()</code> 方法会创建一个事务,使用正确的话, 会自动将一系列命令列封装在 <code>MULTI</code> 和 <code>EXEC</code>命令之间, 于此同时, Python 的客户端也会将要发送的命令存储起来,直到真正要送的时候, 才发送这些命令. 这能够减少 Redis 服务器与客户端的网络通信次数, 能够提高命令的执行效率, 提高性能.</p>
+<p>如何验证 ? 可以通过多线程验证, 每个线程都是先对某个计数器 key 加 1, 再减 1, 非事务的情况下, 一个线程的 +1 和 -1 操作可能被其它 线程的 +1 和 -1 操作打断; 如果使用了 Redis 事务, 则不会出现这种情况。</p>
+<p>其它客户端也是如此 ?</p>
+<p> 使用事务的好处和坏处是什么？</p>
+<h2 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h2><p><code>MULTI/EXEC</code> 这种基础事务的问题在于，如果没有执行 <code>EXEC</code> 命令，那么之前的任何命令都不会被执行， 这意味着不能利用中间一些读操作的结果来在程序中及时做出决策。</p>
+<p><code>WATCH</code> 命令结合 <code>MULTI</code> 和 <code>EXEC</code> 命令， 以及 <code>UNWATCH</code> 和 <code>DISCARD</code> 命令，当通过 <code>WATCH</code> 命令关注 (watch) 键时，在执行 <code>EXEC</code> 操作前的任意时刻，这些键被其它客户端替换、更新或删除，那么这时尝试执行 <code>EXEC</code> 会失败，并返回错误信息。通过使用 <code>WATCH</code>, <code>MULTI/EXEC</code>, 以及 <code>UNWATCH/DISCARD</code> 命令可以确保在做一些重要的操作时，数据不会被修改。</p>
+<p><strong>UNWATCH/DISCARD 的区别</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">WATCH</span><br><span class="line">|</span><br><span class="line">|-----&gt; UNWATCH (reset the connection)</span><br><span class="line">|</span><br><span class="line">MULTI</span><br><span class="line">|</span><br><span class="line">|-----&gt; DISCARD (reset the connection: cancel the WATCH and clear out any queued commands)</span><br><span class="line">|</span><br><span class="line">EXEC</span><br></pre></td></tr></table></figure>
+
+<p>如果通过 <code>WATCH</code> 命令关注了一些 key， 然后通过 <code>MULTI</code> 命令开启了一个事务，并跟随了一组命令，这时可以通过 <code>DISCARD</code> 命令取消关注，并清除任何缓存的命令。</p>
+<p><strong>客户端1操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get guoph2</span><br><span class="line"><span class="string">"2"</span></span><br><span class="line">127.0.0.1:6379&gt; watch guoph2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> guoph2 3</span><br><span class="line">QUEUED</span><br><span class="line"><span class="comment"># 在客户端2进行 set 后，执行 exec，本次事务执行失败，争产执行会返回 OK</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端2操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get guoph2</span><br><span class="line"><span class="string">"2"</span></span><br><span class="line"><span class="comment"># 在客户端1操作 watch，multi,set命令后，对 key 的值进行更新</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> guoph2 1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结合 <code>WATCH</code> 与 <code>MULTI/EXEC</code> 命令，就可以在关注的键被其它客户端修改时得到通知，可以再次进行重试。</p>
+<h3 id="为什么-Redis-不实现典型的锁机制"><a href="#为什么-Redis-不实现典型的锁机制" class="headerlink" title="为什么 Redis 不实现典型的锁机制"></a>为什么 Redis 不实现典型的锁机制</h3><p>当处于写数据的目的而访问数据时，即 SQL 中的 SELECT FOR UPDATE, 关系型数据库会对要访问的行进行加锁，直到一个事务通过 <code>COMMIT</code> 或者 <code>ROLLBACK</code>完成事务的处理. 如果其它客户端尝试对相同的行，access data for writing 时，其它客户端会被阻塞直到第一个事务完成。这种形式的锁在实际中应用的很好（特别是所有的关系型数据库都实现了它），但是可能会导致客户端等待获取锁而长时间等到锁。</p>
+<p>由于这种可能存在的长时间等待，并且 Redis 的设计就是较少客户端的等待时间，Redis 在 <code>WATCH</code>期间并不会锁数据，相反，Redis 会通知客户端，如果其它客户端先修改了数据，这也被称之为乐观锁 (optimistic locking). 关系型数据库执行的锁可以被视作悲观锁 (pessimistic). 乐观锁同样也应用广泛，因为客户端从来不等待第一个锁的持有者释放锁，它只是在不断地进行重试。</p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Redis/" title="Redis">Redis</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Linux/Untitled/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Linux/Untitled</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/">
+                <span class="nav-default">网络相关</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2021
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
