@@ -177,12 +177,12 @@
 </li>
 </ul>
 <p><strong>记得在部署生产前，一定要严格的测试 Lua 脚本</strong></p>
-<h3 id="应用到现实世界"><a href="#应用到现实世界" class="headerlink" title="应用到现实世界"></a>应用到现实世界</h3><h4 id="创一个脚本加载器"><a href="#创一个脚本加载器" class="headerlink" title="创一个脚本加载器"></a>创一个脚本加载器</h4><p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201103222323879.png" alt="image-20201103222323879"></p>
-<p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201103222345132.png" alt="image-20201103222345132"></p>
+<h3 id="应用到现实世界"><a href="#应用到现实世界" class="headerlink" title="应用到现实世界"></a>应用到现实世界</h3><h4 id="创一个脚本加载器"><a href="#创一个脚本加载器" class="headerlink" title="创一个脚本加载器"></a>创一个脚本加载器</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222323879.png" alt="image-20201103222323879"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222345132.png" alt="image-20201103222345132"></p>
 <p><strong>键值与参数列表</strong></p>
 <p>应该尽可能地将要操作地 Key 作为 Keys 列表的一部分，而脚本地其他输入作为参数列表的一部分，这是因为，如果内部实现了多服务器分片，就要对这些 Keys 进行校验，是否存在于同一分片上</p>
-<h4 id="转换为使用-Lua-脚本实现之前的功能"><a href="#转换为使用-Lua-脚本实现之前的功能" class="headerlink" title="转换为使用 Lua 脚本实现之前的功能"></a>转换为使用 Lua 脚本实现之前的功能</h4><p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201103222503976.png" alt="image-20201103222503976"></p>
-<p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201103222524180.png" alt="image-20201103222524180"></p>
+<h4 id="转换为使用-Lua-脚本实现之前的功能"><a href="#转换为使用-Lua-脚本实现之前的功能" class="headerlink" title="转换为使用 Lua 脚本实现之前的功能"></a>转换为使用 Lua 脚本实现之前的功能</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222503976.png" alt="image-20201103222503976"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201103222524180.png" alt="image-20201103222524180"></p>
 <h4 id="应用到项目中例子"><a href="#应用到项目中例子" class="headerlink" title="应用到项目中例子"></a>应用到项目中例子</h4><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> incrres = redis.call(<span class="string">'incr'</span>, KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">if</span> (incrres == <span class="number">1</span>) <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">'expire'</span>, KEYS[<span class="number">1</span>], <span class="number">300</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"SUCCESS"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">"FALSE"</span></span><br></pre></td></tr></table></figure>
         </div>
         
