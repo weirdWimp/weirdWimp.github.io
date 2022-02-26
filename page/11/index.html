@@ -84,6 +84,255 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">新词汇</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-11-29</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="login-shell"><a href="#login-shell" class="headerlink" title="login shell"></a>login shell</h2><p>The goal here is to separate the users having a login shell from the others:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  \=(/usr/sbin/nologin|/bin/false)$= &#123; H;d; &#125;</span></span><br><span class="line"><span class="string">              # Append matching lines to the hold buffer</span></span><br><span class="line"><span class="string">              # and continue to next cycle</span></span><br><span class="line"><span class="string">  p           # Print other lines</span></span><br><span class="line"><span class="string">  $ &#123; g;p &#125;   # On the last line,</span></span><br><span class="line"><span class="string">              # get and print the content of the hold buffer</span></span><br></pre></td></tr></table></figure>
+
+<p>What is a <strong>login shell</strong> ?</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Redis/%E5%87%8F%E5%B0%91%20Redis%20%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/">减少 Redis 中的内存使用</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-10-18</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="减少-Redis-中的内存使用"><a href="#减少-Redis-中的内存使用" class="headerlink" title="减少 Redis 中的内存使用"></a>减少 Redis 中的内存使用</h1><h2 id="Short-structures-使用更短的结构"><a href="#Short-structures-使用更短的结构" class="headerlink" title="Short structures 使用更短的结构"></a>Short structures 使用更短的结构</h2><blockquote>
+<p>Redis stores a serialized version of the data, which must be decoded for every read, partially re-encoded for every write, and may require moving data around in memory.</p>
+</blockquote>
+<h2 id="Sharded-structures-分片的数据结构"><a href="#Sharded-structures-分片的数据结构" class="headerlink" title="Sharded structures 分片的数据结构"></a>Sharded structures 分片的数据结构</h2><h2 id="Packing-bits-and-bytes-更紧凑的位和字节"><a href="#Packing-bits-and-bytes-更紧凑的位和字节" class="headerlink" title="Packing bits and bytes 更紧凑的位和字节"></a>Packing bits and bytes 更紧凑的位和字节</h2><p>社交网站的所有用户都有位置信息，如何在 Redis 中使用更少的内存存储每一个用户的未知信息？而且要能够方便的进行聚合计算</p>
+<p>假设用户的 ID 都是连续的数组，且只存储国家，区域/州/省信息两级信息；并使用 ISO3 中的国家代码，如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 国家代码</span></span><br><span class="line">COUNTRIES = <span class="string">'''</span></span><br><span class="line"><span class="string">ABW AFG AGO AIA ALA ALB AND ARE ARG ARM ASM ATA ATF ATG AUS AUT AZE BDI</span></span><br><span class="line"><span class="string">BEL BEN BES BFA BGD BGR BHR BHS BIH BLM BLR BLZ BMU BOL BRA BRB BRN BTN</span></span><br><span class="line"><span class="string">'''</span>.splt()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 美国，加拿大州信息</span></span><br><span class="line">STATES = &#123;</span><br><span class="line"><span class="string">'CAN'</span>:<span class="string">'''AB BC MB NB NL NS NT NU ON PE QC SK YT'''</span>.split(),</span><br><span class="line"><span class="string">'USA'</span>:<span class="string">'''AA AE AK AL AP AR AS AZ CA CO CT DC DE FL FM GA GU HI IA ID</span></span><br><span class="line"><span class="string">IL IN KS KY LA MA MD ME MH MI MN MO MP MS MT NC ND NE NH NJ NM NV NY OH</span></span><br><span class="line"><span class="string">OK OR PA PR PW RI SC SD TN TX UT VA VI VT WA WI WV WY'''</span>.split(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最直接的方法是直接以字符串的方式直接存储国家和州代码，每个国家代码至少 3 个字节，州信息至少 2 个字节；</p>
+<p><strong>解决方法：以分片的形式存储定长大小的数据</strong></p>
+<p>实际存储的时候，并不存储实际的国家和州代码，而只存储其在 “表”（数组） 中的索引代表的字符，这样，只用两个字节就可以存储国家和州信息了（数组长度不会超过单个字节的十进制数字表示）。</p>
+<p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201018210437144.png" alt="image-20201018210437144"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">(country, state)</span>:</span></span><br><span class="line">	cindex = bisect.bisect_left(COUNTRIES, country)</span><br><span class="line">	<span class="keyword">if</span> cindex &gt; len(COUNTRIES) <span class="keyword">or</span> COUNTRIES[cindex] != country:</span><br><span class="line">		cindex = <span class="number">-1</span></span><br><span class="line">	cindex += <span class="number">1</span></span><br><span class="line">	</span><br><span class="line">    sindex = <span class="number">-1</span></span><br><span class="line">	<span class="keyword">if</span> state <span class="keyword">and</span> country <span class="keyword">in</span> STATES:</span><br><span class="line">		states = STATES[country]</span><br><span class="line">		sindex = bisect.bisect_left(states, state)</span><br><span class="line">		<span class="keyword">if</span> sindex &gt; len(states) <span class="keyword">or</span> states[sindex] != state:</span><br><span class="line">			sindex = <span class="number">-1</span></span><br><span class="line">		sindex += <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> chr(cindex) + chr(sindex)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Redis 中 STRING 结构的值大小限制为 512 MB, 所有用户的信息存储在单个 STRING 的值中必然不可取， 通过进行分片，限制每个分片最多存储 2 百万个用户的位置信息，单个 Key 的值占用大概在 2 MB. 通过 <code>SETRANGE</code>, <code>GETRANGE</code> 命令就可以更新和获取单个用户的位置信息</p>
+<p>这里没有限制分片的个数，只限制了每个分片的大小，考虑的是用户 ID 都是有序的，通过 ID 和每个分片的大小，就可以计算每个 ID 所属的分片， 以及分片内的偏移量；为了知道当前一共由多少分片，就要存储当前的最大用户 ID.</p>
+<p>这样进行存储，要对这些信息进行聚合计算，比如统计所有用户的国家，州分布，就比较容易，遍历所有分片进行统计，当然由于每个分片 STRING 的值比较大，需要分批多次去读取，而不能直接去读取，会阻塞其它客户端</p>
+<p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201018211551176.png" alt="image-20201018211551176"></p>
+<p><img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201018211628124.png" alt="image-20201018211628124"></p>
+<p>这里虽然使用的是多个字节存储的，但是某些情况下，<code>GETBIT</code>, <code>SETBIT</code> 命令来获取和设置单个二进制位可能更高效，更节省空间。存储 Boolean 型？</p>
+<p><strong>存储数据在 Redis 中的方式，会极大地影响所使用地内存。</strong></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-09-29</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Editing-Basics"><a href="#Editing-Basics" class="headerlink" title="Editing Basics"></a>Editing Basics</h1><h3 id="Buffers"><a href="#Buffers" class="headerlink" title="Buffers"></a>Buffers</h3><p>当你编辑一个文件时， Vim 将磁盘上的文件内容读取到计算机的 RAM 中. 这意味这文件的一个备份被存储到了计算机的内存中，你对文件做出的任何修改，是直接映射到内存中的，并且会立即展示出来. 一旦完成了编辑，你可以保存文件，这意味着 Vim 将内存中的内容要写回磁盘. 临时存储文件的内存被称为缓存  (<strong>Buffer</strong>) .  所以，这就是为什么编辑完后要保存文件的原因.</p>
+<h3 id="Swap"><a href="#Swap" class="headerlink" title="Swap"></a>Swap</h3><p>当你编辑文件时, 会在相同目录下会创建一个类似于 <code>.hello.txt.swp</code> 的文件. 查看确切的文件名可以使用如下命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:swapname</span><br></pre></td></tr></table></figure>
+
+<p> Vim 维护了文件缓存区 (buffer) 的一个文件备份, 会定期保存到该文件中, 以避免出现问题时进行恢复 (如 计算机或者 Vim 程序崩溃).  这个文件被称为 <code>swap file</code>, 因为 Vim 会不断交换内存中的内容到磁盘上的文件中.</p>
+<h3 id="Save-my-file"><a href="#Save-my-file" class="headerlink" title="Save my file"></a>Save my file</h3><p>当你修改了文件时, 并且没有保存, 在另一个窗口查看时, 此时是不会看到之前修改的内容的, 这也很好理解, 因为 Vim 只修改了 buffer 中的内容, 还没有保存到磁盘上. 可以通过  <code>:write</code> 命令来完成保存过程, 将内存中的内存写到磁盘中.</p>
+<p><strong>为了让生活变得容易一点, 你可以使用快捷键映射, 在 vimrc 文件中:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#To save,ctrl-s.</span></span><br><span class="line">nmap &lt;c<span class="_">-s</span>&gt; :w&lt;CR&gt;</span><br><span class="line">imap &lt;c<span class="_">-s</span>&gt; &lt;Esc&gt;:w&lt;CR&gt;a</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><table>
+<thead>
+<tr>
+<th>desktop</th>
+<th>vim word</th>
+<th>operation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cut</td>
+<td>delete</td>
+<td>d</td>
+</tr>
+<tr>
+<td>copy</td>
+<td>yank</td>
+<td>y</td>
+</tr>
+<tr>
+<td>paste</td>
+<td>put</td>
+<td>p</td>
+</tr>
+</tbody></table>
+<p>剪切操作在 Vim 中意味着从 buffer 中删除文本, 并将其存储到寄存器中</p>
+<p>复制操作中同样也意味着拉取 (yank) 文本,并将其放到寄存器中</p>
+<p>粘贴没有其特殊含义</p>
+<p><strong>Why yank not copy ?</strong></p>
+<blockquote>
+<p><strong>Yanking is just a Vim name for copying.  The “c” letter was already used for the change operator, and “y” was still available.  Calling this operator “yank” made it easier to remember to use the “y” key.</strong></p>
+<p>– Vim User Manual</p>
+</blockquote>
+<h4 id="如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作"><a href="#如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作" class="headerlink" title="如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?"></a>如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?</h4><p>你可以:</p>
+<table>
+<thead>
+<tr>
+<th>command</th>
+<th>operation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dl</td>
+<td>删除单个字符</td>
+</tr>
+<tr>
+<td>dw</td>
+<td>删除一个单词</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>删除一行</td>
+</tr>
+<tr>
+<td>d$</td>
+<td>删除光标位置到行尾的所有字符</td>
+</tr>
+<tr>
+<td>dwwP</td>
+<td>交换两个单词</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<p><strong>是不是很棒, 这里最让人激动的事情在于, 你可以结合之前的移动等命令, 更多的可能不是吗?  一般的编辑器, 可能没有办法做到如此简洁, 有力 , 并保持方便记忆 !</strong></p>
+<p>还记得清空当前文档的操作吗 ?</p>
+<h3 id="words"><a href="#words" class="headerlink" title="words"></a>words</h3><ul>
+<li><code>w</code></li>
+<li><code>e</code></li>
+</ul>
+<h3 id="Sentence"><a href="#Sentence" class="headerlink" title="Sentence"></a>Sentence</h3><ul>
+<li><code>(</code></li>
+<li><code>)</code></li>
+</ul>
+<h3 id="Paragraph"><a href="#Paragraph" class="headerlink" title="Paragraph"></a>Paragraph</h3><ul>
+<li><code>{</code></li>
+<li><code>}</code></li>
+</ul>
+<h3 id="Visual-Mode-Select"><a href="#Visual-Mode-Select" class="headerlink" title="Visual Mode Select"></a>Visual Mode Select</h3><ul>
+<li><p><code>aw</code></p>
+<p> select a word</p>
+</li>
+<li><p><code>ap</code></p>
+<p>select a paragraph</p>
+</li>
+<li><p><code>ab</code></p>
+<p>select a block (anything with a pair of parentheses)</p>
+</li>
+<li><p><code>a&quot;</code></p>
+<p>select a quoted string (like “this is a quoted string”)</p>
+</li>
+</ul>
+<h3 id="Marking-your-territory"><a href="#Marking-your-territory" class="headerlink" title="Marking your territory"></a>Marking your territory</h3><ul>
+<li><p>create a mark where you can jump here later</p>
+<p><code>ma</code> (a-zA-Z ) then you create a mark called ‘a’</p>
+</li>
+<li><p>return the cursor to the mark</p>
+<p><code>&#39;a</code> take you to the exact line and column of the mark</p>
+</li>
+</ul>
+<h3 id="Time-machine-using-undo-redo"><a href="#Time-machine-using-undo-redo" class="headerlink" title="Time machine using undo/redo"></a>Time machine using undo/redo</h3><ul>
+<li><p><code>u</code> undo  :leftwards_arrow_with_hook:</p>
+</li>
+<li><p><code>ctrl-r</code> redo :arrow_right_hook:</p>
+</li>
+<li><p>more…</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take you back by 4 minutes</span></span><br><span class="line">:earlier 4m</span><br><span class="line"></span><br><span class="line"><span class="comment"># take you later by 45 seconds</span></span><br><span class="line">:later 45s</span><br><span class="line"></span><br><span class="line"><span class="comment"># go back 5 changes</span></span><br><span class="line">undo 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># view the undo tree</span></span><br><span class="line">undolist</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Powerful-search-engine"><a href="#Powerful-search-engine" class="headerlink" title="Powerful search engine"></a>Powerful search engine</h3><ul>
+<li>basic search</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># search</span></span><br><span class="line">/the&lt;cr&gt; <span class="comment"># /the followed by the enter key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># next occurrence</span></span><br><span class="line">press `n`</span><br><span class="line"></span><br><span class="line"><span class="comment"># previous occurrence</span></span><br><span class="line">press `N`</span><br></pre></td></tr></table></figure>
+
+<p>  还记得我们第一次介绍 Vim 的骚操作吗 <code>*</code> 搜索当前光标所在的单词</p>
+<ul>
+<li>start searching as and when you type the search phrase</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> incsearch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ignore the case of the text that you are searching for</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> ignorecase</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>smart case</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smartcase</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>searching for <code>/step</code>, then it will search for any combination of upper and lower case text. So eventually, “Step”, “Stephen”,”stepbrother”</li>
+<li>searching for <code>/Step</code>, <strong>only</strong> “Step”, “Stephen”, but not “stepbrother”</li>
+</ul>
+<ul>
+<li>basic patterns</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exactly search the word 'step' and not 'stepfather'</span></span><br><span class="line">/\&lt;step\&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># search numbers</span></span><br><span class="line">/\d\+</span><br><span class="line"></span><br><span class="line"><span class="comment"># see :help pattern for more details</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>永远不要去死记硬背这些操作, 试着理解, 并练习, 最终成为肌肉记忆.</strong></p>
+<p><a href="http://vimdoc.sourceforge.net/htmldoc/usr_04.html" target="_blank" rel="noopener">vim doc</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Vim%20%E4%BB%8B%E7%BB%8D/">Vim 介绍</a></h2>
             </div>
             <div class="post-meta">
@@ -285,123 +534,6 @@
             </div>
         </article>
     
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Powerful%20Commands/">Vim Powerful Commands</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Vim-Versatile-commands"><a href="#Vim-Versatile-commands" class="headerlink" title="Vim Versatile commands"></a>Vim Versatile commands</h2><ul>
-<li><p><code>.</code></p>
-<ul>
-<li><p>通过 Normal Mode （命令行模式）下的 <code>.</code> 命令来重复上一次的修改操作. 上一次的修改意味着很多操作：Normal Mode 下删除一个或多个字符，单词，行， 如 <code>x</code>, <code>dw</code>, <code>d$</code>, <code>dd</code> 等；比如改变缩进的命令：<code>&gt;&gt;</code>, <code>&lt;&lt;</code> 等. </p>
-</li>
-<li><p>命令行模式下大多数命令对文本做出的修改，都可以使用 <code>.</code> 来重复；Insert Mode （编辑模式） 下做出的修改的重复取决于进入该模式的命令，加入，你通过 <code>A</code> 进入 Insert Mode, 在末尾添加了单词 <code>end</code>，按下 <code>Esc</code>,  <code>.</code> 命令会在末尾重复添加单词 <code>end</code>.</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1. You are now in Normal Mode, you have the text like those below:</span></span><br><span class="line"></span><br><span class="line">This is </span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Press A to enter Insert Mode and write text `end`</span></span><br><span class="line">This is end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Press Esc to enter Normal Mode and press .(period), things will happen like this:</span></span><br><span class="line">This is end end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. mode dot, mode ` end`</span></span><br><span class="line">This is end end end</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>5.</code> 表示重复执行多少次</li>
-<li>Motions (光标的移动) 并不会改变任何事情，所以 <code>.</code> 并不会进行重复</li>
-</ul>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/WSL/">WSL</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-06</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Make-it-started-when-you-start-your-Windows"><a href="#Make-it-started-when-you-start-your-Windows" class="headerlink" title="Make it started when you start your Windows"></a>Make it started when you start your Windows</h2><p>wsl-ubuntun.vbs - 开机自启</p>
-<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
-
-
-
-<p>/etc/init.wsl</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+w <span class="string">"R"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找视频文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -ZP <span class="string">"\.(MP4|mkv|mov|mp4|wmv)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> video/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找图片文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -P <span class="string">"\.(JPG|jpg|png|jpeg|gif|raw)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> ./picture</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Thread%20%E7%BA%BF%E7%A8%8B/">Thread 线程</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-01</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Java-中的线程"><a href="#Java-中的线程" class="headerlink" title="Java 中的线程"></a>Java 中的线程</h1><h2 id="Thread-类与-Runnable-接口"><a href="#Thread-类与-Runnable-接口" class="headerlink" title="Thread 类与 Runnable 接口"></a>Thread 类与 Runnable 接口</h2><p>Thread 中部分方法：</p>
-<ul>
-<li>join()：调用 join() 方法的 Thread 对象结束以前，当前线程一直处于等待状态，不会继续向前运行；内部是通过循环判断该 Thread 对象的 isAlive 方法返回 true 时，调用该 Thread 对象的 wait() 方法，该方法是属于 Object 的方法，且是由当前线程进行调用的，因此当前线程会处于等待状态；当调用 join() 方法的 Thread 对象结束后，会调用 <em>notifyAll</em> 方法通知处于等待状态的线程</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">joinTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> finalI = i;</span><br><span class="line">        <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; System.out.println(finalI));</span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">                thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>输出： 0，1，2，3，4，5，6，7，8，9</p>
-<ul>
-<li>setDaemon(): 线程的默认行为是，只要线程活着，进程就无法退出（普通的用户线程），守护线程不会阻止进程的退出；当应用程序的所有非守护线程均已经结束时，无论是否存在正在运行的守护线程，Java 程序将结束</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">daemonTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"true = "</span> + <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setName(<span class="string">"local-daemon-thread-20200204"</span>);</span><br><span class="line">    thread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">    thread.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只要主线程的打印执行完毕，不管守护线程有没有在执行，整个执行都将结束</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">"main thread = "</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>setUncaughtExceptionHandler()：线程因异常而退出时，默认的行为是打印线程的名称，异常类型，异常消息、堆栈打印；可以设置一个未捕获异常的处理器</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionHandlerTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"illegal argument"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setUncaughtExceptionHandler((t, e) -&gt; &#123;</span><br><span class="line">        System.out.printf(<span class="string">"thread id: %s, thread name: %s, exception: %s"</span>, t.getId(), t.getName(), e);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>多个 Thread 使用一个 Runnable 对象与每个 Thread 使用独立的 Runnable 对象的区别？</p>
-
-                
-            </div>
-        </article>
-    
 </div>
 <div class="paginator">
     
@@ -438,7 +570,7 @@
             &copy;
             
             
-            2021
+            2022
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

@@ -84,6 +84,175 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E6%B5%81%E9%87%8F%E4%B8%8E%E7%AB%AF%E5%8F%A3/">查看网络流量与端口</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-08-15</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Linux 下常用的命令 <code>lsof</code> 和 <code>netstat</code> 都可以用来列出端口以及运行在端口上的服务。</p>
+<h2 id="验证环境"><a href="#验证环境" class="headerlink" title="验证环境"></a>验证环境</h2><p> 为了验证这两个命令，在本地的一台 Ununtun 机器上部署了一个简单的 Kafka broker，端口为 9092，局域网 ip 为 192.168.31.188。在我的开发环境中，ip 为 192.168.31.51 启动了一个 kafka 生产者，在每一次生产消息后会进行休眠一段时间</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">KafkaUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"pid:"</span> + getPid());</span><br><span class="line">        KafkaProducer&lt;String, String&gt; producer = createProducer();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            String time = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);</span><br><span class="line">            String message = <span class="string">"message at "</span> + time;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"message: "</span> + message);</span><br><span class="line">            ProducerRecord&lt;String, String&gt; record = <span class="keyword">new</span> ProducerRecord&lt;&gt;(<span class="string">"test"</span>, message);</span><br><span class="line">            producer.send(record, (r, e) -&gt; &#123;</span><br><span class="line">                <span class="keyword">if</span> (r != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    System.out.printf(<span class="string">"topic:%s, partition:%s, offset:%s\n"</span>, r.topic(), r.partition(), r.offset());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            threadSleep(Duration.ofMinutes(<span class="number">10</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        producer.flush();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> KafkaProducer&lt;String, String&gt; <span class="title">createProducer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"192.168.31.188:9092"</span>);</span><br><span class="line">        properties.put(<span class="string">"key.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">        properties.put(<span class="string">"value.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">        properties.put(<span class="string">"acks"</span>, <span class="string">"all"</span>);</span><br><span class="line">        KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(properties);</span><br><span class="line">        <span class="keyword">return</span> producer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">threadSleep</span><span class="params">(Duration duration)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">long</span> millis = duration.toMillis();</span><br><span class="line">            Thread.sleep(millis);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="comment">// ignore</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getPid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();</span><br><span class="line">        String name = runtime.getName(); <span class="comment">// format: "pid@hostname"</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Integer.parseInt(name.substring(<span class="number">0</span>, name.indexOf(<span class="string">'@'</span>)));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动时打印出了该程序的进程 PID: pid:23264, 此过程也可以通过 Windos 下的任务管理器查看，如果是 IDEA 中运行的，可以在 <code>进程</code> 的选项卡下的 IntelliJ IDEA 子进程下查看</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210815120804600.png" alt="image-20210815120804600"></p>
+<p>Windos 下也有 <code>netstat</code> 命令来查看端口占用和相关的进程，我们找到进程 ID 为 23264 的所有连接，可以看到目标列，即为 Kafka 的 broker 监听的地址 （192.168.31.188:9092）</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a 显示所有连接和侦听端口 -n 以数字形式显示地址和端口号 -o 显示拥有的与每个连接关联的进程 ID</span></span><br><span class="line">C:\Users\guo&gt;netstat <span class="literal">-ano</span> | findstr <span class="string">"23264"</span></span><br><span class="line">  协议    本地地址                外部地址                状态             PID</span><br><span class="line">  TCP    <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50281</span>        <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50280</span>        ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50282</span>        <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50283</span>        ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50283</span>        <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">50282</span>        ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">192.168</span>.<span class="number">31.51</span>:<span class="number">50286</span>    <span class="number">192.168</span>.<span class="number">31.188</span>:<span class="number">9092</span>    ESTABLISHED     <span class="number">23264</span></span><br><span class="line">  TCP    <span class="number">192.168</span>.<span class="number">31.51</span>:<span class="number">50288</span>    <span class="number">192.168</span>.<span class="number">31.188</span>:<span class="number">9092</span>    ESTABLISHED     <span class="number">23264</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><p>Linux 下的 <code>lsof</code>, 即 list open files, 列出已打开的文件， <code>-i</code> 选项列出打开的网络接口文件 ( -i select IPv[46] files)。在 kafka broker 所在机器下查看 9092 端口的使用情况，可以找到与之对应的连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n 以数字形式显示地址</span></span><br><span class="line">ph@guo-lenovo:~$ sudo lsof -i -n | grep 9092</span><br><span class="line">COMMAND      PID            USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME</span><br><span class="line">java      174961            root   95u  IPv6 2748921      0t0  TCP *:9092 (LISTEN)</span><br><span class="line">java      174961            root  100u  IPv6 2854156      0t0  TCP 192.168.31.188:9092-&gt;192.168.31.51:50286 (ESTABLISHED)</span><br><span class="line">java      174961            root  101u  IPv6 2854157      0t0  TCP 192.168.31.188:9092-&gt;192.168.31.51:50288 (ESTABLISHED)</span><br></pre></td></tr></table></figure>
+
+<p><code>192.168.31.188:9092-&gt;192.168.31.51:50286</code> 箭头前表示本地地址（Source/Local），箭头后表示外部地址（Target/Foreign）</p>
+<h3 id="打印所有开放的端口"><a href="#打印所有开放的端口" class="headerlink" title="打印所有开放的端口"></a>打印所有开放的端口</h3><p>根据输出的形式，可以以一个简单的脚本实现打印出当前所有的开放端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo lsof -i | grep -Eo <span class="string">":[0-9a-zA-Z]+-&gt;"</span> | grep -Eo <span class="string">"[0-9a-zA-Z]+"</span> | sort | uniq</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h2><p>Linux 下的 <code>netstat</code> 与 Windos 下的命令效果一样的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -t tcp</span></span><br><span class="line"><span class="comment"># -n, --numeric  don't resolve names</span></span><br><span class="line"><span class="comment"># -p, --programs display PID/Program name for sockets</span></span><br><span class="line">ph@guo-lenovo:~$ netstat -tnp | grep 9092</span><br><span class="line">(Not all processes could be identified, non-owned process info</span><br><span class="line"> will not be shown, you would have to be root to see it all.)</span><br><span class="line">tcp6       0      0 192.168.31.188:9092     192.168.31.51:50288     ESTABLISHED -</span><br><span class="line">tcp6       0      0 192.168.31.188:9092     192.168.31.51:50286     ESTABLISHED -</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E4%B8%8ESSH/">配置网络与SSH</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-08-14</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>[TOC]</p>
+<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>vmware 桥接模式下：</p>
+<p>各种网络模式参考 <a href="https://www.linuxidc.com/Linux/2016-09/135521.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-09/135521.htm</a></p>
+<p>/etc/sysconfig/network-scripts 下一般会有一个网络配置文件，如：ifcfg-eno16777736</p>
+<p>修改该文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet          </span><br><span class="line">BOOTPROTO=static          <span class="comment">#静态IP地址配置</span></span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_PEERDNS=yes</span><br><span class="line">IPV6_PEERROUTES=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">NAME=eno16777736</span><br><span class="line">UUID=7617ff93-0c8f-4272-a28e-ac8cf0807026</span><br><span class="line">DEVICE=eno16777736</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.2.110        <span class="comment">#虚拟机的话，与主机同一网段</span></span><br><span class="line">NETMASK=255.255.255.0       <span class="comment">#子网掩码</span></span><br><span class="line">GATEWAY=192.168.2.1         <span class="comment">#网关</span></span><br><span class="line">DNS1=192.168.2.1            <span class="comment">#DNS</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/network restart</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h4 id="CentOS中修改主机名"><a href="#CentOS中修改主机名" class="headerlink" title="CentOS中修改主机名"></a>CentOS中修改主机名</h4><h5 id="CentOS-6"><a href="#CentOS-6" class="headerlink" title="CentOS 6"></a>CentOS 6</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@centos6 ~]$ hostname                                              <span class="comment"># 查看当前的hostnmae</span></span><br><span class="line">centos6.magedu.com</span><br><span class="line">[root@centos6 ~]$ vim /etc/sysconfig/network                            <span class="comment"># 编辑network文件修改hostname行（重启生效）</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/sysconfig/network                            <span class="comment"># 检查修改</span></span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=centos66.magedu.com</span><br><span class="line">[root@centos6 ~]$ hostname centos66.magedu.com                          <span class="comment"># 设置当前的hostname(立即生效）</span></span><br><span class="line">[root@centos6 ~]$ vim /etc/hosts                                        <span class="comment"># 编辑hosts文件，给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos6 ~]$ cat /etc/hosts                                        <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4 centos66.magedu.com</span><br><span class="line">::1 localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>centos6以及其他有些发行版本，主机名的配置文件是<code>/etc/sysconfig/network</code>, 用 <code>hostname newname</code> 也只是暂时生效，修改了内核的值，重启丢失。 所以可以结合临时加修改配置文件这种方式修改主机名。</p>
+<h5 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]$ hostnamectl <span class="built_in">set</span>-hostname centos77.magedu.com       <span class="comment"># 使用这个命令会立即生效且重启也生效</span></span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ hostname  <span class="comment"># 查看下</span></span><br><span class="line">centos77.magedu.com</span><br><span class="line"></span><br><span class="line">[root@centos7 ~]$ vim /etc/hosts   <span class="comment"># 编辑下hosts文件， 给127.0.0.1添加hostname</span></span><br><span class="line">[root@centos7 ~]$ cat /etc/hosts                                           <span class="comment"># 检查</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 centos77.magedu.com</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br></pre></td></tr></table></figure>
+
+<p>在centos7中，主机名的配置文件为 /etc/hostname, 在该文件中配置了新的主机名后，不会立即生效，需要重启进行生效；因为系统内核已经中的主机名还没有更新，还是旧的指。 可以使用修改CentOS6的策略，也可以通过 <code>hostnamectl set-hostname newname</code> 来更改主机名，内核和配置文件中的主机名都被更新了，不用重启。</p>
+<p>至于<code>/etc/hosts</code> 文件，同Windows下的hosts文件一样，只是起到本地DNS的作用一样，路由的作用。或者也可以说起别名。</p>
+<h4 id="SSH-服务配置"><a href="#SSH-服务配置" class="headerlink" title="SSH 服务配置"></a>SSH 服务配置</h4><p>首先查看是否有安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list installed | grep openssh-server</span><br></pre></td></tr></table></figure>
+
+<p>没有安装的话，用yum进行安装 <code>yum install openssh-server</code></p>
+<p>SSH 服务的配置文件是 /etc/ssh/sshd_config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line">ListenAddress 0.0.0.0</span><br><span class="line">ListenAddress ::</span><br><span class="line"></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<p>重启或开启SSH服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service   <span class="comment">#自启动服务</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum instatll net-tools –y    <span class="comment">#如果没有netstat服务，安装netstat工具</span></span><br><span class="line"></span><br><span class="line">netstat -an | grep 22</span><br></pre></td></tr></table></figure>
+
+
+
+<p>必要时关闭防火墙或开放22端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key </p>
+<h4 id="RPM"><a href="#RPM" class="headerlink" title="RPM"></a>RPM</h4><p><a href="https://www.cnblogs.com/zengkefu/p/5666947.html" target="_blank" rel="noopener">https://www.cnblogs.com/zengkefu/p/5666947.html</a></p>
+<p>ntpdate cn.pool.ntp.org</p>
+<p>\1.  安装ntpdate工具</p>
+<p> # yum -y install ntp ntpdate</p>
+<p> \2.  设置系统时间与网络时间同步</p>
+<p> # ntpdate cn.pool.ntp.org</p>
+<p> \3.  将系统时间写入硬件时间</p>
+<p> # hwclock –systohc</p>
+<p> 4.强制系统时间写入CMOS中防止重启失效</p>
+<p> 　　hwclock -w<br> 　　或clock -w</p>
+<p>本文来自 紫漪 的CSDN 博客 ，全文地址请点击：<a href="https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy" target="_blank" rel="noopener">https://blog.csdn.net/u011391839/article/details/62892020?utm_source=copy</a> </p>
+<p>sudo passwd root 更改密码，要在root用户下</p>
+<p>sudo su - root</p>
+<p>apt list –installed|grep jdk java</p>
+<p>/opt/zookeeper-3.4.6/bin/zkServer.sh start</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.9.0.1/config/server.properties</p>
+<p>/opt/kafka_2.11-0.9.0.1/bin/kafka-server-stop.sh </p>
+<p>bin/kafka-console-producer.sh –broker-list localhost:9092 –topic test</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1 --from-beginning</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20Aysnc%20Request/">Spring Aysnc Request</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-08-07</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Compare-to-WebFlux"><a href="#Compare-to-WebFlux" class="headerlink" title="Compare to WebFlux"></a>Compare to WebFlux</h2><p>Servlet API 最初是为通过 Filter-Servlet 链进行单次传递而构建的。 Servlet 3.0 中添加的异步请求处理允许应用程序退出 Filter-Servlet 链，但将响应保持打开状态以供进一步处理。 Spring MVC 异步支持是围绕该机制构建的。当控制器返回 DeferredResult 时，Filter-Servlet 链退出，Servlet 容器线程被释放。稍后，当设置了 DeferredResult 时，会进行 ASYNC 分派 (dispatch)（到相同的 URL），在此期间再次映射控制器，但不是调用它，而是使用 DeferredResult 值（就像控制器返回它一样）来恢复处理.</p>
+<p>相比之下，Spring WebFlux 既不是建立在 Servlet API 上，也不需要这样的异步请求处理特性，因为它是异步设计的。异步处理内置于所有框架契约中，并且在请求处理的所有阶段都得到内在的支持。</p>
+<p>从编程模型的角度来看，Spring MVC 和 Spring WebFlux 都支持异步和响应式类型作为控制器方法中的返回值。 Spring MVC 甚至支持流，包括反应式背压。但是，对响应的单个写入仍然是阻塞的（并且在单独的线程上执行），这与 WebFlux 不同，后者依赖于非阻塞 I/O，并且每次写入不需要额外的线程。</p>
+<p>另一个根本区别是 Spring MVC 不支持控制器方法参数中的异步或反应类型（例如，@RequestBody、@RequestPart 等），也没有明确支持异步和反应类型作为模型属性。 Spring WebFlux 确实支持所有这些。</p>
+<h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>出于安全原因，浏览器禁止对当前来源之外的资源进行 AJAX 调用。 例如，您可以在一个选项卡中拥有您的银行帐户，而在另一个选项卡中拥有 evil.com。 来自 evil.com 的脚本不应该能够使用您的凭据向您的银行 API 发出 AJAX 请求 — 例如从您的帐户中取款！</p>
+<p>跨域资源共享 (CORS) 是大多数浏览器实现的 W3C 规范，它允许您指定授权的跨域请求类型，而不是使用基于 IFRAME 或 JSONP 的安全性较低且功能较弱的解决方法。</p>
+<p>CORS 规范区分了预检请求、简单请求和实际请求。要了解 CORS 的工作原理，您可以阅读本文等，或查看规范以获取更多详细信息。</p>
+<p>Spring MVC HandlerMapping 实现为 CORS 提供了内置支持。成功将请求映射到处理程序后，HandlerMapping 实现会检查给定请求和处理程序的 CORS 配置并采取进一步行动。预检请求被直接处理，而简单和实际的 CORS 请求被拦截、验证，并设置了所需的 CORS 响应标头。</p>
+<p>为了启用跨域请求（即 Origin 标头存在且与请求的主机不同），您需要有一些显式声明的 CORS 配置。如果未找到匹配的 CORS 配置，则拒绝预检请求。没有将 CORS 标头添加到简单和实际 CORS 请求的响应中，因此浏览器会拒绝它们。</p>
+<p>每个 HandlerMapping 都可以使用基于 URL 模式的 CorsConfiguration 映射进行单独配置。在大多数情况下，应用程序使用 MVC Java 配置或 XML 命名空间来声明此类映射，这会导致将单个全局映射传递给所有 HandlerMappping 实例。</p>
+<p>您可以将 HandlerMapping 级别的全局 CORS 配置与更细粒度的处理程序级别 CORS 配置相结合。例如，带注释的控制器可以使用类或方法级别的 @CrossOrigin 注释（其他处理程序可以实现 CorsConfigurationSource）。</p>
+<p>结合全局和局部配置的规则一般是相加的 —— 例如，所有全局和所有本地起源。对于那些只能接受单个值的属性，例如allowCredentials 和 maxAge，本地覆盖全局值。有关更多详细信息，请参阅 CorsConfiguration#combine(CorsConfiguration)。</p>
+<h2 id="HandlerInterceptor"><a href="#HandlerInterceptor" class="headerlink" title="HandlerInterceptor"></a>HandlerInterceptor</h2><p>允许自定义处理程序执行链的工作流接口。应用程序可以为某些处理程序组注册任意数量的现有或自定义拦截器，以添加常见的预处理行为，而无需修改每个处理程序实现。<br>HandlerInterceptor 在适当的 HandlerAdapter 触发处理程序本身的执行之前被调用。这种机制可以用于预处理方面的大领域，例如用于授权检查或常见的处理程序行为，如语言环境或主题更改。它的主要目的是允许分解出重复的处理程序代码。</p>
+<p>在异步处理场景中，处理程序可能会在单独的线程中执行，而主线程退出而不呈现或调用 postHandle 和 afterCompletion 回调。当并发处理程序执行完成时，请求被分派回来以继续渲染模型，并再次调用此合约的所有方法。有关更多选项和详细信息，请参阅 org.springframework.web.servlet.AsyncHandlerInterceptor</p>
+<p>通常每个 HandlerMapping bean 定义一个拦截器链，共享它的粒度。为了能够将某个拦截器链应用于一组处理程序，需要通过一个 HandlerMapping bean 映射所需的处理程序。</p>
+<p>拦截器本身被定义为应用程序上下文中的 bean，映射 bean 定义通过其“拦截器”属性（在 XML 中：<ref> 的 <list>）引用。</p>
+<p>HandlerInterceptor 基本上类似于 Servlet 过滤器，但与后者相反，它只允许自定义预处理和禁止执行处理程序本身的选项，以及自定义后处理。过滤器更强大，例如它们允许交换传递给链的请求和响应对象。请注意，过滤器在 web.xml 中配置，即应用程序上下文中的 HandlerInterceptor。</p>
+<p>作为基本准则，与细粒度处理程序相关的预处理任务是 HandlerInterceptor 实现的候选对象，尤其是分解出的公共处理程序代码和授权检查。另一方面，过滤器非常适合请求内容和视图内容处理，例如多部分表单和 GZIP 压缩。这通常显示何时需要将过滤器映射到某些内容类型（例如图像）或所有请求。</p>
+<p>WebMvcConfigurer</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Spring/Spring%20Initialization/">Spring Initialization</a></h2>
             </div>
             <div class="post-meta">
@@ -270,151 +439,6 @@
             </div>
         </article>
     
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20AOP%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Spring AOP 源码分析</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-07-20</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210720215531101.png" alt="image-20210720215531101"></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210720215550271.png" alt="image-20210720215550271"></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20%E4%BD%9C%E7%94%A8%E5%9F%9F/">Spring 作用域</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-07-17</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Scoped-Beans-as-Dependencies"><a href="#Scoped-Beans-as-Dependencies" class="headerlink" title="Scoped Beans as Dependencies"></a>Scoped Beans as Dependencies</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@RequestScope</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestScopeEntity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RequestScopeEntity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">"############ Create RequestScopeEntity ############"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doRequestBusiness</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log.info(Thread.currentThread() + <span class="string">" do current request business"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"scope2"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScopeController2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实际注入的是 Spring CGLIB 为 RequestScopeEntity 创建的一个代理对象，</span></span><br><span class="line"><span class="comment">     * 可以通过打印该对象的 Class 对象的名称来验证，针对每个请求，都会创建一个</span></span><br><span class="line"><span class="comment">     * 实际的 RequestScopeEntity 对象，然后将对这个代理对象方法的调用委托给</span></span><br><span class="line"><span class="comment">     * 新创建的 RequestScopeEntity 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RequestScopeEntity requestScopeEntity;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"user"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">userInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        requestScopeEntity.doRequestBusiness();</span><br><span class="line">        <span class="keyword">int</span> scopeEntityHash = requestScopeEntity.hashCode();</span><br><span class="line">        log.info(<span class="string">"[scope2], requestScopeEntity:[&#123;&#125;], class:[&#123;&#125;]"</span>, scopeEntityHash, requestScopeEntity.getClass().getSimpleName());</span><br><span class="line">        <span class="keyword">return</span> scopeEntityHash;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>注入点可以声明为 <code>ObjectFactory&lt;MyTargetBean&gt;</code>， 或者是 <code>Provider&lt;MyTargetBean&gt;</code>， <code>Provider&lt;MyTargetBean&gt;</code> （JSR330）</p>
-<p>代理模式，装饰器模式，适配器模式</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20Enviroment/">Spring Enviroment</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-07-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Spring/">Spring</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Spring-Environment"><a href="#Spring-Environment" class="headerlink" title="Spring Environment"></a>Spring Environment</h1><p><code>Environment</code> 是对 Spring 应用环境 (Spring Application Environment) 的抽象; 应用于应用环境的两个方面：<code>profiles</code> 以及 <code>properties</code>。</p>
-<h2 id="Bean-Definition-Profiles"><a href="#Bean-Definition-Profiles" class="headerlink" title="Bean Definition Profiles"></a>Bean Definition Profiles</h2><p><code>profiles</code> 属于条件化创建 bean 的一种机制， 不同的 <code>profile</code> 包含了一组 bean 的定义，运行时，可以指定激活哪些 <code>profile</code> (spring.profiles.active), 以及应用哪些默认的 <code>profile</code> (spring.profiles.default)，当激活这些 <code>profiles</code> 时，它们包含的 bean 定义会被注册到容器中。</p>
-<p>这种机制的使用想必大家已经比较熟悉，关于细节，需要注意的就是 <code>@Profile</code> 注解，背后依赖的是 <code>@Conditional</code> 作为元注解 （我这里是 Spring 4.1.6 版本），<code>@Conditional</code> 注解是 Spring 为条件化创建 bean 提供的一种机制，需要提供一个 <code>org.springframework.context.annotation.Condition</code> 的实现类作为判断的依据。</p>
-<p><strong><code>@Profile</code> 源码：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE, ElementType.METHOD&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Conditional</span>(ProfileCondition<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">Profile</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The set of profiles for which the annotated component should be registered.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] value();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong><code>ProfileCondition</code> 源码</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProfileCondition</span> <span class="keyword">implements</span> <span class="title">Condition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (context.getEnvironment() != <span class="keyword">null</span>) &#123;</span><br><span class="line">			MultiValueMap&lt;String, Object&gt; attrs = metadata.getAllAnnotationAttributes(Profile<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>())</span>;</span><br><span class="line">			<span class="keyword">if</span> (attrs != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// 获取 @Profile 注解中的 value 属性值，即 bean 定义时指定所属的 profiles</span></span><br><span class="line">				<span class="keyword">for</span> (Object value : attrs.get(<span class="string">"value"</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 判断是否激活</span></span><br><span class="line">					<span class="keyword">if</span> (context.getEnvironment().acceptsProfiles(((String[]) value))) &#123;</span><br><span class="line">						<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong><code>@Profile</code> 的属性值支持表达式</strong></p>
-<ul>
-<li><code>!</code> 逻辑非</li>
-<li><code>&amp;</code> 逻辑与</li>
-<li><code>|</code> 逻辑或</li>
-</ul>
-<p>* <code>&amp;</code> 和 <code>|</code> 的组合使用需要使用括号：<code>production &amp; (us-east | eu-central)</code></p>
-<p><strong>将 <code>@Profile</code> 注解作为元注解创建自定义注解</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Profile</span>(<span class="string">"production"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Production &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h2><p><code>properties</code> 包含了应用用到的所有属性对，可能来源于（不限于）：</p>
-<ul>
-<li>properties 文件</li>
-<li>JVM 系统属性 (JVM System Properties)</li>
-<li>系统环境变量 (System Environment Variables)</li>
-<li>JNDI</li>
-<li>Servlet Context Parameters</li>
-<li>临时属性对象 (ad-hoc <code>Properties</code> object)</li>
-<li>Map 对象</li>
-</ul>
-<p><code>Environment</code> 的作用就是为用户提供一个便利的服务接口用来配置属性源（property sources）以及从中解析属性值，属性源可配置, 并具有层次结构。</p>
-<h3 id="PropertySource"><a href="#PropertySource" class="headerlink" title="PropertySource"></a>PropertySource</h3><p><code>PropertySource</code> 是对任何键值对的属性源的一种抽象，Spring 提供的 <a href="https://docs.spring.io/spring-framework/docs/5.3.8/javadoc-api/org/springframework/core/env/StandardEnvironment.html" target="_blank" rel="noopener"><code>StandardEnvironment</code></a> (在 standalone 模式下使用) 会配置两个 <code>PropertySource</code> 对象，分别代表 JVM 系统属性的集合（ <code>System.getProperties()</code> ）和系统环境变量  （<code>System.getenv()</code> ）</p>
-<p><code>Environment</code> 对象提供了配置 <code>PropertySource</code> 以及在这些 <code>PropertySource</code> 对象上的检索功能，检索某个属性键是否存在或者对应的值。</p>
-<p>Spring Web 应用中, <code>StandardServletEnvironment</code> 实现，检索的优先级如下：</p>
-<ol>
-<li>ServletConfig parameters </li>
-<li>ServletContext parameters ( web.xml context-param entries )</li>
-<li>JNDI environment variables  (<code>java:comp/env/</code> entries) </li>
-<li>JVM system properties (<code>-D</code> command-line arguments) </li>
-<li>JVM system environment (operating system environment variables) </li>
-</ol>
-<p>整个机制是可配置的, 可以移除某个 <code>PropertySource</code> ，或者改变检索的优先级</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ConfigurableApplicationContext ctx = <span class="keyword">new</span> GenericApplicationContext();</span><br><span class="line"></span><br><span class="line"><span class="comment">// MutablePropertySources api exposes a number of methods that allow for precise manipulation of the set of property sources</span></span><br><span class="line">MutablePropertySources sources = ctx.getEnvironment().getPropertySources();</span><br><span class="line"></span><br><span class="line"><span class="comment">// MyPropertySource is a custom PropertySource implementation</span></span><br><span class="line">sources.addFirst(<span class="keyword">new</span> MyPropertySource());</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="PropertySource-注解"><a href="#PropertySource-注解" class="headerlink" title="@PropertySource 注解"></a><code>@PropertySource</code> 注解</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Repeatable</span>(PropertySources<span class="class">.<span class="keyword">class</span>) // 允许重复使用</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">PropertySource</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">	<span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line"></span><br><span class="line">	String[] value();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">ignoreResourceNotFound</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">String <span class="title">encoding</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line"></span><br><span class="line">	Class&lt;? extends PropertySourceFactory&gt; factory() <span class="keyword">default</span> PropertySourceFactory<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><code>@PropertySource</code> 注解提供了一种向 <code>Environment</code> 添加属性源的便利方式，使用在 <code>@Configuration</code> 类上，需要提的一点是，任何出现在 <code>@PropertySource</code>属性源路径中的 <code>${..}</code> 占位符会从已经注册的 <code>PropertySource</code> 中检索，也可以提供一个默认值，如 <code>${key:default}</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@PropertySource</span>(<span class="string">"classpath:/com/myco/$&#123;spring.profiles.active:st&#125;/app.properties"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    Environment env;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TestBean <span class="title">testBean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        TestBean testBean = <span class="keyword">new</span> TestBean();</span><br><span class="line">        testBean.setName(env.getProperty(<span class="string">"testbean.name"</span>));</span><br><span class="line">        <span class="keyword">return</span> testBean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong><code>@PropertySource</code> is repeatable</strong></p>
-<p>可以在一个 <code>@Configuration</code> 类上添加多个 <code>@PropertySource</code> 注解。</p>
-<p>xml 定义中，import 其他bean定义时，可以使用占位符，Spring 会从当前 Environment 中进行解析</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"$&#123;test&#125;.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>但是当定义某个 bean 时，必须配置一个 PropertySourcesPlaceholderConfigurer， 才可以使用占位符</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java.beans.PropertyEditor Spring implementation which can convert String paths to Resource objects.</span><br><span class="line">Classloader.getResource()</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">		<span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">		prepareRefresh();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">		prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">			postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">               <span class="comment">/* </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               *  在这里处理 PropertySource </span></span><br><span class="line"><span class="comment">               *</span></span><br><span class="line"><span class="comment">               */</span></span><br><span class="line">			<span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">			invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">			registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize message source for this context.</span></span><br><span class="line">			initMessageSource();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize event multicaster for this context.</span></span><br><span class="line">			initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">			onRefresh();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Check for listener beans and register them.</span></span><br><span class="line">			registerListeners();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">			finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Last step: publish corresponding event.</span></span><br><span class="line">			finishRefresh();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">			logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt"</span>, ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">			destroyBeans();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Reset 'active' flag.</span></span><br><span class="line">			cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Propagate exception to caller.</span></span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
 </div>
 <div class="paginator">
     
@@ -451,7 +475,7 @@
             &copy;
             
             
-            2021
+            2022
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

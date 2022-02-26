@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Redis Cluster</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-12-04</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-集群的数据分片"><span class="toc-text">Redis 集群的数据分片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-集群的主复制模式"><span class="toc-text">Redis 集群的主复制模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-集群地一致性保障"><span class="toc-text">Redis 集群地一致性保障</span></a></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <p>consistent hashing 一致性哈希</p>
+<p>hash slot 哈希槽</p>
+<h2 id="Redis-集群的数据分片"><a href="#Redis-集群的数据分片" class="headerlink" title="Redis 集群的数据分片"></a>Redis 集群的数据分片</h2><p>Redis 集群没有使用一致性哈希，而是使用了一种不同的数据分片形式: 每个键在概念上属于所谓的 <strong>哈希槽</strong> (hash slot) 的一部分。Redis 集群一共有 16384 个哈希槽，计算一个给定键的哈希槽，采取的方式是：<strong>键的 CRC16 对 16384 取模</strong>。</p>
+<p>Redis 集群中的每一个节点都负责所有哈希槽的一个子集. 假如一个集群有三个节点，那么哈希槽的分布可能是这样:</p>
+<ul>
+<li>A 节点的哈希槽范围 0 - 5500</li>
+<li>B 节点的哈希槽范围 5501 - 11000</li>
+<li>C 节点的哈希槽范围 11001 - 16383</li>
+</ul>
+<p>这使得很容易在集群中增加和移除节点。例如，如果想增加一个新节点 D, 需要将 A,B,C 中的某些哈希槽移动到 D. 类似的，如果想要移除节点 A, 可以将 A  负责的哈希槽移动到 B 和 C。</p>
+<p>由于从一个节点向另一个节点移动哈希槽并不需要停止操作，增加和移除节点或者改变节点所负责的哈希槽的百分比，不需要任何的宕机操作。</p>
+<p>Redis 集群支持多个键的操作（多个键的同时操作），只要单个命令的执行（Redis事务，Lua脚本执行）所涉及的这些键，都属于同一个哈希槽。用户可以通过使用一个叫做 <strong>哈希标签</strong>  (hash tags) 的概念，强制多个键属于不同的哈希槽.</p>
+<p>Redis 集群规范中记录了哈希标签，但重点是，如果键中的 <code>{}</code> 括号之间有一个子字符串，则仅对字符串内的内容进行哈希处理，例如 <code>this{foo}key</code> 和 <code>another{foo} key</code> 保证在同一个哈希槽中，并且可以在一个命令中一起使用多个键作为参数。</p>
+<h2 id="Redis-集群的主复制模式"><a href="#Redis-集群的主复制模式" class="headerlink" title="Redis 集群的主复制模式"></a>Redis 集群的主复制模式</h2><p>Redis Cluster master-replica model</p>
+<p>为了保证可以用性, 当主节点中的某些节点出现故障或者不能与集群中的大多数节点进行通信时, Redis 集群使用了一种主节点复制模式, 即每个哈希槽都有一个到 N 个副本 (N-1 个额外的副本节点).</p>
+<p>在上述 A, B, C 三个节点的集群中, 如果节点 B 故障, 集群不能与之通信, 那么就不再能够提供哈希槽 0-5500 范围的服务. 然而, 如果在创建集群的时候, 为每一个主节点增加一个副本节点, 那么最终集群包含了 A, B, C 以及对应的副本节点 A1, B1, C1. 这样, 系统就能够在 B 节点故障时继续提供服务.</p>
+<p>B1 节点复制节点 B, 如果 B 节点故障, 集群将使得 B1 成为新的主节点继续正确地提供服务. 但是如果 B1 和 B 同一时间都故障了, 那么集群就不能继续服务.</p>
+<h2 id="Redis-集群地一致性保障"><a href="#Redis-集群地一致性保障" class="headerlink" title="Redis 集群地一致性保障"></a>Redis 集群地一致性保障</h2><p>Redis Cluster consistency guarantees</p>
+<p>Redis Cluster 无法保证强一致性。实际上，这意味着在某些条件下，Redis Cluster 可能会丢失系统已向客户端确认的写入。</p>
+<p>Redis Cluster 会丢失写入的第一个原因是因为它使用异步复制。这意味着在写入期间会发生以下情况：</p>
+<p>客户端写入主 B。<br>主 B 向客户端回复 OK。<br>主 B 将写入传播到其副本 B1、B2 和 B3。</p>
+<p>B 在回复客户端之前不会等待来自 B1、B2、B3 的确认，因为这对 Redis 来说是一个令人望而却步的延迟惩罚，因此如果您的客户端写入某些内容，B 会确认写入，但会在此之前崩溃能够将写入发送到其副本，其中一个副本（未收到写入）可以提升为主，永远失去写入。</p>
+<p>这与大多数配置为每秒将数据刷新到磁盘的数据库发生的情况非常相似，因此您已经能够推理出这种情况，因为过去使用不涉及分布式系统的传统数据库系统的经验。同样，您可以通过强制数据库在回复客户端之前将数据刷新到磁盘来提高一致性，但这通常会导致性能低得令人望而却步。在 Redis Cluster 的情况下，这相当于同步复制。</p>
+<p>基本上，需要在性能和一致性之间进行权衡。</p>
+<p>Redis 集群在绝对需要时支持同步写入，通过 WAIT 命令实现。这使得丢失写入的可能性大大降低。但是请注意，即使使用同步复制，Redis Cluster 也没有实现强一致性：在更复杂的故障场景下，始终有可能将无法接收写入的副本选为 master。</p>
+<p>还有一个值得注意的场景是 Redis 集群将丢失写入，这发生在网络分区期间，客户端与少数实例（至少包括一个主实例）隔离。</p>
+<p>以我们的 6 个节点集群为例，它由 A、B、C、A1、B1、C1 组成，有 3 个主节点和 3 个副本节点。还有一个客户端，我们将其称为 Z1。</p>
+<p>分区发生后，可能在分区的一侧有 A、C、A1、B1、C1，而在另一侧有 B 和 Z1。</p>
+<p>Z1 仍然能够写入 B，B 将接受其写入。如果分区在很短的时间内愈合，集群将继续正常运行。但是，如果分区持续足够的时间让 B1 在分区的多数侧提升为 master，则 Z1 同时发送给 B 的写入将丢失。</p>
+<p>请注意，Z1 能够发送到 B 的写入量有一个最大窗口：如果分区的多数方已经有足够的时间来选举一个副本作为主节点，那么少数方的每个主节点都将停止接受写入。</p>
+<p>这个时间量是Redis Cluster一个非常重要的配置指令，称为节点超时。</p>
+<p>节点超时后，主节点被视为出现故障，并且可以由其副本之一替换。类似地，在节点超时过后，主节点无法感知大多数其他主节点，它会进入错误状态并停止接受写入。</p>
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Redis/" title="Redis">Redis</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/%E7%84%A6%E8%99%91%E7%97%87/%E7%84%A6%E8%99%91%E7%97%87%E7%9A%84%E5%BA%B7%E5%A4%8D/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">焦虑症的康复</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Redis/Redis%20%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">
+                <span class="nav-default">Redis 的持久化</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2022
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

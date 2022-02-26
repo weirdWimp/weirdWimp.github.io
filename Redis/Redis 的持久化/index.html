@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">Redis 的持久化</h2>
+            <div class="post-meta">
+                <span class="post-time">2021-11-21</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-数据持久化"><span class="toc-text">Redis 数据持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#通过快照将数据持久化到磁盘"><span class="toc-text">通过快照将数据持久化到磁盘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本的配置选项"><span class="toc-text">基本的配置选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五种初始化快照的方法"><span class="toc-text">五种初始化快照的方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#只追加写文件持久化-Append-only-file-persistence"><span class="toc-text">只追加写文件持久化 (Append-only file persistence)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#文件同步"><span class="toc-text">文件同步</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#appendfsync-always"><span class="toc-text">appendfsync always</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#appendfsync-eversec"><span class="toc-text">appendfsync eversec</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#appendfsync-no"><span class="toc-text">appendfsync no</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重写-压缩-AOF"><span class="toc-text">重写&#x2F;压缩 AOF</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制-Replication"><span class="toc-text">复制 Replication</span></a></li></ol></li></ol>
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <h1 id="Redis-数据持久化"><a href="#Redis-数据持久化" class="headerlink" title="Redis 数据持久化"></a>Redis 数据持久化</h1><p>Redis 中，有两种方式将数据持久化到磁盘。一种称之为<strong>快照</strong> (Spapshotting), 将某一时刻存在数据写道磁盘。另外一种称之为<strong>AOF 仅追加文件</strong> (append-only file), 它是将到来的所有写命令写到磁盘上。这两种方式可以一起使用，也可以单独使用，或者不适用持久化。</p>
+<p>选择配置数据持久话的原因还是为了在 Redis，Redis 所在的主机硬件等发生故障时进行恢复，可以将持久化的文件在远程主机进行备份，故障时进行恢复。而且，如果 Redis 中的数据时大数据集上的聚合分析结果，没有备份，重新计算的代价可能时无法接受的。</p>
+<h2 id="通过快照将数据持久化到磁盘"><a href="#通过快照将数据持久化到磁盘" class="headerlink" title="通过快照将数据持久化到磁盘"></a>通过快照将数据持久化到磁盘</h2><p>在 Redis 中，可以通过创建一个快照，创建一个内部中数据的某个时刻的副本，这些副本可以被备份，复制到其它服务器，创建一个 Redis 服务器的副本，或者留着待以后重启使用。</p>
+<h3 id="基本的配置选项"><a href="#基本的配置选项" class="headerlink" title="基本的配置选项"></a><strong>基本的配置选项</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">save 60 1000 <span class="comment"># 创建快照的频率。如果自上一次创建快照后的 60s 内有 1000 此写，就开启新的快照</span></span><br><span class="line">stop-writes-on-bgsave-error no <span class="comment"># 当创建快照时，发生异常是否暂停所有的写命令</span></span><br><span class="line">rdbcompression yes   <span class="comment"># 是否进行压缩</span></span><br><span class="line">dbfilename dump.rdb  <span class="comment"># 快照文件名</span></span><br><span class="line"></span><br><span class="line">dir ./ <span class="comment"># 快照文件保存的目录</span></span><br></pre></td></tr></table></figure>
+
+<p>自上一次快照完成后，直到下一次快照开始执行，这个期间，如果 Redis 崩溃，系统或硬件故障，期间的写数据就会丢失。</p>
+<h3 id="五种初始化快照的方法"><a href="#五种初始化快照的方法" class="headerlink" title="五种初始化快照的方法"></a>五种初始化快照的方法</h3><ol>
+<li><p>任何的 Redis 客户端都可以通过调用 <code>BGSAVE</code> 命令来初始化快照（创建快照）。在所有支持 <code>BGSAVE</code>  的平台上，Redis 会进行进程的 <strong><em>fork</em></strong>, 子进程会将快照写到磁盘，而父进程仍然可以用于响应来自客户端的命令。</p>
+<blockquote>
+<p>当一个进程 fork 时，底层的操作系统会创建该进程的一个副本。在 Unix 和类 Unix 的系统上，复制进程会被优化：最开始，子进程和父进程时共享所有内存的。当父进程或子进程开始写内存，内存将不再共享。</p>
+</blockquote>
+</li>
+<li><p>Redis 的客户端可以通过调用 <code>SAVE</code> 命令来初始化快照，这将导致 <strong>Redis 停止对任何命令的响应</strong>，直到快照完成。不经常使用，但是如果对于该这种等待 ok 或者没有足够的内存执行 <code>BGSAVE</code> 操作，可以使用。</p>
+</li>
+<li><p>如果 Redis 配置了 <code>save</code> 选项，如 <code>save 60 10000</code>， 如果自上一次快照成功后的 60s 内，已经有 10000 个写操作，那么 Redis 会自动触发一个 <code>BGSAVE</code> 操作。可以配置多个 <code>save</code> 行，任意一条规则满足，就会触发 <code>BGSAVE</code> 操作。</p>
+</li>
+<li><p>当 Redis 接受到 <code>SHUTDOWN</code> 终止命令时，或者接受到标准的 <code>TERM</code> 信号，Redis 会执行 <code>SAVE</code> 操作，阻塞任何客户端执行任何命令，然后再终止。</p>
+</li>
+<li><p>当一个 Redis 服务器连接到另一个 Reids 服务器，并且发起了 <code>SYNC</code> 同步命令开始复制（replication）, Master Redis 服务器将会开始一个 <code>BGSAVE</code> 操作，如果当前没有一个正在进行中的 <code>BGSAVE</code> 操作或者最近完成了。</p>
+</li>
+</ol>
+<h2 id="只追加写文件持久化-Append-only-file-persistence"><a href="#只追加写文件持久化-Append-only-file-persistence" class="headerlink" title="只追加写文件持久化 (Append-only file persistence)"></a>只追加写文件持久化 (Append-only file persistence)</h2><p>只追加写文件通过将修改写到文件的末尾，保存了数据发生修改时的记录。这样，任何人都有可以通过从头到尾，重放 (replay) 只追加写日志文件就可以恢复整个数据集。可以通过设置配置项 <code>appendonly yes</code> 开启。</p>
+<h3 id="文件同步"><a href="#文件同步" class="headerlink" title="文件同步"></a>文件同步</h3><p>当写文件到磁盘上时，至少发生了三件事：首先是写缓存，当调用 <code>file.write()</code> 或其它语言中等价的命令时会执行该操作。当数据存在缓冲区中时，操作系统可以将这些数据再未来的某个时刻写到磁盘。可以通过调用 <code>file.flush()</code>, 要求操作系统将数据写到磁盘上，但这只是发给操作系统的一个请求，并不会立即执行。由于数据实际时不在磁盘上的直到操作系统将它写到磁盘上，我们可以告诉操作系统<strong>同步</strong>文件到磁盘上，这将导致阻塞 (block)，直到同步完成。当同步完成时，我们可以确定数据此时是在磁盘上的，并且如果系统故障，可以稍后读取进行恢复。</p>
+<h4 id="appendfsync-always"><a href="#appendfsync-always" class="headerlink" title="appendfsync always"></a><code>appendfsync always</code></h4><p>如果设置了 <code>appendfsync always</code>, Redis 的每次写将会导致一个磁盘的写过程，如果 Reid 崩溃了，这可以极大地减少数据丢失。然而，因为每次都有写磁盘这个过程，整体的性能会受限于此磁盘的性能。</p>
+<h4 id="appendfsync-eversec"><a href="#appendfsync-eversec" class="headerlink" title="appendfsync eversec"></a><code>appendfsync eversec</code></h4><p>作为保持数据安全和保持高写入性能之间的合理折衷，我们还可以设置 appendfsync everysec。 此配置将每秒同步一次仅追加日志文件。 对于大多数常见用途，与不使用任何类型的持久性相比，我们可能不会发现每秒同步到磁盘的显着性能损失。 通过每秒同步到磁盘，如果系统崩溃，我们最多可能会丢失一秒钟已在 Redis 中写入或更新的数据。 此外，在磁盘无法跟上正在发生的写入量的情况下，Redis 会优雅地减速以适应驱动器的最大写入速率。</p>
+<h4 id="appendfsync-no"><a href="#appendfsync-no" class="headerlink" title="appendfsync no"></a><code>appendfsync no</code></h4><p>Redis 并不会显示地执行任何文件同步，而是将这一切交给操作系统。这种情况下应该没有性能损失，但如果系统以某种方式崩溃，我们将丢失未知和不可预测的数据量。 如果我们使用的硬盘驱动器对于我们的写入负载来说不够快，Redis 会运行良好，直到将数据写入磁盘的缓冲区被填满，此时 Redis 会因为被阻止写入而变得非常慢。 通常不鼓励使用此配置选项。</p>
+<h3 id="重写-压缩-AOF"><a href="#重写-压缩-AOF" class="headerlink" title="重写/压缩 AOF"></a>重写/压缩 AOF</h3><p>AOF 看起来比较完美，即能将数据损失降低到 1s，又可以最小化数据持久化到磁盘上地时间。但是问题是，Redis 的每次写命令，都会生成一条日志记录，随着时间的推移，AOF 日志文件的大小会不断增长，可能会导致磁盘空间耗尽。但更常见的问题是，在 Redis 重启时，由于需要按顺序执行 AOF 中的每条命令，处理较大的文件，需要花费更长的时间</p>
+<p>此时可以使用 <code>BGREWRITEAOF</code>, 它会通过移除冗余的命令，来尽可能地使得 AOF 变得更小一点。和 <code>BGSAVE</code> 命令一样，这个命令也会执行一次 fork 过程，由子进程完成 AOF 的重写，所以关于 fork 的时间，内存使用的问题，同样也适用于 <code>BGREWRITEAOF</code>。而且更糟的时，当 AOF 被重写，操作系统需要删除几十 G 的 AOF 文件时，会使的操作系统中断几秒。</p>
+<p>当启用 AOF , 并且满足以下两个配置项时，Redis 会启动一次 <code>BGREWRITEAOF</code>， 如果 AOF 重写的频率过高，可以适当增加 <code>auto-aof-rewritepercentage</code>， 但是可能会导致 Redis 启动需要花费更多的时间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当 AOF 至少比 Redis 上次完成重写时的 AOF 大 100% 时</span></span><br><span class="line">auto-aof-rewritepercentage 100</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当 AOF 的大小至少为 64m 字节时</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="复制-Replication"><a href="#复制-Replication" class="headerlink" title="复制 Replication"></a>复制 Replication</h2>
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/Redis/" title="Redis">Redis</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/Redis/Redis%20Cluster/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Redis Cluster</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Redis/Redis%20Transaction/">
+                <span class="nav-default">Redis Transaction</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2022
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>
