@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>The Cabin in the City</title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_859455_eaq7v6w8ktj.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">
+
+        </div>
+        <nav class="header-nav">
+            
+            <a href="/" class="header-nav-link" >
+                Home
+            </a>
+            
+
+            
+            <a href="/archives" class="header-nav-link">
+                Archives
+            </a>
+            
+
+            
+            <a href="/tags" class="header-nav-link">
+                Tags
+            </a>
+            
+
+            
+            <a href="/about/" class="header-nav-link">
+                About
+            </a>
+            
+        </nav>
+    </div>
+</header>
+<header class="mobile-header">
+    <div class="mobile-nav">
+        <div class="mobile-nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-nav-title">
+            <a href="/" class="mobile-nav-title-link">'s Blog</a>
+        </div>
+
+    </div>
+    <nav class="mobile-menu">
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-home"></i>
+                <a href="/" class="mobile-nav-link">Home</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-archive"></i>
+                <a href="/archives" class="mobile-nav-link">Archives</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-tag"></i>
+                <a href="/tags" class="mobile-nav-link">Tags</a>
+            </li>
+            <li class="mobile-menu-item">
+                <i class="iconfont icon-about"></i>
+                <a href="/about/" class="mobile-nav-link">About</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="main">
+    <div class="content-inner">
+        <div class="posts">
+    <article class="post-whole">
+        <div class="post-title">
+            <h2 class="title">保持与 Redis 相同的 TTL 操作</h2>
+            <div class="post-meta">
+                <span class="post-time">2022-07-24</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+                    
+                </span>
+                
+                <span class="post-visit"> visited：<span id="busuanzi_value_page_pv"></span></span>
+            </div>
+        </div>
+        <div class="post-toc" id="post-toc">
+    <strong class="post-toc-title">目录</strong>
+    
+    <div class="back-to-top" id="back-to-top">
+        <a href="javascript:void(0);">回到顶部</a>
+    </div>
+</div>
+        <div class="post-content">
+            <p>保持与 Redis 相同的 TTL 操作</p>
+<p>Redis 中没有 Hbase 中时间版本的概念与机制，也可以认为只有当前版本，并且 TTL 是针对整个 Key 的，而 Hbase 的 TTL 可以基于列族或者单元设定，不是基于整个行键的，如果我们将 Redis 中的数据迁移到 Hbase 中，对应的 TTL 就是一个问题，原来基于 Redis 机制的应用中使用也是一个问题，所以为了保持旧的应用兼容（在不对原有应用做大量重构测试的情况下，只在 API 层面兼容修改），只能手动针对 Hbase 的单元的 TTL 进行设置。</p>
+<p>假设现在 API 层面，需要将原有的 Redis  访问替换为 Hbase 的访问，需要做一些 API 层面的映射。首先抛开所使用的底层缓存方案，将缓存抽象：每个缓存数据都属于一张表，这张表中缓存的是某个特定领域，特定应用的数据，访问时，需要指定表名，有两种基本的结构（和 Redis 保持一致） Key-Value, Key-HashKey-Value， 这样就可以为开发人员提供一个抽象层的 API, 开发人员并不需要特别关注底层缓存的方案，如果后面更换缓存方案，可以提供 API 层的兼容。</p>
+<p>Hbase 中单元有时间版本的概念（VERSIONS）, 一般设置 1 就够了，还有最小版本（MIN_VERSIONS）,  可以设置为 0， 保证早于 TTL 的时间版本的数据不会返回。如果我们多次对一个单元进行写，即使设置了最大版本为 1， 如果最近的版本因为 TTL 过期，之前的版本没有过期，而且因为没有合并，没有被删除，还是会被查询出来，这显示对于原来使用 Redis 的应用来说，是不可接受的，所以只能在设置 TTL 时，手动删除之前的版本，而且， TTL 一般来说只是影响数据保存的时间长短，我们是为了清理数据设置的 TTL, 所以这个操作可以异步来进行。即使某次操作失败了，也可以等待下一次的操作进行设置。</p>
+<p>这是一个同步的测试，使用 checkAndMutate 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> test.bigdata</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.&#123;Duration, Instant, LocalDateTime, ZoneId&#125;</span><br><span class="line"><span class="keyword">import</span> java.util</span><br><span class="line"><span class="keyword">import</span> java.util.Date</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.&#123;CellUtil, HBaseConfiguration, TableName&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.&#123;ConnectionFactory, Delete, Get, Put, RowMutations, Table&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes.toBytes</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> guo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/7/24</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">object HbaseExpireTest &#123;</span><br><span class="line"></span><br><span class="line">  <span class="function">def <span class="title">main</span><span class="params">(args: Array[String])</span>: Unit </span>= &#123;</span><br><span class="line">    val configuration = HBaseConfiguration.create()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hbase pseudo distributed cluster on nas docker</span></span><br><span class="line">    configuration.set(<span class="string">"hbase.zookeeper.quorum"</span>, <span class="string">"harisekhon-hbase1"</span>)</span><br><span class="line">    configuration.set(<span class="string">"hbase.zookeeper.property.clientPort"</span>, <span class="string">"2181"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> connection = ConnectionFactory.createConnection(configuration)</span><br><span class="line">    <span class="keyword">var</span> table: Table = connection.getTable(TableName.valueOf(<span class="string">"Test:user"</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      connection = ConnectionFactory.createConnection(configuration)</span><br><span class="line">      table = connection.getTable(TableName.valueOf(<span class="string">"Test:user"</span>))</span><br><span class="line">      val rowKey = toBytes(<span class="string">"r14"</span>)</span><br><span class="line">      val family = toBytes(<span class="string">"info"</span>)</span><br><span class="line">      val qualifier = toBytes(<span class="string">"name"</span>)</span><br><span class="line">      val value = toBytes(<span class="string">"hello world"</span>)</span><br><span class="line">      val ttl = Duration.ofMinutes(<span class="number">10</span>).toMillis</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 先不设置 TTL, 直接 Put</span></span><br><span class="line">      val put = <span class="keyword">new</span> Put(rowKey).addColumn(family, qualifier, value)</span><br><span class="line">      table.put(put)</span><br><span class="line"></span><br><span class="line">      val get = <span class="keyword">new</span> Get(rowKey).addColumn(family, qualifier)</span><br><span class="line">      println(<span class="string">"after first set:"</span> + Bytes.toString(table.get(get).getValue(family, qualifier)))</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 设置 TTL, 先检查值是否相等，再进行原子操作: 删除，新增并设置 TTL</span></span><br><span class="line">      <span class="comment">// 如果不相等，说明其它实例可能修改了单元的值，所以此次不再设置，等待其它实例设置即可</span></span><br><span class="line">      val time = <span class="keyword">new</span> Date().getTime</span><br><span class="line">      val firstDel = <span class="keyword">new</span> Delete(rowKey, time).addColumns(family, qualifier)</span><br><span class="line">      val secondPut = <span class="keyword">new</span> Put(rowKey, time + <span class="number">100</span>).addColumn(family, qualifier, value).setTTL(ttl)</span><br><span class="line">      val delAndPut = RowMutations.of(util.Arrays.asList(firstDel, secondPut))</span><br><span class="line"></span><br><span class="line">      val bool = table.checkAndMutate(rowKey, family)</span><br><span class="line">        .qualifier(qualifier)</span><br><span class="line">        .ifEquals(value)</span><br><span class="line">        .thenMutate(delAndPut)</span><br><span class="line">      println(<span class="string">"check and execute result:"</span> + bool)</span><br><span class="line"></span><br><span class="line">      val limitMinutes = <span class="number">5</span></span><br><span class="line">      val end = LocalDateTime.now().plusMinutes(limitMinutes)</span><br><span class="line">      <span class="keyword">while</span> (LocalDateTime.now().isBefore(end)) &#123;</span><br><span class="line">        val get = <span class="keyword">new</span> Get(rowKey).addColumn(family, qualifier).readAllVersions</span><br><span class="line">        val cells = table.get(get).rawCells()</span><br><span class="line">        <span class="keyword">if</span> (cells != <span class="keyword">null</span> &amp;&amp; cells.nonEmpty) &#123;</span><br><span class="line">          <span class="keyword">for</span> (cell &lt;- cells) &#123;</span><br><span class="line">            val timestamp = cell.getTimestamp</span><br><span class="line">            val family = Bytes.toString(CellUtil.cloneFamily(cell))</span><br><span class="line">            val qualifier = Bytes.toString(CellUtil.cloneQualifier(cell))</span><br><span class="line">            val value = Bytes.toString(CellUtil.cloneValue(cell))</span><br><span class="line">            val row = Bytes.toString(CellUtil.cloneRow(cell))</span><br><span class="line">            println(s<span class="string">"$&#123;LocalDateTime.now()&#125; row:$row, family: $family, qualifier:$qualifier, timestamp:$timestamp, value:$value, $&#123;Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime&#125;"</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          println(<span class="string">"cells null or empty"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      table.close()</span><br><span class="line">      connection.close()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="post-tag">
+            
+            <a class="tag" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" title="大数据">大数据</a>
+            
+        </div>
+        
+    </article>
+</div>
+<div class="paginator">
+    
+        
+            <a class="prev" href="/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hbase/Hbase%20%E6%9C%AF%E8%AF%AD%E4%B8%8E%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+                <i class="iconfont icon-prev"></i>
+                <span class="nav-default">Hbase 术语与基本概念</span>
+                <span class="nav-mobile">Prev</span>
+            </a>
+        
+        
+            <a class="next" href="/Linux/%E8%84%9A%E6%9C%AC/backup/">
+                <span class="nav-default">backup</span>
+                <span class="nav-mobile">Next</span>
+                <i class="iconfont icon-next"></i>
+            </a>
+        
+    
+</div>
+<div id="comment-container"></div>
+    </div>
+</div>
+<footer class="footer-social">
+    
+    <a class="social-link" target="_blank" href="https://github.com/weirdwimp">
+        <i class="iconfont icon-github"></i>
+    </a>
+    
+
+    
+
+    
+
+    <div class="footer-copyright">
+        <p class="time-line">
+            &copy;
+            
+            
+            2022
+            &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
+            <a target="_blank" href="https://github.com/iJinxin"></a>
+        </p>
+        <p class="theme-info">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme -
+            <a target="_blank" href="https://github.com/iJinxin/hexo-theme-sky">Sky</a>
+        </p>
+    </div>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    
+
+</script>
+</html>

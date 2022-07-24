@@ -84,10 +84,106 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">新词汇</a></h2>
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/PKCS/">PKCS</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-11-29</span>
+                <span class="post-time">2021-02-21</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="PKCS"><a href="#PKCS" class="headerlink" title="PKCS"></a>PKCS</h2><p>PKCS (Public-Key Cryptography Standards) 公钥密码标准由 RSA 公司制定, 用于标准化公钥基础设施 (public key infrastructure), 从 PKCS #1, PKCS #2 到 PKCS #15 总共提供了 15 个标准</p>
+<h3 id="PKCS-1"><a href="#PKCS-1" class="headerlink" title="PKCS #1"></a>PKCS #1</h3><p>RSA 密码算法的加密标准，定义了 RSA 公钥函数，数字证书等的基础规则；也定义了 RSA 私钥和公钥的语法， 可以用来计算 RSA 算法中使用的密钥对。除了这些，还定义了数字证书应该如何计算，以及数据的结构应该如何被签名，数字签名的格式</p>
+<p><strong>用于 RSA 公钥密钥</strong></p>
+<h3 id="PKCS-7"><a href="#PKCS-7" class="headerlink" title="PKCS #7"></a>PKCS #7</h3><p>加密消息语法标准。定义了加密操作结果形式数据的语法，例如数字签名 (digital signature) 和数字信封 (digital envelopes)</p>
+<p><strong>用于生成和验证数字签名和由 PKI 管理的证书</strong></p>
+<p><strong>用于证书或证书链</strong></p>
+<p><strong>示例</strong></p>
+<p>生成 PKCS 7 证书链</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ca.p7b created through openssl crl2pkcs7 command represents a certificate chain/path:</span></span><br><span class="line"> </span><br><span class="line">$ openssl crl2pkcs7 -certfile root_ca.crt -certfile sub_ca.crt -outform PEM -out ca.p7b -nocrl</span><br></pre></td></tr></table></figure>
+
+<p>使用 JCA 验证</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadCertPath</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    CertificateFactory cerfFactory = CertificateFactory.getInstance(<span class="string">"X.509"</span>);</span><br><span class="line">    <span class="keyword">try</span> (InputStream inputStream = <span class="keyword">new</span> FileInputStream(<span class="string">"D:\\idea-workspace\\ca.p7b"</span>)) &#123;</span><br><span class="line">        CertPath certPath = cerfFactory.generateCertPath(inputStream, <span class="string">"PKCS7"</span>);</span><br><span class="line">        <span class="keyword">for</span> (Certificate certificate : certPath.getCertificates()) &#123;</span><br><span class="line">            System.out.println(((X509Certificate) certificate).getSubjectX500Principal());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PKCS-8"><a href="#PKCS-8" class="headerlink" title="PKCS #8"></a>PKCS #8</h3><p>私钥信息标准。定义了私钥信息的语法。换句话说，定义了用来生成私钥的算法以及属性</p>
+<p><strong>用于各种公钥密码</strong></p>
+<h3 id="PKCS-12"><a href="#PKCS-12" class="headerlink" title="PKCS #12"></a>PKCS #12</h3><p>该标准描述了用于个人身份信息传输的语法，包含私钥、证书，各种各样的密钥以及扩展等。支持该标准的机器、应用、浏览器等允许用户对个人身份信息进行导入、导出以及使用。这个标准允许用户使用标准机制将数据从一个设备传输到另一台设备，并且保证<strong>私密性</strong>和<strong>完整性</strong>（privacy and integrity）, 可以使用受信任的公私钥对进行加密和签名，也可以使用基于口令的私密和完整性模式。</p>
+<p>通过包含基本但辅助的身份信息以及私钥，以及通过公钥密码实现的隐私和完整性模式建立更高的安全性，可以将该标准视为在 <strong>PKCS＃8</strong> 的基础上构建。</p>
+<p><strong>私密性</strong>主要是用于保护个人身份信息，如避免私钥（private key）泄露，有两种方式：</p>
+<ul>
+<li><p>公钥密码模式 （Public-key privacy mode）</p>
+<p>在信息交换前，个人身份信息通过使用来自受信任的目标平台的公钥（TPDestEncK）进行加密（envelop 封装于信封），加密后的数据只有目标平台持有的私钥才能进行解密（open envelop 开启信封）</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Public-key privacy mode: Personal information is enveloped on the</span><br><span class="line">source platform using a trusted encryption public key of a known</span><br><span class="line">destination platform (see Section 3.3). The envelope is opened</span><br><span class="line">with the corresponding private key.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>基于口令的加密 （Password privacy mode）</p>
+<p>从一个用户名以及私密口令生成一个对称密钥，用来进行加密个人信息</p>
+</li>
+</ul>
+<p><strong>完整性</strong>主要用于确保内容没有被篡改，也有两种方式：</p>
+<ul>
+<li><p>公钥密码模式 （Public-key privacy mode）</p>
+<p>使用源平台的私钥对内容进行数字签名， 目标平台使用对应的公钥（TPSrcSigK）进行验证签名</p>
+</li>
+<li><p>基于口令的完整性 （Password privacy mode）</p>
+<p>基于 MAC 消息验证码来保证，口令的目的是用于生成 MAC 中进行操作的共享密钥 （PBE,口令-盐-迭代次数）</p>
+</li>
+</ul>
+<p><strong>私密性和完整性如果都使用基于口令的模式，他们可以使用相同的口令，也可以使用不同的口令</strong></p>
+<p>对于公钥/私钥对的两种使用，必须将密钥对中的公钥传输到另一个平台，以便可以信任它起源于正确的平台。 从这个意义上来说，判断公钥是否受信任最终必须留给用户。 有多种方法可确保公钥受信任（如公钥证书）。</p>
+<p>PDU: 构成一个协议的消息的二进制位序列</p>
+<p>Protocol Data Unit (PDU): A sequence of bits in machine-independent<br>format constituting a message in a protocol.</p>
+<p>PFX: The top-level exchange PDU defined in this standard. The acronym is sometimes expanded as Personal Information Exchange.</p>
+<p><strong>用于数字证书+私钥</strong>， 常用文件后缀 <code>.pfx</code>, <code>.p12</code> ,<code>.pem</code> </p>
+<p>ASN.1 定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">PFX ::&#x3D; SEQUENCE &#123;</span><br><span class="line">version INTEGER &#123;v3(3)&#125;(v3,...), --版本号</span><br><span class="line">authSafe ContentInfo,</span><br><span class="line">macData MacData OPTIONAL  --用于保证完整性的 MAC 数据</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">MacData ::&#x3D; SEQUENCE &#123;</span><br><span class="line">mac DigestInfo,</span><br><span class="line">macSalt OCTET STRING,</span><br><span class="line">iterations INTEGER DEFAULT 1</span><br><span class="line">-- Note: The default is for historical reasons and its</span><br><span class="line">-- use is deprecated.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-- ContentInfo 类型的 contentType 字段是一个 object identifier， 意味为其分配了一个唯一的整数，并使用字符串字面值来表示，定义了 6 中内容类型：data, signedData, envelopedData, signedAndEnvelopedData, digestedData, and encryptedData. 具体的定义位于 PKCS7 规范中</span><br><span class="line"></span><br><span class="line">ContentInfo ::&#x3D; SEQUENCE &#123;</span><br><span class="line">contentType ContentType,</span><br><span class="line">content</span><br><span class="line">[0] EXPLICIT ANY DEFINED BY contentType OPTIONAL &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ContentType ::&#x3D; OBJECT IDENTIFIER</span><br><span class="line"></span><br><span class="line">AuthenticatedSafe ::&#x3D; SEQUENCE OF ContentInfo</span><br><span class="line">-- Data if unencrypted</span><br><span class="line">-- EncryptedData if password-encrypted</span><br><span class="line">-- EnvelopedData if public key-encrypted</span><br><span class="line"></span><br><span class="line">SafeContents ::&#x3D; SEQUENCE OF SafeBag</span><br><span class="line"></span><br><span class="line">-- 每一个 SafeBag 保存了一个密钥，或者一个证书等</span><br><span class="line">SafeBag ::&#x3D; SEQUENCE &#123;</span><br><span class="line">bagId BAG-TYPE.&amp;id (&#123;PKCS12BagSet&#125;)</span><br><span class="line">bagValue [0] EXPLICIT BAG-TYPE.&amp;Type(&#123;PKCS12BagSet&#125;&#123;@bagId&#125;),</span><br><span class="line">bagAttributes SET OF PKCS12Attribute OPTIONAL</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>authSafe 的 content 字段包含了一个 AuthenticatedSafe 类型数据的 BER 编码（直接或间接（签名数据））， AuthenticatedSafe  类型可以包含多个 ContentInfo 类型的数据，其中的每一个 ContentInfo 的 content 的值要么是明文，要么是加密过的，要么是信封数据。如果是加密和信封数据，保存的是一个 SafeContents 实例的 BER 编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-- encrypted-data content type</span><br><span class="line"></span><br><span class="line">EncryptedData ::&#x3D; SEQUENCE &#123;</span><br><span class="line">version Version,</span><br><span class="line">encryptedContentInfo EncryptedContentInfo &#125;</span><br><span class="line"></span><br><span class="line">EncryptedContentInfo ::&#x3D; SEQUENCE &#123;</span><br><span class="line">contentType ContentType,</span><br><span class="line">contentEncryptionAlgorithm ContentEncryptionAlgorithmIdentifier,</span><br><span class="line">encryptedContent [0] IMPLICIT EncryptedContent OPTIONAL </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">EncryptedContent ::&#x3D; OCTET STRING</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>简单的图示</strong></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/%E5%9B%BE%E7%89%872.png" alt="图片2"></p>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 openssl 创建 pkcs#12 文件</span></span><br><span class="line"></span><br><span class="line">$ openssl pkcs12 -<span class="built_in">export</span> -<span class="keyword">in</span> con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span><br><span class="line"></span><br><span class="line"><span class="comment"># -export 表示创建一个 pkcs12 文件而不是解析一个 pkcs12 文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -in 表示包含私钥及证书的文件 PEM 格式</span></span><br><span class="line"><span class="comment"># con_key_crt.pem 是对密钥和证书的一个简单拼接</span></span><br><span class="line">$ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span><br><span class="line"></span><br><span class="line"><span class="comment"># -out 输出的 pkcs12 路径</span></span><br><span class="line"><span class="comment"># -CAfile 指定 CA 的证书文件</span></span><br><span class="line"><span class="comment"># -name 指定一个友好的别名, Java JCA 中的 KeyStore 中的 `alias`， 这也在 PKCS12 标准中进行了定义</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.openssl.org/docs/man1.1.1/man1/pkcs12.html" target="_blank" rel="noopener">openssl-man-pkcs12</a></p>
+<p>使用 openssl 的 asn1parse 命令来解析生成的 pkcs12 文件</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/%E5%9B%BE%E7%89%873.png" alt="图片3"></p>
+<p>最后几行是 MAC 包含的信息，0800 表示 迭代次数， 倒数第二行是盐（salt）</p>
+<h2 id="PEM"><a href="#PEM" class="headerlink" title="PEM"></a>PEM</h2><p>PEM (Privacy Enhanced Mail) 私密增强邮件, 是 X.509  证书，CSRs (Certiticate Signing Requests) 证书签名请求，加密密钥的常用格式。PEM 文件包含了一个或多个 Base64 编码的内容，并且每一内容都有一个头部和尾部：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Base64 encoded data</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>单个 PEM 文件可以包含一个证书，一个私钥，或多个证书组成完整的证书信任链。</p>
+<p>通常使用的文件扩展名：<code>.crt</code>, <code>.pem</code>, <code>.cer</code>, <code>.key</code> (用于密钥)</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://www.pcmag.com/encyclopedia/term/pkcs" target="_blank" rel="noopener">PKCS</a></p>
+<p>[2] <a href="https://tools.ietf.org/html/rfc8017#appendix-A.2.4" target="_blank" rel="noopener">PKCS #1</a></p>
+<p>[3] <a href="https://tools.ietf.org/html/rfc2315" target="_blank" rel="noopener">PKCS #7</a></p>
+<p>[4] <a href="https://tools.ietf.org/html/rfc7292" target="_blank" rel="noopener">PKCS #12</a></p>
+<p>[5] <a href="https://www.cryptomathic.com/news-events/blog/introduction-to-digital-signatures-and-pkcs-7" target="_blank" rel="noopener">Introduction to Digital Signatures and PKCS #7</a></p>
+<p>[6] <a href="https://www.openssl.org/docs/man1.1.1/man1/asn1parse.html" target="_blank" rel="noopener">openssl-man-asn1parse</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/hexdump%E5%91%BD%E4%BB%A4/">hexdump命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-01-24</span>
                 
                 <span class="post-category">
                     
@@ -98,10 +194,129 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="login-shell"><a href="#login-shell" class="headerlink" title="login shell"></a>login shell</h2><p>The goal here is to separate the users having a login shell from the others:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  \=(/usr/sbin/nologin|/bin/false)$= &#123; H;d; &#125;</span></span><br><span class="line"><span class="string">              # Append matching lines to the hold buffer</span></span><br><span class="line"><span class="string">              # and continue to next cycle</span></span><br><span class="line"><span class="string">  p           # Print other lines</span></span><br><span class="line"><span class="string">  $ &#123; g;p &#125;   # On the last line,</span></span><br><span class="line"><span class="string">              # get and print the content of the hold buffer</span></span><br></pre></td></tr></table></figure>
+                    <h1 id="hexdump-命令"><a href="#hexdump-命令" class="headerlink" title="hexdump 命令"></a>hexdump 命令</h1><p><strong>一点感想</strong>：自从学习 Shell 脚本编程以来，有时候会觉得，使用图形化界面的工具实现一个稍微复杂的操作过于麻烦，并且如果你学习过 Vim 的基本操作和哲学思想后，就会了解命令行的组合可以比图形界面上有限的菜单，按钮能做更过的事情，即实现高度的定制化。</p>
+<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>hexdump 工具可以将指定的文件或标准输入，以用户指定的格式进行展示，打印到控制台，提供了很多选项（options），如打印出对应字符的八进制，十六进制</p>
+<h2 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h2><h4 id="b-八进制"><a href="#b-八进制" class="headerlink" title="-b 八进制"></a>-b 八进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-b One-byte octal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, zero-filled, bytes of input data, <span class="keyword">in</span> octal, per line.</span><br></pre></td></tr></table></figure>
 
-<p>What is a <strong>login shell</strong> ?</p>
+<p>每行首先以十六进制展示输入偏移量，然后将输入的每个字节以八进制展示 (占 3 位，不足 3 位的用 0 填充)，并以空格分隔</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -b</span><br><span class="line"></span><br><span class="line">0000000 150 145 154 154 157</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="c-字符"><a href="#c-字符" class="headerlink" title="-c 字符"></a>-c 字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-c      One-byte character display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, three column, space-filled, characters of input data per line.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后展示输入的每个字符 (占 3 位，不足 3 位的用空格填充)，并以空格分隔</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -c</span><br><span class="line">0000000   h   e   l   l   o</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="C-十六进制-ASCII字符"><a href="#C-十六进制-ASCII字符" class="headerlink" title="-C  十六进制+ASCII字符"></a>-C  十六进制+ASCII字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-C Canonical hex+ASCII display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by sixteen space-separated, two column, hexadecimal bytes, followed by the same sixteen bytes <span class="keyword">in</span> %_p format enclosed <span class="keyword">in</span> ``|<span class="string">''</span> characters.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后展示每个字节的十六进制，随后是包含在两个 <code>|</code> 中的对应的字符，<strong>非打印字符以</strong> <code>.</code> 展示</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -C</span><br><span class="line">00000000  68 65 6c 6c 6f                                    |hello|</span><br><span class="line">00000005</span><br></pre></td></tr></table></figure>
+
+<p><code>-C</code> 选项应该是比较常用的，比较方便对比字符与对应的十六进制</p>
+<h4 id="d-两个字节的十进制"><a href="#d-两个字节的十进制" class="headerlink" title="-d 两个字节的十进制"></a>-d 两个字节的十进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-d      Two-byte decimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight space-separated, five column, zero-filled, two-byte units of input data, <span class="keyword">in</span> unsigned decimal, per line.</span><br></pre></td></tr></table></figure>
+
+<p>每行首先以十六进制展示输入偏移量，然后将输入数据中的每两个字节作为一个单元，并展示他们组合成的无符号十进制数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -d</span><br><span class="line">0000000   25960   27756   00111</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：两个字节组合的顺序与字符的顺序相反，例如 <code>he</code>, <code>h</code> 的十六进制是 <code>0x68</code>，<code>e</code> 的十六进制是 <code>0x65</code>， 但是字节组合的顺序是 <code>0x6568</code>, 对应的十进制就是上面结果中的 2590</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $((16<span class="comment">#6568))</span></span><br><span class="line">25960</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="x-两个字节的十六进制"><a href="#x-两个字节的十六进制" class="headerlink" title="-x 两个字节的十六进制"></a>-x 两个字节的十六进制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-x      Two-byte hexadecimal display.  Display the input offset <span class="keyword">in</span> hexadecimal, followed by eight, space separated, four column, zero-filled, two-byte quantities of input data, <span class="keyword">in</span> hexadecimal, per line.</span><br></pre></td></tr></table></figure>
+
+<p>和 <code>-d</code> 类似</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'hello'</span> | hexdump -x</span><br><span class="line">0000000    6568    6c6c    006f</span><br><span class="line">0000005</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="n-只处理-n-个字节"><a href="#n-只处理-n-个字节" class="headerlink" title="-n 只处理 n 个字节"></a>-n 只处理 n 个字节</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-n length Interpret only length bytes of input.</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="v-展示所有的字符"><a href="#v-展示所有的字符" class="headerlink" title="-v 展示所有的字符"></a>-v 展示所有的字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-v      Cause hexdump to display all input data.  Without the -v option, any number of groups of output lines, <span class="built_in">which</span> would be identical to the immediately preceding group of output lines (except <span class="keyword">for</span> the input offsets), are</span><br><span class="line">        replaced with a line comprised of a single asterisk.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h2><h4 id="e-格式化字符串"><a href="#e-格式化字符串" class="headerlink" title="-e 格式化字符串"></a>-e 格式化字符串</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-e format_string</span><br><span class="line">           Specify a format string to be used <span class="keyword">for</span> displaying data.</span><br></pre></td></tr></table></figure>
+
+<p>指定格式化字符串</p>
+<h4 id="f-包含格式化字符串的文件"><a href="#f-包含格式化字符串的文件" class="headerlink" title="-f 包含格式化字符串的文件"></a>-f 包含格式化字符串的文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f format_file</span><br><span class="line">        Specify a file that contains one or more newline separated format strings.  Empty lines and lines whose first non-blank character is a <span class="built_in">hash</span> mark (<span class="comment">#) are ignored.</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>一个<strong>格式化字符串</strong>由任意多个格式化单元（format unit）组成，每个格式化单元以空格分隔。一个格式化单元最多由三个部分组成：<strong>迭代次数</strong>（iteration count），<strong>字节个数</strong> (byte count)，<strong>以及格式字符串</strong> (format)</p>
+<p><strong>迭代次数</strong>：可选的正整数，默认为1， 表示格式字符串要被应用多少次</p>
+<p><strong>字节个数</strong>: 可选的正整数. 如果指定了，它定义了每次应用格式字符串时，需要使用多少个字节</p>
+<p>​    如果指定了迭代次数和（或）字节个数，需要使用 <code>/</code> 来加以区分，如 <code>1/4</code>，<code>/4</code></p>
+<p><strong>格式字符串</strong>：必须指定，并且要包含在双引号中 <code>&quot;&quot;</code>, 类似于 <code>fprintf</code> 中的格式字符串， 支持单个字符的转义序列：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NUL                  \0</span><br><span class="line">&lt;alert character&gt;    \a</span><br><span class="line">&lt;backspace&gt;          \b</span><br><span class="line">&lt;form-feed&gt;          \f</span><br><span class="line">&lt;newline&gt;            \n</span><br><span class="line">&lt;carriage <span class="built_in">return</span>&gt;    \r</span><br><span class="line">&lt;tab&gt;                \t</span><br><span class="line">&lt;vertical tab&gt;       \v</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如包含一个格式化单元的格式化字符串：<code>&#39;4/1 &quot;%_p&quot;&#39;</code> ， 4 表示迭代次数，1表示每次使用一个字节，<code>%_p</code> 为格式字符串</p>
+<p>也支持额外的转换字符串：</p>
+<ul>
+<li><p><code>_a[dox]</code> 展示输入偏移量 <code>d</code>,<code>o</code>,<code>x</code> 分表表示十进制，八进制和十六进制</p>
+</li>
+<li><p><code>_A[dox]</code> 与 <code>_a[dox]</code> 行为一致，但是只执行一次，当所有的输入数据都被处理了</p>
+</li>
+<li><p><code>_c</code>  以默认的字符集打印出输入字符，非打印字符以八进制展示（占 3 位，不足三位用 0 填充），如果该字符支持转义序列，则会以转义序列的形式展示，如 <code>\n</code></p>
+</li>
+<li><p><code>_p</code> 以默认的字符集打印出输入字符. 非打印字符会被展示成 <code>.</code></p>
+</li>
+<li><p><code>_u</code> 打印出 <code>ASCII</code> 字符，控制字符会被展示成如下的名称（小写）：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">000 NUL  001 SOH  002 STX  003 ETX  004 EOT  005 ENQ</span><br><span class="line">006 ACK  007 BEL  008 BS   009 HT   00A LF   00B VT</span><br><span class="line">00C FF   00D CR   00E SO   00F SI   010 DLE  011 DC1</span><br><span class="line">012 DC2  013 DC3  014 DC4  015 NAK  016 SYN  017 ETB</span><br><span class="line">018 CAN  019 EM   01A SUB  01B ESC  01C FS   01D GS</span><br><span class="line">01E RS   01F US   07F DEL</span><br></pre></td></tr></table></figure>
+
+
+
+<p>每个格式字符串需要使用字节个数等于所有格式化单元使用的字节个数加起来，每个格式化单元使用的字节个数 = 迭代次数 * 字节个数 （或者没有指定字节个数，格式单元需要的字节个数）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"ABCDEFGH"</span> | hexdump -e <span class="string">'4/1 "%_p"'</span></span><br></pre></td></tr></table></figure>
+
+<p>上述中的格式化字符串需要使用的字节个数 = 4 * 1</p>
+<p>输入数据，是以 “数据块”（blocks） 的形式处理的，一个数据块定义为所有格式化字符使用的最大字节数</p>
+<h4 id="指定格式化字符串的列子"><a href="#指定格式化字符串的列子" class="headerlink" title="指定格式化字符串的列子"></a>指定格式化字符串的列子</h4><p><strong>打印输入数据的十六进制</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X "'</span> ; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>打印输入数据的十六进制及字符</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% <span class="built_in">echo</span> hello | hexdump -e <span class="string">'8/1 "%02X ""\t"" "'</span> -e <span class="string">'8/1 "%c""\n"'</span></span><br><span class="line"></span><br><span class="line">68 65 6C 6C 6F 0A        hello</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>打印十六进制，并加上前缀 <code>x</code></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hex with preceding 'x'</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'"x" 1/1 "%02X" " "'</span> ; <span class="built_in">echo</span></span><br><span class="line">x68 x65 x6C x6C x6F x0A</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>打印十六进制，每行一个字节</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># one hex byte per line</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v -e <span class="string">'/1 "%02X\n"'</span></span><br><span class="line">68</span><br><span class="line">65</span><br><span class="line">6C</span><br><span class="line">6C</span><br><span class="line">6F</span><br><span class="line">0A</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>带偏移量</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># byte# &amp; ASCII with control chars</span></span><br><span class="line">$ <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#  "'</span> -e <span class="string">'/1 " _%_u\_\n"'</span></span><br><span class="line">0<span class="comment">#   _h_</span></span><br><span class="line">1<span class="comment">#   _e_</span></span><br><span class="line">2<span class="comment">#   _l_</span></span><br><span class="line">3<span class="comment">#   _l_</span></span><br><span class="line">4<span class="comment">#   _o_</span></span><br><span class="line">5<span class="comment">#   _lf_</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>每行只打印一个字节对应的十六进制，以及对应的 ASCII 字符，行首打印偏移量，即序号</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"ABCDEFG"</span> | hexdump -e <span class="string">'/1 "%02_ad#  "'</span> -e <span class="string">'/1 "%02X "'</span> -e <span class="string">'/1 " %_u\n"'</span></span><br><span class="line">00<span class="comment">#  41  A</span></span><br><span class="line">01<span class="comment">#  42  B</span></span><br><span class="line">02<span class="comment">#  43  C</span></span><br><span class="line">03<span class="comment">#  44  D</span></span><br><span class="line">04<span class="comment">#  45  E</span></span><br><span class="line">05<span class="comment">#  46  F</span></span><br><span class="line">06<span class="comment">#  47  G</span></span><br><span class="line">07<span class="comment">#  0A  lf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># lf 表示 LF 换行符</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>7C1C分隔符示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># char.dat</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"A\u007c\u001cB\u007c\u001cC"</span> &gt; char.dat</span><br><span class="line"></span><br><span class="line">cat char.dat | hexdump -v -e <span class="string">'"%02_ad#\t"'</span> -e <span class="string">'/1 "0x%02X\t"'</span> -e <span class="string">'/1 "%_p\n"'</span></span><br><span class="line">00<span class="comment">#     0x41    A</span></span><br><span class="line">01<span class="comment">#     0x7C    |</span></span><br><span class="line">02<span class="comment">#     0x1C    .</span></span><br><span class="line">03<span class="comment">#     0x42    B</span></span><br><span class="line">04<span class="comment">#     0x7C    |</span></span><br><span class="line">05<span class="comment">#     0x1C    .</span></span><br><span class="line">06<span class="comment">#     0x43    C</span></span><br><span class="line">07<span class="comment">#     0x0A    .</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a table of byte#, hex, decimal, octal, ASCII</span></span><br><span class="line">% <span class="built_in">echo</span> hello | hexdump -v  -e <span class="string">'/1  "%_ad#    "'</span> -e <span class="string">'/1    "%02X hex"'</span> -e <span class="string">'/1 " = %03i dec"'</span> -e <span class="string">'/1 " = %03o oct"'</span> -e <span class="string">'/1 " = _%c\_\n"'</span></span><br><span class="line">           0<span class="comment">#    68 hex = 104 dec = 150 oct = _h_</span></span><br><span class="line">           1<span class="comment">#    65 hex = 101 dec = 145 oct = _e_</span></span><br><span class="line">           2<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           3<span class="comment">#    6C hex = 108 dec = 154 oct = _l_</span></span><br><span class="line">           4<span class="comment">#    6F hex = 111 dec = 157 oct = _o_</span></span><br><span class="line">           5<span class="comment">#    0A hex = 010 dec = 012 oct = _</span></span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -109,223 +324,94 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Redis/%E5%87%8F%E5%B0%91%20Redis%20%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/">减少 Redis 中的内存使用</a></h2>
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-10-18</span>
+                <span class="post-time">2021-01-23</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Redis/">Redis</a>
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h1 id="减少-Redis-中的内存使用"><a href="#减少-Redis-中的内存使用" class="headerlink" title="减少 Redis 中的内存使用"></a>减少 Redis 中的内存使用</h1><h2 id="Short-structures-使用更短的结构"><a href="#Short-structures-使用更短的结构" class="headerlink" title="Short structures 使用更短的结构"></a>Short structures 使用更短的结构</h2><blockquote>
-<p>Redis stores a serialized version of the data, which must be decoded for every read, partially re-encoded for every write, and may require moving data around in memory.</p>
-</blockquote>
-<h2 id="Sharded-structures-分片的数据结构"><a href="#Sharded-structures-分片的数据结构" class="headerlink" title="Sharded structures 分片的数据结构"></a>Sharded structures 分片的数据结构</h2><h2 id="Packing-bits-and-bytes-更紧凑的位和字节"><a href="#Packing-bits-and-bytes-更紧凑的位和字节" class="headerlink" title="Packing bits and bytes 更紧凑的位和字节"></a>Packing bits and bytes 更紧凑的位和字节</h2><p>社交网站的所有用户都有位置信息，如何在 Redis 中使用更少的内存存储每一个用户的未知信息？而且要能够方便的进行聚合计算</p>
-<p>假设用户的 ID 都是连续的数组，且只存储国家，区域/州/省信息两级信息；并使用 ISO3 中的国家代码，如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 国家代码</span></span><br><span class="line">COUNTRIES = <span class="string">'''</span></span><br><span class="line"><span class="string">ABW AFG AGO AIA ALA ALB AND ARE ARG ARM ASM ATA ATF ATG AUS AUT AZE BDI</span></span><br><span class="line"><span class="string">BEL BEN BES BFA BGD BGR BHR BHS BIH BLM BLR BLZ BMU BOL BRA BRB BRN BTN</span></span><br><span class="line"><span class="string">'''</span>.splt()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 美国，加拿大州信息</span></span><br><span class="line">STATES = &#123;</span><br><span class="line"><span class="string">'CAN'</span>:<span class="string">'''AB BC MB NB NL NS NT NU ON PE QC SK YT'''</span>.split(),</span><br><span class="line"><span class="string">'USA'</span>:<span class="string">'''AA AE AK AL AP AR AS AZ CA CO CT DC DE FL FM GA GU HI IA ID</span></span><br><span class="line"><span class="string">IL IN KS KY LA MA MD ME MH MI MN MO MP MS MT NC ND NE NH NJ NM NV NY OH</span></span><br><span class="line"><span class="string">OK OR PA PR PW RI SC SD TN TX UT VA VI VT WA WI WV WY'''</span>.split(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>最直接的方法是直接以字符串的方式直接存储国家和州代码，每个国家代码至少 3 个字节，州信息至少 2 个字节；</p>
-<p><strong>解决方法：以分片的形式存储定长大小的数据</strong></p>
-<p>实际存储的时候，并不存储实际的国家和州代码，而只存储其在 “表”（数组） 中的索引代表的字符，这样，只用两个字节就可以存储国家和州信息了（数组长度不会超过单个字节的十进制数字表示）。</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018210437144.png" alt="image-20201018210437144"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">(country, state)</span>:</span></span><br><span class="line">	cindex = bisect.bisect_left(COUNTRIES, country)</span><br><span class="line">	<span class="keyword">if</span> cindex &gt; len(COUNTRIES) <span class="keyword">or</span> COUNTRIES[cindex] != country:</span><br><span class="line">		cindex = <span class="number">-1</span></span><br><span class="line">	cindex += <span class="number">1</span></span><br><span class="line">	</span><br><span class="line">    sindex = <span class="number">-1</span></span><br><span class="line">	<span class="keyword">if</span> state <span class="keyword">and</span> country <span class="keyword">in</span> STATES:</span><br><span class="line">		states = STATES[country]</span><br><span class="line">		sindex = bisect.bisect_left(states, state)</span><br><span class="line">		<span class="keyword">if</span> sindex &gt; len(states) <span class="keyword">or</span> states[sindex] != state:</span><br><span class="line">			sindex = <span class="number">-1</span></span><br><span class="line">		sindex += <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> chr(cindex) + chr(sindex)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Redis 中 STRING 结构的值大小限制为 512 MB, 所有用户的信息存储在单个 STRING 的值中必然不可取， 通过进行分片，限制每个分片最多存储 2 百万个用户的位置信息，单个 Key 的值占用大概在 2 MB. 通过 <code>SETRANGE</code>, <code>GETRANGE</code> 命令就可以更新和获取单个用户的位置信息</p>
-<p>这里没有限制分片的个数，只限制了每个分片的大小，考虑的是用户 ID 都是有序的，通过 ID 和每个分片的大小，就可以计算每个 ID 所属的分片， 以及分片内的偏移量；为了知道当前一共由多少分片，就要存储当前的最大用户 ID.</p>
-<p>这样进行存储，要对这些信息进行聚合计算，比如统计所有用户的国家，州分布，就比较容易，遍历所有分片进行统计，当然由于每个分片 STRING 的值比较大，需要分批多次去读取，而不能直接去读取，会阻塞其它客户端</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211551176.png" alt="image-20201018211551176"></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211628124.png" alt="image-20201018211628124"></p>
-<p>这里虽然使用的是多个字节存储的，但是某些情况下，<code>GETBIT</code>, <code>SETBIT</code> 命令来获取和设置单个二进制位可能更高效，更节省空间。存储 Boolean 型？</p>
-<p><strong>存储数据在 Redis 中的方式，会极大地影响所使用地内存。</strong></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-29</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="Editing-Basics"><a href="#Editing-Basics" class="headerlink" title="Editing Basics"></a>Editing Basics</h1><h3 id="Buffers"><a href="#Buffers" class="headerlink" title="Buffers"></a>Buffers</h3><p>当你编辑一个文件时， Vim 将磁盘上的文件内容读取到计算机的 RAM 中. 这意味这文件的一个备份被存储到了计算机的内存中，你对文件做出的任何修改，是直接映射到内存中的，并且会立即展示出来. 一旦完成了编辑，你可以保存文件，这意味着 Vim 将内存中的内容要写回磁盘. 临时存储文件的内存被称为缓存  (<strong>Buffer</strong>) .  所以，这就是为什么编辑完后要保存文件的原因.</p>
-<h3 id="Swap"><a href="#Swap" class="headerlink" title="Swap"></a>Swap</h3><p>当你编辑文件时, 会在相同目录下会创建一个类似于 <code>.hello.txt.swp</code> 的文件. 查看确切的文件名可以使用如下命令:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:swapname</span><br></pre></td></tr></table></figure>
-
-<p> Vim 维护了文件缓存区 (buffer) 的一个文件备份, 会定期保存到该文件中, 以避免出现问题时进行恢复 (如 计算机或者 Vim 程序崩溃).  这个文件被称为 <code>swap file</code>, 因为 Vim 会不断交换内存中的内容到磁盘上的文件中.</p>
-<h3 id="Save-my-file"><a href="#Save-my-file" class="headerlink" title="Save my file"></a>Save my file</h3><p>当你修改了文件时, 并且没有保存, 在另一个窗口查看时, 此时是不会看到之前修改的内容的, 这也很好理解, 因为 Vim 只修改了 buffer 中的内容, 还没有保存到磁盘上. 可以通过  <code>:write</code> 命令来完成保存过程, 将内存中的内存写到磁盘中.</p>
-<p><strong>为了让生活变得容易一点, 你可以使用快捷键映射, 在 vimrc 文件中:</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#To save,ctrl-s.</span></span><br><span class="line">nmap &lt;c<span class="_">-s</span>&gt; :w&lt;CR&gt;</span><br><span class="line">imap &lt;c<span class="_">-s</span>&gt; &lt;Esc&gt;:w&lt;CR&gt;a</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Cut-Copy-and-paste"><a href="#Cut-Copy-and-paste" class="headerlink" title="Cut, Copy and paste"></a>Cut, Copy and paste</h3><table>
-<thead>
-<tr>
-<th>desktop</th>
-<th>vim word</th>
-<th>operation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>cut</td>
-<td>delete</td>
-<td>d</td>
-</tr>
-<tr>
-<td>copy</td>
-<td>yank</td>
-<td>y</td>
-</tr>
-<tr>
-<td>paste</td>
-<td>put</td>
-<td>p</td>
-</tr>
-</tbody></table>
-<p>剪切操作在 Vim 中意味着从 buffer 中删除文本, 并将其存储到寄存器中</p>
-<p>复制操作中同样也意味着拉取 (yank) 文本,并将其放到寄存器中</p>
-<p>粘贴没有其特殊含义</p>
-<p><strong>Why yank not copy ?</strong></p>
+                    <h2 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h2><p>Alice 向 Bob 发送邮件的场景， Alice 称为发送者（sender），Bob 称为接收者（receiver）, 更普遍的场景，发出消息的一方称为发送者，接受到消息的为接收者。</p>
+<p>信息从发送方的计算机发送到接受者的计算机，中间会经过多台计算机和通信设备进行中转，这个过程中就可能被恶意<strong>窃听者</strong>（eavesdropper）偷看到，窃听者不一定是人类，安装在通信设备的窃听器，邮件软件或服务器上的某些程序</p>
+<p>为了不让别人看到邮件的内容， Alice 要对邮件进行<strong>加密</strong>（encrypt）后再发送出去，加密前的消息称为<strong>明文</strong>（plaintext），加密后的消息称为<strong>密文</strong> (ciphertext). 明文被加密后就会变成看不懂的密文，密文被解密后，就会变回原来的明文。加密通过运用<strong>密码</strong> (cryptography) 技术, 保证消息的机密性 (confidentiality).</p>
+<h2 id="破译"><a href="#破译" class="headerlink" title="破译"></a>破译</h2><p><strong>解密</strong>：正当的接收者将密文还原成明文</p>
+<p><strong>破译</strong>/<strong>密码分析</strong>：cryptanalysis  接收者以外的人试图将将密文还原为明文</p>
+<p><strong>破译者</strong>：cryptanalyst 进行破译的人</p>
+<p>破译者不一定是坏人，如密码学研究者研究密码强度</p>
+<h2 id="对称密码与公钥密码"><a href="#对称密码与公钥密码" class="headerlink" title="对称密码与公钥密码"></a>对称密码与公钥密码</h2><p><strong>密码算法</strong>：解决复杂问题的步骤通常称为算法，明文生成密文的步骤，称为 <em>加密算法</em>，解密的步骤称为 <em>解密算法</em>。加密、解密的算法合在一起统称为密码算法.</p>
+<p><strong>密钥</strong> (key): 密码算法中的密钥,一般是遗传非常大的数字, 无论是在加密时还是解密时, 都需要密钥. 正如现实世界中的密钥不能随便丢弃一样, 密码算法中的密钥也要注意不被他人窃取.</p>
+<p><strong>对称密码</strong> (symmetric cryptography): 加密解密使用同一密钥的方式, 也称为 <strong>公共密钥密码</strong> (common-key cryptography), <strong>传统密码</strong> (conventional cryptography), <strong>私钥密码</strong> (secret-key cryptography), <strong>共享密钥密码</strong> (shared-key cryptography)</p>
+<p><strong>公钥密码</strong> (public-key cryptography): 加密解密使用不同密钥的方式, 所以也称为 <strong>非对称密码</strong> (asymmetric cryptography)</p>
+<p><strong>混合密码系统</strong>: 对称密码与公钥密码结合起来使用</p>
+<h2 id="其它密码技术"><a href="#其它密码技术" class="headerlink" title="其它密码技术"></a>其它密码技术</h2><ul>
+<li><p><strong>单向散列函数</strong> (one-way hash function)</p>
+<p>属于保证<strong>完整性</strong>的密码技术 (数据时正牌的,不是伪造的).  软件供应商发布软件的时候, 也会发布该软件的<strong>散列值</strong>. 如 MD5 等. </p>
+<p>散列值 (hash) 又称哈希值, 密码校验和 (cryptographic checksum), 指纹 (fingerprint), 消息摘要(message digest)</p>
 <blockquote>
-<p><strong>Yanking is just a Vim name for copying.  The “c” letter was already used for the change operator, and “y” was still available.  Calling this operator “yank” made it easier to remember to use the “y” key.</strong></p>
-<p>– Vim User Manual</p>
+<p><em>MD5<em>信息摘要算法（英语：</em>MD5</em> Message-Digest Algorithm），一种被广泛使用的密码散列函数，可以产生出一个128位（16字节）的散列值（hash value），用于确保信息传输完整一致。</p>
+<p>– 百度百科</p>
 </blockquote>
-<h4 id="如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作"><a href="#如何在-Vim-中指定要在哪些文本上应用-cut-copy-paste-操作" class="headerlink" title="如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?"></a>如何在 Vim 中指定要在哪些文本上应用 cut/copy/paste 操作?</h4><p>你可以:</p>
-<table>
-<thead>
-<tr>
-<th>command</th>
-<th>operation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>dl</td>
-<td>删除单个字符</td>
-</tr>
-<tr>
-<td>dw</td>
-<td>删除一个单词</td>
-</tr>
-<tr>
-<td>dd</td>
-<td>删除一行</td>
-</tr>
-<tr>
-<td>d$</td>
-<td>删除光标位置到行尾的所有字符</td>
-</tr>
-<tr>
-<td>dwwP</td>
-<td>交换两个单词</td>
-</tr>
-<tr>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
-<p><strong>是不是很棒, 这里最让人激动的事情在于, 你可以结合之前的移动等命令, 更多的可能不是吗?  一般的编辑器, 可能没有办法做到如此简洁, 有力 , 并保持方便记忆 !</strong></p>
-<p>还记得清空当前文档的操作吗 ?</p>
-<h3 id="words"><a href="#words" class="headerlink" title="words"></a>words</h3><ul>
-<li><code>w</code></li>
-<li><code>e</code></li>
-</ul>
-<h3 id="Sentence"><a href="#Sentence" class="headerlink" title="Sentence"></a>Sentence</h3><ul>
-<li><code>(</code></li>
-<li><code>)</code></li>
-</ul>
-<h3 id="Paragraph"><a href="#Paragraph" class="headerlink" title="Paragraph"></a>Paragraph</h3><ul>
-<li><code>{</code></li>
-<li><code>}</code></li>
-</ul>
-<h3 id="Visual-Mode-Select"><a href="#Visual-Mode-Select" class="headerlink" title="Visual Mode Select"></a>Visual Mode Select</h3><ul>
-<li><p><code>aw</code></p>
-<p> select a word</p>
 </li>
-<li><p><code>ap</code></p>
-<p>select a paragraph</p>
+<li><p><strong>消息认证码</strong> (message authentication code)</p>
+<p>不但 够确认消息是否被篡改，而且确认消息是否来自所期待的通信对象,  提供<strong>完整性</strong>和<strong>认证</strong>机制,  HMAC</p>
 </li>
-<li><p><code>ab</code></p>
-<p>select a block (anything with a pair of parentheses)</p>
-</li>
-<li><p><code>a&quot;</code></p>
-<p>select a quoted string (like “this is a quoted string”)</p>
+<li><p><strong>数字签名</strong></p>
+<p>伪装(spoofing):  消息是否来自真正所谓的发送者</p>
+<p>篡改: 消息再传输的过程中被别有用心的修改了</p>
+<p>否认: 消息的发送者否认自己发送过</p>
 </li>
 </ul>
-<h3 id="Marking-your-territory"><a href="#Marking-your-territory" class="headerlink" title="Marking your territory"></a>Marking your territory</h3><ul>
-<li><p>create a mark where you can jump here later</p>
-<p><code>ma</code> (a-zA-Z ) then you create a mark called ‘a’</p>
-</li>
-<li><p>return the cursor to the mark</p>
-<p><code>&#39;a</code> take you to the exact line and column of the mark</p>
-</li>
-</ul>
-<h3 id="Time-machine-using-undo-redo"><a href="#Time-machine-using-undo-redo" class="headerlink" title="Time machine using undo/redo"></a>Time machine using undo/redo</h3><ul>
-<li><p><code>u</code> undo  :leftwards_arrow_with_hook:</p>
-</li>
-<li><p><code>ctrl-r</code> redo :arrow_right_hook:</p>
-</li>
-<li><p>more…</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># take you back by 4 minutes</span></span><br><span class="line">:earlier 4m</span><br><span class="line"></span><br><span class="line"><span class="comment"># take you later by 45 seconds</span></span><br><span class="line">:later 45s</span><br><span class="line"></span><br><span class="line"><span class="comment"># go back 5 changes</span></span><br><span class="line">undo 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># view the undo tree</span></span><br><span class="line">undolist</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Powerful-search-engine"><a href="#Powerful-search-engine" class="headerlink" title="Powerful search engine"></a>Powerful search engine</h3><ul>
-<li>basic search</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># search</span></span><br><span class="line">/the&lt;cr&gt; <span class="comment"># /the followed by the enter key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># next occurrence</span></span><br><span class="line">press `n`</span><br><span class="line"></span><br><span class="line"><span class="comment"># previous occurrence</span></span><br><span class="line">press `N`</span><br></pre></td></tr></table></figure>
-
-<p>  还记得我们第一次介绍 Vim 的骚操作吗 <code>*</code> 搜索当前光标所在的单词</p>
+<p>  能够防止<strong>伪装</strong>, <strong>篡改</strong>, 和 <strong>否认</strong>等威胁的技术, 就是数字签名(digital signature), 发送者对消息的内容加上数字签名, 接受者可以对数字签名进行验证(verify).  能够保证<strong>完整性</strong>, <strong>提供认证</strong>并<strong>防止否认</strong>的技术</p>
 <ul>
-<li>start searching as and when you type the search phrase</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> incsearch</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ignore the case of the text that you are searching for</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> ignorecase</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>smart case</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> smartcase</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>searching for <code>/step</code>, then it will search for any combination of upper and lower case text. So eventually, “Step”, “Stephen”,”stepbrother”</li>
-<li>searching for <code>/Step</code>, <strong>only</strong> “Step”, “Stephen”, but not “stepbrother”</li>
+<li><p><strong>伪随机数生成器</strong> (Pseudo Random Number Generator, PRNG) </p>
+<p>模拟产生随机数列的算法</p>
+</li>
 </ul>
 <ul>
-<li>basic patterns</li>
+<li><strong>隐写术与数字水印</strong></li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exactly search the word 'step' and not 'stepfather'</span></span><br><span class="line">/\&lt;step\&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># search numbers</span></span><br><span class="line">/\d\+</span><br><span class="line"></span><br><span class="line"><span class="comment"># see :help pattern for more details</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>永远不要去死记硬背这些操作, 试着理解, 并练习, 最终成为肌肉记忆.</strong></p>
-<p><a href="http://vimdoc.sourceforge.net/htmldoc/usr_04.html" target="_blank" rel="noopener">vim doc</a></p>
+<p>  我们先准备一段话，<br>  很容易看懂的就可以，<br>  喜闻乐见的当然更好<br>  欢迎你尝试将另一句话嵌在这段话中，<br>  你会发现这其实就是一种隐写术</p>
+<p>  隐写术的目的时隐藏消息本身, 但是搞清楚了嵌入消息的方法, 也就可以搞清楚消息的内容. <strong>因此, 隐写术不能替代密码</strong>. </p>
+<blockquote>
+<p> 密码隐藏的是内容, 隐写术隐藏的时消息本身</p>
+</blockquote>
+<p>  <strong>数字水印技术</strong> 就是运用了隐写术, 将著作拥有者及购买者的信息嵌入文件中的技术</p>
+<h2 id="密码与信息安全常识"><a href="#密码与信息安全常识" class="headerlink" title="密码与信息安全常识"></a>密码与信息安全常识</h2><ul>
+<li><p><strong>不要使用保密的密码算法</strong></p>
+<p>1999 年， DVD 的密码算法被破解</p>
+<p>2007 年， NXP 的非接触式 IC 卡的密码算法被破解 </p>
+<p>RSA 公司开发的 RC4 密码算法曾经也是保密的，但最终还是有一位匿名人士开发并公开了与其等效的程序</p>
+<p>密码算法的秘密早晚会公诸于世; 开发高强度的密码算法是非常困难的</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>使用低强度的密码比不进行任何加密更危险</strong></p>
+<p>对于用户来说，安全感与密码的强度无关，而只是由“信息已经被加密了“这一事实产生的，而这通常会导致用<br>户在处理某些机密信息的时候麻痹大意</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>任何密码总有一天都会被破解</strong></p>
+<p>无论使用任何密码算法所生成的密文，只要将所有可能的密钥全部尝试一遍 就总有一天可以破译出来 因此 ，破译密文所需要花费的时间，与要保密的明文的价值之间的权衡就显得非常重要</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>密码只是信息安全的一部分</strong></p>
+<p>比如, 社会工程学 (social engineering) 攻击:</p>
+<p>办公室的电话响起: 您好, 我是 IT 部的, 由于需要对您的电脑进行安全检查, 请您将密码临时改为 XR2315. 实际拨打电话的有可能就是一名攻击者. 这些手段与密码的强度并没有关系.</p>
+<blockquote>
+<p>最脆弱的环节并不是密码, 而是人类自己</p>
+</blockquote>
+</li>
+</ul>
+<p>​     </p>
+<p>​       简单密码技术: 凯撒密码, ROT13</p>
 
                 
             </div>
@@ -333,179 +419,57 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20%E4%BB%8B%E7%BB%8D/">Vim 介绍</a></h2>
+                <h2><a class="post-title-link" href="/Java/initialization-on-demand%20holder/">initialization-on-demand holder</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-25</span>
+                <span class="post-time">2021-01-16</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Linux/">Linux</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="Vim-的基本使用"><a href="#Vim-的基本使用" class="headerlink" title="Vim 的基本使用"></a>Vim 的基本使用</h2><p>内容取自 byte-of-vim， 查看原文，请参考文末链接.</p>
-<h3 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h3><p>Vim 是一个用于写作的计算机程序（computer program），提供一系列特性帮助你更好地进行写作。 可以用来编写购物清单，写书，或者是程序代码。</p>
-<h3 id="为什么选择-Vim"><a href="#为什么选择-Vim" class="headerlink" title="为什么选择 Vim"></a>为什么选择 Vim</h3><h4 id="简单"><a href="#简单" class="headerlink" title="简单"></a>简单</h4><ul>
-<li>极简主义界面，帮助你集中注意力</li>
-<li>少许的核心概念</li>
-</ul>
-<h4 id="高效"><a href="#高效" class="headerlink" title="高效"></a>高效</h4><blockquote>
-<p>There is no great writing, only great rewriting.</p>
-<p>​                                                        ——Louis Brandeis</p>
-</blockquote>
-<p>与纯文本或富文本编辑器对比，Vim 可以使得复杂大量频繁的修改该变得更容易，更快，更好。Minimal effort. Maximal effect.</p>
-<h3 id="Vim-能干什么？"><a href="#Vim-能干什么？" class="headerlink" title="Vim 能干什么？"></a>Vim 能干什么？</h3><p><strong>说了这么多漂亮话，Vim 到底强在哪里？</strong></p>
-<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><table>
-<thead>
-<tr>
-<th>编辑</th>
-<th>Vim 中的操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>如何将光标向下移动 7 行</td>
-<td>Press 7j</td>
-</tr>
-<tr>
-<td>删除一个单词</td>
-<td>Press dw</td>
-</tr>
-<tr>
-<td>搜索文档中光标所在的单词</td>
-<td>Press *</td>
-</tr>
-<tr>
-<td>在 50-100 行进行查找并替换</td>
-<td>Run :50,100s/old/new/g (s = substitute, c = confirmation )</td>
-</tr>
-<tr>
-<td>如果光标所在的单词是一个文件，如何打开</td>
-<td>gf (g = goto, f = file)</td>
-</tr>
-<tr>
-<td>如果每行只有前N个字符是有用的？</td>
-<td>ctrl-v  –&gt; y (copy)</td>
-</tr>
-<tr>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
-<p><strong>所以，你被说服了吗？</strong></p>
-<p>我们为什么学习 Vim ?</p>
-<h4 id="Vim-图形化界面版本"><a href="#Vim-图形化界面版本" class="headerlink" title="Vim 图形化界面版本"></a>Vim 图形化界面版本</h4><p><strong>Windows</strong></p>
-<p><strong>Mac OS X</strong></p>
-<p><strong>Linux/BSD</strong></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901204140178.png" alt="image-20200901204140178"></p>
-<p>​                                                                    Windos 下的 Vim</p>
-<h4 id="终端版本"><a href="#终端版本" class="headerlink" title="终端版本"></a>终端版本</h4><p><strong>Windows</strong></p>
-<p><strong>Mac OS X</strong></p>
-<p><strong>Linux/BSD</strong></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901204402296.png" alt="image-20200901204402296"></p>
-<h3 id="最重要的概念-模式"><a href="#最重要的概念-模式" class="headerlink" title="最重要的概念 - 模式"></a>最重要的概念 - 模式</h3><p>Vim 中的模式也许是最令刚接触 Vim 的人最疑惑的部分，为什么打开不能直接输入文字？该怎么样保存并退出 Vim？据说 Stack Overflow 上关于如何退出 Vim 的问题，其点击量已有上百万次了</p>
-<p>Vim 中不同的模式就像是电视机中的正常模式和 DVD 模式，每种模式都有其特定的功能。模式使得功能区得以划分，使得事情变得尽可能简单。Vim 的目标之一就是使用键盘就可以完成所有工作，而不需要借助鼠标。</p>
-<h4 id="Normal-Mode-正常模式-命令行模式"><a href="#Normal-Mode-正常模式-命令行模式" class="headerlink" title="Normal Mode (正常模式/命令行模式)"></a>Normal Mode (正常模式/命令行模式)</h4><p><strong>A mode for running commands</strong></p>
-<p>Vim 启动的默认模式</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Vim command :echo</span></span><br><span class="line">:<span class="built_in">echo</span> <span class="string">"Hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Vim command :help takes us to the table of contents of the reference manual</span></span><br><span class="line">:<span class="built_in">help</span> usr_toc</span><br></pre></td></tr></table></figure>
+                    <h1 id="initialization-on-demand-holder"><a href="#initialization-on-demand-holder" class="headerlink" title="initialization-on-demand holder"></a>initialization-on-demand holder</h1><p>In <a href="https://en.wikipedia.org/wiki/Software_engineering" target="_blank" rel="noopener">software engineering</a>, the <strong>initialization-on-demand holder</strong> (<a href="https://en.wikipedia.org/wiki/Design_pattern_(computer_science)" target="_blank" rel="noopener">design pattern</a>) idiom is a <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank" rel="noopener">lazy-loaded</a> <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" rel="noopener">singleton</a>. In all versions of Java, the idiom enables a safe, highly concurrent lazy initialization of static fields with good performance.<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-1" target="_blank" rel="noopener">[1]</a><a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-2" target="_blank" rel="noopener">[2]</a></p>
+<p>是一种延迟加载单例模式，所有的 Java 版本中，都能够安全、高并发的延迟初始化静态字段，并且拥有很好的性能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="Insert-Mode-插入模式-编辑模式"><a href="#Insert-Mode-插入模式-编辑模式" class="headerlink" title="Insert Mode (插入模式/编辑模式)"></a>Insert Mode (插入模式/编辑模式)</h4><p><strong>A mode for writing text</strong></p>
-<p>打开 Vim，命令行模式下运行 <code>:e temp.txt</code>,  按下 <code>i</code>, 进入编辑模式，输入文本；</p>
-<p>按下 <code>&lt;ESC&gt;</code>, 切换回命令行模式，运行 <code>:w</code> 命令保存</p>
-<p><strong>使用命令进行更方便的移动光标</strong></p>
-<p>除了  <code>i</code> 之外，你还可以 </p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>insert text just before the cursor</td>
-</tr>
-<tr>
-<td>I</td>
-<td>insert text at the start of the line</td>
-</tr>
-<tr>
-<td>a</td>
-<td>append text just after the cursor</td>
-</tr>
-<tr>
-<td>A</td>
-<td>append text at the end of the line</td>
-</tr>
-</tbody></table>
-<p>光标移动，并切换为 Insert Mode</p>
-<p><strong>其他常用操作命令</strong></p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>o</td>
-<td>open a new line below</td>
-</tr>
-<tr>
-<td>O</td>
-<td>open a new line above</td>
-</tr>
-<tr>
-<td>s</td>
-<td>substitute character</td>
-</tr>
-<tr>
-<td>S</td>
-<td>substitutes the whole line</td>
-</tr>
-<tr>
-<td>r</td>
-<td>replace the current character</td>
-</tr>
-<tr>
-<td>R</td>
-<td>replace continuous characters</td>
-</tr>
-</tbody></table>
-<p>编辑完文本，切换回 Normal Mode, 是一个良好的习惯，完成文档的初始编写时，最好切换为 Normal Mode。</p>
-<p>这两种模式的切换时如此的简单，按下 <code>i</code> 即可进入编辑模式， <code>&lt;ESC&gt;</code> 即可切换为命令行模式，图形化界面看似提供了很多菜单选项，可是如果上百个命令，以及这些命令的组合，图形化界面是难以做到的。</p>
-<p>一旦你理解了 Vim 的模式 （哲学）， 你就不会觉得好难用，好奇怪，是吧？</p>
-<h4 id="Visual-mode"><a href="#Visual-mode" class="headerlink" title="Visual mode"></a>Visual mode</h4><p>假如想要选中一连串的单词（words），并将它们完全替换为新的文本， 该如何做呢？你可不想按住删除键全部删除，再重新添加新的文本吧？Visual Mode 就将发挥它的作用。</p>
-<p>Normal Mode 下，按下 <code>v</code> 或则 <code>V</code> 进入 Visual Mode</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>desc</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>v</td>
-<td>Visual Mode, character basis</td>
-</tr>
-<tr>
-<td>V</td>
-<td>Visual Mode, line basis</td>
-</tr>
-</tbody></table>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901215958686.png" alt="image-20200901215958686"></p>
-<p>​                                                relation between the difference modes</p>
-<h3 id="Graphical-cheat-sheet"><a href="#Graphical-cheat-sheet" class="headerlink" title="Graphical cheat sheet"></a>Graphical cheat sheet</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901221532521.png" alt="image-20200901221532521"></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>理解模式是如何工作的，以及如何进行模式的切换是成为一个 <strong>Vimmer</strong> 的关键，当然， Vim 也只是众多编辑器中的一种 （如 Vim 于 Emacs 之争），如何选择，取决于你的个人习惯和偏好，工欲善其事必先利其器，Vim 也只是提供了一种选择，这个看似古老的软件依然在庞大的程序员群体中占有一席之地，继续发光发热。</p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://github.com/swaroopch/byte-of-vim" target="_blank" rel="noopener">A Byte of Vim</a></p>
-<p>[2] <a href="https://initialcommit.com/blog/7-versatile-vim-commands" target="_blank" rel="noopener">7 versatile Vim commands that are easy to memorize</a></p>
-<p>[3] <a href="https://github.com/wsdjeg/vim-galore-zh_cn" target="_blank" rel="noopener">Vim Galore</a></p>
-<p>[4] <a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html" target="_blank" rel="noopener">Graphical vi-vim Cheat Sheet and Tutorial</a></p>
+<p>The implementation of the idiom relies on the initialization phase of execution within the <a href="https://en.wikipedia.org/wiki/Java_Virtual_Machine" target="_blank" rel="noopener">Java Virtual Machine</a> (JVM) as specified by the Java Language Specification (JLS).<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-3" target="_blank" rel="noopener">[3]</a></p>
+<p>主要依赖于 JLS 规定的 JVM 执行的初始化阶段</p>
+<p>When the class <code>Something</code> is loaded by the JVM, the class goes through initialization. Since the class does not have any static variables to initialize, the initialization completes trivially. </p>
+<p>当 JVM 加载类 Something 类时，会执行这个类的初始化阶段，其实就是静态字段的初始化和静态代码块的执行，但 Something 没有什么要初始化的，所以 initialize 阶段就完成了。</p>
+<p>The static class definition <code>LazyHolder</code> within it is <em>not</em> initialized until the JVM determines that <code>LazyHolder</code> must be executed. The static class <code>LazyHolder</code> is only executed when the static method <code>getInstance</code> is invoked on the class <code>Something</code>, and the first time this happens the JVM will load and initialize the <code>LazyHolder</code> class. </p>
+<p><code>LazyHolder</code> 这个静态内部类，只有 JVM 决定这个类被执行的时候，才会进行初始化（被 JVM 加载和初始化）。所以只有 <code>Something.</code>getInstance 方法调用时，当第一次调用时，JVM 会加载和初始化 <code>LazyHolder</code> 这个类。</p>
+<p>The initialization of the <code>LazyHolder</code> class results in static variable <code>INSTANCE</code> being initialized by executing the (private) constructor for the outer class <code>Something</code>. Since the class initialization phase is guaranteed by the JLS to be sequential, i.e., non-concurrent, no further synchronization is required in the static <code>getInstance</code> method during loading and initialization.</p>
+<p><code>LazyHolder</code> 的初始化阶会导致静态变量 <code>INSTANCE</code> 被初始化，也就是执行 <code>Something</code> 的私有构造器。由于JLS 保证类的初始化阶段是串行的，即非并发的，因此静态getInstance方法中在加载和初始化 <code>LazyHolder</code> 期间不需要进一步的同步。</p>
+<p> And since the initialization phase writes the static variable <code>INSTANCE</code> in a sequential operation, all subsequent concurrent invocations of the <code>getInstance</code> will return the same correctly initialized <code>INSTANCE</code> without incurring any additional synchronization overhead.</p>
+<p>所有对 <code>getInstance</code>  方法的连续并发调用都会返回正确的初始化了的 <code>INSTANCE</code>, 并且没有任何额外的同步机制开销</p>
+<p>While the implementation is an efficient thread-safe “singleton” cache without synchronization overhead, and better performing than uncontended synchronization,<a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#cite_note-4" target="_blank" rel="noopener">[4]</a> the idiom can only be used when the construction of <code>Something</code> can be guaranteed to not fail. In most JVM implementations, if construction of <code>Something</code> fails, subsequent attempts to initialize it from the same class-loader will result in a <code>NoClassDefFoundError</code> failure.</p>
+<p>虽然高效、线程安全，但是只有保证 <code>Something</code> 的构造方法不会失败的情况下，才可以使用</p>
+<p>维基百科 - initialization-on-demand holder</p>
+<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类加载就是将新的类型添加到运行中的 JVM 进程里的过程。将字节码文件（.class）文件加载进 JVM, 转换成类对象（Class<T> 对象）。字节码文件属于二进制文件，字节流文件。</p>
+<p>分为以下几个阶段：</p>
+<ol>
+<li><strong>加载</strong></li>
+</ol>
+<p>从文件系统、URL或其它位置读取字节数组，生成类对象的骨架，做一些基本检查</p>
+<ol>
+<li><strong>验证</strong></li>
+</ol>
+<p>确认类文件与预期相符，没有违背 JVM 的安全模型，避免导致 JVM 崩溃的字节码，或将 JVM 带入未知状态，出现恶意代码能攻击的漏洞</p>
+<ol>
+<li><strong>准备和解析</strong></li>
+</ol>
+<p>确保运行时直到类文件引用的每个类型，加载引用到的类型，和引用类型所依赖的类，直到直到所有类型为止</p>
+<ol>
+<li><strong>初始化</strong></li>
+</ol>
+<p>JVM 初始化类，初始化静态变脸，运行静态代码块。这是 JVM 首次执行新加载的类的字节码。初始化执行完毕后，类就完全加载好，可以使用了。</p>
 
                 
             </div>
@@ -513,22 +477,41 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Terminology/">Terminology</a></h2>
+                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6/">基础组件</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-19</span>
+                <span class="post-time">2021-01-02</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Linux/">Linux</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>symbolic links</p>
-<p>fork</p>
+                    <h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p>Executor 接口中只定义了一个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Executes the given command at some time in the future.  The command</span></span><br><span class="line"><span class="comment">     * may execute in a new thread, in a pooled thread, or in the calling</span></span><br><span class="line"><span class="comment">     * thread, at the discretion of the &#123;<span class="doctag">@code</span> Executor&#125; implementation.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> command the runnable task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException if this task cannot be</span></span><br><span class="line"><span class="comment">     * accepted for execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if command is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>execute(Runnable command)</code> 方法负责执行提交的任务，<code>Executor</code> 接口将任务的提交，任务的执行，以及线程使用的细节进行解耦。隐藏了创建线程的操作，甚至可以实现为非异步的方式，即由调用线程来直接执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DirectExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    r.run();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，通常情况下，是由调用该方法线程以外的线程来执行的，也就是会为每一个 <code>Runnable</code> 任务（命令）创建一个线程来异步执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPerTaskExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(r).start();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>属于多线程设计模式 <code>Thread-Per-Message</code>（见《图解 Java 多线程设计模式》） 的实现，即为每个请求分配一个新线程，由这个线程来执行处理。</p>
+<p><strong>该模式具有以下特点：</strong></p>
+<ol>
+<li>提高方法的响应，缩短延迟时间</li>
+<li>适用于对操作顺序没有要求（即方法的调用顺序不一定和执行顺序一致）</li>
+<li>适用于不需要返回值（<code>execute</code>方法的返回类型为 <code>void</code>）</li>
+</ol>
+<p>​    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 
                 
             </div>

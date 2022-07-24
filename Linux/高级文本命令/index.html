@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">高级文本命令</h2>
             <div class="post-meta">
-                <span class="post-time">2020-11-29</span>
+                <span class="post-time">2022-07-16</span>
                 
                 <span class="post-category">
                     
@@ -148,7 +148,7 @@
 
 
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk可以调用命令并读取输出。把命令放入引号中，然后利用管道将命令输出传入getline：</span></span><br><span class="line">awk <span class="string">'BEGIN &#123;FS=":"&#125; &#123; "grep root /etc/passwd" | getline; \</span></span><br><span class="line"><span class="string">print $1,$6 &#125;'</span></span><br><span class="line"></span><br><span class="line">root /root</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk可以调用命令并读取输出。把命令放入引号中，然后利用管道将命令输出传入getline：</span></span><br><span class="line">awk <span class="string">'BEGIN &#123;FS=":"&#125; &#123; "grep root /etc/passwd" | getline; \</span></span><br><span class="line"><span class="string">print $1,$6 &#125;'</span></span><br><span class="line"></span><br><span class="line">root /root</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">awk <span class="string">'/import.+/ &#123; print "echo "$0"|grep -o com"|"bash" &#125;'</span> import</span><br></pre></td></tr></table></figure>
 
 
 
@@ -170,15 +170,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Java/Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F/">
+            <a class="prev" href="/Linux/%E8%84%9A%E6%9C%AC/backup/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Semaphore-信号量</span>
+                <span class="nav-default">backup</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/%E6%96%B0%E8%AF%8D%E6%B1%87/">
-                <span class="nav-default">新词汇</span>
+            <a class="next" href="/%E7%84%A6%E8%99%91%E7%97%87/%E7%84%A6%E8%99%91%E7%97%87%E5%8E%86%E7%A8%8B/">
+                <span class="nav-default">焦虑症历程</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>

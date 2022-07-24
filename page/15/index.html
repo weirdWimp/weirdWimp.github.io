@@ -84,27 +84,52 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/TimeZoneMapping/">TimeZoneMapping</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E5%AE%89%E8%A3%85MacOS/">安装MacOS</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-06-07</span>
+                <span class="post-time">2020-07-05</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    <a class="category" href="/categories/Linux/">Linux</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useTimezone</span><br><span class="line"></span><br><span class="line">Convert time&#x2F;date types between client and server time zones (true&#x2F;false, defaults to &#39;false&#39;)? This is part of the legacy date-time code, thus the property has an effect only when &quot;useLegacyDatetimeCode&#x3D;true.&quot;</span><br><span class="line"></span><br><span class="line">Default: false</span><br><span class="line"></span><br><span class="line">Since version: 3.0.2</span><br></pre></td></tr></table></figure>
+                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># （此命令用来设置禁用 hyper-v)</span></span><br><span class="line">bcdedit /<span class="built_in">set</span> hypervisorlaunchtype off </span><br><span class="line"></span><br><span class="line"><span class="comment">#【 如果想再次启用 hyper-v 的话，请运行此命令。】</span></span><br><span class="line">bcdedit /<span class="built_in">set</span> hypervisorlaunchtype auto</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://jingyan.baidu.com/article/215817f7e68fb81eda14230f.html" target="_blank" rel="noopener">Win 8/8.1 下virtualbox无法开启虚拟化解决方法</a></p>
+<p>Push-button installer of macOS on VirtualBox <a href="https://github.com/myspaghetti/macos-virtualbox" target="_blank" rel="noopener"> macos-virtualbox</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/ANSI%20Color/">ANSI Color</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-06-25</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>From Wicked Cool Shell Scripts, 2nd Edition</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">initializeANSI</span></span> () &#123;</span><br><span class="line"></span><br><span class="line">    esc=<span class="string">"\033"</span> <span class="comment"># 如果无效，直接敲 ESC 键。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 前景色：</span></span><br><span class="line">    blackf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[30m"</span>; redf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[31m"</span>; greenf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[32m"</span></span><br><span class="line">    yellowf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[33m"</span> bluef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[34m"</span>; purplef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[35m"</span></span><br><span class="line">    cyanf=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[36m"</span>; whitef=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[37m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 背景色：</span></span><br><span class="line">    blackb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[40m"</span>; redb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[41m"</span>; greenb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[42m"</span></span><br><span class="line">    yellowb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[43m"</span> blueb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[44m"</span>; purpleb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[45m"</span></span><br><span class="line">    cyanb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[46m"</span>; whiteb=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[47m"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 粗体、斜体、下划线以及样式切换：</span></span><br><span class="line">    boldon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[1m"</span>; boldoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[22m"</span></span><br><span class="line">    italicson=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[3m"</span>; italicsoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[23m"</span></span><br><span class="line">    ulon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[4m"</span>; uloff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[24m"</span></span><br><span class="line">    invon=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[7m"</span>; invoff=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[27m"</span></span><br><span class="line">    reset=<span class="string">"<span class="variable">$&#123;esc&#125;</span>[0m"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">initializeANSI</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span>This is a phrase in yellow<span class="variable">$&#123;redb&#125;</span> and red<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string"><span class="variable">$&#123;boldon&#125;</span>This is bold<span class="variable">$&#123;ulon&#125;</span> this is italics<span class="variable">$&#123;reset&#125;</span> bye-bye</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;italicson&#125;</span>This is italics<span class="variable">$&#123;italicsoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;ulon&#125;</span>This is ul<span class="variable">$&#123;uloff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;invon&#125;</span>This is inv<span class="variable">$&#123;invoff&#125;</span> and this is not</span></span><br><span class="line"><span class="string"><span class="variable">$&#123;yellowf&#125;</span><span class="variable">$&#123;redb&#125;</span>Warning I <span class="variable">$&#123;yellowb&#125;</span><span class="variable">$&#123;redf&#125;</span>Warning II<span class="variable">$&#123;reset&#125;</span></span></span><br><span class="line"><span class="string">"</span></span><br></pre></td></tr></table></figure>
 
 
 
-
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useJDBCCompliantTimezoneShift</span><br><span class="line"></span><br><span class="line">Should the driver use JDBC-compliant rules when converting TIME&#x2F;TIMESTAMP&#x2F;DATETIME values&#39; time zone information for those JDBC arguments which take a java.util.Calendar argument? This is part of the legacy date-time code, thus the property has an effect only when &quot;useLegacyDatetimeCode&#x3D;true.&quot;</span><br><span class="line"></span><br><span class="line">Default: false</span><br><span class="line"></span><br><span class="line">Since version: 5.0.0</span><br></pre></td></tr></table></figure>
+<p>Add snippets for shell common comment</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"Print to shellNote"</span>: &#123;</span><br><span class="line">		<span class="attr">"prefix"</span>: <span class="string">"shell"</span>,</span><br><span class="line">		<span class="attr">"body"</span>: [</span><br><span class="line">			<span class="string">" # Description: $1"</span>,</span><br><span class="line">			<span class="string">" # Author:      Your Name"</span>,</span><br><span class="line">			<span class="string">" # Date:        $&#123;CURRENT_YEAR&#125;-$&#123;CURRENT_MONTH&#125;-$&#123;CURRENT_DATE&#125;"</span></span><br><span class="line">		],</span><br><span class="line">		<span class="attr">"description"</span>: <span class="string">"shel script comment"</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -113,10 +138,119 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Maven/">Maven</a></h2>
+                <h2><a class="post-title-link" href="/Linux/Bash%E8%84%9A%E6%9C%AC%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">Bash脚本基本语法</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
+                <span class="post-time">2020-06-25</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h3 id="array-sh"><a href="#array-sh" class="headerlink" title="array.sh"></a>array.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">names=(<span class="string">"Jason Chen"</span> <span class="string">"Bell"</span> <span class="string">"Alice"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print all array members</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;names[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line">newNames=(<span class="string">"<span class="variable">$&#123;names[@]&#125;</span>"</span> <span class="string">"Jason Guo"</span>)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;newNames[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">days=([0]=Sun [1]=Mon [2]=Tue [3]=Wed [4]=Thu [5]=Fri [6]=Sta)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"days: <span class="variable">$&#123;#days[@]&#125;</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"value(index at 0): <span class="variable">$&#123;days[0]&#125;</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"value's length at index 0: <span class="variable">$&#123;days[0]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## return indexes</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$&#123;!days[@]&#125;</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"index: <span class="variable">$i</span>, value: <span class="variable">$&#123;days[$i]&#125;</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## extract array members: $&#123;array[@]:position:length&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;days[@]:1:3&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## append to array</span></span><br><span class="line">days+=(<span class="string">"Unk"</span> Unk<span class="string">""</span>)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;days[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## del a member from array</span></span><br><span class="line"><span class="built_in">unset</span> days[7]</span><br><span class="line">days[8]=<span class="string">''</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"after remove index[7,8]: <span class="variable">$&#123;days[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## empty array</span></span><br><span class="line"><span class="built_in">unset</span> days</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"after empty array: <span class="variable">$&#123;days[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"your input will be added to array:"</span></span><br><span class="line"><span class="built_in">read</span> -a dice</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;dice[@]&#125;</span>"</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">declare</span> -A colors</span><br><span class="line">colors[<span class="string">"red"</span>]=<span class="string">"#ff0000"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;colors["red"]&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="bashEnv-sh"><a href="#bashEnv-sh" class="headerlink" title="bashEnv.sh"></a>bashEnv.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">func1</span></span>() &#123;</span><br><span class="line">  <span class="comment">## 打印函数调用栈 FUNCNAME 返回一个数组，0号元素是当前调用的函数</span></span><br><span class="line">  <span class="comment">## 1 号元素是调用当前函数的函数，以此类推</span></span><br><span class="line">  <span class="built_in">echo</span> -e <span class="string">"\nfunction call stack:"</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"FUNCNAME[0]: <span class="variable">$&#123;FUNCNAME[0]&#125;</span>"</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"FUNCNAME[1]: <span class="variable">$&#123;FUNCNAME[1]&#125;</span>"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"This is <span class="variable">$&#123;LINENO&#125;</span>th line in this script file"</span></span><br><span class="line">func1</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="custom-env-sh"><a href="#custom-env-sh" class="headerlink" title="custom_env.sh"></a>custom_env.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="built_in">export</span> CUST_ENV4=guo</span><br><span class="line">CUST_ENV5=peng</span><br><span class="line">CUST_ENV6=hui</span><br><span class="line"></span><br><span class="line">(<span class="built_in">echo</span> <span class="variable">$CUST_ENV4</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="hello-sh"><a href="#hello-sh" class="headerlink" title="hello.sh"></a>hello.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">hello=<span class="string">"hello world"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$hello</span>, Tang!"</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="if-sh"><a href="#if-sh" class="headerlink" title="if.sh"></a>if.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"plz input your answer:"</span></span><br><span class="line"><span class="built_in">read</span> ans</span><br><span class="line"></span><br><span class="line"><span class="comment">### String condition test</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$ans</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"you input nothing!"</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$ans</span>"</span> = <span class="string">"yes"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Yeah!!!!!!!!"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">"<span class="variable">$ans</span>"</span> = <span class="string">"no"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Sorry to hear that!!!!!!!"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">"<span class="variable">$ans</span>"</span> = <span class="string">"maybe"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"You have make up your mind .-."</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"unknow answer"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"plz input a num:"</span></span><br><span class="line"><span class="built_in">read</span> INT</span><br><span class="line"></span><br><span class="line"><span class="comment">### [[ ]] supports regex</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$INT</span>"</span> =~ ^-?[0-9]+$ ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"yeah, you input a number, good boy!"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"your input is not a number!"</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### integer condition</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$INT</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"zero"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$INT</span> -gt 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"great than zero"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"less than zero"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3%2)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3%2)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3%3)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3%3)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3 &gt; 2)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3 &gt; 2)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3 &lt; 2)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3 &lt; 2)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3 == 3)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3 == 3)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## command1 || command2; if command1 is false, then run command2</span></span><br><span class="line">[ -d dir ] || mkdir dir</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="loop-sh"><a href="#loop-sh" class="headerlink" title="loop.sh"></a>loop.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## loop test</span></span><br><span class="line"></span><br><span class="line">number=1</span><br><span class="line"><span class="keyword">while</span> [ <span class="string">"<span class="variable">$number</span>"</span> -le 10 ]; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$number</span> hello"</span></span><br><span class="line">        number=$((number+1))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> *.sh; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"shell file: <span class="variable">$i</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## break continue</span></span><br><span class="line"><span class="keyword">for</span> (( i=0; i&lt;5; i=i+1 )); <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$i</span> -eq 3 ]; <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="string">"break statement"</span></span><br><span class="line">                <span class="built_in">break</span></span><br><span class="line">                <span class="comment"># continue</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="month-sh"><a href="#month-sh" class="headerlink" title="month.sh"></a>month.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#echo "input month number:"</span></span><br><span class="line"><span class="comment">#read monthNum</span></span><br><span class="line"></span><br><span class="line">monthNum=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$monthNum</span>"</span> =~ ^(1[0-2]|0?[1-9])$ ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -n <span class="string">"you input <span class="variable">$monthNum</span>, and it is: "</span></span><br><span class="line">        <span class="keyword">case</span> <span class="variable">$monthNum</span> <span class="keyword">in</span></span><br><span class="line">        1 | 01) <span class="built_in">echo</span> <span class="string">"Jan"</span> ;;</span><br><span class="line">        2 | 02) <span class="built_in">echo</span> <span class="string">"Feb"</span> ;;</span><br><span class="line">        3 | 03) <span class="built_in">echo</span> <span class="string">"Mar"</span> ;;</span><br><span class="line">        4 | 04) <span class="built_in">echo</span> <span class="string">"Apr"</span> ;;</span><br><span class="line">        5 | 05) <span class="built_in">echo</span> <span class="string">"May"</span> ;;</span><br><span class="line">        6 | 06) <span class="built_in">echo</span> <span class="string">"Jun"</span> ;;</span><br><span class="line">        7 | 07) <span class="built_in">echo</span> <span class="string">"Jul"</span> ;;</span><br><span class="line">        8 | 08) <span class="built_in">echo</span> <span class="string">"Aug"</span> ;;</span><br><span class="line">        9 | 09) <span class="built_in">echo</span> <span class="string">"Sep"</span> ;;</span><br><span class="line">        10) <span class="built_in">echo</span> <span class="string">"Oct"</span> ;;</span><br><span class="line">        11) <span class="built_in">echo</span> <span class="string">"Nov"</span> ;;</span><br><span class="line">        12) <span class="built_in">echo</span> <span class="string">"Dec"</span> ;;</span><br><span class="line">        <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="parameter-parse-sh"><a href="#parameter-parse-sh" class="headerlink" title="parameter-parse.sh"></a>parameter-parse.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">$(<span class="built_in">echo</span> <span class="string">'command'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PWD</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前脚本中没有定义该变量，但如果调用脚本的父shell定义了该变量，并使用 source 执行，则可以打印</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nvariable defined in parent shell: <span class="variable">$CUST_ENV1</span>\n"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> 时间: $(date <span class="string">'+%F %T'</span>)</span><br><span class="line"><span class="built_in">echo</span> 带有option的参数列表: <span class="variable">$@</span></span><br><span class="line"><span class="built_in">echo</span> 带有option的参数个数: <span class="variable">$#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">'sn:'</span> OPT; <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">case</span> <span class="string">"<span class="variable">$OPT</span>"</span> <span class="keyword">in</span></span><br><span class="line">        s)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"silent output enabled"</span></span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        n)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"output number: <span class="variable">$OPTARG</span>"</span></span><br><span class="line">        ;;</span><br><span class="line">        ?)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"avaliable options: [-s] [-n number]"</span> &gt;&amp;2 <span class="comment">## standard error</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">        ;;</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">shift</span> <span class="string">"<span class="variable">$(($OPTIND - 1)</span>)"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"option 选项处理完成，处理剩余主参数列表: <span class="variable">$@</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## for 循环遍历参数列表</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nfor 循环便利参数列表"</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$@</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> 参数：<span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nshift 遍历参数列表：<span class="variable">$@</span>"</span></span><br><span class="line"><span class="comment">## shift n 移除脚本当前n个参数, 没有指定默认为1；</span></span><br><span class="line"><span class="keyword">while</span> [ <span class="string">"<span class="variable">$1</span>"</span> != <span class="string">""</span> ]; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> 参数个数：<span class="variable">$#</span></span><br><span class="line">  <span class="built_in">echo</span> 参数：<span class="variable">$1</span></span><br><span class="line">  <span class="built_in">shift</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="readFile-sh"><a href="#readFile-sh" class="headerlink" title="readFile.sh"></a>readFile.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"请指定文件路径"</span></span><br><span class="line">  <span class="built_in">exit</span> 2</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$@</span>"</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">"\nfile: <span class="variable">$i</span>"</span></span><br><span class="line">    num=1</span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">"<span class="variable">$((num++)</span>)\t<span class="variable">$line</span>"</span></span><br><span class="line">    <span class="keyword">done</span> &lt; <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="readInput-sh"><a href="#readInput-sh" class="headerlink" title="readInput.sh"></a>readInput.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"输入您的用户名 &gt; "</span></span><br><span class="line"><span class="built_in">read</span> user</span><br><span class="line"><span class="built_in">read</span> -s -p <span class="string">"请输入密码 &gt; "</span> passwd1</span><br><span class="line"><span class="built_in">echo</span></span><br><span class="line"><span class="built_in">read</span> -s -p <span class="string">"请确认密码 &gt; "</span> passwd2</span><br><span class="line"><span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$passwd1</span>"</span> == <span class="string">"<span class="variable">$passwd2</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"注册成功, 用户名: '<span class="variable">$user</span>', 密码: '<span class="variable">$passwd1</span>'"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"密码输入不一致: '<span class="variable">$passwd1</span>', '<span class="variable">$passwd2</span>'"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="select-sh"><a href="#select-sh" class="headerlink" title="select.sh"></a>select.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"select the seq number to choose(use ctrl+c to quit)"</span></span><br><span class="line"></span><br><span class="line">select gender <span class="keyword">in</span> male female other</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        <span class="keyword">case</span> <span class="variable">$gender</span> <span class="keyword">in</span></span><br><span class="line">                <span class="string">"male"</span>)   <span class="built_in">echo</span> <span class="string">"Hi man"</span> ;;</span><br><span class="line">                <span class="string">"female"</span>) <span class="built_in">echo</span> <span class="string">"Hi girl"</span> ;;</span><br><span class="line">                <span class="string">"other"</span>)  <span class="built_in">echo</span> <span class="string">"Hi there"</span> ;;</span><br><span class="line">                *)        <span class="built_in">echo</span> <span class="string">"Unknow seq"</span> ;;</span><br><span class="line">        <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="setShellDisallowNoUnset-sh"><a href="#setShellDisallowNoUnset-sh" class="headerlink" title="setShellDisallowNoUnset.sh"></a>setShellDisallowNoUnset.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set -o nounset: none set variable will case exit</span></span><br><span class="line"><span class="built_in">set</span> -u</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$a</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hi"</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="setShellExitOnError-sh"><a href="#setShellExitOnError-sh" class="headerlink" title="setShellExitOnError.sh"></a>setShellExitOnError.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遇到错误退出可以使用 command1 || exit 1, 如果 commands 1 执行失败，就执行 exit 1</span></span><br><span class="line"><span class="comment"># ls *.exe || exit 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 -e 设置， set -o errexit</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果不存在 dll文件，不会终止，只要管道最后的命令执行成功</span></span><br><span class="line"><span class="comment"># 为了避免这种情况，可以使用 set -eo pipefail</span></span><br><span class="line">ls *.dll | <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果不存在 exe文件，错误终止</span></span><br><span class="line">ls *.exe</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hi there"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set +e 可以关闭该设置</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="setShellallowTrace-sh"><a href="#setShellallowTrace-sh" class="headerlink" title="setShellallowTrace.sh"></a>setShellallowTrace.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set -o xtrace</span></span><br><span class="line"><span class="built_in">set</span> -x</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$PWD</span>"</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="temp-sh"><a href="#temp-sh" class="headerlink" title="temp.sh"></a>temp.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 脚本退出时，删除创建的临时文件</span></span><br><span class="line"><span class="built_in">trap</span> <span class="string">'rm -f "$tmpFile"'</span> EXIT</span><br><span class="line"></span><br><span class="line">tmpFile=$(mktemp) || <span class="built_in">exit</span> 1</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"temporary file created successfully: <span class="variable">$tmpFile</span>"</span></span><br></pre></td></tr></table></figure>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/ls%20Invalid%20option/">ls Invalid option</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-06-14</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="ls-invalid-option-–-‘j’"><a href="#ls-invalid-option-–-‘j’" class="headerlink" title="ls: invalid option – ‘j’"></a>ls: invalid option – ‘j’</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line"></span><br><span class="line">0n5whdeZ0ow-download.jpg  A-McbCSin6w-download.jpg  G1vKK6L7Ep0-download.jpg .....</span><br><span class="line">-jGGcAqIBms-download.jpg  -pahtnAMuFo-download.jpg </span><br><span class="line"></span><br><span class="line">$ ls *.jpg</span><br><span class="line">ls: invalid option -- <span class="string">'j'</span></span><br><span class="line">Try <span class="string">'ls --help'</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+
+<p>这个简单的命令执行失败了，期望 shell 扩展 <code>*</code> 找出所有 jpg 图像，也没有传入 <code>-j</code> 作为 option 选项，很是奇怪，通过 bing 找到了答案，百度真的是不适合程序员…..</p>
+<p>StackExchange <a href="https://superuser.com/questions/1300382/ls-pdf-complains-ls-invalid-option" target="_blank" rel="noopener">ls invalid option</a> 中的问题类似，原因是有个图像文件开头是 <code>-</code> （-jGGcAqIBms-download.jpg），被当作 ls 的 option 选项了….</p>
+<p>man bash</p>
+<blockquote>
+<p>A <code>--</code> signals the end of options and disables further option processing. Any arguments after the – are treated as file‐ names and arguments. An argument of - is equivalent to –.</p>
+</blockquote>
+<p>解决上述问题的办法：</p>
+<ol>
+<li>使用 <code>--</code> </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -- *.jpg</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>生产脚本使用 find + xargs，更保险</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -name选项指定了待查找文件名的模式。这个模式可以是通配符，也可以是正则表达式</span></span><br><span class="line">find . -<span class="built_in">type</span> f -name <span class="string">'*.jpg'</span> -print0 | xargs -0 -n 1 <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改文件名，避免此种情况发生</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> $(find . -maxdepth 1 -<span class="built_in">type</span> f  ! -iname <span class="string">'unsplash*.jpg'</span>); <span class="keyword">do</span> new=unsplash_<span class="variable">$&#123;img##*/&#125;</span>; sudo mv <span class="string">"<span class="variable">$img</span>"</span> <span class="string">"<span class="variable">$new</span>"</span>; <span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/DateAndTime/">DateAndTime</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-06-07</span>
                 
                 <span class="post-category">
                     
@@ -127,573 +261,8 @@
             </div>
             <div class="post-content">
                 
-                    <p><strong>groupId</strong>     此元素指示创建项目的组织或组的唯一标识符。 groupId是项目的关键标识符之一，通常基于组织的完全限定域名。 例如，org.apache.maven.plugins 是所有Maven插件的指定groupId。</p>
-<p>${basedir} represents the directory containing <code>pom.xml</code></p>
-<p><a href="http://repo.maven.apache.org/maven2" target="_blank" rel="noopener">http://repo.maven.apache.org/maven2</a></p>
-<p>Note that you can use the <executions> element to gain more control over the order of particular goals.</p>
-<p><strong>Project Inheritance - 项目继承</strong></p>
-<p>Introduce your own parent POMs by specifying the parent element in the POM</p>
-<p>子模块会继承父项目的配置项</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.mycompany.app<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-app<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">relativePath</span>&gt;</span>../parent/pom.xml<span class="tag">&lt;/<span class="name">relativePath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-module<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+                    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">java.util public class Date</span><br><span class="line">extends Object</span><br><span class="line">implements java.io.Serializable, Cloneable, Comparable&lt;Date&gt;</span><br><span class="line"></span><br><span class="line">The class Date represents a specific instant in time, with millisecond precision.</span><br><span class="line">Prior to JDK 1.1, the class Date had two additional functions. </span><br><span class="line"></span><br><span class="line">It allowed the interpretation of dates as year, month, day, hour, minute, and second values. It also allowed the formatting and parsing of date strings. Unfortunately, the API for these functions was not amenable to internationalization.</span><br><span class="line"></span><br><span class="line">As of JDK 1.1, the Calendar class should be used to convert between dates and time fields and the DateFormat class should be used to format and parse date strings. The corresponding methods in Date are deprecated.</span><br><span class="line"></span><br><span class="line">Although the Date class is intended to reflect coordinated universal time (UTC), it may not do so exactly, depending on the host environment of the Java Virtual Machine. Nearly all modern operating systems assume that 1 day &#x3D; 24 × 60 × 60 &#x3D; 86400 seconds in all cases. In UTC, however, about once every year or two there is an extra second, called a &quot;leap second.&quot;</span><br><span class="line"></span><br><span class="line">The leap second is always added as the last second of the day, and always on December 31 or June 30. For example, the last minute of the year 1995 was 61 seconds long, thanks to an added leap second. Most computer clocks are not accurate enough to be able to reflect the leap-second distinction.</span><br><span class="line"></span><br><span class="line">Some computer standards are defined in terms of Greenwich mean time (GMT), which is equivalent to universal time (UT). GMT is the &quot;civil&quot; name for the standard; UT is the &quot;scientific&quot; name for the same standard. The distinction between UTC and UT is that UTC is based on an atomic clock and UT is based on astronomical observations, which for all practical purposes is an invisibly fine hair to split. Because the earth&#39;s rotation is not uniform (it slows down and speeds up in complicated ways), UT does not always flow uniformly. Leap seconds are introduced as needed into UTC so as to keep UTC within 0.9 seconds of UT1, which is a version of UT with certain corrections applied. There are other time and date systems as well; for example, the time scale used by the satellite-based global positioning system (GPS) is synchronized to UTC but is not adjusted for leap seconds. An interesting source of further information is the U.S. Naval Observatory, particularly the Directorate of Time at:</span><br><span class="line">       http:&#x2F;&#x2F;tycho.usno.navy.mil</span><br><span class="line">   </span><br><span class="line">and their definitions of &quot;Systems of Time&quot; at:</span><br><span class="line">       http:&#x2F;&#x2F;tycho.usno.navy.mil&#x2F;systime.html</span><br><span class="line">   </span><br><span class="line">In all methods of class Date that accept or return year, month, date, hours, minutes, and seconds values, the following representations are used:</span><br><span class="line">A year y is represented by the integer y - 1900.</span><br><span class="line">A month is represented by an integer from 0 to 11; 0 is January, 1 is February, and so forth; thus 11 is December.</span><br><span class="line">A date (day of month) is represented by an integer from 1 to 31 in the usual manner.</span><br><span class="line">An hour is represented by an integer from 0 to 23. Thus, the hour from midnight to 1 a.m. is hour 0, and the hour from noon to 1 p.m. is hour 12.</span><br><span class="line">A minute is represented by an integer from 0 to 59 in the usual manner.</span><br><span class="line">A second is represented by an integer from 0 to 61; the values 60 and 61 occur only for leap seconds and even then only in Java implementations that actually track leap seconds correctly. Because of the manner in which leap seconds are currently introduced, it is extremely unlikely that two leap seconds will occur in the same minute, but this specification follows the date and time conventions for ISO C.</span><br><span class="line">In all cases, arguments given to methods for these purposes need not fall within the indicated ranges; for example, a date may be specified as January 32 and is interpreted as meaning February 1.</span><br><span class="line">Since:</span><br><span class="line">JDK1.0</span><br><span class="line">See Also:</span><br><span class="line">DateFormat, Calendar, TimeZone</span><br><span class="line">  &lt; 1.8 &gt;</span><br></pre></td></tr></table></figure>
 
-<p>备注：</p>
-<ul>
-<li><p>子模块未指定 <code>groupId</code> 和 <code>vsersion</code>, 将会从父 POM 中继承</p>
-</li>
-<li><p>如果父项目没有安装在 repository 中或者父项目与子模块的目录层级不是下面这种：</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line"> |-- my-module</span><br><span class="line"> |   `-- pom.xml          <span class="comment"># 子模块的POM</span></span><br><span class="line"> `-- pom.xml              <span class="comment"># 父POM</span></span><br></pre></td></tr></table></figure>
-
-<p>  那么就需要通过 <code>relativePath</code> 标签指定父 POM 的路径，相对路径，相对于子模块的 POM 的路径</p>
-<p><strong>Project Aggregation - 项目聚合（集成）</strong></p>
-<p>Instead of specifying the parent POM from the module, it specifies the modules from the parent POM</p>
-<p>父项目中知道自己有哪些子模块，在父项目中调用了 Maven 命令， 这些 Maven 命令也会在子模块中执行。</p>
-<ul>
-<li>在父 POM 中指定 <code>packaging</code> 的值为 “pom”</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在父 POM 中指定子模块(子PMO)的目录 -<strong>相对路径</strong>，相对于父 POM 的路径</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>my-module<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>../my-module<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><em>Dependency mediation</em></p>
-<p>这将确定在遇到多个版本作为依赖项时将选择哪个版本的工件。 Maven选择“最接近的定义”。 也就是说，它在依赖树中使用与项目最接近的依赖项版本。 您可以通过在项目的POM中明确声明它来保证版本。 请注意，如果两个依赖项版本在依赖关系树中处于相同深度，则第一个声明将获胜。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate \</span><br><span class="line">-DgroupId=com.mycompany.app \ </span><br><span class="line">-DartifactId=my-app \</span><br><span class="line">-DarchetypeArtifactId=maven-archetype-quickstart \</span><br><span class="line">-DarchetypeVersion=1.4 \</span><br><span class="line">-DinteractiveMode=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>URI is not registered (Settings | Languages &amp; Frameworks | Schemas and DTDs)</p>
-<p>assembly 3.1 和 2.5 的版本竟然会之执行不一样，</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--禁止传递依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">useTransitiveDependencies</span>&gt;</span>true<span class="tag">&lt;/<span class="name">useTransitiveDependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>3.1 版本， useTransitiveDependencies 设置为 true， scope 为 provided 的依赖不会拉进来？</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/MySQL%208.0.16%20JDBC%20%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98/">MySQL 8.0.16 JDBC 数据库连接问题</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h3 id="MySQL-8-0-16-JDBC-数据库连接问题"><a href="#MySQL-8-0-16-JDBC-数据库连接问题" class="headerlink" title="MySQL 8.0.16 JDBC 数据库连接问题"></a>MySQL 8.0.16 JDBC 数据库连接问题</h3><p>Mysql 版本：mysql  Ver 8.0.16 for Win64 on x86_64 (MySQL Community Server - GPL)， 使用 5.x.x 或较低版本的  JDBC driver for MySQL 会出现连接问题：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.ClassCastException: java.math.BigInteger cannot be cast to java.lang.Long</span><br><span class="line">	at com.mysql.jdbc.ConnectionImpl.buildCollationMapping(ConnectionImpl.java:<span class="number">1019</span>)</span><br><span class="line">	... <span class="number">16</span> more</span><br></pre></td></tr></table></figure>
-
-<p>需要修改驱动器为对应的版本 </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.16<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>InvalidConnectionAttributeException</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.InvalidConnectionAttributeException: </span><br><span class="line"></span><br><span class="line">The server time zone value <span class="string">'�й���׼ʱ��'</span> is unrecognized or represents more than one time zone. <span class="function">You must configure either the server or JDBC <span class="title">driver</span> <span class="params">(via the serverTimezone configuration property)</span> to use a more specifc time zone value <span class="keyword">if</span> you want to utilize time zone support.</span></span><br></pre></td></tr></table></figure>
-
-<p>url 设置 serverTimezone属性</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//localhost:3306/world?serverTimezone=UTC</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="MySQL-Connector-J-Database-URL"><a href="#MySQL-Connector-J-Database-URL" class="headerlink" title="MySQL Connector/J Database URL"></a>MySQL Connector/J Database URL</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:&#x2F;&#x2F;[host][,failoverhost...]</span><br><span class="line">    [:port]&#x2F;[database]</span><br><span class="line">    [?propertyName1][&#x3D;propertyValue1]</span><br><span class="line">    [&amp;propertyName2][&#x3D;propertyValue2]...</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>left join 与 left outer join 的区别</p>
-<p>事务的隔离级别</p>
-<p>Vector 的使用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> java.util.<span class="function">Enumeration&lt;Driver&gt; <span class="title">getDrivers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    java.util.Vector&lt;Driver&gt; result = <span class="keyword">new</span> java.util.Vector&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; callerClass = Reflection.getCallerClass();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Walk through the loaded registeredDrivers.</span></span><br><span class="line">    <span class="keyword">for</span>(DriverInfo aDriver : registeredDrivers) &#123;</span><br><span class="line">        <span class="comment">// If the caller does not have permission to load the driver then</span></span><br><span class="line">        <span class="comment">// skip it.</span></span><br><span class="line">        <span class="keyword">if</span>(isDriverAllowed(aDriver.driver, callerClass)) &#123;</span><br><span class="line">            result.addElement(aDriver.driver);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            println(<span class="string">"    skipping: "</span> + aDriver.getClass().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (result.elements());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/2%20%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">2 基础操作</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <hr>
-<h2 id="typora-copy-images-to-md-pics"><a href="#typora-copy-images-to-md-pics" class="headerlink" title="typora-copy-images-to: ......\md_pics"></a>typora-copy-images-to: ......\md_pics</h2><h1 id="2-基本操作"><a href="#2-基本操作" class="headerlink" title="2 基本操作"></a>2 基本操作</h1><p>Git 的基本操作都要由命令行完成，当然也有 GUI 方式的 Git 工具，是对某些命令的封。</p>
-<p>[TOC]</p>
-<h2 id="2-1-获取-Git-仓库"><a href="#2-1-获取-Git-仓库" class="headerlink" title="2.1 获取 Git 仓库"></a>2.1 获取 Git 仓库</h2><p><strong>在现有目录中初始化仓库</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入该项目，并执行一下命令</span></span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<p>该命令将创建一个名为 <code>.git</code> 的子目录，包含了初始化的 Git 仓库中所有的必须文件，是 Git 仓库的骨干。</p>
-<p>接着通过 <code>git add</code> 命令来对指定文件进行跟踪，并将其放入暂存区域，执行 <code>git commit</code> 进行提交。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add *.md</span><br><span class="line"></span><br><span class="line">git commit -m <span class="string">"description of this commit"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>克隆已有的仓库</strong></p>
-<p>Git 克隆的是该 Git ==仓库服务器上的几乎所有数据==，而不是仅仅复制完成你的工作所需要文件。 当你执行 <code>git clone</code> 命令的时候，默认配置下远程 Git 仓库中的每一个文件的每一个版本都将被拉取下来。 事实上，如果你的服务器的磁盘坏掉了，你通常可以使用任何一个克隆下来的用户端来重建服务器上的仓库。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git clone [url] [local repository name]</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/weirdWimp/gitpro-guide.git</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
-
-<p>支持多种数据传输协议。https://、git:// 或者 SSH 协议。</p>
-<h2 id="2-2-记录每次更新到仓库"><a href="#2-2-记录每次更新到仓库" class="headerlink" title="2.2 记录每次更新到仓库"></a>2.2 记录每次更新到仓库</h2><p><strong>仓库中每个文件的状态</strong></p>
-<p><img src="E:%5Cmd_pics%5Clifecycle.png" alt="Git 下文件生命周期图。"> </p>
-<p>工作目录下的文件不外乎两种状态：已跟踪或未跟踪。已跟踪的文件是指那些被纳入了版本控制的文件，在上一次快照中有它们的记录。工作一段时间后，状态可能处于 <strong>未修改</strong> <strong>已修改</strong> <strong>已暂存</strong>。 新建的文件属于未跟踪文件。初次克隆某个仓库有的时候，工作目录中所有文件都属于以跟踪文件，并处于未修改状态。</p>
-<p><strong>状态简览</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前文件的状态，显示当前所属的分支，反应每个文件是处于 已修改未暂存 还是 已暂存 或者 未追踪状态</span></span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出跟为简单的状态</span></span><br><span class="line"></span><br><span class="line">git status -s</span><br><span class="line">git status --short</span><br></pre></td></tr></table></figure>
-
-<p>新添加的未跟踪文件前面有 <code>??</code> 标记</p>
-<p>新添加到暂存区中的文件前面有 <code>A</code> 标记</p>
-<p>修改过的文件前面有 <code>M</code> 标记</p>
-<p> <code>M</code> 有两个可以出现的位置，出现在右边的 <code>M</code> 表示该文件被修改了但是还没放入暂存区，出现在靠左边的 <code>M</code> 表示该文件被修改了并放入了暂存区。 </p>
-<p>例如，上面的状态报告显示： <code>README</code> 文件在工作区被修改了但是还没有将修改后的文件放入暂存区, <code>lib/simplegit.rb</code>  文件被修改了并将修改后的文件放入了暂存区。 而 <code>Rakefile</code> 在工作区被修改并提交到暂存区后又在工作区中被修改了，所以在暂存区和工作区都有该文件被修改了的记录。 </p>
-<p><strong>追踪文件或将已修改文件放入暂存区</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git add 不仅可以用于追踪文件，还用于暂存文件</span></span><br><span class="line"></span><br><span class="line">git add newFile <span class="comment">#追踪文件并将其加入暂存区</span></span><br><span class="line"></span><br><span class="line">git add modifiedFile <span class="comment">#将已经修改的文件加入暂存区</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 还可以用于修改冲突，其实最好的解释是 git add 操作的是下次要提交的文件（保存文件快照，并生成索引？）</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>查看已暂存和未暂存的修改</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看已修改文件和暂存区域文件的差异</span></span><br><span class="line">git diff</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看暂存区域文件与最近的上一次提交的文件的差异</span></span><br><span class="line">git diff --cached</span><br><span class="line">git diff --staged</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>提交更新</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将暂存区域的更新提交只版本库</span></span><br><span class="line">git commit -m <span class="string">"description of commit"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 给 git commit 加上 -a 选项，Git 就会自动把所有已经跟踪过的文件暂存起来一并提交，从而跳过 git add 步骤</span></span><br><span class="line">git commit -a -m <span class="string">"description of commit"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>移除文件</strong></p>
-<ul>
-<li>先将文件从工作目录中删除，然后运行 <code>git rm</code> 记录此次移除文件的操作，也就是不在追踪此文件。之后再提交后，版本库里的文件也被移除掉了。</li>
-<li>如果要保留工作目录中的文件，即需要移除暂存区的文件，需要通过 <code>git rm --cached READEME.md</code>, 提交后，Git 就不再跟踪此文件，但工作目录中依然保留。</li>
-</ul>
-<p><code>git rm</code> 命令后面可以列出文件或者目录的名字，也可以使用 glob 模式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached <span class="built_in">log</span>/\*.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">git rm \*~</span><br><span class="line"></span><br><span class="line"><span class="comment"># * 号之前添加反斜杠，是因为 Git 有自己的文件模式扩展匹配方式。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>移动文件</strong></p>
-<p>移动文件和文件的重命名是一样的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git mv fileFrom fileTo</span><br></pre></td></tr></table></figure>
-
-<p>相当于运行了下面的三条命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv README.md README</span><br><span class="line">git rm README.md</span><br><span class="line">git add README</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<p><strong>忽略文件</strong></p>
-<p>有些文件不需要被 Git 管理，比如编译后生成的文件、日志文件、临时生成的文件。这时就可以创建一个名为 <code>.gitignore</code>  的文件。列出要忽略的文件模式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个 .gitignore 文件 </span></span><br><span class="line">cat &gt; .gitignore</span><br><span class="line"><span class="comment"># 忽略txt格式的文件</span></span><br><span class="line">*.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略以~结尾的文件</span></span><br><span class="line">*~</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>.gitignore 文件的格式规范如下：</strong></p>
-<ul>
-<li><p>所有空行或者以 <code>＃</code> 开头的行都会被 Git 忽略。</p>
-</li>
-<li><p>可以使用标准的 glob 模式匹配。</p>
-</li>
-<li><p>匹配模式可以以（<code>/</code>）开头防止递归。</p>
-</li>
-<li><p>匹配模式可以以（<code>/</code>）结尾指定目录。</p>
-</li>
-<li><p>要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（<code>!</code>）取反。</p>
-</li>
-</ul>
-<p>glob 模式是指使用简化了的正则表达式</p>
-<p>* 表示匹配零个或多个任意字符</p>
-<p>[abc ] 匹配方括号中的任意一个字符</p>
-<p>[0-9] 范围</p>
-<p>？匹配一个任意字符</p>
-<p>使用两个星号 ** 匹配任意中间目录，比如 a/**/z 可以匹配 a/z a/b/z  或 a/b/c/z</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># no .a files</span></span><br><span class="line">*.a</span><br><span class="line"></span><br><span class="line"><span class="comment"># but do track lib.a, even though you're ignoring .a files above</span></span><br><span class="line">!lib.a</span><br><span class="line"></span><br><span class="line"><span class="comment"># only ignore the TODO file in the current directory, not subdir/TODO</span></span><br><span class="line">/TODO</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore all files in the build/ directory</span></span><br><span class="line">build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore doc/notes.txt, but not doc/server/arch.txt</span></span><br><span class="line">doc/*.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># ignore all .pdf files in the doc/ directory</span></span><br><span class="line">doc/**/*.pdf</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="2-3-查看提交历史"><a href="#2-3-查看提交历史" class="headerlink" title="2.3 查看提交历史"></a>2.3 查看提交历史</h2><p>在提交了若干更新，又或者克隆了某个项目之后，你也许想回顾下提交历史。 完成这个任务最简单而又有效的工具是 <code>git log</code> 命令。</p>
-<p>默认不用任何参数的话，<code>git log</code> 会按提交时间列出所有的更新，最近的更新排在最上面。这个命令会列出每个提交的 SHA-1 校验和、作者的名字和电子邮件地址、提交时间以及提交说明。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只显示提交的作者、时间信息和提交的注释说明</span></span><br><span class="line">git <span class="built_in">log</span> -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 参数，显示此次提交的具体信息，包括具体的行删除、增加、改动信息。</span></span><br><span class="line">git <span class="built_in">log</span> -p -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line">diff --git a/revoke.md b/revoke.md</span><br><span class="line">index 14df9a5..72b1f8d 100644</span><br><span class="line">--- a/revoke.md</span><br><span class="line">+++ b/revoke.md</span><br><span class="line">@@ -1,3 +1,4 @@</span><br><span class="line"> revoke</span><br><span class="line"> <span class="comment">## I am falling in love with you. My stunning girl.</span></span><br><span class="line"> ** I [ Hate You! **</span><br><span class="line">+I love you and I hate I love you.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># --stat 总结性参数选项，显示简略的统计信息。具体为哪个文件被修改，插入了几行，删除了几行，改动了几行</span></span><br><span class="line">git <span class="built_in">log</span> --<span class="built_in">stat</span> -1</span><br><span class="line">Author: Guo &lt;splendidmonkey@163.com&gt;</span><br><span class="line">Date:   Fri May 18 13:17:10 2018 +0800</span><br><span class="line"></span><br><span class="line">    Modify revoke.md</span><br><span class="line"></span><br><span class="line"> revoke.md | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>默认内置格式显示</strong></p>
-<p>另外一个常用的选项是 <code>--pretty</code>。 这个选项可以指定使用不同于默认格式的方式展示提交历史。 这个选项有一些内建的子选项供你使用。 比如用 <code>oneline</code> 将每个提交放在一行显示，查看的提交数很大时非常有用。 另外还有 <code>short</code>，<code>full</code> 和 <code>fuller</code> 可以用，展示的信息或多或少有些不同，请自己动手实践一下看看效果如何。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line">ca82a6dff817ec66f44342007202690a93763949 changed the version number</span><br><span class="line">085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7 removed unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef06a3f659402fe7563abf99ad00de2209e6 first commit</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>格式化显示</strong></p>
-<p>可以定制显示的记录格式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%h - %an, %ar : %s"</span></span><br><span class="line">ca82a6d - Scott Chacon, 6 years ago : changed the version number</span><br><span class="line">085bb3b - Scott Chacon, 6 years ago : removed unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef0 - Scott Chacon, 6 years ago : first commit</span><br></pre></td></tr></table></figure>
-
-<p>下表列出了常用的格式占位符写法及其代表的意义。</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>%H</code></td>
-<td>提交对象（commit）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%h</code></td>
-<td>提交对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%T</code></td>
-<td>树对象（tree）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%t</code></td>
-<td>树对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%P</code></td>
-<td>父对象（parent）的完整哈希字串</td>
-</tr>
-<tr>
-<td><code>%p</code></td>
-<td>父对象的简短哈希字串</td>
-</tr>
-<tr>
-<td><code>%an</code></td>
-<td>作者（author）的名字</td>
-</tr>
-<tr>
-<td><code>%ae</code></td>
-<td>作者的电子邮件地址</td>
-</tr>
-<tr>
-<td><code>%ad</code></td>
-<td>作者修订日期（可以用 –date= 选项定制格式）</td>
-</tr>
-<tr>
-<td><code>%ar</code></td>
-<td>作者修订日期，按多久以前的方式显示</td>
-</tr>
-<tr>
-<td><code>%cn</code></td>
-<td>提交者（committer）的名字</td>
-</tr>
-<tr>
-<td><code>%ce</code></td>
-<td>提交者的电子邮件地址</td>
-</tr>
-<tr>
-<td><code>%cd</code></td>
-<td>提交日期</td>
-</tr>
-<tr>
-<td><code>%cr</code></td>
-<td>提交日期，按多久以前的方式显示</td>
-</tr>
-<tr>
-<td><code>%s</code></td>
-<td>提交说明</td>
-</tr>
-</tbody></table>
-<p>作者指的是实际作出修改的人，提交者指的是最后将此工作成果提交到仓库的人。 所以，当你为某个项目发布补丁，然后某个核心成员将你的补丁并入项目时，你就是作者，而那个核心成员就是提交者。</p>
-<p>当 oneline 或 format 与另一个 <code>log</code> 选项 <code>--graph</code> 结合使用时尤其有用。 这个选项添加了一些ASCII字符串来形象地展示你的分支、合并历史：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%h %s"</span> --graph</span><br></pre></td></tr></table></figure>
-
-<p>以上只是简单介绍了一些 <code>git log</code> 命令支持的选项。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">"%ad ar - %s"</span> --date=format:%Y-%m-%d </span><br><span class="line"><span class="comment"># 指定日志打印的时间的格式，git log --help 获取多种预定义好的格式，如 --date=short</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">%a        Abbreviated weekday name</span><br><span class="line">%A        Full weekday name</span><br><span class="line">%b        Abbreviated month name</span><br><span class="line">%B        Full month name</span><br><span class="line">%c        Date and time representation appropriate <span class="keyword">for</span> locale</span><br><span class="line">%d        Day of month as decimal number (01 – 31)</span><br><span class="line">%H        Hour <span class="keyword">in</span> 24-hour format (00 – 23)</span><br><span class="line">%I        Hour <span class="keyword">in</span> 12-hour format (01 – 12)</span><br><span class="line">%j        Day of year as decimal number (001 – 366)</span><br><span class="line">%m        Month as decimal number (01 – 12)</span><br><span class="line">%M        Minute as decimal number (00 – 59)</span><br><span class="line">%p        Current locale<span class="string">'s A.M./P.M. indicator for 12-hour clock</span></span><br><span class="line"><span class="string">%S        Second as decimal number (00 – 59)</span></span><br><span class="line"><span class="string">%U        Week of year as decimal number, with Sunday as first day of week (00 – 53)</span></span><br><span class="line"><span class="string">%w        Weekday as decimal number (0 – 6; Sunday is 0)</span></span><br><span class="line"><span class="string">%W        Week of year as decimal number, with Monday as first day of week (00 – 53)</span></span><br><span class="line"><span class="string">%x        Date representation for current locale</span></span><br><span class="line"><span class="string">%X        Time representation for current locale</span></span><br><span class="line"><span class="string">%y        Year without century, as decimal number (00 – 99)</span></span><br><span class="line"><span class="string">%Y        Year with century, as decimal number</span></span><br><span class="line"><span class="string">%z, %Z        Either the time-zone name or time zone abbreviation, depending on registry settings; no characters if time zone is unknown</span></span><br><span class="line"><span class="string">%%        Percent sign</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://cloud.tencent.com/developer/ask/77373" target="_blank" rel="noopener">Git strftime 占位符原表出处</a></p>
-<p>下面列出了我们目前涉及到的和没涉及到的选项，以及它们是如何影响 log 命令的输出的：</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-p</code></td>
-<td>按补丁格式显示每个更新之间的差异。</td>
-</tr>
-<tr>
-<td><code>--stat</code></td>
-<td>显示每次更新的文件修改统计信息。</td>
-</tr>
-<tr>
-<td><code>--shortstat</code></td>
-<td>只显示 –stat 中最后的行数修改添加移除统计。</td>
-</tr>
-<tr>
-<td><code>--name-only</code></td>
-<td>仅在提交信息后显示已修改的文件清单。</td>
-</tr>
-<tr>
-<td><code>--name-status</code></td>
-<td>显示新增、修改、删除的文件清单。</td>
-</tr>
-<tr>
-<td><code>--abbrev-commit</code></td>
-<td>仅显示 SHA-1 的前几个字符，而非所有的 40 个字符。</td>
-</tr>
-<tr>
-<td><code>--relative-date</code></td>
-<td>使用较短的相对时间显示（比如，“2 weeks ago”）。</td>
-</tr>
-<tr>
-<td><code>--graph</code></td>
-<td>显示 ASCII 图形表示的分支合并历史。</td>
-</tr>
-<tr>
-<td><code>--pretty</code></td>
-<td>使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）。</td>
-</tr>
-</tbody></table>
-<p><strong>限制输出长度</strong></p>
-<p>Git 在输出所有提交时会自动调用分页程序，所以你一次只会看到一页的内容。</p>
-<p>按照时间作限制的选项，比如 <code>--since</code> 和 <code>--until</code> 也很有用。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面的命令列出所有最近两周内的提交：</span></span><br><span class="line"></span><br><span class="line">$ git <span class="built_in">log</span> --since=2.weeks</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个命令可以在多种格式下工作，比如说具体的某一天 "2008-01-15"，或者是相对地多久以前 "2 years 1 day 3 minutes ago"。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p> 用 <code>--author</code> 选项显示指定作者的提交，用 <code>--grep</code> 选项搜索提交说明中的关键字。 （请注意，如果要得到同时满足这两个选项搜索条件的提交，就必须用 <code>--all-match</code> 选项。否则，满足任意一个条件的提交都会被匹配出来）</p>
-<p>另一个非常有用的筛选选项是 <code>-S</code>，可以列出那些添加或移除了某些字符串的提交。 比如说，你想找出添加或移除了某一个特定函数的引用的提交，你可以这样使用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> -Sfunction_name</span><br></pre></td></tr></table></figure>
-
-<p>最后一个很实用的 <code>git log</code> 选项是路径（path）， 如果只关心某些文件或者目录的历史提交，可以在 git log 选项的最后指定它们的路径。 因为是放在最后位置上的选项，所以用两个短划线（–）隔开之前的选项和后面限定的路径名。</p>
-<p>常用的选项</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-(n)</code></td>
-<td>仅显示最近的 n 条提交</td>
-</tr>
-<tr>
-<td><code>--since</code>, <code>--after</code></td>
-<td>仅显示指定时间之后的提交。</td>
-</tr>
-<tr>
-<td><code>--until</code>, <code>--before</code></td>
-<td>仅显示指定时间之前的提交。</td>
-</tr>
-<tr>
-<td><code>--author</code></td>
-<td>仅显示指定作者相关的提交。</td>
-</tr>
-<tr>
-<td><code>--committer</code></td>
-<td>仅显示指定提交者相关的提交。</td>
-</tr>
-<tr>
-<td><code>--grep</code></td>
-<td>仅显示含指定关键字的提交</td>
-</tr>
-<tr>
-<td><code>-S</code></td>
-<td>仅显示添加或移除了某个关键字的提交</td>
-</tr>
-</tbody></table>
-<p>来看一个实际的例子，如果要查看 Git 仓库中，2008 年 10 月期间，Junio Hamano 提交的但未合并的测试文件，可以用下面的查询命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=<span class="string">"%h - %s"</span> --author=gitster --since=<span class="string">"2008-10-01"</span> \</span><br><span class="line">   --before=<span class="string">"2008-11-01"</span> --no-merges -- t/</span><br><span class="line">5610e3b - Fix testcase failure when extended attributes are <span class="keyword">in</span> use</span><br><span class="line">acd3b9e - Enhance hold_lock_file_for_&#123;update,append&#125;() API</span><br><span class="line">f563754 - demonstrate breakage of detached checkout with symbolic link HEAD</span><br><span class="line">d1a43f2 - reset --hard/<span class="built_in">read</span>-tree --reset -u: remove unmerged new paths</span><br><span class="line">51a94af - Fix <span class="string">"checkout --track -b newbranch"</span> on detached HEAD</span><br><span class="line">b0ad11e - pull: allow <span class="string">"git pull origin <span class="variable">$something</span>:<span class="variable">$current_branch</span>"</span> into an unborn branch</span><br></pre></td></tr></table></figure>
-
-<p>在近 40000 条提交中，上面的输出仅列出了符合条件的 6 条记录。</p>
-<h2 id="2-4-撤销操作"><a href="#2-4-撤销操作" class="headerlink" title="2.4 撤销操作"></a>2.4 撤销操作</h2><p><strong>补充提交</strong></p>
-<p>如果在一次提交完成之后发现有些文件还没有被添加，或者提交信息写错了。此时可以通过以下命令尝试重新提交：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
-
-<p>这个命令会将添加进暂存区的文件再次提交。如果上次提交后立马执行了此命令，那么修改的只是提交信息。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">"Add files."</span></span><br><span class="line"></span><br><span class="line">git commit --amend -m <span class="string">"Add two files"</span></span><br><span class="line"><span class="comment"># 最终结果将只有一次提交，并且只将提交信息改为 Add two files.</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">'Add files'</span></span><br><span class="line">git add forgotten_file</span><br><span class="line">git commit --amend -m <span class="string">"Add files"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 被忘记提交的文件与上一次提交的文件作为一次提交。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>取消暂存的文件</strong></p>
-<p>如过不想同时暂存两个文件，但又通过命令 <code>git add *</code> 暂存了所有的文件，如何撤销已经暂存的另一个文件。 git 在 git status 中一般有相应的提示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD second.md</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行完该命令后， second.md 文件已经变为未暂存的状态了。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>撤销对文件的修改</strong></p>
-<p>如果对该文件的修改要退回到上次提交后的状态。 git status 中同样有所提示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个命令应该是重新从版本库中重新获取了该文件并进行了替换。</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="2-5-远程仓库"><a href="#2-5-远程仓库" class="headerlink" title="2.5 远程仓库"></a>2.5 远程仓库</h2><p>远程仓库的几个命令</p>
-<p><strong>进行远程仓库的克隆</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> repository_url</span><br></pre></td></tr></table></figure>
-
-<p><strong>从远程仓库中进行抓取，本地库被更新为最新的版本</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch [remote-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>从远程仓库中进行来进行拉取，并尝试合并到当前所在的分支</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull [remote-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>推送到远程仓库中相应的分支中</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push [remote-name] [branch-name]</span><br></pre></td></tr></table></figure>
-
-<p><strong>添加远程仓库</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add [remote-name] [remote-url]</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的别名</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的别名与远程库链接</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-
-<p><strong>查看远程仓库的具体信息</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git remote show [remote-name]</span><br><span class="line"></span><br><span class="line">$ git remote show origin</span><br><span class="line">* remote origin</span><br><span class="line">  Fetch URL: https://github.com/schacon/ticgit</span><br><span class="line">  Push  URL: https://github.com/schacon/ticgit</span><br><span class="line">  HEAD branch: master</span><br><span class="line">  Remote branches:</span><br><span class="line">    master                               tracked</span><br><span class="line">    dev-branch                           tracked</span><br><span class="line">  Local branch configured <span class="keyword">for</span> <span class="string">'git pull'</span>:</span><br><span class="line">    master merges with remote master</span><br><span class="line">  Local ref configured <span class="keyword">for</span> <span class="string">'git push'</span>:</span><br><span class="line">    master pushes to master (up to date)</span><br></pre></td></tr></table></figure>
-
-
-<p><strong>一般的流程是</strong> </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch ---&gt; git add ---&gt; git commit ---&gt; git push</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="2-6-打标签"><a href="#2-6-打标签" class="headerlink" title="2.6 打标签"></a>2.6 打标签</h2><p>给历史提交打上标签，来标记重要的提交节点或重大的功能完成节点。</p>
-<p><strong>列出已有的标签</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出特定模式的标签</span></span><br><span class="line">git tag -l <span class="string">'v1.8.5*'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>创建标签</strong></p>
-<p>Git 中有两种标签：lightweight - 轻量标签； annotated - 附注标签</p>
-<p>一个轻量标签只是一个特定提交的引用。</p>
-<p>一个附注标签是存储在 Git 数据库中的一个完整对象，包括打标签作者的名字、电子邮件地址、日期时间、标签信息，可以使用 GNU Privacy Guard (GPG) 签名与验证。</p>
-<p>通常建议创建附注标签，这样可以拥有很多信息。</p>
-<ul>
-<li><strong>附注标签</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">'version 1.0'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -m 制定了该标签的详细描述，没有指定的话，Git 会运行编辑器要求你输入信息。</span></span><br><span class="line"></span><br><span class="line">git show v1.0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以看到标签信息与对应的提交信息</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>轻量标签</strong></p>
-<p>轻量标签本质上是提交校验和存储到一个文件中 - 没有保存任何其他信息。只需要提供标签名字就可以创建轻量标签。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git tag v1.0-lightweight</span><br><span class="line"></span><br><span class="line">git show v1.0-lightweight</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不会看到额外的标签信息。命令之后会显示出提交信息。</span></span><br><span class="line"><span class="comment"># 这个在 git version 2.16.2.windows.1 中为什么还是会显示提交信息？</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>  如果前面的某一次提交忘记打标签了，可以在之后补上标签。需要在命令的末尾指定提交的校验和（部分校验和）。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line"></span><br><span class="line">34874876b494a234ca52790d6e9cd85a47927953 (HEAD -&gt; master, tag: v1.0-lightweight, tag: v1.0, origin/master) Add something to revoke.md</span><br><span class="line">c3176ae309d942cb495257ad457172e244da21d9 Add <span class="built_in">test</span> line to revoke.md</span><br><span class="line">5969cb43806b3a632fe7b3cb6ab0201be49d3801 Add markdown notes.</span><br><span class="line">c4331a9d271ee5516976a54a42ed282d9fb82d42 Initial commit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git tag -a v0.9 5969cb -m <span class="string">"version 0.9"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p><strong>共享标签至远程库</strong></p>
-<p>创建完标签，必须显示地推送标签到共享服务器上。</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git push origin [tagname]</span></span><br><span class="line"></span><br><span class="line">git push origin v1.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一次性推送很多标签, 会把所有不在远程仓库服务器上的标签全部传送到那里。当被人从仓库中克隆或拉去，也能得到相应的标签。</span></span><br><span class="line"></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p><strong>检出标签</strong></p>
-<p>在 Git 中你并不能真的检出一个标签，因为它们并不能像分支一样来回移动。 如果你想要工作目录与仓库中特定的标签版本完全一样，可以使用 <code>git checkout -b [branchname] [tagname]</code> 在特定的标签上创建一个新分支：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b version2 v2.0.0</span><br><span class="line">Switched to a new branch &#39;version2&#39;</span><br></pre></td></tr></table></figure>
-<p>当然，如果在这之后又进行了一次提交，<code>version2</code> 分支会因为改动向前移动了，那么   <code>version2</code> 分支就会和 <code>v2.0.0</code> 标签稍微有些不同，这时就应该当心了。</p>
-</li>
-</ul>
-<h2 id="2-7-别名"><a href="#2-7-别名" class="headerlink" title="2.7 别名"></a>2.7 别名</h2><p>Git 可以通过别名的方式简化命令，为命令设置一个别名，通过别名就可完成相应的命令。别名一般从字面上就可以看出该命令的执行作用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.co checkout</span><br><span class="line">git config --global alias.ci commit</span><br><span class="line">git config --global alias.st status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当要输入 git commit 时，只需要输入 git ci 就可以了。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git config --global alias.unstage <span class="string">'reset HEAD --'</span></span><br><span class="line"><span class="comment"># 下面两个命令是等价的</span></span><br><span class="line">git unstage file</span><br><span class="line">git reset HEAD -- file</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示最近一次提交的日志信息</span></span><br><span class="line">git config --global alias.last <span class="string">'log -1 HEAD'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以看出，Git 只是简单地将别名替换为对应的命令。 然而，你可能想要执行外部命令，而不是一个 Git 子命令。 如果是那样的话，可以在命令前面加入 <code>!</code> 符号。 如果你自己要写一些与 Git 仓库协作的工具的话，那会很有用。 我们现在演示将 <code>git visual</code> 定义为 <code>gitk</code> 的别名：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.visual <span class="string">'!gitk'</span></span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Pro-Git-Note/3%20%E5%88%86%E6%94%AF/">3 分支</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Pro-Git-Note/">Pro-Git-Note</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建分支</span></span><br><span class="line">git branch branchname</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换分支</span></span><br><span class="line">git checkout branchname</span><br><span class="line"></span><br><span class="line"><span class="comment"># -----------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并切换分支</span></span><br><span class="line">git checkout -b branchname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除分支</span></span><br><span class="line">git branch -d branchname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示所有的分支及当前所在分支</span></span><br><span class="line">git branch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进一步显示所有分支的最后一次提交</span></span><br><span class="line">git branch -v</span><br></pre></td></tr></table></figure>
-
-
-
-<p>–merged 与 –no-merged 这两个有用的选项可以过滤这个列表中已经合并或尚未合并到当前分支的分支。 如果要查看哪些分支已经合并到当前分支，可以运行 git branch –merged：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch --merged</span><br><span class="line">  iss53</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
-
-<p>查看所有包含未合并工作的分支，可以运行 <code>git branch --no-merged</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git branch --no-merged</span><br><span class="line">  testing</span><br></pre></td></tr></table></figure>
-
-<p>这里显示了其他分支。 因为它包含了还未合并的工作，尝试使用 <code>git branch -d</code> 命令删除它时会失败：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch -d testing</span><br><span class="line">error: The branch <span class="string">'testing'</span> is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run <span class="string">'git branch -D testing'</span>.</span><br></pre></td></tr></table></figure>
-
-<p>如果真的想要删除分支并丢掉那些工作，如同帮助信息里所指出的，可以使用 <code>-D</code> 选项强制删除它。</p>
-<p><strong>变基操作</strong></p>
-<p>在本地仓库的 master 分之下执行变基操作时，默认以本地 refs/origin/master (前提是通过 git fetch 进行抓取过了) 为变基操作的目标基地分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git rebase</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改冲突后</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br></pre></td></tr></table></figure>
-
-<p>本地 master 的分支与 res/origin/master 的分支有共同的祖先，找出本地 master 分支相对于 res/origin/master的修改，并将其应用到 res/origin/master 的分支上，（这时，可能需要修改冲突的地方后继续），  res/origin/master 分支和本地master分支共同指向最新的合并后的分支，git push 将本地 master 的分支推送到远程仓库的 master 分支，完成了 res/origin/master 分支和本地master分支的变基操作。</p>
-<p><strong>合并操作</strong></p>
-<p>在本地仓库的 master 分之下执行合并操作时，默认以 refs/origin/master 为要合并的另一个分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git merge</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改冲突后</span></span><br><span class="line">git commit -a -m <span class="string">"decscription"</span></span><br></pre></td></tr></table></figure>
-
-<p>进行一次三方合并后，本地master分支的最新提交对象推送到远程仓库完成了合并操作。</p>
 
                 
             </div>

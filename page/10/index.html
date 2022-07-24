@@ -84,10 +84,280 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6/">基础组件</a></h2>
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/AES/">AES</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2021-01-02</span>
+                <span class="post-time">2021-04-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="AES-Advanced-Encryption-Standard"><a href="#AES-Advanced-Encryption-Standard" class="headerlink" title="AES - Advanced Encryption Standard"></a>AES - Advanced Encryption Standard</h2><p>AES 是取代 DES 称为新标准的一种<strong>对称密码算法</strong></p>
+<h3 id="AES-的选拔"><a href="#AES-的选拔" class="headerlink" title="AES 的选拔"></a>AES 的选拔</h3><p>AES 由 <strong>NIST</strong> (National Institute of Standards and Technology, 国家标准技术研究所) 组织公开竞选，最终所选拔的密码算法，成为美国的国家标准，即联邦信息处理标准（<strong>FIPS</strong>）, 但最终成为一个世界性的标准。</p>
+<p>AES 选拔对全世界公开，参加者提供密码算法的详细规格书、算法强度的证明和实现代码，由全世界的企业和密码学家共同完成评审。2000 年， Rijndael  算法被 NIST 从<strong>最终候选算法</strong>名单中选定成为 AES 标准。</p>
+<p>被选为 AES 密码算法必须无条件地免费供全世界使用。</p>
+<h3 id="Rijndael-密码算法"><a href="#Rijndael-密码算法" class="headerlink" title="Rijndael 密码算法"></a>Rijndael 密码算法</h3><p>两位比利时密码学家设计，也属于*<em>分组密码算法 *</em>(block cipher)</p>
+<p><strong>分组长度</strong>: 128 比特位</p>
+<p><strong>密钥长度</strong>: 128、192 和 256 比特</p>
+<h4 id="Rijndael-的加密和解密"><a href="#Rijndael-的加密和解密" class="headerlink" title="Rijndael 的加密和解密"></a>Rijndael 的加密和解密</h4><p>和 DES 一样，Rijndael  算法由多轮构成，其中每一轮分为 SubBytes、ShiftRows、MixColumns 和 AddRoundKey 个步骤。并且使用了一种称为 SPN 结构。</p>
+<h5 id="1-SubBytes-逐字节替换"><a href="#1-SubBytes-逐字节替换" class="headerlink" title="1. SubBytes-逐字节替换"></a>1. SubBytes-逐字节替换</h5><p>Rijndael  的分组是 128 比特位，即 16 字节。对 16 个字节进行 SubBytes 处理，就是将每个字节所代表的无符号整数值（0-255）作为索引，从一个拥有 256 个值的替换表 (S-Box, S盒) 中查找对应的值。简单来说，就是每个字节查表映射为新的值。</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-SubBytes.png" alt="SubBytes"></p>
+<h5 id="2-ShiftRows-平移行"><a href="#2-ShiftRows-平移行" class="headerlink" title="2. ShiftRows-平移行"></a>2. ShiftRows-平移行</h5><p>将以 4 字节为单位的行 (row) 按照一定的规则向左平移，且每一行平移的字节数是不同的。图示为对其中一行进行处理的情形：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-ShiftRows.png" alt="ShiftRows"></p>
+<h5 id="3-MixColumns-混合列"><a href="#3-MixColumns-混合列" class="headerlink" title="3. MixColumns-混合列"></a>3. MixColumns-混合列</h5><p>对一个 4 字节的值进行比特运算，将其变为另一个 4 字节的值，图示为对其中一列（column）进行处理的情形：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-MixColumns.png" alt="MixColumns"></p>
+<h5 id="4-AddRoundKey-轮密钥异或运算"><a href="#4-AddRoundKey-轮密钥异或运算" class="headerlink" title="4. AddRoundKey-轮密钥异或运算"></a>4. AddRoundKey-轮密钥异或运算</h5><p>将 MixColumns 的输出与轮密钥进行 XOR，图示为对其中一个字节进行处理的情形：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/AES-AddRoundKey.png" alt="AddRoundKey"></p>
+<p>输入的所有比特在一轮中都会被加密，相比于 DES 的 Feistel 网络相比（每一轮只加密一半输入的比特位），加密所需的轮数更少，一般重复进行10 到 14 轮，而且其中的步骤，可以分别以字节、行和列为单位进行并行计算。</p>
+<p>注：<strong>并行计算也是衡量密码算法的一个重要指标，并行意味着加密解密的速度块</strong>。</p>
+<p>加密的过程： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SubBytes  --&gt; SbiftRows --&gt; MixColumns --&gt; AddRoundKey</span><br></pre></td></tr></table></figure>
+
+<p>解密，就是按照相反的顺序来进行就可以：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AddRoundKey --&gt; InvMixColumns --&gt; InvShiftRows --&gt; InvSubBytes</span><br><span class="line"></span><br><span class="line">* Inv 表示逆运算</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rijndael 的算法背后有着严谨的数学结构，明文到密文的过程可以全部用数学公式来表达，此外，轮密钥的计算也涉及到稍微复杂的过程，没有在这里涉及。</p>
+<h2 id="使用-openssl-和-JCA-进行加密解密的验证"><a href="#使用-openssl-和-JCA-进行加密解密的验证" class="headerlink" title="使用 openssl 和 JCA 进行加密解密的验证"></a>使用 openssl 和 JCA 进行加密解密的验证</h2><h3 id="opesnssl-加密和解密"><a href="#opesnssl-加密和解密" class="headerlink" title="opesnssl 加密和解密"></a>opesnssl 加密和解密</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 openssl 加密 'hello' 字符串</span></span><br><span class="line">$ openssl enc -aes-128-cbc -e -base64 -salt -p &lt;&lt;&lt; hello</span><br><span class="line"></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line">key=421990ECB00E9A9B8372D0E46727F6AA</span><br><span class="line">iv =5973EAA7D1C1D5240B78CB8A4458D663</span><br><span class="line">U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw=</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 openssl 进行解密</span></span><br><span class="line">$ openssl enc -aes-128-cbc -d -base64 -salt -p &lt;&lt;&lt; U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw=</span><br><span class="line"></span><br><span class="line">salt=3631C9DA382CE487</span><br><span class="line">key=421990ECB00E9A9B8372D0E46727F6AA</span><br><span class="line">iv =5973EAA7D1C1D5240B78CB8A4458D663</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用-JCA-Java-Cryptography-Architecture-进行验证"><a href="#使用-JCA-Java-Cryptography-Architecture-进行验证" class="headerlink" title="使用 JCA (Java Cryptography Architecture) 进行验证"></a>使用 JCA (Java Cryptography Architecture) 进行验证</h3><p>openssl 会生成 8 个比特的 salt，并以  <code>Salted__${salt}</code>  附加在加密的密文前，一共占 16 个字节，验证如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"U2FsdGVkX182McnaOCzkh7BPMUJaKwGCIc8cAGAtbNw="</span> | base64 -d | hexdump -C</span><br><span class="line">00000000  53 61 6c 74 65 64 5f 5f  36 31 c9 da 38 2c e4 87  |Salted__61..8,..|</span><br><span class="line">00000010  b0 4f 31 42 5a 2b 01 82  21 cf 1c 00 60 2d 6c dc  |.O1BZ+..!...`-l.|</span><br><span class="line">00000020</span><br></pre></td></tr></table></figure>
+
+<p>所以实际加密后密文的 16 进制为：<code>b04f31425a2b018221cf1c00602d6cdc</code></p>
+<p>使用 JCA 进行解密验证：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AESCryptoTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES = <span class="string">"AES"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AES_CBC_PKCS_5_PADDING = <span class="string">"AES/CBC/PKCS5Padding"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String keyHex = <span class="string">"421990ECB00E9A9B8372D0E46727F6AA"</span>;</span><br><span class="line">        String ivHex = <span class="string">"5973EAA7D1C1D5240B78CB8A4458D663"</span>;</span><br><span class="line">        String cipherTextHex = <span class="string">"b04f31425a2b018221cf1c00602d6cdc"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] key = HexUtils.fromHexString(keyHex);</span><br><span class="line">        <span class="keyword">byte</span>[] iv = HexUtils.fromHexString(ivHex);</span><br><span class="line">        <span class="keyword">byte</span>[] cipherText = HexUtils.fromHexString(cipherTextHex);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] clearText = aesDecrypt(key, iv, cipherText);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> String(clearText, StandardCharsets.UTF_8));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SneakyThrows</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] aesDecrypt(<span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv, <span class="keyword">byte</span>[] cipherText) &#123;</span><br><span class="line">        <span class="comment">// constructor a secret key</span></span><br><span class="line">        SecretKeySpec secretKey = <span class="keyword">new</span> SecretKeySpec(key, AES);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init algorithm parameters with iv</span></span><br><span class="line">        AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance(AES);</span><br><span class="line">        IvParameterSpec ivParameterSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line">        algorithmParameters.init(ivParameterSpec);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// init a AES cipher with key and iv</span></span><br><span class="line">        Cipher cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, secretKey, algorithmParameters);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// decrypt</span></span><br><span class="line">        <span class="keyword">return</span> cipher.doFinal(cipherText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最终输出 hello</span></span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/JCA/">JCA</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-04-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>JSSE Java Secure Socket Extension</p>
+<p>JGSS Java Generic Security Services - kerberos</p>
+<p>SASL Simple Authentication and Security Layer</p>
+<p>JCE 使用和 JCA 一样的架构，JCE 应该被看做是 JCA 的一部分.</p>
+<p><strong>JDK 中的 JCA 包含两个组件：</strong></p>
+<ul>
+<li>定义密码服务以及提供支持的框架</li>
+<li>实际提供实现的 provider， 如 Sun, SunRsaSign, SunJCE</li>
+</ul>
+<h2 id="JCA-设计原则"><a href="#JCA-设计原则" class="headerlink" title="JCA 设计原则"></a><strong>JCA 设计原则</strong></h2><ul>
+<li>实现独立性与互操作性</li>
+<li>算法独立性与可扩展</li>
+</ul>
+<p>使用密码服务，例如数字签名，消息摘要等，并不需要担心实现的细节，甚至是组成这些基础概念的的算法。完全的算法独立性是做不到的，这里的意思就是不可能完全抽象出一个接口，屏蔽使用的细节，做到算法的独立性。JCA 提供了标准化的，特定类型相关算法的 API. 并且当有多个实现时，允许开发者指定特定的实现。</p>
+<p><strong>算法的独立性</strong></p>
+<p>通过密码引擎（cryptographic engines）， 以及提供这些密码引擎功能的定义类实现独立性。这些类被称为 <strong>引擎类</strong>，如 <code>MessageDigest</code>, <code>Signature</code>, <code>KeyFactory</code>, <code>KeyPairGenerator</code>, <code>Cipher</code> 等类</p>
+<p><strong>实现的独立性</strong></p>
+<p>使用基于 procider 的架构实现的， provider（Cryptograpic Service Provider）在这里指的是实现一个或多个密码服务（如数字签名算法，消息摘要算法等）的包或一组包。应用程序可能只是简单的从安装的众多 provider 中请求实现了某个特定服务的特定类型对象，如实现了 DSA 签名算法的 <code>Signature</code> 对象，当然也可以自己指定从哪个特定的 provider 中获取。provider 对应用程序的使用是透明的。</p>
+<p><strong>可互操作性</strong></p>
+<p>的事项也可以正常工作，一个 provider 提供的某个服务实现产生的密钥，可以用于另一个 provider 相同服务提供的实现。再比如证书以及证书的验证等。其实就是算法都是相同的，JCA 对输入，输出进行了标准化，所以不同的 provider 实现都要遵循相同的标准，又是实现相同的算法，当然可以互相操作了<strong>。</strong></p>
+<p><strong>算法的可扩展性</strong></p>
+<p>只要是现有引擎类支持，该引擎类类的新算法可以很容易的被添加。比如，现在有一种新的消息摘要算法，实现之后就可以提供 provider ，应用中使用相同的引擎类 <code>MessageDigest</code> 类获取该新算法的实例，就可以使用了。</p>
+<h2 id="Cryptographic-Service-Providers"><a href="#Cryptographic-Service-Providers" class="headerlink" title="Cryptographic Service Providers"></a>Cryptographic Service Providers</h2><p><code>java.security.Provider</code> 类是所有 provider 的基类，每一个 CSP 包含了这个类的一个实例，其中包含了 provider 的名称以及所有它实现的安全服务/算法的列表。 当需要某个特定算法的实例时，JCA 框架会查询所有的 provider，如果有匹配，就会创建它的实例。</p>
+<p>providers 的包提供了一些广为人知的密码算法的具体实现。每一个 JDK 都默认安装并配置了一个或多个 provider。额外的 provider 可以被静态或动态的安装。客户端可以配置它们的运行时环境来指定 provider 的优先级顺序。就是 provider 被搜索的顺序。</p>
+<p>使用 JCA，可以直接请求某个特定类型的对象和特定的算法，如 <code>MessageDigest</code>, 使用 <code>SHA-256</code> 摘要算法，这会从安装的 provider 中获得一个该算法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>);</span><br></pre></td></tr></table></figure>
+
+<p> 如果需要，当然也可以指定某个具体的 provider</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md = MessageDigest.getInstance(<span class="string">"SHA-256"</span>,<span class="string">"providerName"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>JDK 中的密码服务实现分布在几个不同的 provider 中（Sun, SunJSSE, SunJCE, SunRsaSing）, 其它 Java 运行时环境可能不包含这些 provider ，所以只有在确定某个 provider 安装的情况下，才可以指定使用哪个 provider 的实现。JCA 提供了 API 可以用户查询安装的 provider 以及它们提供的安全服务/算法。JCA 使得第三方的 provider 的添加也是很容易的, 如 BouncyCastle。</p>
+<h3 id="Provider-具体是怎么实现的"><a href="#Provider-具体是怎么实现的" class="headerlink" title="Provider 具体是怎么实现的"></a>Provider 具体是怎么实现的</h3><p>有如下的代码，目的是获取一个 AES 密码算法的实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cipher c = Cipher.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">c.init(ENCRYPT_MODE, key);</span><br></pre></td></tr></table></figure>
+
+<p>具体的流程大概如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">调用引擎类 Cipher 的静态工厂方法 getInstance</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">JCA 框架查询每一个安装的 provider， 并获取 Provider 类的一个实例（Provider视作是提供的算法的一个数据库）</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">最终找到一个合适的 CSP(provider)，并指向了继承了 CipherSPI 的实现类 AESCipher，创建 AESCipher 的实例</span><br><span class="line"> </span><br><span class="line"> |</span><br><span class="line">\|&#x2F;</span><br><span class="line"></span><br><span class="line">AESCIpher 实例被封装在一个新创建的 Cipher 实例, Cipher 实例返回</span><br></pre></td></tr></table></figure>
+
+<p>当调用 <code>init</code> 方法时，Cipher 实例会将请求委托给 AESCiphrt对象对应的 <code>engineInit</code> 方法</p>
+<h3 id="KeyStore"><a href="#KeyStore" class="headerlink" title="KeyStore"></a>KeyStore</h3><p>keystore 是一种用来管理密钥和证书的数据库。应用在需要数据认证，加密以及签名时，就可以使用 keystore，在程序中，可以通过 <code>KeyStore</code> 类（位于 java.security 包下）。</p>
+<p><strong>keystore 类型/格式</strong></p>
+<ul>
+<li>pkcs12 - 基于 RSA PKCS12 （Personal Information Exchange Syntax Standard）标准, JDK9 默认以及推荐的格式</li>
+<li>jks - 私有格式</li>
+<li>jceks - 私有格式</li>
+<li>pkcs11 - 基于 RSA PKCS11 标准，支持对密码令牌的访问，如硬件安全模块和智能卡</li>
+</ul>
+<p>应用可以从不同的 provider 中选择不同类型的 keystore 实现。 KeyStore 类提供了接口来访问和修改一个 keystore 中的信息。这个类代表了一个内存中密钥和证书的集合，主要用来管理两种类型的条目:</p>
+<ul>
+<li><p>密钥 - Key</p>
+<p>密钥类型的条目保存了非常敏感的密钥信息，<strong>必须进行保护以避免未经授权的访问</strong>。通常，是一个私密的密钥 (secret key) 或者是一个私钥（private key）以及对其公钥进行认证的证书链。私钥以及证书链被一个指定的实体使用数字签名来进行自认证。例如：软件供应商对 JAR 文件进行数字签名，作为软件发布的一部分</p>
+</li>
+<li><p>受信任的证书 - Trusted Certificate Entry</p>
+<p>这种类型的条目仅包含了一个个公钥证书(从属于其它实体),  被称为受信任的证书,因为 keystore 的拥有者新人证书中的公钥确实是属于证书 <code>subject(owner)</code> 所标识的实体</p>
+</li>
+</ul>
+<p>keystore 中的每一个条目都通过一个<strong>别名</strong> (alias) 字符串表示. 对于私钥及其关联的证书链，这些字符串区分实体进行身份验证的不同方式。</p>
+<p><strong>示例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use openssl tool to create pkcs12 file:</span></span><br><span class="line"><span class="comment">     * $ openssl pkcs12 -export -in con_key_crt.pem -out sub_ca.p12 -CAfile root_ca.crt -name myKeyEntry</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * con_key_crt.pem is a simple concatenation of sub_ca_key.pem and sub_ca.crt:</span></span><br><span class="line"><span class="comment">     * $ cat sub_ca_key.pem sub_ca.crt &gt;&gt; con_key_crt.pem</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">keyStoreTest</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (InputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"D:\\idea-workspace\\sub_ca.p12"</span>)) &#123;</span><br><span class="line">            KeyStore keyStore = KeyStore.getInstance(<span class="string">"pkcs12"</span>);</span><br><span class="line">            <span class="comment">// 此处的密码用于验证 keystore 的完整性</span></span><br><span class="line">            keyStore.load(in, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 打印所有的 alias 别名, 此例中只有一个 myKeyEntry (openssl -name 选项)</span></span><br><span class="line">            Enumeration&lt;String&gt; aliases = keyStore.aliases();</span><br><span class="line">            <span class="keyword">while</span> (aliases.hasMoreElements()) &#123;</span><br><span class="line">                System.out.println(<span class="string">"alias:"</span> + aliases.nextElement());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取 RSA 私钥</span></span><br><span class="line">            Key key = keyStore.getKey(<span class="string">"myKeyEntry"</span>, <span class="string">"123456"</span>.toCharArray());</span><br><span class="line">            System.out.println(key.getAlgorithm());</span><br><span class="line"></span><br><span class="line">            KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">            RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(key, RSAPrivateKeySpec<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            System.out.println(privateKeySpec.getModulus());</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取证书</span></span><br><span class="line">            Certificate certificate = keyStore.getCertificate(<span class="string">"myKeyEntry"</span>);</span><br><span class="line">            System.out.println(certificate.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PKCS12 文件的生成详细内容见 PKCS 一章中的介绍,这里解析的 keystore 就是使用 openssl 创建的 PKCS12 文件, 包含了私钥及证书</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Engine-Classes-and-Algorithoms"><a href="#Engine-Classes-and-Algorithoms" class="headerlink" title="Engine Classes and Algorithoms"></a>Engine Classes and Algorithoms</h2><p>引擎类提供了到某一个具体类型的安全服务的接口， 与 provider 及算法是独立的，提供了以下功能：</p>
+<ul>
+<li><p>密码服务操作（加密解密、数字签名，消息摘要等）</p>
+</li>
+<li><p>密码材料（cryotographic material）的生成或转换（密钥和算法初始化参数）</p>
+</li>
+<li><p>封装密码数据的对象（keystore 或证书），可以在抽象层的上层使用</p>
+</li>
+</ul>
+<p><strong>可用的引擎类：</strong></p>
+<ul>
+<li>SecureRandom 用来生成随机数或伪随机数</li>
+<li>MessageDigest 用来计算数据的消息摘要（hash, 单向散列函数）</li>
+<li>Signature 通过密钥进行初始化，用来对数据进行签名以及验证数字签名</li>
+<li>Cipher 通过密钥初始化，用来对数据进行加密，解密，有不同类型的密码算法：对称、非对称、PBE 等</li>
+<li>Mac Message Authentication Codes 同样也是用来生成 hash 值的，但是要用到密钥，用来保护数据的完整性</li>
+<li>KeyFactory 用来将非透明 <code>Key</code> 类型的密钥转换为特定密钥标准形式，反之亦然</li>
+<li>SecretKeyFactory 用来将非透明 <code>SecretKey</code> 类型的密钥转换为特定密钥标准形式，SecretKeyFactory 是 KeyFactory 的特殊形式，专门用来生成秘密的堆成密码的密钥</li>
+<li>KeyPairGenerator 用来生成一个新的公钥，私钥对，适用于特定的算法</li>
+<li>KeyGeneraor 用来生成特定算法的密钥</li>
+<li>KeyAgreement 使用在通信的两端，用来协商创建一个特定的密钥，使用在特定的密码操作中</li>
+<li>AlgorithmParameters 用来存储的特定算法的参数，包含参数编码和解码</li>
+<li>AlgorithmParameterGeneraor 用来生成适用于特定算法的一组 AlgorithmParameters</li>
+<li>KeyStore 用来创建以及管理一个 keystore. 一个 keystore 是一个存储密钥的数据库，keystore 中的私钥还关联了一个与其相关的证书链，用来认证对应的公钥。keystore 可能包含来自信任实体的证书</li>
+<li>CertificateFactory 用来创建公钥证书和 CRLs (Certificate Revtocation Lists) 证书撤回列表</li>
+<li>CertPathBuilder 用来创建一个证书链（也称之为证书路径）</li>
+<li>CertPathVlidator 用来对证书链进行验证</li>
+<li>CertStore 用来从一个 repository 中检索证书和 CRLs</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="https://docs.oracle.com/en/java/javase/11/security/java-cryptography-architecture-jca-reference-guide.html#GUID-2BCFDD85-D533-4E6C-8CE9-29990DEB0190" target="_blank" rel="noopener">Java Cryptography Architecture (JCA) Reference Guide</a></p>
+<p>[2] <a href="https://docs.oracle.com/en/java/javase/14/docs/specs/security/standard-names.html#keystore-types" target="_blank" rel="noopener">Java Security Standard Algorithm Names</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/">对称密码</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-04-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86/">加密与解密</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="一次性密码本"><a href="#一次性密码本" class="headerlink" title="一次性密码本"></a>一次性密码本</h2><p>一次性密码本也称为<strong>维纳密码</strong>（Vernam Cipher），特点：无条件安全，理论上是 ”无法破译” 的。</p>
+<h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>将明文与一串<strong>随机</strong>的比特序列进行 <strong>XOR</strong> 运算，随机不是随便臆想出一个随机的序列，抛硬币的过程可以看作随机的过程，比如出现正面，可以看作比特位 1， 反面看作比特位 0. 密码学中有专门的随机数生成硬件和伪随机数生成器软件。</p>
+<p>例如, 明文 midnight 的 ASCII 比特序列为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">"midnight"</span> | hexdump -e <span class="string">'/1 "%02X "'</span> | xargs -n 1 | <span class="keyword">while</span> <span class="built_in">read</span> dec; <span class="keyword">do</span> <span class="built_in">echo</span>  <span class="string">"ibase=16;obase=2;<span class="variable">$dec</span>"</span> | bc | tr <span class="string">"\n"</span> <span class="string">" "</span> | sed <span class="string">'s/^/0/g'</span>; <span class="keyword">done</span>; <span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line">01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 ====&gt; midnight</span><br></pre></td></tr></table></figure>
+
+<p>产生一个和明文长度相同的 64 位比特序列，作为一次性密码本的密钥:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 ====&gt; 密钥</span><br></pre></td></tr></table></figure>
+
+<p>加密，即进行异或运算</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 明文</span><br><span class="line">⊕</span><br><span class="line">	01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 密钥</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">	00100000 00100100 00110000 00010000 00000110 00000110 00101000 01100000 密文</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>解密就是加密的反向运算，即用密文和密钥进行 X0R 运算，就可以得到明文</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	00100000 00100100 00110000 00010000 00000110 00000110 00101000 01100000 密文</span><br><span class="line">⊕</span><br><span class="line">	01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100 密钥</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">	01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100 明文</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一次性密码本是无法破译的"><a href="#一次性密码本是无法破译的" class="headerlink" title="一次性密码本是无法破译的"></a>一次性密码本是无法破译的</h3><p>只要遍历密钥空间，总能找到进行加密解密的密钥（运算能力无穷大，可以在有限时间内），然后对密文界面，无法破译指的是<strong>没有办法判断解密后的内容是否是正确的的明文</strong>， 所有可能密钥的解密，可能会出现类似于 midnight, onenight 的单词，也可能会出现其他不规则的字符组合，作为一个破译者，没有办法定义哪一个是正确的明文。明文就对应着密钥，所以一次性密码本无法破译。</p>
+<h3 id="一次性密码本存在的问题"><a href="#一次性密码本存在的问题" class="headerlink" title="一次性密码本存在的问题"></a>一次性密码本存在的问题</h3><ul>
+<li><p>密钥配送</p>
+<p>可以安全的发送密钥，那为什么不直接用来安全的发送明文？</p>
+</li>
+<li><p>密钥保存</p>
+<p>密钥与明文一样长，保存明文转换为保存密钥的问题</p>
+</li>
+<li><p>密钥重用</p>
+<p>不能重用用过的随机比特序列，否则，获取所有的机密通信将被全部解密</p>
+</li>
+<li><p>密钥同步</p>
+<p>密钥长度与明文长度相同，明文过长，密钥的传输与通信不能有任何差错（比特位的丢失，错位等），否则，将不能解密</p>
+</li>
+</ul>
+<h2 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h2><p>DES (Data Encryption Standard) 是 1997 年美国联邦信息处理标准中采用的一种对称密码。DES 已经可以在短时间内被破译，所以除了兼容性，不应该再使用 DES 来直接加密</p>
+<h3 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h3><p>DES 属于<strong>分组密码</strong>（block cipher），以 64 比特位为一个单位来进行加密的，密钥长度为 64 位，实际只有 56 位，每隔 7 位会设置一个错误校验位，所以 DES 的密钥长度为 56 位.     (分组密码的模式)</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126210108366.png" alt="image-20210126210108366"></p>
+<h3 id="DES-的结构"><a href="#DES-的结构" class="headerlink" title="DES 的结构"></a>DES 的结构</h3><p>DES 的基本结构由 Horst Feistel 设计, 所以也称为 Feistel  网络, Feistel 结构, Feistel  密码, 并且应用到了其它的密码算法中. Feistel  中将每一次加密过程, 称为<strong>轮</strong> (round), DES 是一种 16 轮循环的 Feistel  网络.</p>
+<h4 id="一轮的过程"><a href="#一轮的过程" class="headerlink" title="一轮的过程"></a>一轮的过程</h4><h5 id="加密的过程"><a href="#加密的过程" class="headerlink" title="加密的过程"></a>加密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126211458134.png" alt="image-20210126211458134"></p>
+<p>Feistel  网络中一轮的过程如上图所示, 输入被等分为左右两半,分别进行处理, 写作左侧和右侧, 加密后的左半部分写作”加密后的左侧”, 右侧称为右侧.</p>
+<p>Feistel  网络中每一轮都需要使用一个不同的密钥, 所以这个密钥只在一轮中使用, 因此称为 <strong>子密钥</strong> (subkey)</p>
+<p><strong>具体的步骤:</strong></p>
+<p>(1) 将输入的数据等分为左右两部分<br>(2) 将输入的右侧直接发送到输出的右侧<br>(3) 将输入的右侧发送到轮函数<br>(4) 轮函数根据右侧数据和子密钥，计算出 一串看上去是随机 的比特序列<br>(5) 将上一步得到的比特序列与左侧数据进行 XOR 运算， 将结果作为加密后的左侧</p>
+<p>每一轮, 右侧部分是没有被加密的,因此需要使用不同的子密钥重复多轮, 每两轮之间将左侧和右侧的数据进行对调. 最后一轮结束后不需要对调。3 轮的Feistel  网络如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213116336.png" alt="image-20210126213116336"></p>
+<h5 id="解密的过程"><a href="#解密的过程" class="headerlink" title="解密的过程"></a>解密的过程</h5><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126213750078.png" alt="image-20210126213750078"></p>
+<p>用相同的子密钥运行两次 Feistel 网络就能够将数据还原， 利用的其实 XOR 异或的性质 (两个相同的数异或为 0)， 多轮的情况是一样的：</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126214210806.png" alt="image-20210126214210806"></p>
+<h4 id="Feistel-网络的性质"><a href="#Feistel-网络的性质" class="headerlink" title="Feistel 网络的性质"></a>Feistel 网络的性质</h4><ul>
+<li><p><strong>加密时无论使用任何函数作为轮函数都可以正确解密</strong></p>
+<p>即便使用的轮函数的输出结果无法逆计算出输入的值（即该函数不存在反函数）也没有问题，可以被设计得任意复杂；Feistel 网络实际上就是从加密算法中抽取出“密码的本质部分”并将其封装成一个轮函数</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>可解密性</strong></p>
+<p>在 Feistel 网络的一轮中， 右半边部分没有进行任何处理，看起来时一种浪费，但却保证了可解密性，是解密过程中所必须的信息；</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>加密和解密可以用相同的结构来实现</strong></p>
+<p>由于加密解密可以用相同的结构来实现，因此用于实现 DES 算法的硬件设备的设计变得容易</p>
+</li>
+</ul>
+<h4 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h4><p>三重 DES (triple - DES) 是为了增加 DES 的强度， 将 DES 重复 3 次的一种密码算法，也称为 TDEA (Triple Date Ecnryption Algorithm), 通常称为 3DES。</p>
+<p><strong>三重 DES 的加密过程：</strong></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221848991.png" alt="image-20210126221848991"></p>
+<p>明文经过三次 DES 处理变为密文，所以三重 DES 的密钥长度是 56 * 3=168 比特. 三重 DES 并不是进行三次加密，而是 <code>加密 --&gt; 解密--&gt; 加密</code> 的过程， 此方法由 IBM 公司设计，目的是兼容普通的 DES， 当三重 DES 使用的所有密钥都相同时，三重 DES 就相等于普通的 DES , 因为 <code>加密--&gt;解密</code> 就变为明文了。因此<strong>三重 DES 对 DES 具备向下兼容性</strong></p>
+<p><strong>DES-EDE2</strong>： 密钥1和密钥3使用相同的密钥，密钥2使用不同的密钥</p>
+<p><strong>DES-EDE3</strong>:   密钥1，密钥2，密钥3全部使用不同的比特序列</p>
+<p><strong>三重 DES 的解密过程：</strong></p>
+<p>三重 DES 的解密过程和加密正好相反，以密钥3，密钥2，密钥1的顺序执行 <code>解密--&gt;加密--&gt;解密</code> 的操作</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20210126221714656.png" alt="image-20210126221714656"></p>
+<h4 id="关于-DES-与-3DES-的使用"><a href="#关于-DES-与-3DES-的使用" class="headerlink" title="关于 DES 与 3DES 的使用"></a>关于 DES 与 3DES 的使用</h4><p>由于 DES 的密文已经可以在短时间内被破译，处理解密以前的密文，不应该再使用 DES 了。三重 DES 由于处理速度不高，很少被用于新的用途。</p>
+<blockquote>
+<p>在日本总务省和经济产业省 2013 年发布的《电子政府相关技术采购中参考的密码清单》中，“电子政府推荐使用的密码清单” 项中将 3-key Triple DES 作为 64 比特分组密码列了出来，但考虑到 IST SP 800-67 的规定，以及其事实性标准的地位，又在脚注中给出了“目前暂且允许使用”的描述</p>
+</blockquote>
+<h4 id="使用-openssl-通过-3DES-进行加密和解密"><a href="#使用-openssl-通过-3DES-进行加密和解密" class="headerlink" title="使用 openssl 通过 3DES 进行加密和解密"></a>使用 openssl 通过 3DES 进行加密和解密</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加密</span></span><br><span class="line">$ cat seq.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">$ openssl enc -e -des3 -a -salt -<span class="keyword">in</span> seq.txt -out encrypted.txt</span><br><span class="line">enter des-ede3-cbc encryption password:</span><br><span class="line">Verifying - enter des-ede3-cbc encryption password:</span><br><span class="line"></span><br><span class="line">$ cat encrypted.txt</span><br><span class="line">U2FsdGVkX1+HbjKWGlQzlIM7EM/TFhzn8wzKBBWn91TBdUSH3bOCeQ==</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密</span></span><br><span class="line">openssl enc -d -des3 -a -salt -<span class="keyword">in</span> encrypted.txt -out decrypted.txt</span><br><span class="line">enter des-ede3-cbc decryption password:</span><br><span class="line"></span><br><span class="line">$ cat decrypted.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/OAuth/">OAuth</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-03-17</span>
                 
                 <span class="post-category">
                     
@@ -98,26 +368,24 @@
             </div>
             <div class="post-content">
                 
-                    <h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p>Executor 接口中只定义了一个方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Executes the given command at some time in the future.  The command</span></span><br><span class="line"><span class="comment">     * may execute in a new thread, in a pooled thread, or in the calling</span></span><br><span class="line"><span class="comment">     * thread, at the discretion of the &#123;<span class="doctag">@code</span> Executor&#125; implementation.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> command the runnable task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException if this task cannot be</span></span><br><span class="line"><span class="comment">     * accepted for execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if command is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <p>OpenID Connect</p>
+<p>User Managed Access (UMA)</p>
+<p>资源拥有者向授权服务器进行身份认证，可以自由选择: 用户名/密码、加密证书、安全令牌、联合单点登录或其它方式</p>
+<p>授权服务器可以保存授权决策，后续可以跳过授权环节，沿用前一次的授权决策</p>
+<p>也可以通过客户端白名单或者黑名单的内部策略来否决用户的决策</p>
+<p>令牌内省</p>
+<p>记忆授权决策</p>
+<p>授权码许可类型</p>
+<p>隐式许可类型</p>
+<p>客户端凭据许可类型</p>
+<p>授权服务器和资源服务共享令牌数据库是一种简单可行的机制，但是如果授权服务器要对多个资源服务进行保护，这种共享就不合适，可以使用：结构化令牌和令牌内省</p>
+<h3 id="结构化令牌-JWT"><a href="#结构化令牌-JWT" class="headerlink" title="结构化令牌 - JWT"></a>结构化令牌 - JWT</h3><h4 id="签名的-JWT"><a href="#签名的-JWT" class="headerlink" title="签名的 JWT"></a>签名的 JWT</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/JWT.png" alt="JWT"></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JWT 头部，描述令牌剩余部分的信息</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"typ"</span>: <span class="string">"JWT"</span>, <span class="comment">// 表明令牌的第二部分（载荷）的类型</span></span><br><span class="line">    <span class="attr">"alg"</span>: <span class="string">"none"</span> <span class="comment">// none 表示未签名的令牌</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 载荷， JWT 的载荷可以是任意的 JSON 对象</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"sub"</span>: <span class="string">"1234567890"</span>, <span class="comment">// 令牌主体, 令牌是关于谁的，一般设为资源拥有者的唯一标识</span></span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"John Doe"</span>,  <span class="comment">// 特定于当前应用的新增字段，用户名称</span></span><br><span class="line">    <span class="attr">"admin"</span>: <span class="literal">true</span>        <span class="comment">// 特定于当前应用的新增字段，是否为管理员</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 载荷， JWT 提供的一些可选的声明，可以为特定的应用新增字段</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"iss"</span>: <span class="string">""</span>,      <span class="comment">// 令牌颁发者，令牌的创建者，一般设为授权服务器的 URL</span></span><br><span class="line">    <span class="attr">"sub"</span>: <span class="string">""</span>,      <span class="comment">// 令牌主体, 令牌是关于谁的，一般设为资源拥有者的唯一标识</span></span><br><span class="line">    <span class="attr">"aud"</span>: <span class="string">""</span>,      <span class="comment">// 令牌的受众，令牌的接收者，包含受保护资源的 URI 或者能够接受该令牌的受保护资源，可以是字符串数组</span></span><br><span class="line">    <span class="attr">"exp"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌的过期时间戳，令牌什么时候过期，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"nbf"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌的生效时间戳，令牌从什么时候生效，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"iat"</span>: <span class="number">123456</span>,  <span class="comment">// 令牌颁发的时间戳，令牌何时被创建，自 UNIX 纪元以来的秒数</span></span><br><span class="line">    <span class="attr">"jti"</span>: <span class="string">""</span>       <span class="comment">// 令牌的唯一标识符。令牌颁发者创建的每一个令牌中唯一，密码随机值，这个值相当于向结构化令牌中加入了一个攻击者无法获得的随机熵组件，有利于防止令牌猜测攻击和重放攻击</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>execute(Runnable command)</code> 方法负责执行提交的任务，<code>Executor</code> 接口将任务的提交，任务的执行，以及线程使用的细节进行解耦。隐藏了创建线程的操作，甚至可以实现为非异步的方式，即由调用线程来直接执行：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DirectExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    r.run();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是，通常情况下，是由调用该方法线程以外的线程来执行的，也就是会为每一个 <code>Runnable</code> 任务（命令）创建一个线程来异步执行：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPerTaskExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(r).start();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-
-<p>属于多线程设计模式 <code>Thread-Per-Message</code>（见《图解 Java 多线程设计模式》） 的实现，即为每个请求分配一个新线程，由这个线程来执行处理。</p>
-<p><strong>该模式具有以下特点：</strong></p>
-<ol>
-<li>提高方法的响应，缩短延迟时间</li>
-<li>适用于对操作顺序没有要求（即方法的调用顺序不一定和执行顺序一致）</li>
-<li>适用于不需要返回值（<code>execute</code>方法的返回类型为 <code>void</code>）</li>
-</ol>
-<p>​    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通过 JOSE 库得到最终代签名的令牌 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImF1dGhzZXJ2ZXIifQ.eyJpc3MiOiJodH</span><br><span class="line">RwOi8vbG9jYWxob3N0OjkwMDEvIiwic3ViIjoiOVhFMy1KSTM0LTAwMTMyQSIsImF1ZCI6Imh0d</span><br><span class="line">HA6Ly9sb2NhbGhvc3Q6OTAwMi8iLCJpYXQiOjE0NjcyNTE5NjksImV4cCI6MTQ2NzI1MjI2OSwi</span><br><span class="line">anRpIjoidURYMWNwVnYifQ.nK-tYidfd6IHW8iwJ1ZHcPPnbDdbjnveunKrpOihEb0JD5wfjXoY</span><br><span class="line">jpToXKfaSFPdpgbhy4ocnRAfKfX6tQfJuFQpZpKmtFG8OVtWpiOYlH4Ecoh3soSkaQyIy4L6p8o</span><br><span class="line">3gmgl9iyjLQj4B7Anfe6rwQlIQi79WTQwE9bd3tgqic5cPBFtPLqRJQluvjZerkSdUo7Kt8XdyG</span><br><span class="line">yfTAiyrsWoD1H0WGJm6IodTmSUOH7L08k-mGhUHmSkOgwGddrxLwLcMWWQ6ohmXaVv_Vf-9yTC2</span><br><span class="line">STHOKuuUm2w_cRE1sF7JryiO7aFRa8JGEoUff2moaEuLG88weOT_S2EQBhYB0vQ8A</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -126,238 +394,179 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">杂七杂八</a></h2>
+                <h2><a class="post-title-link" href="/Java/OAuth2.0/">OAuth2.0</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-12-27</span>
+                <span class="post-time">2021-03-13</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Linux/">Linux</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p><a href="https://blog.csdn.net/cuijiying/article/details/104993550" target="_blank" rel="noopener">window系统电脑某个端口下的程序无法被局域网内的电脑访问的问题</a></p>
-<p><a href="https://blog.csdn.net/qq_43442102/article/details/100195522" target="_blank" rel="noopener">ubuntu-linux 笔记本合上盖子保持链接</a></p>
+                    <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><ul>
+<li><p>client_id: 客户端标识字符串，由授权服务器分配，形式可采用开发者门户，动态客户端注册机等</p>
+</li>
+<li><p>client_secret: 保密客户端的共享密钥，用于与授权服务器交互时对自身进行身份认证，由授权服务器分配</p>
+</li>
+</ul>
+<p><strong>其它配置：</strong></p>
+<ul>
+<li>重定向 url</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/callback</span><br></pre></td></tr></table></figure>
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/cURL%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">cURL基本使用</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-12-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h4 id="指定用户代理"><a href="#指定用户代理" class="headerlink" title="指定用户代理"></a>指定用户代理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -A, --user-agent &lt;name&gt; Send User-Agent &lt;name&gt; to server</span></span><br><span class="line">curl -A <span class="string">"Mozilla/5.0"</span> http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="设置参照页（referer）"><a href="#设置参照页（referer）" class="headerlink" title="设置参照页（referer）"></a>设置参照页（referer）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -e, --referer &lt;URL&gt; Referrer URL</span></span><br><span class="line">curl --referer http://google.com http://knopper.org</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="使用-cURL-进行认证"><a href="#使用-cURL-进行认证" class="headerlink" title="使用 cURL 进行认证"></a>使用 cURL 进行认证</h4><p>HTTP Basic 认证</p>
-<ol>
-<li>使用 <code>Authorization</code> 头部</li>
+<ul>
+<li><p>授权端点</p>
+</li>
+<li><p>令牌端点</p>
+</li>
+<li><p>资源服务器， 受保护的资源端点</p>
+</li>
+</ul>
+<h3 id="授权码许可方式获取访问令牌"><a href="#授权码许可方式获取访问令牌" class="headerlink" title="授权码许可方式获取访问令牌"></a>授权码许可方式获取访问令牌</h3><ol>
+<li>将用户重定向至授权服务器的授权端点，并在请求的 URL 中包含适当的查询参数，如请求权限范围，重定向 URL （回调 URL, 即授权服务器返回授权码给客户端的端点），client_id 等。</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -H <span class="string">"Authorization: Basic Z3Vlc3Q6Z3Vlc3Q="</span> http://localhost:8080/validation/basic</span><br><span class="line"></span><br><span class="line"><span class="comment"># Authorization Success</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># `code` 授权码许可类型</span></span><br><span class="line"><span class="attr">response_type</span>: <span class="string">'code',</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端标识 ID</span></span><br><span class="line"><span class="attr">client_id</span>: <span class="string">client.client_id,</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端接收授权码的端点</span></span><br><span class="line"><span class="attr">redirect_uri</span>: <span class="string">client.redirect_uris[0]</span></span><br></pre></td></tr></table></figure>
+
+
 
 <ol start="2">
-<li>使用 <code>-u</code> 完成 HTTP 或 FTP 认证</li>
+<li>在授权<strong>服务器授权端点</strong>，用户对客户端进行授权（可能包含必要用户身份认证），授权结束，根据客户端传过来的重定向 URL 重定向至客户端端点, 并且携带了授权服务器生成的授权码</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl -u user:pass</span></span><br><span class="line">curl -u <span class="string">"guest:guest"</span> http://localhost:8080/validation/basic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示后输入密码</span></span><br><span class="line">curl -u guest http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>客户端拿到授权码，使用 <strong>POST</strong> 请求，并使用 Http Basic 认证（client_id作为用户名，client_secret 作为密码），将授权码以表单形式放入请求体中，发送至<strong>服务器令牌端点</strong></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 请求头部，使用表单，使用 Http Basic 认证</span></span><br><span class="line"><span class="keyword">var</span> headers = &#123;</span><br><span class="line"><span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line"><span class="string">'Authorization'</span>: <span class="string">'Basic '</span> + encodeClientCredentials(client.client_id,</span><br><span class="line">client.client_secret)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 授权码许可类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'authorization_code',</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权码</span></span><br><span class="line"><span class="attr">code</span>: <span class="string">code,</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 此处不需要执行重定向</span></span><br><span class="line"><span class="comment"># 这里是 OAuth 规范约定必须指定和请求授权时相同的重定向 url</span></span><br><span class="line"><span class="attr">redirect_uri</span>: <span class="string">client.redirect_uris[0]</span></span><br></pre></td></tr></table></figure>
 
+<ol start="4">
+<li>请求成功时，授权服务器返回一个包含访问令牌等信息的 JSON 对象</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>	<span class="comment">// Bearer 令牌，持有该类型的令牌，就可以向受保护资源出示</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="只打印返回头部信息"><a href="#只打印返回头部信息" class="headerlink" title="只打印返回头部信息"></a>只打印返回头部信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -I http://localhost:8080/validation/basic</span><br><span class="line"></span><br><span class="line">curl --head http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>客户端解析 JSON 对象，获取访问令牌值，并将其保存起来，以便以后使用</li>
+</ol>
+<h3 id="使用-state-参数添加跨站保护"><a href="#使用-state-参数添加跨站保护" class="headerlink" title="使用  state 参数添加跨站保护"></a>使用  state 参数添加跨站保护</h3><p>为了避免恶意调用客户端重定向 URL 端点 （<code>client.redirect_uris[0]</code>），破解令牌，请求授权端点前，客户端生成一个随机字符串，并添加在请求授权端点的请求参数中 （state），授权端点在返回授权码时，会带着这个字符串，客户端进行比较，如果相同，表明是自己之前发送的授权请求，否则，应向客户提示异常。</p>
+<h3 id="使用令牌访问受保护资源"><a href="#使用令牌访问受保护资源" class="headerlink" title="使用令牌访问受保护资源"></a><strong>使用令牌访问受保护资源</strong></h3><p>bearer 令牌，它意味着无论是谁，只要持有该令牌就可以向受保护资源出示</p>
+<p>使用令牌向受保护资源发出调用请求，令牌的使用的方式有三种：</p>
+<ol>
+<li>HTTP Authorization 头部（OAuth 规范推荐）</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">'Authorization': 'Bearer ' + access_token</span><br></pre></td></tr></table></figure>
 
-
-
-<h4 id="打印响应头部信息"><a href="#打印响应头部信息" class="headerlink" title="打印响应头部信息"></a>打印响应头部信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -i, --include       Include protocol response headers in the output</span></span><br><span class="line">curl -i http://localhost:8080/validation/basic</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="使用其他-HTTP-方法"><a href="#使用其他-HTTP-方法" class="headerlink" title="使用其他 HTTP 方法"></a>使用其他 HTTP 方法</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  -X, --request &lt;command&gt; Specify request command to use</span></span><br><span class="line">curl -X DELETE http://upload.linuxhandbook.org/files/deleteFile.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="发送数据到服务器"><a href="#发送数据到服务器" class="headerlink" title="发送数据到服务器"></a>发送数据到服务器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -d, --data &lt;data&gt;   HTTP POST data</span></span><br><span class="line">curl -i -X POST http://localhost:8080/addPerson -d <span class="string">'&#123;"name":"Jason","age":26,"gender":"male","address"AVE.18"&#125;'</span> -H <span class="string">"Content-Type: application/json"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="将-Cookie-写入到文件中"><a href="#将-Cookie-写入到文件中" class="headerlink" title="将 Cookie 写入到文件中"></a>将 Cookie 写入到文件中</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  -c, --cookie-jar &lt;filename&gt; Write cookies to &lt;filename&gt; after operation</span></span><br><span class="line">curl -c googleCookie.txt http://www.google.com/files</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="使用Cookie"><a href="#使用Cookie" class="headerlink" title="使用Cookie"></a>使用Cookie</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  -b, --cookie &lt;data&gt; Send cookies from string/file</span></span><br><span class="line"><span class="comment"># 从文件读取或者在命令行中指定</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 多个 cookie 使用分号分割</span></span><br><span class="line">curl http://example.com --cookie <span class="string">"user=username;pass=hack"</span></span><br><span class="line"></span><br><span class="line">curl -b googleCookie.txt http://www.google.com/files</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="开启新的会话（Session）"><a href="#开启新的会话（Session）" class="headerlink" title="开启新的会话（Session）"></a>开启新的会话（Session）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -j, --junk-session-cookies Ignore session cookies read from file</span></span><br><span class="line">curl -b googleCookie.txt http://www.google.com/files -j</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F/">Semaphore-信号量</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-12-05</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore - 信号量"></a>Semaphore - 信号量</h2><h3 id="1-什么是信号量"><a href="#1-什么是信号量" class="headerlink" title="1. 什么是信号量"></a>1. 什么是信号量</h3><p> 一个信号量是一个整数变量，在多个进程间进行共享. 信号量的主要目的在于 ：</p>
-<ul>
-<li>处理同步问题</li>
-<li>并发环境下用于共享资源的访问控制</li>
-</ul>
-<p>信号量的取值取决于遇到的具体问题，通常，会使用可用资源的个数作为信号量的初始值。</p>
-<h3 id="2-信号量操作"><a href="#2-信号量操作" class="headerlink" title="2. 信号量操作"></a>2. 信号量操作</h3><p>信号量包含两个独立的原子操作，也就是 <code>wait</code> 和 <code>signal</code>. 也被称之为 <code>P</code> (荷兰语Proberen(测试)的首字母) 和 <code>V</code> 荷兰语Verhogen(增加)的首字母. </p>
-<p>假设 <code>S</code> 表示一个信号量，他的整数值代表了某种可用资源的数量，那么 <code>wait</code> 和 <code>signal</code> 操作分表可用如下的伪代码表示</p>
-<h4 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201204409486.png" alt="image-20201201204409486"></p>
-<p>如果 <code>S</code> 的值大于 0，<code>wait</code> 操作会简单的进行减 1 操作，表示仍有资源可以用于分配；如果 <code>S</code> 已经是 0 ， 表示没有可用的资源进行分配， 那么调用 <code>wait</code> 操作的进程会进入休眠（sleep）状态</p>
-<h4 id="signal"><a href="#signal" class="headerlink" title="signal"></a>signal</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201204646050.png" alt="image-20201201204646050"></p>
-<p>如果没有其它进程等待资源， <code>signal</code> 操作会进行一个加 1 操作；否则，一个等待的进程会被唤醒（操作系统调度器），最终，唤醒的进程获得了资源的访问控制权限。</p>
-<p><strong>简单总结</strong></p>
-<p><code>wait</code>： (把信号量减1)，若成功，则退出；若失败，则该进程被阻塞；</p>
-<p><code>signal</code>：(把信号量加1)，如果发现有被阻塞的进程，则选择一个唤醒之。</p>
-<h3 id="3-信号量的种类"><a href="#3-信号量的种类" class="headerlink" title="3. 信号量的种类"></a>3. 信号量的种类</h3><ul>
-<li><p>Binary Semphore - 二元信号量</p>
-<p>二元信号量的取值只能是 0 或 1, 可以实现互斥的效果（mutex）， 可以用来解决临界区（critial section）问题。</p>
+<ol start="2">
+<li><p>使用表单格式的请求体参数 （必须使得资源端点支持 POST 请求和表单）</p>
 </li>
-</ul>
-<p>  <strong>binary semphore is not a mutex ?</strong></p>
-<ul>
-<li><p>Counting Semphore - 计数信号量</p>
-<p>计数信号量的取值域是不受限制的，可以用来解决资源分配的同步问题。</p>
+<li><p>使用 URL 编码的查询参数 （可能使得令牌暴漏在请求日志中）</p>
 </li>
-</ul>
-<p>信号量的实现，通常需要一个整数值来保存信号量的值，以及一个指针指向等待队列中下一个要执行的进程，同时要避免死锁（deadlock）和饥饿 (starvation)</p>
-<h4 id="死锁的情况"><a href="#死锁的情况" class="headerlink" title="死锁的情况"></a>死锁的情况</h4><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201214736878.png" alt="image-20201201214736878"></p>
-<p>进程 0 执行了 <code>wait(S)</code> 操作，然后进程被打断，进程 1 开始执行 <code>wait(Q)</code> 操作后，就开始等待信号量 <code>S</code>, 会被阻塞，然后进入休眠状态，当内核开始执行进程 0 时，信号量 <code>Q</code> 已经被使用，所以两个进程互相等待对方的情况，出现了死锁</p>
-<p>如何解决 ?</p>
-<h3 id="4-使用信号量的例子"><a href="#4-使用信号量的例子" class="headerlink" title="4. 使用信号量的例子"></a>4. 使用信号量的例子</h3><h4 id="临界区问题"><a href="#临界区问题" class="headerlink" title="临界区问题"></a>临界区问题</h4><p><strong>临界区（critical section）</strong>是指代码的一部分，必须避免并发访问。 这时，可以使用一个二元信号量来解决这个问题，信号量的值初始化为 1.  保证互斥的执行临界区代码，一旦 <code>signal</code> 操作，内核会将休眠的进程添加到就绪队列，等待内核执行该进程时，就可以继续执行临界的代码。确保在任何时刻，临界区的代码只有一个和进程在执行</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201215432904.png" alt="image-20201201215432904"></p>
-<h4 id="以顺序执行"><a href="#以顺序执行" class="headerlink" title="以顺序执行"></a>以顺序执行</h4><p>假设要执行代码片段 S1 和 S2 ，但是要求 S1 先执行， S2 后执行</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201220621412.png" alt="image-20201201220621412"></p>
-<p>使用一个初始值为 0 的信号量就可以解决这个问题：</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201220908667.png" alt="image-20201201220908667"></p>
-<h4 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者/消费者问题"></a>生产者/消费者问题</h4><p>在这个问题中，生产者往缓冲区中生产物品，消费中从缓冲区中拿出来消费，他们分别对应 Producer 进程和 Consumer 进程，这是，使用一个信号量 <code>S</code> 代表换取中的物品个数，初始化为 0.</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201201222814601.png" alt="image-20201201222814601"></p>
-<p>缓冲区满了，生产者应该停止生产，进入休眠状态，缓冲区空闲了，谁来通知 Producer 进程呢？</p>
-<p>使用三个信号量：</p>
-<p><code>empty</code>： 表示缓冲区中剩余空间大小，初始化为缓冲区的大小</p>
-<p><code>full</code>：表示缓冲区中已用空间大小，初始化为 0</p>
-<p><code>S</code> 用来保护缓冲区同时只能被一个进程访问， 初始化 1</p>
-<p>![image-20201201223208708](D:\Markdown 目录\Markdown 文档\工作\Java\img-assets\image-20201201223208708.png)·</p>
-<p><strong>生产者</strong>：</p>
-<p>如果 <code>empty</code> 信号量变为 0 ，生产者进入休眠状态；否则往缓冲区里进行生产，然后通知 <code>full</code> 信号量，因此会触发唤醒任何可能等待的消费者</p>
-<p><strong>消费者</strong>：</p>
-<p>如果 <code>full</code> 信号量变为 0 ，消费者进入休眠状态，否则从缓冲区中取出物品，并通知 <code>empty</code> 信号量，因此会触发唤醒任何需要进程生成的生成者</p>
-<p>除非缓冲区中还有空间，否则生产者进入休眠状态；除非缓冲区中还有元素，否则消费者进入休眠状态</p>
-<p>还有很多案例，包括哲学家吃饭问题，同一数据集上的读写问题….</p>
-<p>工作中的例子</p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://www.baeldung.com/cs/semaphore" target="_blank" rel="noopener">What is a Semaphore</a></p>
-<p>[2] <a href="https://www.cnblogs.com/biglucky/p/4633706.html" target="_blank" rel="noopener">哲学家进餐问题</a></p>
-<p>[3] <a href="https://zhuanlan.zhihu.com/p/61326272" target="_blank" rel="noopener">PV操作</a></p>
+</ol>
+<h3 id="刷新访问令牌"><a href="#刷新访问令牌" class="headerlink" title="刷新访问令牌"></a>刷新访问令牌</h3><p>无需用户参与下获取新访问令牌的方法</p>
+<p><strong>步骤</strong></p>
+<p>1.授权服务器的令牌端点会将刷新令牌与访问令牌一起返回给客户端</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"987tghjkiu6trfghjuytrghj"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">高级文本命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-11-29</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="高级文本命令"><a href="#高级文本命令" class="headerlink" title="高级文本命令"></a>高级文本命令</h1><h3 id="1-sed-命令"><a href="#1-sed-命令" class="headerlink" title="1 sed  命令"></a>1 sed  命令</h3><h5 id="synopsis-基本用法"><a href="#synopsis-基本用法" class="headerlink" title="synopsis - 基本用法"></a><strong>synopsis - 基本用法</strong></h5><p>sed [OPTION]… {script-only-if-no-other-script} [input-file]..</p>
-<h5 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h5><p><a href="https://www.cnblogs.com/theCambrian/p/3606214.html" target="_blank" rel="noopener">博客园  sed 的工作原理</a></p>
-<p><code>man sed</code></p>
-<h5 id="option"><a href="#option" class="headerlink" title="option"></a><strong>option</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># suppress automatic printing of pattern space</span></span><br><span class="line"><span class="comment"># 关闭 pattern space 的自动打印，如果 command 中已经指定了 p, 可能就需要指定该选项</span></span><br><span class="line">-n, --quiet, --silent</span><br></pre></td></tr></table></figure>
+<p>2.客户端发送访问令牌失效时（使用令牌获取资源失败），使用刷新令牌重新请求访问令牌</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># POST 请求, 同时头部也要添加 Basic 认证信息，并使用表单形式</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'refresh_token',</span></span><br><span class="line"><span class="attr">refresh_token</span>: <span class="string">refresh_token</span></span><br></pre></td></tr></table></figure>
 
+<p><strong>如果刷新令牌有效，返回新的访问令牌和刷新令牌</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"access_token"</span>: <span class="string">"IqTnLQKcSY62klAuNTVevPdyEnbY82PB"</span>,</span><br><span class="line"><span class="attr">"token_type"</span>: <span class="string">"Bearer"</span>,</span><br><span class="line"><span class="attr">"refresh_token"</span>: <span class="string">"j2r3oj32r23rmasd98uhjrk2o3i"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-<h5 id="script-command"><a href="#script-command" class="headerlink" title="script command"></a><strong>script command</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">d      <span class="comment"># Delete pattern space.  Start next cycle.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Copy 即覆盖， append 即追加</span></span><br><span class="line">h H    <span class="comment"># Copy/append pattern space to hold space.</span></span><br><span class="line">g G    <span class="comment"># Copy/append hold space to pattern space.</span></span><br><span class="line">x      <span class="comment"># Exchange the contents of the hold and pattern spaces.</span></span><br><span class="line"></span><br><span class="line">n N    <span class="comment"># Read/append the next line of input into the pattern space.</span></span><br><span class="line">p      <span class="comment"># Print the current pattern space.</span></span><br><span class="line">P      <span class="comment"># Print up to the first embedded newline of the current pattern space.</span></span><br><span class="line"></span><br><span class="line">w filename <span class="comment"># Write the current pattern space to filename.</span></span><br><span class="line">W filename <span class="comment"># Write the first line of the current pattern space to filename.  This is a GNU extension.</span></span><br></pre></td></tr></table></figure>
-<h5 id="examples"><a href="#examples" class="headerlink" title="examples"></a><strong>examples</strong></h5><ul>
-<li>逆序打印文件行，等同于 <code>tac</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一行，只将 pattern space 中的内容 copy 到 hold space，再删除 pattern space，下一轮循环</span></span><br><span class="line"><span class="comment"># 接下来，每一行，将 hold space 的内容 append 到 pattern space，再删除 pattern space，下一轮循环</span></span><br><span class="line">sed <span class="string">'1&#123;h;d&#125;;G;h;$!d'</span> seq.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sed <span class="string">'1!G;h;$!d'</span> t.txt</span><br><span class="line"><span class="comment"># 1!G —— 只有第一行不执行G命令，将hold space中的内容append回到pattern space</span></span><br><span class="line"><span class="comment"># h —— 第一行都执行h命令，将pattern space中的内容拷贝到hold space中</span></span><br><span class="line"><span class="comment"># $!d —— 除了最后一行不执行d命令，其它行都执行d命令，删除当前行</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>指定要处理的行</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印第一行，1 指定第一行</span></span><br><span class="line">sed  -n <span class="string">'1p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印除了第一行的所有行</span></span><br><span class="line">sed -n <span class="string">'1!p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印奇数行，如第 1 行，第 3 行，第 5 行...， 语义为，从第一行开始，每隔 2 行打印</span></span><br><span class="line">sed -n <span class="string">'1~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印偶数行, 语义为每隔 2 行，打印</span></span><br><span class="line">sed -n <span class="string">'0~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，以及后续连续的 5 行</span></span><br><span class="line">sed -n <span class="string">'1,+5p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，直到第一次遇到行号是 2 的倍数的行，打印</span></span><br><span class="line">sed -n <span class="string">'1,~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印最后一行</span></span><br><span class="line">sed -n <span class="string">'$p'</span> seq.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印</span></span><br><span class="line">sed -n <span class="string">'/regex/p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># &amp; 代表匹配的内容</span></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | xargs -n 1 | sed <span class="string">"s/[a-z]/[&amp;]/g"</span></span><br></pre></td></tr></table></figure>
-
-
-
+<p>如果刷新令牌无效，提示错误, 回到最开始没有获取访问令牌的情况，提示用户重新进行获取与令牌的授权</p>
+<h2 id="受保护的资源端"><a href="#受保护的资源端" class="headerlink" title="受保护的资源端"></a>受保护的资源端</h2><p><strong>使用 OAuth 保护 Web API</strong></p>
+<ol>
+<li>从传入的请求中解析出令牌</li>
+<li>通过授权服务器验证令牌</li>
+<li>根据令牌的权限范围做出响应，令牌的权限范围有多种</li>
+</ol>
+<p><strong>资源服务器如何对请求中传过来的令牌进行验证？</strong></p>
+<ol>
+<li>授权服务器与资源服务器共享令牌数据库</li>
+<li>使用令牌内省（token introspection）的 Web 协议，由授权服务器提供接口，让资源服务器能在运行时检查令牌的状态</li>
+<li>令牌内包含资源服务器能直接解析并理解的信息，如 JWT, 使用受加密保护的 JSON 对象携带声明信息</li>
+</ol>
+<p><strong>权限范围 scope</strong></p>
+<ol>
+<li><p>不同的权限范围对应不同的操作，如 GET\POST\DELETE 分别对应的 read write delete 权限</p>
+</li>
+<li><p>不同的权限范围对应不同的数据结果，例如，同一个 API 对权限范围不同的客户端返回不同的子集，如有一个销售统计 API, 每个大区只能请求自己大区的数据</p>
+</li>
+<li><p>不同的用户对应不同的数据结果</p>
+</li>
+</ol>
 <blockquote>
-<p>sed表达式通常用单引号来引用。不过也可以使用双引号。 shell会在调用sed前先扩展双引<br>号中的内容。如果想在sed表达式中使用变量，双引号就能派上用场了。</p>
+<p>资源服务器可以根据令牌及其附属信息（如权限范围）直接做出授权决策。资源服务器还可以将访问令牌中的权限范围与其他访问控制信息结合起来，用于决定是否响应 API 调用以及响应什么内容。</p>
 </blockquote>
-<h4 id="2-cut"><a href="#2-cut" class="headerlink" title="2 cut"></a>2 cut</h4><p>synopsis - 基本用法</p>
-<p>cut OPTION  [FILE]</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-d, --delimiter		<span class="comment"># 指定列分隔符</span></span><br><span class="line">-f, --fields		<span class="comment"># 制定要打印的列（不包含列分隔符的行同样会被打印，除非指定 -s）</span></span><br><span class="line">--complement		<span class="comment"># 打印指定之外的列、字符或字节（相当于取反）</span></span><br><span class="line">-output-delimiter	<span class="comment"># 指定打印时的列分隔符</span></span><br><span class="line">-z 					<span class="comment"># 行分隔符为 NUL， cut 是对一行进行切割的</span></span><br></pre></td></tr></table></figure>
+<p>资源服务器如何设计权限是比较灵活的，而且可以和其他控制信息结合，也是属于灵活的一种体现。客户端绝不会知道授权的用户与具体的权限范围，令牌本身就代表了资源拥有者的授权与权限范文，在资源服务器端，通过验证令牌以及获取令牌对应的访问权限，用户，以及其它控制信息，做出是否有要相应的决策以及相应什么内容。</p>
+<h2 id="授权服务器"><a href="#授权服务器" class="headerlink" title="授权服务器"></a>授权服务器</h2><p>授权服务器对用户进行身份认证、注册并管理客户端、颁发令牌。</p>
+<h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ol>
+<li>客户端将用户重定向至授权服务器授权端点 <code>/authorize</code>，并携带了必要的查询参数</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">https://api.weibo.com/oauth2/authorize?</span></span><br><span class="line">client_id=3129654709&amp;													//客户端 id</span><br><span class="line">redirect_uri=https://www.douyu.com/member/oauth/signin/weibo&amp;			//重定向客户端 uri</span><br><span class="line">state=96b2a0b5a31566c5f63b2322f987736a&amp;								//state 防止恶意调用客户端重定向 uri</span><br><span class="line">response_type=code&amp;													//授权码许可类型</span><br><span class="line">approval_prompt=force&amp;													//授权提示？</span><br><span class="line">scope=foo bar															//客户端期望的权限范围</span><br></pre></td></tr></table></figure>
 
 
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cut -d <span class="string">","</span> f 2,5 file		<span class="comment"># 打印第2列，第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 file		<span class="comment"># 打印第2列到第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 --complement file	<span class="comment"># 打印除了2-5列的其他列</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 制定打印第几个字节、字符、列（区间）</span></span><br><span class="line"><span class="comment"># N-M 从第N个字节、字符或字段开始到行尾</span></span><br><span class="line"><span class="comment"># N-  从第N个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"><span class="comment"># -M  从第1个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | cut -d <span class="string">" "</span> -f-4</span><br><span class="line"><span class="comment"># result: a b c d</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"4 3\x001 2"</span> | cut -z -d <span class="string">" "</span> --output-delimiter <span class="string">"#"</span> -f1,2</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>授权服务器验证客户端身份（client id），检查传入的 redirect_url 与注册时的是否一致；验证请求的权限范围是否符合要求（提前为每个客户端限定了权限范围），如果都满足要求，生成一个随机字符串 ,  并将其与客户端请求的查询参数保存为一个映射；渲染一个授权表单，提供授权或拒绝授权，以及权限范围的选择, 并将随机字符串 ，嵌入到表单中（表示未完成授权，为授权页面提供了简单的防跨站请求伪造保护，防止对服务器端授权端点的恶意请求）</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 提交的表单数据</span><br><span class="line"><span class="keyword">POST</span> <span class="string">/approve</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost:9001</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)</span><br><span class="line">Gecko/20100101 Firefox/39.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Referer</span>: http://localhost:9001/authorize?response_type=code&amp;scope=foo&amp;client_id=</span><br><span class="line">oauth-client-1&amp;redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Fcallback&amp;state=</span><br><span class="line"><span class="attribute">GKckoHfwMHIjCpEwXchXvsGFlPOS266u</span></span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"></span><br><span class="line">//reqid 即授权服务器生成的随机值，approve 表示用户的授权许可</span><br><span class="line">reqid=tKVUYQSM&amp;approve=Approve</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>用户同意授权，表单提交到授权码生成端点 <code>/approve</code>，对提交表单的请求验证 （随机值），权限范围进行验证（表单请求可能会被篡改，所以需要再次验证），生成授权码 code，存储在授权服务器上，并保存与之对应的权限范围（在令牌端点可以取出来，与访问令牌形成对应关系），客户端请求，并将其通过客户端请求授权时的重定向 uri 重定向到客户端，并且在查询参数上应用了客户端的 state 值（对客户端提供跨站保护，虽然不要求客户端传递该参数，但是要求授权服务器只要收到该参数就返回它）</li>
+</ol>
+<h3 id="令牌颁发"><a href="#令牌颁发" class="headerlink" title="令牌颁发"></a>令牌颁发</h3><p>客户端身份认证，client_id, client_secret</p>
+<p>授权许可类型 grant_type 检查， 如 <code>authorization_code</code></p>
+<p>如果是授权许可码类型，取出授权许可码 code， 并查询之前保存的 code 与客户端请求信息缓存，验证它确实是为该客户端生成的（对比 client_id）</p>
+<p>客户端匹配成功，生成一个访问令牌，并将其保存</p>
+<p>向客户端返回访问令牌，令牌类型</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">access_token</span>: access_token,</span><br><span class="line"><span class="attribute">token_type</span>: 'Bearer'</span><br></pre></td></tr></table></figure>
+
+<p>支持刷新令牌，刷新令牌只在授权服务器上使用，访问令牌只在受保护的资源上使用</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">refresh_token</span>: refresh_token,</span><br><span class="line"><span class="attribute">client_id</span>: clientId</span><br></pre></td></tr></table></figure>
 
 
 
 
 
-<h4 id="3-awk"><a href="#3-awk" class="headerlink" title="3 awk"></a>3 awk</h4><p>awk BEGIN{} PATTERN {} END{}</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk 的 pattern</span></span><br><span class="line">$ awk <span class="string">'NR &lt; 5'</span> <span class="comment"># 行号小于5的行</span></span><br><span class="line">$ awk <span class="string">'NR==1,NR==4'</span> <span class="comment"># 行号在1到5之间的行</span></span><br><span class="line">$ awk <span class="string">'/linux/'</span> <span class="comment"># 包含模式为linux的行（可以用正则表达式来指定模式）</span></span><br><span class="line">$ awk <span class="string">'!/linux/'</span> <span class="comment"># 不包含模式为linux的行</span></span><br></pre></td></tr></table></figure>
+<h2 id="授权许可类型"><a href="#授权许可类型" class="headerlink" title="授权许可类型"></a>授权许可类型</h2><p>除了授权码许可类型外的许可类型</p>
+<h3 id="1-隐式许可类型"><a href="#1-隐式许可类型" class="headerlink" title="1 隐式许可类型"></a>1 隐式许可类型</h3><p>直接运行在浏览器内的客户端，此时，客户端没有必要再通过授权码获取访问令牌，因为授权码是通过浏览器（前端信道）发送给客户端的，对于浏览器来说是可见的（如果是 web 应用，是直接发送给客户端服务器的）。直接请求<strong>授权端点</strong>， 而不是令牌端点来获取访问令牌，其它流程与授权码许可类型相似，客户端 id 检查，授权端点检查权限范围，资源拥有者身份认证，并验证对请求的批准，生成令牌，在授权端点响应中，将令牌附在客户端重定向 URI 片段中 。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 隐式许可类型下，客户端访问授权端点时的 response_type</span></span><br><span class="line"><span class="attr">response_type</span>=<span class="string">token</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 授权端点响应重定向时的 URI, 附件了 access_token 和 token_type</span></span><br><span class="line"><span class="attr">GET</span> <span class="string">/callback#access_token=987tghjkiu6trfghjuytrghj&amp;token_type=Bearer</span></span><br></pre></td></tr></table></figure>
 
+<p><strong>限使用隐式许可类型的限制</strong></p>
+<ul>
+<li>无法持有客户端密钥，无法对浏览器隐藏密钥</li>
+<li>只使用授权端点，而不是用令牌端点 （不要求客户端在授权端点的身份认证），影响安全等级</li>
+<li>不可用于获取刷新令牌，浏览器内的应用运行的特点：短暂，没有必要</li>
+</ul>
+<h3 id="2-客户端凭据许可类型"><a href="#2-客户端凭据许可类型" class="headerlink" title="2 客户端凭据许可类型"></a>2 客户端凭据许可类型</h3><p>后端系统通信的场景，并不代表某个特定用户，没有明确的资源拥有者。这种场景下，相当于没有用户对客户端授权。</p>
+<p>客户端凭据许可类型，只使用后端信道，客户端代表自己从令牌端点获取令牌，此时客户端向授权服务器的<strong>令牌端点</strong>发出令牌请求。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端身份认证 head：客户端 ID 和密钥</span></span><br><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端凭据许可类型的授权类型</span></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">'client_credientials'</span></span><br><span class="line"><span class="comment"># 也可以使用 scope 指定请求的权限范围，与授权码或隐式许可流程在 授权端点 上使用的 scope 参数一样</span></span><br><span class="line"><span class="attr">scope</span>: <span class="string">foo</span></span><br></pre></td></tr></table></figure>
 
+<p>客户端直接向授权服务器进行身份认证，授权服务器向客户端颁发访问令牌，客户端能随时获取新令牌，无需单独的资源拥有者参与，因此也没有必要使用刷新令牌</p>
+<p><strong>特点</strong></p>
+<ul>
+<li><p>客户端凭据类型没有任何直接的用户交互，是为可信的后端系统直接访问服务准备的</p>
+<p>因此对于交互式与非交互式客户端，最好进行区分，指定不同的权限范围</p>
+</li>
+</ul>
+<h3 id="3-资源拥有者凭据类型"><a href="#3-资源拥有者凭据类型" class="headerlink" title="3 资源拥有者凭据类型"></a>3 资源拥有者凭据类型</h3><p>客户端通过后端信道使用用户名和密码换取访问令牌, 资源拥有者直接与客户端进行交互, 而不是授权服务器, 只使用<strong>令牌端点</strong>. 授权服务器验证客户端的身份, 从收到的请求中取出用户名和密码，并与本地存储的用户信息对比, 验证权限范围, 如果都匹配，则授权服务器向客户端颁发令牌, 刷新访问令牌。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端收集用户的用户名和密码,发送至授权服务器的令牌端点</span></span><br><span class="line"><span class="attr">grant_type</span>=<span class="string">password</span></span><br><span class="line"><span class="attr">scope</span>=<span class="string">foo bar</span></span><br><span class="line"><span class="attr">username</span>=<span class="string">alice</span></span><br><span class="line"><span class="meta">&amp;password</span>=<span class="string">secret</span></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F":" 'BEGIN&#123;OFS="#"&#125; &#123;print $1,$2&#125;'</span><br></pre></td></tr></table></figure>
+<p>虽然这种模式下客户端直接获取了用户的认证信息, 但是后续的请求受保护资源使用的是访问令牌, 比每次请求都直接使用用户凭据要好的多, 但这仍然是一种不不好的许可类型, 请不要在现实中使用.</p>
+<h3 id="4-断言许可类型"><a href="#4-断言许可类型" class="headerlink" title="4 断言许可类型"></a>4 断言许可类型</h3><p>官方扩展许可类型，客户端得到一条结构化的且被加密保护的信息-<strong>断言</strong>， 使用断言向授权服务器换取令牌。断言必须由信任的认证机构提供. 这种许可类型只使用后端信道, 没有明确的资源拥有者参与. 断言一般来自第三方, 客户端可以不知道断言本身的含义. 客户端向授权服务器的<strong>令牌端点</strong>发送 HTTP POST 请求, 将断言作为参数传递给服务器. 客户端一样要进行身份认证</p>
+<p>两种标准化的断言: 安全断言标记语言 (SAML); JSON Web Token (JWT)</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Authorization</span>: <span class="string">Basic b2F1dGgtY2xpZW50LTE6b2F1dGgtY2xpZW50LXNlY3JldC0x</span></span><br><span class="line"></span><br><span class="line"><span class="attr">grant_type</span>: <span class="string">urn:ietf:params:oauth:grant-type:jwt-bearer</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例断言</span></span><br><span class="line"><span class="attr">assertion</span>=<span class="string">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0xIn0.eyJpc3MiOiJodHRwOi8vdHJ1c3QuZXhhbXBsZS5uZXQvIiwic3ViIjoib2F1dGgtY2xpZW50LTEiLCJzY29wZSI6ImZvbyBiYXIgYmF6IiwiYXVkIjoiaHR0cDovL2F1dGhzZXJ2ZXIuZXhhbXBsZS5uZXQvdG9rZW4iLCJpYXQiOjE0NjU1ODI5NTYsImV4cCI6MTQ2NTczMzI1NiwianRpIjoiWDQ1cDM1SWZPckRZTmxXOG9BQ29Xb1djMDQ3V2J3djIifQ.HGCeZh79Va-7meazxJEtm07ZyptdLDu_Ocfw82F1zAT2p6Np6Ia_vEZTKzGhI3HdqXsUG3uDILBv337VNweWYE7F9ThNgDVD90UYGzZN5VlLf9bzjnB2CDjUWXBhgepSyaSfKHQhfyjoLnb2uHg2BUb5YDNYk5oqaBT_tyN7k_PSopt1XZyYIAf6-5VTweEcUjdpwrUUXGZ0fla8s6RIFNosqt5e6j0CsZ7Eb_zYEhfWXPo0NbRXUIG3KN6DCA-ES6D1TW0Dm2UuJLb-LfzCWsA1W_sZZz6jxbclnP6c6Pf8upBQIC9EvXqCseoPAykyR48KeW8tcd5ki3_tPtI7vA</span></span><br></pre></td></tr></table></figure>
 
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk可以调用命令并读取输出。把命令放入引号中，然后利用管道将命令输出传入getline：</span></span><br><span class="line">awk <span class="string">'BEGIN &#123;FS=":"&#125; &#123; "grep root /etc/passwd" | getline; \</span></span><br><span class="line"><span class="string">print $1,$6 &#125;'</span></span><br><span class="line"></span><br><span class="line">root /root</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="4-tr"><a href="#4-tr" class="headerlink" title="4 tr"></a>4 tr</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> alnum：字母和数字。</span><br><span class="line"> alpha：字母。</span><br><span class="line"> cntrl：控制（非打印）字符。</span><br><span class="line"> digit：数字。</span><br><span class="line"> graph：图形字符。</span><br><span class="line"> lower：小写字母。</span><br><span class="line"> <span class="built_in">print</span>：可打印字符。</span><br><span class="line"> punct：标点符号。</span><br><span class="line"> space：空白字符。</span><br><span class="line"> upper：大写字母。</span><br><span class="line"> xdigit：十六进制字符。</span><br></pre></td></tr></table></figure>
-
-
-
+<p>授权服务器进行断言解析,检查加密保护, 确定生成何种令牌. 断言可以表示很多不同的信息: 资源拥有者的身份,被允许的权限范围. 授权服务器决定接受哪些断言并为断言的含义制定解释规则. 最终生成访问令牌返回.</p>
+<p>基于 OAuth 的身份认证协议：OpenID Connect</p>
 
                 
             </div>
