@@ -84,6 +84,99 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/">网络相关</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-11-14</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="ping-命令"><a href="#ping-命令" class="headerlink" title="ping 命令"></a>ping 命令</h2><p><code>ping</code> 命令通过 ICMP (Internet Control Message Protocol) 中的 echo 分组测试两台主机的连通性。向某台主机发送 echo 分组时，如果能够送达目标主机，可以返回一条 reply 消息；如果没有到目标主机的路由或其它原因，则 ping 命令失败。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -c n 限制发送的分组数量</span></span><br><span class="line"><span class="comment"># icmp_seq icmp 序号</span></span><br><span class="line"><span class="comment"># ttl time to live 剩余路由器转发的次数，次数为 0 时还没有到达目标主机，消息将被丢弃</span></span><br><span class="line"><span class="comment"># time RTT(Round Trip Time) 分组的往返时间</span></span><br><span class="line">guo@DESKTOP-4L69AND:/mnt/e/learning-dir/shell-learning$ ping baidu.com -c 5</span><br><span class="line">PING baidu.com (220.181.38.148) 56(84) bytes of data.</span><br><span class="line">64 bytes from 220.181.38.148 (220.181.38.148): icmp_seq=1 ttl=52 time=35.3 ms</span><br><span class="line">64 bytes from 220.181.38.148 (220.181.38.148): icmp_seq=2 ttl=52 time=35.4 ms</span><br><span class="line">64 bytes from 220.181.38.148 (220.181.38.148): icmp_seq=3 ttl=52 time=35.4 ms</span><br><span class="line">64 bytes from 220.181.38.148 (220.181.38.148): icmp_seq=4 ttl=52 time=35.8 ms</span><br><span class="line">64 bytes from 220.181.38.148 (220.181.38.148): icmp_seq=5 ttl=52 time=35.8 ms</span><br><span class="line"></span><br><span class="line">--- baidu.com ping statistics ---</span><br><span class="line">5 packets transmitted, 5 received, 0% packet loss, time 5053ms</span><br><span class="line">rtt min/avg/max/mdev = 35.322/35.588/35.876/0.331 ms</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>ping</code> 命令执行顺利，目标主机可达，退出状态为 0；否则非 0，目标主机不可达。</p>
+<p>测试局域网下所有可达的主机：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ip <span class="keyword">in</span> 192.168.31.&#123;1..255&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"testing <span class="variable">$ip</span>"</span></span><br><span class="line">        ping <span class="variable">$ip</span> -c 1 &amp;&gt; /dev/null ;</span><br><span class="line">        <span class="keyword">if</span> [ $? -eq 0 ];<span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">$ip</span> is alive</span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建套接字"><a href="#创建套接字" class="headerlink" title="创建套接字"></a>创建套接字</h2><p>TCP/IP 网络中用于传输数据的套接字，可以使用 <code>netcat</code> 或 <code>nc</code> 命令。</p>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><ol>
+<li>首先创建一个监听本地端口 1234 的套接字</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -l 指定监听一个要连接接到本地某个端口的套接字，而不是初始化一个到远程主机的连接</span></span><br><span class="line">ph@guo-lenovo:~$ nc -l 1234</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>本地或其它主机连接到上述监听套接字</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ph@guo-lenovo:~$ nc localhost 1234</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>任意一端中输入信息并按下回车键，信息会出现在另一端中，完成了一次通信</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ph@guo-lenovo:~$ nc -l 1234</span><br><span class="line">hello</span><br><span class="line">a</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ph@guo-lenovo:~$ nc localhost 1234</span><br><span class="line">hello</span><br><span class="line">a</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速复制文件"><a href="#快速复制文件" class="headerlink" title="快速复制文件"></a>快速复制文件</h3><p>主要利用的时 shell 的重定向</p>
+<ol>
+<li>监听端</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l 1234 &gt; nc_redirect_out</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>发送端</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc 192.168.31.188 1234 &lt; yihuo.sh</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>文件内容</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ph@guo-lenovo:~$ cat nc_redirect_out</span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">orig=(01101101 01101001 01100100 01101110 01101001 01100111 01101000 01110100)</span><br><span class="line">key=(01001101 01001101 01010100 01111110 01101111 01100001 01000000 00010100)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;!orig[@]&#125;</span>"</span>;<span class="keyword">do</span></span><br><span class="line">    o=$(<span class="built_in">echo</span> -n $((2<span class="comment">#$&#123;orig[$i]&#125;)))</span></span><br><span class="line">    k=$(<span class="built_in">echo</span> -n $((2<span class="comment">#$&#123;key[$i]&#125;)))</span></span><br><span class="line">    <span class="built_in">echo</span> $((<span class="variable">$o</span> ^ <span class="variable">$k</span>)) | xargs -n 1 | <span class="keyword">while</span> <span class="built_in">read</span> dec; <span class="keyword">do</span> <span class="built_in">echo</span>  <span class="string">"ibase=10;obase=2;<span class="variable">$dec</span>"</span> | bc | tr <span class="string">"\n"</span> <span class="string">" "</span> | sed <span class="string">'s/^/0/g'</span>; <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="搭建网桥"><a href="#搭建网桥" class="headerlink" title="搭建网桥"></a>搭建网桥</h2><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20211114121038694.png" alt="image-20211114121038694"></p>
+<p>主要使用到了 <code>ip link</code> 命令, 主机有两个网卡， eth0 配置连接到子网 192.168.1.0，eth1 通过网桥连接到子网 10.0.0.0， 并为网桥配置 ip 地址为 10.0.0.2，如果以太网适配器加入了网桥，该适配器不再配置 ip 地址，需要配置地址的时网桥。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建名为 br0 的网桥</span></span><br><span class="line">ip link add br0 <span class="built_in">type</span> bridge</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将以太网适配器添加到网桥</span></span><br><span class="line">ip link sed dev eht1 master br0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置网桥的 ip 地址</span></span><br><span class="line">ifconfig br0 10.0.0.2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用分组转发</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/net/ipv4/ip_forward</span><br><span class="line"></span><br><span class="line"><span class="comment"># 10.0.0.0/24 中的主机添加路由</span></span><br><span class="line">route add -net 192.168.1.0/16 gw 10.0.0.2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 192.168.1.0/16 中的主机添加路由</span></span><br><span class="line">route add -net 10.0.0.0/24 gw 192.168.1.2</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Internet-连接共享"><a href="#Internet-连接共享" class="headerlink" title="Internet 连接共享"></a>Internet 连接共享</h2><p>Internet 连接共享其实也是利用的分组转发的功能，类似上面的网桥部分，起到了路由器的功能，可以提供防火墙以及连接共享。假设有线网络连接 eth0 连接到了 internet，可以创建无线连接，并创建一个共享的无线网络，是其它设备连接到这个无线网络，其中的分组通过虚拟路由器，最终转发到互联网</p>
+<h2 id="使用-iptables-架设简易防火墙"><a href="#使用-iptables-架设简易防火墙" class="headerlink" title="使用 iptables 架设简易防火墙"></a>使用 iptables 架设简易防火墙</h2><p>防火墙的目的主要时过滤、阻止不需要的网络流量，允许正常的网络流量通过。</p>
+<ul>
+<li>阻止到特定 IP 地址的流量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -A Append to chain 链就是若干规则的集合，追加到 OUTPUT 链，控制所有的出站流量 (outgoing traffic)</span></span><br><span class="line"><span class="comment"># -I Insert in chain as rulenum (default 1=first)</span></span><br><span class="line"><span class="comment"># -d 匹配分组的目的地址</span></span><br><span class="line"><span class="comment"># -j iptables 执行特定的处理:DROP,ACCEPT,REJECT</span></span><br><span class="line">iptables -A OUTPUT -d 8.8.8.8 -j DROP</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阻止到特定端口的流量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -P 指定规则仅适用于 TCP</span></span><br><span class="line"><span class="comment"># -dport 指定了对应的端口</span></span><br><span class="line"><span class="comment"># 这里来相当于阻止了所有出站的 FTP 流量</span></span><br><span class="line">iptables -A OUTPUT -p tcp -dport 21 -j DROP</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阻止进入的特定流量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -I 新的规则将插入到规则集的开头</span></span><br><span class="line"><span class="comment"># INPUT INPUT 链，控制所有的入站流量 (incoming traffic)</span></span><br><span class="line"><span class="comment"># -s 指定了分组的源地址</span></span><br><span class="line">iptables -I INPUT -s 1.2.3.4 -j DROP</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -flush 清除对 iptables 链所作出的所有改动</span></span><br><span class="line">iptables -flush</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Wicked%20Cook%20Shell%20Scripts/">Wicked Cook Shell Scripts</a></h2>
             </div>
             <div class="post-meta">
@@ -276,54 +369,6 @@
 <li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
 </li>
 </ol>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">Sed 命令行手册</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-09-09</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="print-delete-and-next"><a href="#print-delete-and-next" class="headerlink" title="print, delete, and next"></a>print, delete, and next</h2><table>
-<thead>
-<tr>
-<th>command</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>P</td>
-<td>打印 pattern space 中的一行</td>
-</tr>
-<tr>
-<td>D</td>
-<td>删除当前 pattern space 的一行,并重新开始新的循环</td>
-</tr>
-<tr>
-<td>N</td>
-<td>读取输入源的下一行，并追加到 pattern space，使用 newline 分隔，并继续当前循环的执行（execution of cycle）</td>
-</tr>
-</tbody></table>
-<p>一行指的是，使用行分隔符分隔</p>
-<p>sed 命令中，似乎有这样的规约：大写字母的命令总是与多行数据相关的；通常利用这些命令实现一个队列 <code>FIFO</code>.</p>
-<p>例子：移除文件中最后5行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  1 &#123; N;N;N;N &#125;     # ensure the pattern space contains *five* lines</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  N                 # append a sixth line onto the queue</span></span><br><span class="line"><span class="string">  P                 # Print the head of the queue</span></span><br><span class="line"><span class="string">  D                 # Remove the head of the queue</span></span><br><span class="line"><span class="string">'</span></span><br></pre></td></tr></table></figure>
-
-<p>利用可以追加（N - read and append）到 pattern space 的命令，以及删除（D） pattern space 中首行的命令，可以在 pattern space 中保持一个大小为 5 的队列，当第 6 行的数据追加到 pattern space 时，出队，即打印（P）队首的元素, 并删除（D）队首的行, 最终 pattern space 中保留了最后 5 行的数据，其余行已经打印，到达文件末尾，执行结束。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://linuxhandbook.com/sed-reference-guide/#branching" target="_blank" rel="noopener">Complete Sed Command Guide</a></p>
 
                 
             </div>

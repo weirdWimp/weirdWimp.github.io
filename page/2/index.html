@@ -84,6 +84,39 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E8%84%9A%E6%9C%AC/backup/">backup</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2022-07-23</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><a href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份" class="headerlink" title="使用 WSL 进行 Windows 下不同磁盘之间的文件备份"></a>使用 WSL 进行 Windows 下不同磁盘之间的文件备份</h2><p>modified.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">sourceDir=<span class="variable">$1</span></span><br><span class="line">find <span class="variable">$1</span> -<span class="built_in">type</span> f -mmin -60 | \</span><br><span class="line">awk \</span><br><span class="line"><span class="string">'BEGIN &#123; "date \"+%F %T\""| getline; print $0 &#125; \</span></span><br><span class="line"><span class="string">&#123; print "modified:"$0 &#125; \</span></span><br><span class="line"><span class="string">END &#123; print "\n\n"&#125;'</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>backup.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># copy source to target</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># system(cmdrm);</span></span><br><span class="line">baseDir=<span class="string">"/mnt/e/SoftConfigBackup"</span></span><br><span class="line">awk -F<span class="string">"="</span> <span class="string">'!/^\s*#/  \</span></span><br><span class="line"><span class="string">&#123; origDir=$1; \</span></span><br><span class="line"><span class="string">cmd0=bd"/modified.sh "$1" &gt;&gt; "bd"/modified.log"; \</span></span><br><span class="line"><span class="string">system(cmd0); \</span></span><br><span class="line"><span class="string">sub("^.*/", "", origDir); \</span></span><br><span class="line"><span class="string">cmdrm="rm -rf "$2"/"origDir; \</span></span><br><span class="line"><span class="string">cmd1="mkdir -p "$2; \</span></span><br><span class="line"><span class="string">cmd2="cp -r " $1 " " $2; \</span></span><br><span class="line"><span class="string">system(cmd1); \</span></span><br><span class="line"><span class="string">system(cmd2) &#125;'</span> \</span><br><span class="line">    bd=<span class="variable">$baseDir</span> <span class="string">"<span class="variable">$baseDir</span>/backupToNewDisk.properties"</span></span><br><span class="line"></span><br><span class="line">date &gt;&gt;<span class="variable">$baseDir</span>/date.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line">*/60 * * * * /mnt/e/SoftConfigBackup/backup.sh</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">高级文本命令</a></h2>
             </div>
             <div class="post-meta">
@@ -579,43 +612,6 @@
 <p>[2] <a href="https://initialcommit.com/blog/7-versatile-vim-commands" target="_blank" rel="noopener">7 versatile Vim commands that are easy to memorize</a></p>
 <p>[3] <a href="https://github.com/wsdjeg/vim-galore-zh_cn" target="_blank" rel="noopener">Vim Galore</a></p>
 <p>[4] <a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html" target="_blank" rel="noopener">Graphical vi-vim Cheat Sheet and Tutorial</a></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Vim%20Powerful%20Commands/">Vim Powerful Commands</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-05-29</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="Vim-Versatile-commands"><a href="#Vim-Versatile-commands" class="headerlink" title="` Vim Versatile commands"></a>` Vim Versatile commands</h2><ul>
-<li><p><code>.</code></p>
-<ul>
-<li><p>通过 Normal Mode （命令行模式）下的 <code>.</code> 命令来重复上一次的修改操作. 上一次的修改意味着很多操作：Normal Mode 下删除一个或多个字符，单词，行， 如 <code>x</code>, <code>dw</code>, <code>d$</code>, <code>dd</code> 等；比如改变缩进的命令：<code>&gt;&gt;</code>, <code>&lt;&lt;</code> 等. </p>
-</li>
-<li><p>命令行模式下大多数命令对文本做出的修改，都可以使用 <code>.</code> 来重复；Insert Mode （编辑模式） 下做出的修改的重复取决于进入该模式的命令，加入，你通过 <code>A</code> 进入 Insert Mode, 在末尾添加了单词 <code>end</code>，按下 <code>Esc</code>,  <code>.</code> 命令会在末尾重复添加单词 <code>end</code>.</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1. You are now in Normal Mode, you have the text like those below:</span></span><br><span class="line"></span><br><span class="line">This is </span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Press A to enter Insert Mode and write text `end`</span></span><br><span class="line">This is end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Press Esc to enter Normal Mode and press .(period), things will happen like this:</span></span><br><span class="line">This is end end</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. mode dot, mode ` end`</span></span><br><span class="line">This is end end end</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>5.</code> 表示重复执行多少次</li>
-<li>Motions (光标的移动) 并不会改变任何事情，所以 <code>.</code> 并不会进行重复</li>
-</ul>
 
                 
             </div>
