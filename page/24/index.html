@@ -84,38 +84,38 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/%E3%80%8AJava%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">《Java技术内幕》学习笔记</a></h2>
+                <h2><a class="post-title-link" href="/Linux/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6/">批量重命名文件</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Java/">Java</a>
+                    <a class="category" href="/categories/Linux/">Linux</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>Chapter 6 Java 实现内存管理和并发编程的方式</p>
-<p>allocation table - 分配表</p>
-<p>stack frame - 栈帧</p>
-<p>heap - 堆</p>
-<p>reachable object - 可达对象/活性对象</p>
-<p>GC Root - 通向可达对象的引用链根部一般称为 GC Root</p>
-<h3 id="mark-and-sweep-标记清除"><a href="#mark-and-sweep-标记清除" class="headerlink" title="mark and sweep 标记清除"></a>mark and sweep 标记清除</h3><p>标记清除，垃圾回收程序需要互斥存取整个堆，因此应用代码一直在运行，会不断创建和修改对象，应用线程会停顿一下（Stop-The-World, STW）, 先停止所有应用线程，然后进行垃圾回收</p>
-<p>对象的预期生命周期称为 <code>代</code></p>
-<p><code>弱代假设</code> （Weak Generation Hypothesis, WGH）, 在这个假设中，对象常常处于少数几个预期生命周期之一</p>
-<p>大多数的对象的生命期非常短，不久就会被垃圾回收，这些对象也称为 <code>瞬时对象</code></p>
-<h3 id="筛选回收-Evacuation"><a href="#筛选回收-Evacuation" class="headerlink" title="筛选回收 Evacuation"></a>筛选回收 Evacuation</h3><p>将堆内存分成多个独立的内存空间，每次回收垃圾时，只为活性对象分配空间，并将这些对象移动到另一个内存空间。清理整个内存空间，供以后重复使用。</p>
-<p> Eden 区 / Nursery 区</p>
-<p>使用筛选回收程序的话，每个线程都可以单独分配内存，每个应用线程都有一块连续的内存-线程私有的分配缓冲区，专门供这个线程分配对象。为对象分配内存时，只需把指针指向分配缓冲区。</p>
-<p>HotSpot 引入了 Survivor 区，用于保存前一次回收新生对象后存活下来的对象。筛选回收程序会在多个 Survivor 区之间来回复制存活下来的对象，直到超过 <code>保有阈值</code>， 再推给老年代</p>
-<p>• 并行回收程序<br>    使用多个线程执行回收操作的垃圾回收程序<br>• 并发回收程序<br>    可以和应用线程同时运行的垃圾回收程序</p>
-<h3 id="HotSpot-堆"><a href="#HotSpot-堆" class="headerlink" title="HotSpot 堆"></a>HotSpot 堆</h3><p>堆空间：新生代和老年代；新生代由三个区组成： Eden 区、两个 Survivor 区，老年代只有一个内存空间</p>
-<p>多次回收循环后存活下来的对象，最终会推给老年代。</p>
-<p>默认情况下，老年代使用的也是并行标记清除回收程序，并且回收程序会整理老年代，清除内存碎片</p>
+                    <h2 id="批量重命名或移动文件"><a href="#批量重命名或移动文件" class="headerlink" title="批量重命名或移动文件"></a>批量重命名或移动文件</h2><ol>
+<li>利用 <code>find</code> 命令和 <code>mv</code> 命令，编写简单脚本</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#！/bin/bash</span></span><br><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"></span><br><span class="line">count=1</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> `find . -maxdepth 1 -<span class="built_in">type</span> f -iname <span class="string">"*.jpg"</span> -o -iname <span class="string">"*.jpeg"</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	picName=image-<span class="variable">$count</span>.<span class="variable">$&#123;img##*.&#125;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"rename <span class="variable">$img</span> to <span class="variable">$picName</span>"</span></span><br><span class="line">	mv <span class="variable">$img</span> <span class="variable">$picName</span></span><br><span class="line">	((count++))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>利用 <code>rename</code> 命令</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reanme 利用了 perl 的正则表达式来进行替换 substitute</span></span><br><span class="line">rename ‘s/\.jpg$/.jpeg/’ *.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名大小变小写</span></span><br><span class="line">rename <span class="string">'y/A-Z/a-z/'</span> *</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>find</code> 结合 <code>rename</code> 实现递归重命名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f -<span class="built_in">exec</span> rename <span class="string">'s/-/_/'</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>清理工作</li>
+</ol>
 
                 
             </div>

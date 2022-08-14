@@ -84,26 +84,82 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+                <h2><a class="post-title-link" href="/Spring/Spring%20MVC/">Spring MVC</a></h2>
             </div>
             <div class="post-meta">
                 <span class="post-time">2020-05-31</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    <a class="category" href="/categories/Spring/">Spring</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>org.springframework.boot.SpringApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <h2 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h2><blockquote>
+<p>设计良好的控制器本身只处理很少甚至不处理工作，而是将业务逻辑委托给一个或多个服务对象。</p>
+</blockquote>
+<h3 id="使用Java类配置Spring-MVC"><a href="#使用Java类配置Spring-MVC" class="headerlink" title="使用Java类配置Spring MVC"></a>使用Java类配置Spring MVC</h3><p>Servlet 3.0 查找 <code>javax.servlet.ServletContainerInitializer</code> 的实现类来配置 Servlet 容器；Spring 提供了该接口的实现：<code>SpringServletContainerInitializer</code> , 并且又会查找实现<code>WebApplicationInitializer</code> 的类来进行配置，并引入了一个<code>AbstractAnnotationConfigDispatcherServletInitializer</code>的基础实现，所以在Spring中通过Java代码进行配置的时候，需要扩展该基础实现类。</p>
+<p><strong>这种配置DispatcherServlet的方式只能部署到支持Servlet 3.0的服务器中才能工作。</strong></p>
+<p><strong>UML 图示：</strong></p>
+<p><img src="D:%5Cmd_pics%5CSpringServlet.png" alt="SpringServlet"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Delegate the ServletContext to any WebApplicationInitializer implementations present on the application classpath.</span><br><span class="line">Because <span class="keyword">this</span> <span class="class"><span class="keyword">class</span> <span class="title">declares</span> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>), <span class="title">Servlet</span> 3.0+ <span class="title">containers</span> <span class="title">will</span> <span class="title">automatically</span> <span class="title">scan</span> <span class="title">the</span> <span class="title">classpath</span> <span class="title">for</span> <span class="title">implementations</span> <span class="title">of</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">WebApplicationInitializer</span> <span class="title">interface</span> <span class="title">and</span> <span class="title">provide</span> <span class="title">the</span> <span class="title">set</span> <span class="title">of</span> <span class="title">all</span> <span class="title">such</span> <span class="title">types</span> <span class="title">to</span> <span class="title">the</span> <span class="title">webAppInitializerClasses</span> <span class="title">parameter</span> <span class="title">of</span> <span class="title">this</span> <span class="title">method</span>.</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    <span class="title">Assuming</span> <span class="title">that</span> <span class="title">one</span> <span class="title">or</span> <span class="title">more</span> <span class="title">WebApplicationInitializer</span> <span class="title">types</span> <span class="title">are</span> <span class="title">detected</span>, <span class="title">they</span> <span class="title">will</span> <span class="title">be</span> <span class="title">instantiated</span> (<span class="title">and</span> <span class="title">sorted</span> <span class="title">if</span> <span class="title">the</span> @@<span class="title">Order</span> <span class="title">annotation</span> <span class="title">is</span> <span class="title">present</span> <span class="title">or</span> <span class="title">the</span> <span class="title">Ordered</span> <span class="title">interface</span> <span class="title">has</span> <span class="title">been</span> <span class="title">implemented</span>). <span class="title">Then</span> <span class="title">the</span> <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>) <span class="title">method</span> <span class="title">will</span> <span class="title">be</span> <span class="title">invoked</span> <span class="title">on</span> <span class="title">each</span> <span class="title">instance</span>, <span class="title">delegating</span> <span class="title">the</span> <span class="title">ServletContext</span> <span class="title">such</span> <span class="title">that</span> <span class="title">each</span> <span class="title">instance</span> <span class="title">may</span> <span class="title">register</span> <span class="title">and</span> <span class="title">configure</span> <span class="title">servlets</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">DispatcherServlet</span>, <span class="title">listeners</span> <span class="title">such</span> <span class="title">as</span> <span class="title">Spring</span>'<span class="title">s</span> <span class="title">ContextLoaderListener</span>, <span class="title">or</span> <span class="title">any</span> <span class="title">other</span> <span class="title">Servlet</span> <span class="title">API</span> <span class="title">componentry</span> <span class="title">such</span> <span class="title">as</span> <span class="title">filters</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  /* <span class="title">Servlet</span> 3.0+ 会自动在应用的 <span class="title">classpath</span> 中寻找 <span class="title">WebApplicationInitializer</span> 的实现类，并对每一个实现类进行实例化，将 <span class="title">ServletContext</span> 委托给他们，对每一个实例调用 <span class="title">WebApplicationInitializer</span>.<span class="title">onStartup</span>(<span class="title">ServletContext</span>), 加载和注册所有的 <span class="title">Servlet</span>、<span class="title">Listener</span>、<span class="title">Filter</span> */</span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"><span class="title">If</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">are</span> <span class="title">found</span> <span class="title">on</span> <span class="title">the</span> <span class="title">classpath</span>, <span class="title">this</span> <span class="title">method</span> <span class="title">is</span> <span class="title">effectively</span> <span class="title">a</span> <span class="title">no</span>-<span class="title">op</span>. <span class="title">An</span> <span class="title">INFO</span>-<span class="title">level</span> <span class="title">log</span> <span class="title">message</span> <span class="title">will</span> <span class="title">be</span> <span class="title">issued</span> <span class="title">notifying</span> <span class="title">the</span> <span class="title">user</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ServletContainerInitializer</span> <span class="title">has</span> <span class="title">indeed</span> <span class="title">been</span> <span class="title">invoked</span> <span class="title">but</span> <span class="title">that</span> <span class="title">no</span> <span class="title">WebApplicationInitializer</span> <span class="title">implementations</span> <span class="title">were</span> <span class="title">found</span>.</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class"> // <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">SpringServletContainerInitializer</span> </span></span><br><span class="line"><span class="class"> </span></span><br><span class="line"><span class="class"> @<span class="title">HandlesTypes</span>(<span class="title">WebApplicationInitializer</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, @NotNull ServletContext servletContext)</span> <span class="keyword">throws</span> 		ServletException </span>&#123;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
-<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
-<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
+
+
+<p><strong>Root Application Context</strong><br>As such, it typically contains middle-tier services, data sources, etc.</p>
+<p><strong>Servlet Application Context</strong><br>As such, it typically contains controllers, view resolvers, locale resolvers, and other web-related beans.</p>
+<p>Root Application Context 用来初始化 ContextLoaderListener 对象，并将该对象注册到 Servlet 容器中</p>
+<p>Servlet Application Context 用来初始化 DispatcherServlet 对象，并将该对象注册到 Servlet 容器中，随后添加 Filters, 添加 Mapping 映射， 当然用户还可以通过 customizeRegistration(ServletRegistration.Dynamic registration) 来进行自定义之后的操作，如配置 Multipart 处理的参数</p>
+<h3 id="DispatcherServlet"><a href="#DispatcherServlet" class="headerlink" title="DispatcherServlet"></a>DispatcherServlet</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DispatcherServlet api 与 Web.xml中 对应的初始化参数</span></span><br><span class="line">setContextClass(Class) / <span class="string">'contextClass'</span></span><br><span class="line">setContextConfigLocation(String) / <span class="string">'contextConfigLocation'</span></span><br><span class="line">setContextAttribute(String) / <span class="string">'contextAttribute'</span></span><br><span class="line">setNamespace(String) / <span class="string">'namespace'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// indicates which ApplicationContextInitializer classes should be used to further configure the internal application context prior to refresh().</span></span><br><span class="line">setContextInitializerClasses(String) / <span class="string">'contextInitializerClasses'</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="编写控制器方法"><a href="#编写控制器方法" class="headerlink" title="编写控制器方法"></a>编写控制器方法</h3><ul>
+<li>处理查询参数请求</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对类似 /messageList?count=10 的url进行处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/messageList"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">message</span><span class="params">(@RequestParam(value = <span class="string">"count"</span>, defaultValue = <span class="string">"20"</span>)</span> <span class="keyword">int</span> count, Model model) </span>&#123;</span><br><span class="line">    model.addAttribute(<span class="string">"messageList"</span>, repository.getMessageList(count));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"message"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>处理路径变量</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对类似 /messageList/Tom 这样的url进行处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/messageList/&#123;name&#125;"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">messageListByName</span><span class="params">(@PathVariable String name, Model model)</span> </span>&#123;</span><br><span class="line">    model.addAttribute(<span class="string">"messageList"</span>, repository.getMessageListByName(name));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"message"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>处理表单提交，以及增加校验 </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/register"</span>, method = RequestMethod.POST)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">processRegistration</span><span class="params">(@Valid User user, Errors errors)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (errors.hasErrors()) &#123;</span><br><span class="line">        errors.getAllErrors().forEach(error -&gt; printError(error));</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"registerFormSpringForm"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">"--------"</span> + user.getUsername());</span><br><span class="line">    repository.saveUser(user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"redirect:/blog/"</span> + user.getUsername();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>==C:\Users\guo.IntelliJIdea2018.3\system\tomcat\Unnamed_spring_web_java_config\work\Catalina\localhost\ROOT==</p>
+<h3 id="表单数据校验"><a href="#表单数据校验" class="headerlink" title="表单数据校验"></a>表单数据校验</h3><p>在使用validator对表单数据进行校验时，需要</p>
+<blockquote>
+<p>Spring对Java校验API（Java Validation API，又称JSR-303）的支持。从Spring 3.0开始，在Spring MVC中提供了对Java校验API的支持。在Spring MVC中要使用Java校验API的话，并不需要什么额外的配置。只要保证在类路径下包含这个Java API的实现即可，比如Hibernate Validator。</p>
+</blockquote>
+<p>java的 JSR 303: Bean Validation 只是一个规范，并没有具体的实现，hibernate-validator 项目是对其的一个实现，因此，具体使用要引入相应的JAR包：validation-api（定义校验注解） hibernate-validator（具体实现）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.validation<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>validation-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.1.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.0.13.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>==并且如果之前没有添加，后来添加了，要生效，必须重新打包部署，即重新生产 Artifacts, 并部署到tomcat上，否则就不会起作用！！==</p>
+<h3 id="使用spring-test进行测试"><a href="#使用spring-test进行测试" class="headerlink" title="使用spring-test进行测试"></a>使用spring-test进行测试</h3><p>在用spring-test进行测试的时候，需要和spring其他组件的jar包版本一致，否则就可能会出现NoSuchMethodError</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.NoSuchMethodError: org.springframework.util.StreamUtils.emptyInput()Ljava/io/InputStream;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>Apache Common Lang包来实现<code>equals()</code>和<code>hashCode()</code>方法。</p>
+<blockquote>
+<p>对“/spittles/12345”发起<code>GET</code>请求要优于对“/spittles/show?spittle_id=12345”发起请求。前者能够识别出要查询的资源，而后者描述的是带有参数的一个操作——本质上是通过HTTP发起的RPC。</p>
+</blockquote>
 
                 
             </div>
@@ -134,212 +190,6 @@
 
 
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E4%B8%8D%E5%90%8C%E5%B7%A5%E5%85%B7%E7%9A%84%E5%85%83%E5%AD%97%E7%AC%A6%E6%94%AF%E6%8C%81/">不同工具的元字符支持</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="grep-P"><a href="#grep-P" class="headerlink" title="grep -P"></a><strong>grep -P</strong></h2><p>pattern is a Perl regular expression. Based on  PRCE. (兼容Perl的正则表达式包)</p>
-<ul>
-<li>八进制</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\012b'</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>十六进制<ul>
-<li><code>\xFF</code> </li>
-<li>\x{…}</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'a\nb'</span> | grep -z -P <span class="string">'a\x&#123;0A&#125;b'</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>元字符 <code>.</code> 不能匹配换行符, 其他 Unicode 换行符等可以匹配</li>
-<li><code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code>， java ， PHP 也是一样的, 但是 Perl 语言的正则引擎室支持 Unicode 字符（未验证）</li>
-</ul>
-<h2 id="grep-E-egrep"><a href="#grep-E-egrep" class="headerlink" title="grep -E / egrep"></a><strong>grep -E / egrep</strong></h2><ul>
-<li><p>不支持八进制、十六进制转义表示</p>
-</li>
-<li><p>元字符 <code>.</code> 可以匹配换行符(\n),  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
-</li>
-<li><p><code>\w</code> 可以匹配汉字</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'a严b'</span> | grep -z -E <span class="string">'a\wb'</span></span><br></pre></td></tr></table></figure>
-
-
-<p>对于字符组， 尤其是排除型字符组，都支持 <code>\n</code>, <code>\r</code>, Unicode 换行符，行分隔符，段分隔符都支持</p>
-<h2 id="Notepad"><a href="#Notepad" class="headerlink" title="Notepad++"></a>Notepad++</h2><p>Notepad++ 的 <code>匹配新行模式</code>， 应该是启用了 <code>点通配符模式 - dotALL（Perl中的单行模式）</code>, 以及 <code>多行模式 - 行锚点可以匹配行内的换行符前后的位置</code></p>
-<p>POSIX 规定，点号不能匹配 NUL (值为0的字符)， 具体工具可有有差异。</p>
-<p>grep: PCRE does not support \L, \l, \N{name}, \U, or \u</p>
-<p>PCRE(包括PHP)， java.util.regex <code>\w</code> 严格等价于 <code>[a-zA-Z0-9_]</code></p>
-<h2 id="java-util-regex"><a href="#java-util-regex" class="headerlink" title="java.util.regex"></a>java.util.regex</h2><ul>
-<li><p>\w 严格等价于 [a-zA-Z0-9_]</p>
-</li>
-<li><p>\s 不匹配 Unicode 换行符</p>
-</li>
-<li><p>普通模式下 . 不能匹配 \n,  \r,  Unicode 换行符 NEL (\u0085), Unicode 行分隔符 LS (\u2028), Unicode 段分隔符 PS (\u2029)</p>
-</li>
-<li><p>字符组可以匹配换行符，包括 Unicode 的上述行终结符</p>
-</li>
-<li><p>支持字符组的计算 [[a-c]&amp;&amp;[a-z]]  [[a-c]OR[d-e]], 当然也可以使用环视来实现</p>
-</li>
-<li><p>多行模式下<code>(?:m)</code>，锚点可以匹配 Unicode 行终结符  Page.370 </p>
-</li>
-<li><p>$ 既可以匹配目标字符串的末尾，也可以匹配整个字符串末尾的换行符之前的位置 (这里的换行符也包括Unicode 的行终结符)</p>
-</li>
-<li><p>\Z 和普通模式下的 $ 的意义一样</p>
-</li>
-<li><p>\z 只匹配文本的末尾的位置</p>
-</li>
-<li><p>\A 总是与普通的 ^ 一样</p>
-</li>
-<li><p>\b 单词分界符 与 \B 非单词分界符对单词字符的定义仅限于 ASCII 字符，如果需要扩展，可以使用环视功能以及 Unicode 属性实现</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（?&lt;!\pL）(?=\pL)......(?&lt;=pL)(?!\pL)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>正则表达式中设定匹配模式，支持</p>
-<ul>
-<li><code>(?i)...(?-i)</code>, <code>(?i)</code> 开启模式，<code>(?-i)</code>关闭模式</li>
-<li><code>(?:(?i)very)</code>, <code>(?i)</code> 的作用范围只限于括号內部，闭括号后就失效</li>
-<li>支持模式修饰范围，<code>(?i:...)</code></li>
-</ul>
-</li>
-<li><p>文字文本模式（消除所有元字符的特殊含义进行匹配）, java.util.regex 的引擎支持 <code>\Q...\E</code> 序列，但是它只会消除除了 <code>\E</code> 之外的所有的元字符的特殊含义，直接在字符串两边加上，会有问题（原始字符串出现 <code>\E</code>， 会截断，只对前面的部分应用该模式）。请直接使用 <code>Pattern.quote</code> 方法或自己写一个处理方法。</p>
-</li>
-</ul>
-<p>Perl 中的锚点都不支持 Unicode 行终结符， 而 Java 的普通模式下的 <code>$</code> 以及多行模式下的 <code>^</code> 以及 <code>$</code> 都支持 Unicode 行终结符。</p>
-<p>基于 PCRE 的 grep -P  测试, 普通模式下，<code>$</code> 只匹配末尾，不匹配换行符之前的位置</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
-
-
-
-<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符出啊；查找和替换，字符串的更新</p>
-<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
-<li><p>集成式 （integrated）</p>
-<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
-</li>
-<li><p>程序式 (procedural)</p>
-<p>函数式</p>
-</li>
-<li><p>面向对象式 (object-oriented)</p>
-<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
-</li>
-</ul>
-<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
-<thead>
-<tr>
-<th>表示</th>
-<th>Unicode code point</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LF</td>
-<td>U+000A</td>
-<td>ASCII 换行符</td>
-</tr>
-<tr>
-<td>VT</td>
-<td>U+000B</td>
-<td>ASCII 垂直制表符</td>
-</tr>
-<tr>
-<td>FF</td>
-<td>U+000C</td>
-<td>ASCII 进纸符</td>
-</tr>
-<tr>
-<td>CR</td>
-<td>U+000D</td>
-<td>ASCII 回车</td>
-</tr>
-<tr>
-<td>CR/LF</td>
-<td>U+000D U+000A</td>
-<td>ASCII 回车/换行</td>
-</tr>
-<tr>
-<td>NEL</td>
-<td>U+0085</td>
-<td>Unicode 换行</td>
-</tr>
-<tr>
-<td>LS</td>
-<td>U+2028</td>
-<td>Unicode 行分隔符</td>
-</tr>
-<tr>
-<td>PS</td>
-<td>U+2029</td>
-<td>Unicode 段分隔符</td>
-</tr>
-</tbody></table>
-<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
-<thead>
-<tr>
-<th>字母</th>
-<th>模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>不区分大小写的匹配模式</td>
-</tr>
-<tr>
-<td>x</td>
-<td>宽松排列和注释模式</td>
-</tr>
-<tr>
-<td>s</td>
-<td>点号通配模式（单行模式）</td>
-</tr>
-<tr>
-<td>m</td>
-<td>增强的行锚点模式（多行模式）</td>
-</tr>
-</tbody></table>
 
                 
             </div>
@@ -502,6 +352,58 @@
 
 
 
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring/Spring%20%E6%BA%90%E7%A0%81/">Spring 源码</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring/">Spring</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ConfigurableWebApplicationContext</span> <span class="keyword">extends</span> <span class="title">WebApplicationContext</span>, <span class="title">ConfigurableApplicationContext</span></span></span><br></pre></td></tr></table></figure>
+
+<p>ConfigurableWebApplicationContext 提供了  configLocation 的属性，为 web application context 设置 config 文件的路径</p>
+<p>在 <code>public class ContextLoaderListener extends ContextLoader implements ServletContextListener</code> 中，在监听到 ServletContext 初始化时，会初始化一个 WebApplication 实例（实现了ConfigurableWebApplicationContext接口），会从 web.xml 中 配置的 Servlet Context 参数中寻找  <code>contextConfigLocation</code>， 填充  configLocation .</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Spring%20Boot/SpringApplication/">SpringApplication</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-05-31</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Spring-Boot/">Spring Boot</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>org.springframework.boot.SpringApplication</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ConfigurableEnvironment <span class="title">prepareEnvironment</span><span class="params">(SpringApplicationRunListeners listeners,</span></span></span><br><span class="line"><span class="function"><span class="params">		ApplicationArguments applicationArguments)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Create and configure the environment</span></span><br><span class="line">	ConfigurableEnvironment environment = getOrCreateEnvironment();</span><br><span class="line">	configureEnvironment(environment, applicationArguments.getSourceArgs());</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	listeners.environmentPrepared(environment);</span><br><span class="line">	bindToSpringApplication(environment);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isCustomEnvironment) &#123;</span><br><span class="line">		environment = <span class="keyword">new</span> EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,</span><br><span class="line">				deduceEnvironmentClass());</span><br><span class="line">	&#125;</span><br><span class="line">	ConfigurationPropertySources.attach(environment);</span><br><span class="line">	<span class="keyword">return</span> environment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>EnvironmentPostProcessor 接口的实现类定义在 <code>META-INF/spring.factories</code> 文件中, Spring Boot 应用启动时， 调用上面的 <code>prepareEnvironment</code> 方法时，会发布 <code>ApplicationEnvironmentPreparedEvent</code> 事件，相应的监听器类 <code>ConfigFileApplicationListener</code> 监听到改时间后，会通过类似于 java <code>SPI</code> 机制加载所有指定 EnvironmentPostProcessor  接口的实现类，并且初始化，调用内部方法 <code>postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)</code>，实现自定义 spring 的 <code>Environment</code></p>
+<p><a href="https://www.cnblogs.com/itplay/p/9927892.html" target="_blank" rel="noopener">spring.factories 机制</a></p>
+<p><a href="https://blog.csdn.net/qq_38449518/article/details/82414069" target="_blank" rel="noopener">META-INF</a></p>
 
                 
             </div>
