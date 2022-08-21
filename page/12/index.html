@@ -84,6 +84,71 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6/">基础组件</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-01-02</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p>Executor 接口中只定义了一个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Executes the given command at some time in the future.  The command</span></span><br><span class="line"><span class="comment">     * may execute in a new thread, in a pooled thread, or in the calling</span></span><br><span class="line"><span class="comment">     * thread, at the discretion of the &#123;<span class="doctag">@code</span> Executor&#125; implementation.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> command the runnable task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException if this task cannot be</span></span><br><span class="line"><span class="comment">     * accepted for execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if command is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>execute(Runnable command)</code> 方法负责执行提交的任务，<code>Executor</code> 接口将任务的提交，任务的执行，以及线程使用的细节进行解耦。隐藏了创建线程的操作，甚至可以实现为非异步的方式，即由调用线程来直接执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DirectExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    r.run();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，通常情况下，是由调用该方法线程以外的线程来执行的，也就是会为每一个 <code>Runnable</code> 任务（命令）创建一个线程来异步执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadPerTaskExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(r).start();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>属于多线程设计模式 <code>Thread-Per-Message</code>（见《图解 Java 多线程设计模式》） 的实现，即为每个请求分配一个新线程，由这个线程来执行处理。</p>
+<p><strong>该模式具有以下特点：</strong></p>
+<ol>
+<li>提高方法的响应，缩短延迟时间</li>
+<li>适用于对操作顺序没有要求（即方法的调用顺序不一定和执行顺序一致）</li>
+<li>适用于不需要返回值（<code>execute</code>方法的返回类型为 <code>void</code>）</li>
+</ol>
+<p>​    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">杂七杂八</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-12-27</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p><a href="https://blog.csdn.net/cuijiying/article/details/104993550" target="_blank" rel="noopener">window系统电脑某个端口下的程序无法被局域网内的电脑访问的问题</a></p>
+<p><a href="https://blog.csdn.net/qq_43442102/article/details/100195522" target="_blank" rel="noopener">ubuntu-linux 笔记本合上盖子保持链接</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/cURL%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">cURL基本使用</a></h2>
             </div>
             <div class="post-meta">
@@ -245,74 +310,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat -n inputfile | sed -En -e <span class="string">'</span></span><br><span class="line"><span class="string">  \=(/usr/sbin/nologin|/bin/false)$= &#123; H;d; &#125;</span></span><br><span class="line"><span class="string">              # Append matching lines to the hold buffer</span></span><br><span class="line"><span class="string">              # and continue to next cycle</span></span><br><span class="line"><span class="string">  p           # Print other lines</span></span><br><span class="line"><span class="string">  $ &#123; g;p &#125;   # On the last line,</span></span><br><span class="line"><span class="string">              # get and print the content of the hold buffer</span></span><br></pre></td></tr></table></figure>
 
 <p>What is a <strong>login shell</strong> ?</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Redis/%E5%87%8F%E5%B0%91%20Redis%20%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/">减少 Redis 中的内存使用</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-10-18</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Redis/">Redis</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="减少-Redis-中的内存使用"><a href="#减少-Redis-中的内存使用" class="headerlink" title="减少 Redis 中的内存使用"></a>减少 Redis 中的内存使用</h1><h2 id="Short-structures-使用更短的结构"><a href="#Short-structures-使用更短的结构" class="headerlink" title="Short structures 使用更短的结构"></a>Short structures 使用更短的结构</h2><blockquote>
-<p>Redis stores a serialized version of the data, which must be decoded for every read, partially re-encoded for every write, and may require moving data around in memory.</p>
-</blockquote>
-<h2 id="Sharded-structures-分片的数据结构"><a href="#Sharded-structures-分片的数据结构" class="headerlink" title="Sharded structures 分片的数据结构"></a>Sharded structures 分片的数据结构</h2><h2 id="Packing-bits-and-bytes-更紧凑的位和字节"><a href="#Packing-bits-and-bytes-更紧凑的位和字节" class="headerlink" title="Packing bits and bytes 更紧凑的位和字节"></a>Packing bits and bytes 更紧凑的位和字节</h2><p>社交网站的所有用户都有位置信息，如何在 Redis 中使用更少的内存存储每一个用户的未知信息？而且要能够方便的进行聚合计算</p>
-<p>假设用户的 ID 都是连续的数组，且只存储国家，区域/州/省信息两级信息；并使用 ISO3 中的国家代码，如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 国家代码</span></span><br><span class="line">COUNTRIES = <span class="string">'''</span></span><br><span class="line"><span class="string">ABW AFG AGO AIA ALA ALB AND ARE ARG ARM ASM ATA ATF ATG AUS AUT AZE BDI</span></span><br><span class="line"><span class="string">BEL BEN BES BFA BGD BGR BHR BHS BIH BLM BLR BLZ BMU BOL BRA BRB BRN BTN</span></span><br><span class="line"><span class="string">'''</span>.splt()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 美国，加拿大州信息</span></span><br><span class="line">STATES = &#123;</span><br><span class="line"><span class="string">'CAN'</span>:<span class="string">'''AB BC MB NB NL NS NT NU ON PE QC SK YT'''</span>.split(),</span><br><span class="line"><span class="string">'USA'</span>:<span class="string">'''AA AE AK AL AP AR AS AZ CA CO CT DC DE FL FM GA GU HI IA ID</span></span><br><span class="line"><span class="string">IL IN KS KY LA MA MD ME MH MI MN MO MP MS MT NC ND NE NH NJ NM NV NY OH</span></span><br><span class="line"><span class="string">OK OR PA PR PW RI SC SD TN TX UT VA VI VT WA WI WV WY'''</span>.split(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>最直接的方法是直接以字符串的方式直接存储国家和州代码，每个国家代码至少 3 个字节，州信息至少 2 个字节；</p>
-<p><strong>解决方法：以分片的形式存储定长大小的数据</strong></p>
-<p>实际存储的时候，并不存储实际的国家和州代码，而只存储其在 “表”（数组） 中的索引代表的字符，这样，只用两个字节就可以存储国家和州信息了（数组长度不会超过单个字节的十进制数字表示）。</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018210437144.png" alt="image-20201018210437144"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">(country, state)</span>:</span></span><br><span class="line">	cindex = bisect.bisect_left(COUNTRIES, country)</span><br><span class="line">	<span class="keyword">if</span> cindex &gt; len(COUNTRIES) <span class="keyword">or</span> COUNTRIES[cindex] != country:</span><br><span class="line">		cindex = <span class="number">-1</span></span><br><span class="line">	cindex += <span class="number">1</span></span><br><span class="line">	</span><br><span class="line">    sindex = <span class="number">-1</span></span><br><span class="line">	<span class="keyword">if</span> state <span class="keyword">and</span> country <span class="keyword">in</span> STATES:</span><br><span class="line">		states = STATES[country]</span><br><span class="line">		sindex = bisect.bisect_left(states, state)</span><br><span class="line">		<span class="keyword">if</span> sindex &gt; len(states) <span class="keyword">or</span> states[sindex] != state:</span><br><span class="line">			sindex = <span class="number">-1</span></span><br><span class="line">		sindex += <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> chr(cindex) + chr(sindex)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Redis 中 STRING 结构的值大小限制为 512 MB, 所有用户的信息存储在单个 STRING 的值中必然不可取， 通过进行分片，限制每个分片最多存储 2 百万个用户的位置信息，单个 Key 的值占用大概在 2 MB. 通过 <code>SETRANGE</code>, <code>GETRANGE</code> 命令就可以更新和获取单个用户的位置信息</p>
-<p>这里没有限制分片的个数，只限制了每个分片的大小，考虑的是用户 ID 都是有序的，通过 ID 和每个分片的大小，就可以计算每个 ID 所属的分片， 以及分片内的偏移量；为了知道当前一共由多少分片，就要存储当前的最大用户 ID.</p>
-<p>这样进行存储，要对这些信息进行聚合计算，比如统计所有用户的国家，州分布，就比较容易，遍历所有分片进行统计，当然由于每个分片 STRING 的值比较大，需要分批多次去读取，而不能直接去读取，会阻塞其它客户端</p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211551176.png" alt="image-20201018211551176"></p>
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211628124.png" alt="image-20201018211628124"></p>
-<p>这里虽然使用的是多个字节存储的，但是某些情况下，<code>GETBIT</code>, <code>SETBIT</code> 命令来获取和设置单个二进制位可能更高效，更节省空间。存储 Boolean 型？</p>
-<p><strong>存储数据在 Redis 中的方式，会极大地影响所使用地内存。</strong></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Terminology/">Terminology</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-19</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>symbolic links</p>
-<p>fork</p>
 
                 
             </div>

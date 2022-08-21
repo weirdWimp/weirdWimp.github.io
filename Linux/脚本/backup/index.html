@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">backup</h2>
             <div class="post-meta">
-                <span class="post-time">2022-07-23</span>
+                <span class="post-time">2022-08-21</span>
                 
                 <span class="post-category">
                     
@@ -98,13 +98,13 @@
         </div>
         <div class="post-toc" id="post-toc">
     <strong class="post-toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><span class="toc-text">使用 WSL 进行 Windows 下不同磁盘之间的文件备份</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><span class="toc-text">使用 WSL 进行 Windows 下不同磁盘之间的文件备份</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件目录大小排序"><span class="toc-text">文件目录大小排序</span></a></li></ol>
     <div class="back-to-top" id="back-to-top">
         <a href="javascript:void(0);">回到顶部</a>
     </div>
 </div>
         <div class="post-content">
-            <h2 id="使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><a href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份" class="headerlink" title="使用 WSL 进行 Windows 下不同磁盘之间的文件备份"></a>使用 WSL 进行 Windows 下不同磁盘之间的文件备份</h2><p>modified.sh</p>
+            <h3 id="使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><a href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份" class="headerlink" title="使用 WSL 进行 Windows 下不同磁盘之间的文件备份"></a>使用 WSL 进行 Windows 下不同磁盘之间的文件备份</h3><p>modified.sh</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">sourceDir=<span class="variable">$1</span></span><br><span class="line">find <span class="variable">$1</span> -<span class="built_in">type</span> f -mmin -60 | \</span><br><span class="line">awk \</span><br><span class="line"><span class="string">'BEGIN &#123; "date \"+%F %T\""| getline; print $0 &#125; \</span></span><br><span class="line"><span class="string">&#123; print "modified:"$0 &#125; \</span></span><br><span class="line"><span class="string">END &#123; print "\n\n"&#125;'</span></span><br></pre></td></tr></table></figure>
 
 
@@ -115,6 +115,12 @@
 
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line">*/60 * * * * /mnt/e/SoftConfigBackup/backup.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="文件目录大小排序"><a href="#文件目录大小排序" class="headerlink" title="文件目录大小排序"></a>文件目录大小排序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前目录下，根据文件或目录的大小进行降序排序, 需要有对应目录的权限</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set current directory as default directory</span></span><br><span class="line">dir=<span class="variable">$&#123;1:-$(pwd)&#125;</span></span><br><span class="line">dir=$(<span class="built_in">echo</span> <span class="variable">$dir</span> | sed -E <span class="string">'s/\/$//g'</span>)</span><br><span class="line"></span><br><span class="line">IFSOld=<span class="variable">$IFS</span></span><br><span class="line">IFS=$<span class="string">'\n'</span></span><br><span class="line">rs=<span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(ls <span class="string">"<span class="variable">$&#123;dir&#125;</span>"</span>); <span class="keyword">do</span></span><br><span class="line">    fpath=<span class="string">"<span class="variable">$&#123;dir&#125;</span>/<span class="variable">$i</span>"</span></span><br><span class="line">    <span class="keyword">if</span> [ -f <span class="string">"<span class="variable">$fpath</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        size=$(du -B 1G <span class="string">"<span class="variable">$fpath</span>"</span> | cut -f1)</span><br><span class="line">        rs=<span class="variable">$rs</span><span class="string">"\n[f]\x1c<span class="variable">$&#123;size&#125;</span>\x1c<span class="variable">$fpath</span>"</span></span><br><span class="line">    <span class="keyword">elif</span> [ -d <span class="string">"<span class="variable">$fpath</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        size=$(du -B 1G -c <span class="string">"<span class="variable">$fpath</span>"</span> | grep total | cut -f1)</span><br><span class="line">        rs=<span class="variable">$rs</span><span class="string">"\n[d]\x1c<span class="variable">$&#123;size&#125;</span>\x1c<span class="variable">$fpath</span>"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"block size = 1GB"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nFLG Block Path"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"-----------------------------------------------"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="variable">$rs</span> | sort -t $<span class="string">'\x1c'</span> -n -r -k2 | tr $<span class="string">'\x1c'</span> <span class="string">' '</span></span><br><span class="line">IFS=<span class="variable">$IFSOld</span></span><br></pre></td></tr></table></figure>
+
+
 
 
         </div>
@@ -130,15 +136,9 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hbase/%E4%BF%9D%E6%8C%81%E4%B8%8E%20Redis%20%E7%9B%B8%E5%90%8C%E7%9A%84%20TTL%20%E6%93%8D%E4%BD%9C/">
-                <i class="iconfont icon-prev"></i>
-                <span class="nav-default">保持与 Redis 相同的 TTL 操作</span>
-                <span class="nav-mobile">Prev</span>
-            </a>
         
-        
-            <a class="next" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">
-                <span class="nav-default">高级文本命令</span>
+            <a class="next" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+                <span class="nav-default">常用替换表达式</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
