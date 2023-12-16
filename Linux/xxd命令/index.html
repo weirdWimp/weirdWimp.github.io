@@ -85,7 +85,7 @@
         <div class="post-title">
             <h2 class="title">xxd命令</h2>
             <div class="post-meta">
-                <span class="post-time">2021-08-29</span>
+                <span class="post-time">2022-11-12</span>
                 
                 <span class="post-category">
                     
@@ -142,9 +142,25 @@
 <p>start at &lt;<em>seek</em>&gt; bytes abs. (or rel.) infile offset. <em>+</em> indicates that the seek is relative to the current stdin file position (meaningless when not reading from stdin). <em>-</em> indicates that the seek should be that many characters from the end of the input (or if combined with <em>+</em>: before the current stdin file position). Without -s option, xxd starts at the current file position.</p>
 <p>跳过多少字节</p>
 </li>
-<li><p><code>u</code> 使用大写的十六进制字母，默认是小写的</p>
-</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">xxd text</span><br><span class="line">00000000: 6865 6c6c 6f0a 4f6e 2054 7565 7364 6179  hello.On Tuesday</span><br><span class="line">00000010: 2c20 7468 6520 4c69 6e75 7820 5379 7374  , the Linux Syst</span><br><span class="line">00000020: 656d 0a41 646d 696e 6973 7472 6174 6f72  em.Administrator</span><br><span class="line">00000030: 2773 2067 726f 7570 206d 6565 7469 6e67  <span class="string">'s group meeting</span></span><br><span class="line"><span class="string">00000040: 2077 696c 6c20 6265 2068 656c 642e 5379   will be held.Sy</span></span><br><span class="line"><span class="string">00000050: 7374 656d 0a41 646d 696e 6973 7472 6174  stem.Administrat</span></span><br><span class="line"><span class="string">00000060: 6f72 2041 6c6c 2053 7973 7465 6d20 4164  or All System Ad</span></span><br><span class="line"><span class="string">00000070: 6d69 6e69 7374 7261 746f 7273 2073 686f  ministrators sho</span></span><br><span class="line"><span class="string">00000080: 756c 6420 6174 7465 6e64 2e20 5379 7374  uld attend. Syst</span></span><br><span class="line"><span class="string">00000090: 656d 0a41 646d 696e 6973 7472 6174 6f72  em.Administrator</span></span><br><span class="line"><span class="string">000000a0: 2054 6861 6e6b 2079 6f75 2066 6f72 2079   Thank you for y</span></span><br><span class="line"><span class="string">000000b0: 6f75 7220 6174 7465 6e64 616e 6365 2e0a  our attendance..</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># xxd 每行默认 16 个字节，0x30 也就是 48 个字节，刚好是前 3 行</span></span><br><span class="line"><span class="string">xxd -s 0x30 text</span></span><br><span class="line"><span class="string">00000030: 2773 2067 726f 7570 206d 6565 7469 6e67  '</span>s group meeting</span><br><span class="line">00000040: 2077 696c 6c20 6265 2068 656c 642e 5379   will be held.Sy</span><br><span class="line">00000050: 7374 656d 0a41 646d 696e 6973 7472 6174  stem.Administrat</span><br><span class="line">00000060: 6f72 2041 6c6c 2053 7973 7465 6d20 4164  or All System Ad</span><br><span class="line">00000070: 6d69 6e69 7374 7261 746f 7273 2073 686f  ministrators sho</span><br><span class="line">00000080: 756c 6420 6174 7465 6e64 2e20 5379 7374  uld attend. Syst</span><br><span class="line">00000090: 656d 0a41 646d 696e 6973 7472 6174 6f72  em.Administrator</span><br><span class="line">000000a0: 2054 6861 6e6b 2079 6f75 2066 6f72 2079   Thank you <span class="keyword">for</span> y</span><br><span class="line">000000b0: 6f75 7220 6174 7465 6e64 616e 6365 2e0a  our attendance..</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-l len | -len len</code> 只打印出 len 个字节</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xxd -l 5 text</span><br><span class="line">00000000: 6865 6c6c 6f                             hello</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p><code>-u</code> 使用大写的十六进制字母，默认是小写的</p>
+</li>
+<li></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a 65537 byte file with all bytes 0x00, except for the last one which is 'A' (hex 0x41).</span></span><br><span class="line">% <span class="built_in">echo</span> <span class="string">"010000: 41"</span> | xxd -r &gt; file</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.commandlinux.com/man-page/man1/xxd.1.html" target="_blank" rel="noopener">XXD</a></p>
 
         </div>
@@ -160,15 +176,15 @@
 <div class="paginator">
     
         
-            <a class="prev" href="/Linux/Shell%E5%8F%98%E9%87%8F/">
+            <a class="prev" href="/%E7%84%A6%E8%99%91%E7%97%87/%E7%84%A6%E8%99%91%E7%97%87%E5%8E%86%E7%A8%8B/">
                 <i class="iconfont icon-prev"></i>
-                <span class="nav-default">Shell变量</span>
+                <span class="nav-default">焦虑症历程</span>
                 <span class="nav-mobile">Prev</span>
             </a>
         
         
-            <a class="next" href="/Linux/decode/">
-                <span class="nav-default">decode</span>
+            <a class="next" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+                <span class="nav-default">常用替换表达式</span>
                 <span class="nav-mobile">Next</span>
                 <i class="iconfont icon-next"></i>
             </a>
@@ -194,7 +210,7 @@
             &copy;
             
             
-            2022
+            2023
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

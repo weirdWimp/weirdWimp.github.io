@@ -84,220 +84,44 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/MRR%20and%20BAK%20Algorithm/">MRR and BAK Algorithm</a></h2>
+                <h2><a class="post-title-link" href="/Redis/%E5%87%8F%E5%B0%91%20Redis%20%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/">减少 Redis 中的内存使用</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-09-01</span>
+                <span class="post-time">2020-10-18</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    <a class="category" href="/categories/Redis/">Redis</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h3 id="1-Multi-Range-Read-Optimization-多范围索引扫描读优化"><a href="#1-Multi-Range-Read-Optimization-多范围索引扫描读优化" class="headerlink" title="1 Multi-Range Read Optimization 多范围索引扫描读优化"></a>1 <strong>Multi-Range Read Optimization 多范围索引扫描读优化</strong></h3><p>在次级索引上使用范围扫描（range scan）读取行时，当表很大且没有存储再存储引擎的缓存中时，就可能会导致对基础表的的许多磁盘的随机访问。 Mysql 试图通过 <strong>Multi-Range Read</strong> (<strong>MRR</strong>)  优化来减少范围扫描时的随机磁盘访问</p>
-<h4 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a><strong>步骤：</strong></h4><ol>
-<li>首先只扫描索引。并收集相关行的键（keys for the relevent rows）</li>
-<li>对这些键进行排序，使用键排序的顺序访基表检索数据行</li>
-</ol>
-<p>优化的动机就是减少随机磁盘访问，实现对基表的更多的顺序扫描</p>
-<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a><strong>优点：</strong></h4><ol>
-<li>MRR 基于索引对，使得数据行的访问是顺序执行的，而不是随机的。Server 获取满足查询条件的索引对 (<strong>index tuple</strong>)，根据数据行键（row ID）进行排序，使用排序的结果顺序访问完整的数据行。使得数据访问更高效，较低磁盘IO消耗</li>
-<li>MRR 允许批量处理对键访问的请求，这些请求用于需要通过索引对访问数据行的操作，比如范围索引扫描和使用索引连接属性的等值连接。MRR 迭代索引范围序列，获得满足条件的索引对。将这些结果进行聚合，访问对应的数据行。并且没有获取所有的索引对后才进行数据行的读取</li>
-</ol>
-<p>MRR 不支持虚拟列上的次级索引.</p>
-<h4 id="哪些场景下可以利用-MRR-优化"><a href="#哪些场景下可以利用-MRR-优化" class="headerlink" title="哪些场景下可以利用 MRR 优化:"></a><strong>哪些场景下可以利用 MRR 优化</strong>:</h4><ul>
-<li><p>场景 A</p>
-<p>InnoDB, MyISAM 表的索引范围扫描或者等值连接操作 (<strong>equi-join operations</strong>)</p>
-<ol>
-<li>部分索引对被存储 (accumulated) 在缓存区中</li>
-<li>缓冲区中的索引对通过数据行ID进行排序</li>
-<li>根据排序的索引对的顺序访问数据行</li>
-</ol>
-</li>
-</ul>
-<ul>
-<li><p>场景 B</p>
-<p>MRR 可以用于 NDB 表，用于多范围索引扫描，或者用于通过属性执行等值连接。</p>
-<ol>
-<li>部分范围(可能是单键范围)缓存在查询提交的中心节点上的缓冲区中 (A portion of ranges, possibly single-key ranges, is accumulated in a buffer on the central node<br>where the query is submitted)</li>
-<li>这些范围查询被发送到执行节点来访问数据</li>
-<li>数据行被打包发送回中心节点</li>
-<li>将接收到的包 (带有数据行) 存放在缓冲区中</li>
-<li>从缓冲区中返回结果行</li>
-</ol>
-</li>
-</ul>
-<h4 id="如何判断当前查询使用了-MRR-优化"><a href="#如何判断当前查询使用了-MRR-优化" class="headerlink" title="如何判断当前查询使用了 MRR 优化"></a><strong>如何判断当前查询使用了 MRR 优化</strong></h4><p>  执行计划的 <code>Extra</code> 列为 <code>Using MRR</code></p>
-<p>  InnoDB, MyISAM 如果需要进行全表扫描时, 不会使用 MRR 优化.  例如: 如果仅仅基于索引对中的信息就可以获取查询结构, 即 <strong>覆盖索引</strong>, MRR 不会提供任何优化.</p>
-<h4 id="如何开启-MRR"><a href="#如何开启-MRR" class="headerlink" title="如何开启 MRR"></a><strong>如何开启 MRR</strong></h4><p>  <code>optimizer_switch</code> 系统变量提供了使用 MRR 优化的开关, <code>mrr</code> 标志表示 MRR 是否已开启 (on), 默认开启, <code>mrr_cost_based</code> 标志表示控制查询优化器是否尝试基于性能的选择, 使用或不适用 MRR, 默认开启 (on). 如果希望尽可能的使用 MRR , 将其置为 off</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> @@optimizer_switch;</span><br><span class="line"></span><br><span class="line">index_merge=on,</span><br><span class="line">index_merge_union=on,</span><br><span class="line">index_merge_sort_union=on,</span><br><span class="line">index_merge_intersection=on,</span><br><span class="line">engine_condition_pushdown=on,</span><br><span class="line">index_condition_pushdown=on,</span><br><span class="line">mrr=on,</span><br><span class="line">mrr_cost_based=on,</span><br><span class="line">block_nested_loop=on,</span><br><span class="line">batched_key_access=off,</span><br><span class="line">materialization=on,</span><br><span class="line">semijoin=on,</span><br><span class="line">loosescan=on,</span><br><span class="line">firstmatch=on,</span><br><span class="line">duplicateweedout=on,</span><br><span class="line">subquery_materialization_cost_based=on,</span><br><span class="line">use_index_extensions=on,</span><br><span class="line">condition_fanout_filter=on,</span><br><span class="line">derived_merge=on</span><br></pre></td></tr></table></figure>
-
-<p>  <code>read_rnd_buffer_size</code> 系统变量表明可以为缓冲区分配的内存字节大小.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 默认 262144B = 256KB</span></span><br><span class="line"><span class="keyword">SELECT</span> @@read_rnd_buffer_size /<span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">256.0000</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_info;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user_info`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`uid`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`upd_time`</span> <span class="built_in">timestamp</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`user_info_uid_index`</span> (<span class="string">`uid`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">22000001</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure>
-
-
-
-<p>  使用 <code>in</code> 的范围查询</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_info <span class="keyword">where</span> uid <span class="keyword">in</span> (<span class="string">'204-42-7061'</span>,<span class="string">'735-14-7777'</span>,<span class="string">'321-09-5846'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+-----------------------+</span></span><br><span class="line">| id | select_type | table     | partitions | type  | possible_keys       | key                 | key_len | ref  | rows | filtered | Extra                 |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+-----------------------+</span></span><br><span class="line">|  1 | SIMPLE      | user_info | NULL       | range | user_info_uid_index | user_info_uid_index | 194     | NULL |    3 |   100.00 | Using index condition |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+-----------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span>, <span class="number">1</span> <span class="keyword">warning</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
-
-<p>  <img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200705144752910.png" alt="image-20200705144752910"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- in 的条件查询有 400 多个,后面的省略了</span></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_info <span class="keyword">where</span> uid <span class="keyword">in</span> (<span class="string">'204-42-7061'</span>,<span class="string">'735-14-7777'</span>,<span class="string">'321-09-5846'</span>,<span class="string">'736-50-3975'</span>,<span class="string">'176-55-0702'</span>,<span class="string">'466-84-4864'</span>,<span class="string">'157-95-0925'</span>,<span class="string">'358-76-6422'</span>,<span class="string">'275-11-5932'</span>,<span class="string">'316-90-4137'</span>,<span class="string">'868-03-2935'</span>,<span class="string">'020-06-6077'</span>,<span class="string">'726-08-5008'</span>,<span class="string">'475-65-1649'</span>,<span class="string">'059-97-0370'</span>,<span class="string">'503-92-8111'</span>,<span class="string">'385-02-6790'</span>,<span class="string">'451-49-1154'</span>,<span class="string">'020-16-2354'</span>,<span class="string">'588-93-7398'</span>,<span class="string">'657-12-6885'</span>,<span class="string">'155-98-3036'</span>,<span class="string">'838-63-2477'</span>,<span class="string">'780-33-4522'</span>,<span class="string">'033-70-3319'</span>,<span class="string">'529-49-3149'</span>,<span class="string">'006-93-6411'</span>,<span class="string">'749-94-6620'</span>,<span class="string">'717-17-1261'</span>,<span class="string">'377-55-0697'</span>,<span class="string">'525-59-2422'</span>,<span class="string">'565-14-3063'</span>,<span class="string">'686-91-9092'</span>,<span class="string">'381-99-6716'</span>,<span class="string">'228-22-7720'</span>,<span class="string">'431-62-1403'</span>,<span class="string">'222-46-8484'</span>,<span class="string">'556-13-2704'</span>,<span class="string">'053-34-8148'</span>,<span class="string">'128-05-3170'</span>,<span class="string">'599-38-5086'</span>,<span class="string">'722-22-2334'</span>, ...)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+----------------------------------+</span></span><br><span class="line">| <span class="keyword">id</span> | select_type | <span class="keyword">table</span>     | <span class="keyword">partitions</span> | <span class="keyword">type</span>  | possible_keys       | <span class="keyword">key</span>                 | key_len | <span class="keyword">ref</span>  | <span class="keyword">rows</span> | filtered | Extra                            |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+----------------------------------+</span></span><br><span class="line">|  <span class="number">1</span> | SIMPLE      | user_info | <span class="literal">NULL</span>       | <span class="keyword">range</span> | user_info_uid_index | user_info_uid_index | <span class="number">194</span>     | <span class="literal">NULL</span> |  <span class="number">435</span> |   <span class="number">100.00</span> | <span class="keyword">Using</span> <span class="keyword">index</span> condition; Using MRR |</span><br><span class="line">+<span class="comment">----+-------------+-----------+------------+-------+---------------------+---------------------+---------+------+------+----------+----------------------------------+</span></span><br></pre></td></tr></table></figure>
-
-<p>  <img src="C:%5CUsers%5Cguo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200705145000247.png" alt="image-20200705145000247"></p>
-<h3 id="2-Block-Nested-Loop-and-Batched-Key-Access-Joins"><a href="#2-Block-Nested-Loop-and-Batched-Key-Access-Joins" class="headerlink" title="2 Block Nested-Loop and Batched Key Access Joins"></a>2 <strong>Block Nested-Loop and Batched Key Access Joins</strong></h3><p>MySQL 中可以使用 <code>Batched Key Access (BKA)</code> 连接算法来同时使用索引来访问被连接的表, 同样也使用一个连接缓冲区. BKA 算法支持内连接, 外连接, 以及半连接 (semijoin operations), 包括前内外连接. BKA 算法由于更高效的表扫描, 可以提升连接的性能. 同时, <code>Block Nested-Loop(BNL)</code> 连接算法也可以被扩展应用与的外连接等操作.</p>
-<p>Join Buffer Management for Block Nested-Loop and Batched Key Access Algorithms</p>
-<p>Block Nested-Loop Algorithm for Outer Joins and Semijoins</p>
-<h4 id="Batched-Key-Access-Joins"><a href="#Batched-Key-Access-Joins" class="headerlink" title="Batched Key Access Joins"></a><strong>Batched Key Access Joins</strong></h4><p>Batched Key Access (BKA) 连接算法用于连接表, 当第二个连接操作数( the second join operand - 被驱动表) 表生成的行可以使用索引访问时, 可以使用应用 BKA 算法. </p>
-<ol>
-<li>和 BNL 算法一样, BKA 连接算法会使用一个连接缓冲区 (join buffer) 来缓存连接操作中驱动表行的感兴趣的列. </li>
-<li>然后 BKA 算法会构建缓冲区中所有行的键 (keys 索引) 来访问被连接的表</li>
-<li>以批量的方式将这些 keys 提交给数据库引擎进行索引查询</li>
-<li>提交的 keys 通过 MRR 接口进行处理, 以优化的方式, 使用索引进行查询</li>
-<li>获取由这些 keys 匹配的行, 返回给 BKA 连接算法, 每一个匹配的行同时带了一个指向连接缓冲区中行的引用</li>
-</ol>
-<p>使用 BKA 时, <code>join_buffer_size</code> 定义的时每次发给存储引擎的批量 keys 的大小</p>
-<h4 id="开启-BKA"><a href="#开启-BKA" class="headerlink" title="开启  BKA"></a><strong>开启  BKA</strong></h4><p><code>optimizer_switch</code> 系统变量的 <code>batched_key_access</code> 需要置为 <code>on</code>, BKA 同时使用 MRR, <code>mrr</code> 也需要置为 <code>on</code>. 并且由于目前对于使用 MRR 所进行的优化效果过于悲观, 需要将  <code>mrr_cost_based</code> 置为 <code>off</code></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_switch=<span class="string">'mrr=on,mrr_cost_based=off,batched_key_access=on'</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="如何判断当前连接查询使用了-BKA-算法"><a href="#如何判断当前连接查询使用了-BKA-算法" class="headerlink" title="如何判断当前连接查询使用了 BKA 算法"></a><strong>如何判断当前连接查询使用了 BKA 算法</strong></h4><p>执行计划的 <code>Extra</code> 列为 <code>Using join buffer (Batched Key Access)</code>, 同时, 连接类型 <code>type</code> 是 <code>ref</code> 或者 <code>eq_ref</code></p>
-<h4 id="MRR-的执行由由两种场景"><a href="#MRR-的执行由由两种场景" class="headerlink" title="MRR 的执行由由两种场景"></a><strong>MRR 的执行由由两种场景</strong></h4><ul>
-<li>传统的基于磁盘的存储引擎, 如 InnoDB 和 MyISAM, 对于这些引擎. 来自连接缓冲区的所有行的键一次性提交给 MRR. 特定于引擎的 MRR 函数对提交的键进行索引查找, 从他们中获取行 id (或主键), 然后获取所有行 id 对应的行数据. 返回的每一行都带了一个关联引用 (用于访问连接缓冲区中的行).  MRR 读取行时使用了行 id的顺序进行读取 (顺序访问而不是随机访问).</li>
-<li>远程存储引擎, 如 NDB, MySQL Server (SQL 节点)将连接缓冲区的部分行的键及其关联引用发送到 NDB 集群的数据节点. SQL 节点收到数据节点返回的包(一个或多个), 其中包含了匹配的行以及相应的关联引用. BKA 算法利用这些行并构建新的连接行. 然后想数据节点发送行的键, 知道所有的连接操作匹配已经完成.</li>
-</ul>
-<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h4><p>开启 BKA </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_switch=<span class="string">'mrr=on,mrr_cost_based=off,batched_key_access=on'</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_score;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user_score`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`uid`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`score`</span> <span class="built_in">float</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">15</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure>
-
-
-
-<p>连接查询, 并且被驱动表的连接类型是 <code>ref</code>, <code>eq_ref</code></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_score a <span class="keyword">left</span> <span class="keyword">join</span>  user_info b <span class="keyword">on</span> a.uid = b.uid;</span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------------+---------------------+---------+-------------------+------+----------+----------------------------------------+</span></span><br><span class="line">| id | select_type | table | partitions | type | possible_keys       | key                 | key_len | ref               | rows | filtered | Extra                                  |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------------+---------------------+---------+-------------------+------+----------+----------------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | a     | NULL       | ALL  | NULL                | NULL                | NULL    | NULL              |    6 |   100.00 | NULL                                   |</span><br><span class="line">|  1 | SIMPLE      | b     | NULL       | ref  | user_info_uid_index | user_info_uid_index | 194     | learning_db.a.uid |    1 |   100.00 | Using join buffer (Batched Key Access) |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------------+---------------------+---------+-------------------+------+----------+----------------------------------------+</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200705152742898.png" alt="image-20200705152742898"></p>
-<p><strong>关掉 BKA, 还原默认设置</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> optimizer_switch=<span class="string">'mrr=on,mrr_cost_based=on,batched_key_access=off'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_score a <span class="keyword">left</span> <span class="keyword">join</span>  user_info b <span class="keyword">on</span> a.uid = b.uid;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200705154158520.png" alt="image-20200705154158520"></p>
-<p>*<em>被驱动表的连接类型不是 <code>ref</code>, <code>eq_ref</code> *</em> </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_info a <span class="keyword">left</span> <span class="keyword">join</span> user_score b <span class="keyword">on</span> a.uid = b.uid;</span><br><span class="line"></span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+----------+----------+----------------------------------------------------+</span></span><br><span class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows     | filtered | Extra                                              |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+----------+----------+----------------------------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | a     | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 21919807 |   100.00 | NULL                                               |</span><br><span class="line">|  1 | SIMPLE      | b     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |        6 |   100.00 | Using where; Using join buffer (Block Nested Loop) |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+----------+----------+----------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200705153949927.png" alt="image-20200705153949927"></p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/TimeStamp/">TimeStamp</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-09-01</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>5.1.13 MySQL Server Time Zone Support</p>
-<p>11.2 Date and Time Data Types</p>
-<p>Section 11.2.6, “Automatic Initialization and Updating for TIMESTAMP and DATETIME”.</p>
-<p>格林威治时间 </p>
-<p>UTC</p>
-<p><a href="https://www.liaoxuefeng.com/article/978494994163392" target="_blank" rel="noopener">廖雪峰-如何正确的处理时间</a></p>
-<p><a href="https://stackoverflow.com/questions/7605953/how-to-change-mysql-timezone-in-a-database-connection-using-java?spm=a2c6h.13066369.0.0.4a3d35feS3vSBf" target="_blank" rel="noopener">jdbc url timezone</a></p>
-<p>Server SQL Modes</p>
-<p>ALLOW_INVALID_DATES</p>
-<p>STRICT_MODE</p>
-<p>NO_ZERO_DATE</p>
-<ul>
-<li><p><code>TIMESTAMP</code> 类型的的范围 <code>1970-01-01 00:00:01.000000</code> UTC 到 <code>2038-01-19
-03:14:07.999999</code> UTC，注意是 UTC 时间</p>
-</li>
-<li><p><code>TIMESTAMP</code> 的值存储为自 epoch <code>1970-01-01 00:00:00</code> UTC 的秒数</p>
-</li>
-<li><p><code>TIMESTAMP[(fsp)]</code> fsp (0-6) 表示可以指定小数秒数精度， 默认是 0 ，表示没有用小数部分， 如 ‘2038-01-19 03:14:07.999999’</p>
-</li>
-<li><p>STRICT_MODE, NO_ZERO_DATE 决定是否可以设为 ‘0’ 值 （0000-00-00 00:00:00）</p>
-</li>
-<li><p>Automatic initialization and updating to the current date and time can be specified using DEFAULT CURRENT_TIMESTAMP and ON UPDATE CURRENT_TIMESTAMP column definition clauses. By default, the first TIMESTAMP column has these properties, as previously noted. However, any TIMESTAMP column in a table can be defined to have these properties.</p>
-</li>
-</ul>
-<blockquote>
-<p>MySQL converts <code>TIMESTAMP</code> values from the current time zone to UTC for storage, and back from UTC to the current time zone for retrieval. (This does not occur for other types such as <code>DATETIME</code>) By default, the current time zone for each connection is the server’s time. The time zone can be set on a per-connection basis. As long as the time zone settings remains constant, you get back the same value you store. If you store a <code>TIMESTAM</code> value, and then change the time zone and retrieve the value, the value is different from the value you stored. The current time zone is avaliable as the value of the <code>time_zone</code> system variable.  This occurs because the same time zone was not used for conversion in both directions. The current time zone is available as the value of the <code>time_zone</code> system variable. For more information, see Section 5.1.13, “MySQL Server Time Zone Support”.</p>
+                    <h1 id="减少-Redis-中的内存使用"><a href="#减少-Redis-中的内存使用" class="headerlink" title="减少 Redis 中的内存使用"></a>减少 Redis 中的内存使用</h1><h2 id="Short-structures-使用更短的结构"><a href="#Short-structures-使用更短的结构" class="headerlink" title="Short structures 使用更短的结构"></a>Short structures 使用更短的结构</h2><blockquote>
+<p>Redis stores a serialized version of the data, which must be decoded for every read, partially re-encoded for every write, and may require moving data around in memory.</p>
 </blockquote>
-<h3 id="MySQL-Server-Time-Zone-Support"><a href="#MySQL-Server-Time-Zone-Support" class="headerlink" title="MySQL Server Time Zone Support"></a>MySQL Server Time Zone Support</h3><ul>
-<li><p>system time zone  系统时区，server 启动时，尝试自动获取所在机器的时区，并设置为 <code>system_time_zone</code> 系统变量（system variable）</p>
-<p>要显示指定 Mysql Server 启动时的系统时区，启动 <code>mysqld</code> 服务前，设置 <code>TZ</code> 环境变量。 如果使用 <code>mysqld_safe</code>, 使用 <code>--timezone</code> 选项也可以设置</p>
-</li>
-<li><p>server time zone 服务器当前时区， 全局 <code>time_zone</code>系统变量表明了 server 当前操作使用的时区. <code>time_zone</code> 的初始化值是 <code>SYSTEM</code>, 表示和系统时区 (system time zone) 相同;  初始的全局 server time zone 也可以通过命令行选项 <code>--default-time-zone</code> 来设置，或者在 option 文件中指定 <code>default-time-zone=&#39;timezone&#39;</code>； 如果拥有权限，也可以在运行时设置：</p>
-</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> <span class="keyword">time_zone</span> = timezone;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>per-session time zone 针对每个会话的时区，每一个连接的客户端都有自己的会话时区设置，通过会话范围内的 <code>time_zone</code> 变量来设置；默认会话变量会从全局 <code>time_zone</code> 变量继承，但是客户端也可以修改：</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">time_zone</span> = timezone;</span><br></pre></td></tr></table></figure>
-
-<p>  会话时区设置会影响与时区相关（zone-sensitive）的数据类型的展示和存储. 包含 <code>NOW()</code> 或者 <code>CURTIME</code> 函数值的展示，以及 <code>TIMESTAMP</code> 列的值的存储和查询. 存储时，<code>TIMESTAMP</code> 列的值会从当前会话时区转为 UTC 进行存储，查询时，再从 UTC 时间转为当前会话的时区时间</p>
-<p>  <code>UTC_TIMESTAMP</code> 函数和 <code>DATE</code>, <code>TIME</code> 或者 <code>DATETIME</code> 列的值不受会话时区影响，它们也不是转为 UTC 存储</p>
-<h3 id="timezone-时区的设置格式"><a href="#timezone-时区的设置格式" class="headerlink" title="timezone 时区的设置格式"></a>timezone 时区的设置格式</h3><ul>
-<li>指定为 <code>SYSTEM</code>, 表明使用系统时区 system time zone</li>
-<li>指定一个 UTC 偏移量的字符串, <code>+/-[H]H:MM</code>, 如 ‘+10:00’， ‘-6:00’ （前面会自动补 0）. 有效范围 ‘-12:59’  - ‘+13:00’ inclusive</li>
-<li>‘Europe/Helsinki’, ‘US/Eastern’ 类似于这种命名时区，需要 <code>mysql</code> 库中创建的了时区信息表，并且填充了数据</li>
-</ul>
-<h3 id="JDBC-查询-TIMESTAMP"><a href="#JDBC-查询-TIMESTAMP" class="headerlink" title="JDBC 查询 TIMESTAMP"></a>JDBC 查询 TIMESTAMP</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1 </span></span><br><span class="line">com.mysql.jdbc.ResultSetImpl#getTimestamp(int)</span><br><span class="line"></span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line">com.mysql.jdbc.ResultSetImpl#getTimestampInternal</span><br><span class="line"></span><br><span class="line"><span class="comment">// step3</span></span><br><span class="line">com.mysql.jdbc.ByteArrayRow#getTimestampFast</span><br><span class="line"></span><br><span class="line"><span class="comment">// step4</span></span><br><span class="line">com.mysql.jdbc.ResultSetRow#getTimestampFast(int, byte[], int, int, java.util.Calendar, java.util.TimeZone, boolean, com.mysql.jdbc.MySQLConnection, com.mysql.jdbc.ResultSetImpl)   </span><br><span class="line"></span><br><span class="line"><span class="comment">// step5</span></span><br><span class="line">(useLegacyDatetimeCode=false) mysql.jdbc.TimeUtil#fastTimestampCreate(java.util.TimeZone, int, int, int, int, int, int, int)</span><br><span class="line">    或</span><br><span class="line">(useLegacyDatetimeCode=false) com.mysql.jdbc.TimeUtil#changeTimezone(com.mysql.jdbc.MySQLConnection, java.util.Calendar, java.util.Calendar, java.sql.Timestamp, java.util.TimeZone, java.util.TimeZone, boolean)</span><br></pre></td></tr></table></figure>
+<h2 id="Sharded-structures-分片的数据结构"><a href="#Sharded-structures-分片的数据结构" class="headerlink" title="Sharded structures 分片的数据结构"></a>Sharded structures 分片的数据结构</h2><h2 id="Packing-bits-and-bytes-更紧凑的位和字节"><a href="#Packing-bits-and-bytes-更紧凑的位和字节" class="headerlink" title="Packing bits and bytes 更紧凑的位和字节"></a>Packing bits and bytes 更紧凑的位和字节</h2><p>社交网站的所有用户都有位置信息，如何在 Redis 中使用更少的内存存储每一个用户的未知信息？而且要能够方便的进行聚合计算</p>
+<p>假设用户的 ID 都是连续的数组，且只存储国家，区域/州/省信息两级信息；并使用 ISO3 中的国家代码，如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 国家代码</span></span><br><span class="line">COUNTRIES = <span class="string">'''</span></span><br><span class="line"><span class="string">ABW AFG AGO AIA ALA ALB AND ARE ARG ARM ASM ATA ATF ATG AUS AUT AZE BDI</span></span><br><span class="line"><span class="string">BEL BEN BES BFA BGD BGR BHR BHS BIH BLM BLR BLZ BMU BOL BRA BRB BRN BTN</span></span><br><span class="line"><span class="string">'''</span>.splt()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 美国，加拿大州信息</span></span><br><span class="line">STATES = &#123;</span><br><span class="line"><span class="string">'CAN'</span>:<span class="string">'''AB BC MB NB NL NS NT NU ON PE QC SK YT'''</span>.split(),</span><br><span class="line"><span class="string">'USA'</span>:<span class="string">'''AA AE AK AL AP AR AS AZ CA CO CT DC DE FL FM GA GU HI IA ID</span></span><br><span class="line"><span class="string">IL IN KS KY LA MA MD ME MH MI MN MO MP MS MT NC ND NE NH NJ NM NV NY OH</span></span><br><span class="line"><span class="string">OK OR PA PR PW RI SC SD TN TX UT VA VI VT WA WI WV WY'''</span>.split(),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>INIT</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"net_buffer_length"</span> -&gt; <span class="string">"16384"</span></span><br><span class="line"><span class="string">"interactive_timeout"</span> -&gt; <span class="string">"28800"</span></span><br><span class="line"><span class="string">"query_cache_size"</span> -&gt; <span class="string">"16777216"</span></span><br><span class="line"><span class="string">"character_set_connection"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"max_allowed_packet"</span> -&gt; <span class="string">"16777216"</span></span><br><span class="line"><span class="string">"net_write_timeout"</span> -&gt; <span class="string">"60"</span></span><br><span class="line"><span class="string">"lower_case_table_names"</span> -&gt; <span class="string">"0"</span></span><br><span class="line"><span class="string">"system_time_zone"</span> -&gt; <span class="string">"CST"</span></span><br><span class="line"><span class="string">"tx_isolation"</span> -&gt; <span class="string">"REPEATABLE-READ"</span></span><br><span class="line"><span class="string">"time_zone"</span> -&gt; <span class="string">"SYSTEM"</span></span><br><span class="line"><span class="string">"wait_timeout"</span> -&gt; <span class="string">"28800"</span></span><br><span class="line"><span class="string">"character_set_server"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"auto_increment_increment"</span> -&gt; <span class="string">"1"</span></span><br><span class="line"><span class="string">"license"</span> -&gt; <span class="string">"GPL"</span></span><br><span class="line"><span class="string">"character_set_client"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"sql_mode"</span> -&gt; <span class="string">"ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"</span></span><br><span class="line"><span class="string">"character_set_results"</span> -&gt; <span class="string">"utf8"</span></span><br><span class="line"><span class="string">"query_cache_type"</span> -&gt; <span class="string">"OFF"</span></span><br><span class="line"><span class="string">"init_connect"</span> -&gt; <span class="string">""</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    com.mysql.jdbc.ConnectionImpl#configureTimezone</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//1. configuredTimeZoneOnServer=CST</span></span><br><span class="line">    </span><br><span class="line">    com.mysql.jdbc.ConnectionPropertiesImpl#getServerTimezone</span><br><span class="line">    <span class="comment">// 2. 返回 url 中配置的 serverTimezone： canonicalTimezone = America/New_York</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getServerTimezone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.serverTimezone.getValueAsString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 3. (getUseTimezone() || !getUseLegacyDatetimeCode()) &amp;&amp; configuredTimeZoneOnServer != null)</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 4. this.serverTimezoneTZ = sun.util.calendar.ZoneInfo[id="America/New_York",offset=-18000000,dstSavings=3600000,useDaylight=true,transitions=235,lastRule=java.util.SimpleTimeZone[id=America/New_York,offset=-18000000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=3,startMonth=2,startDay=8,startDayOfWeek=1,startTime=7200000,startTimeMode=0,endMode=3,endMonth=10,endDay=1,endDayOfWeek=1,endTime=7200000,endTimeMode=0]]</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Configures the client's timezone if required.</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> SQLException</span></span><br><span class="line"><span class="comment">     *             if the timezone the server is configured to use can't be</span></span><br><span class="line"><span class="comment">     *             mapped to a Java timezone.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">configureTimezone</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        String configuredTimeZoneOnServer = <span class="keyword">this</span>.serverVariables.get(<span class="string">"timezone"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (configuredTimeZoneOnServer == <span class="keyword">null</span>) &#123;</span><br><span class="line">            configuredTimeZoneOnServer = <span class="keyword">this</span>.serverVariables.get(<span class="string">"time_zone"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="string">"SYSTEM"</span>.equalsIgnoreCase(configuredTimeZoneOnServer)) &#123;</span><br><span class="line">                configuredTimeZoneOnServer = <span class="keyword">this</span>.serverVariables.get(<span class="string">"system_time_zone"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String canonicalTimezone = getServerTimezone();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((getUseTimezone() || !getUseLegacyDatetimeCode()) &amp;&amp; configuredTimeZoneOnServer != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// user can override this with driver properties, so don't detect if that's the case</span></span><br><span class="line">            <span class="keyword">if</span> (canonicalTimezone == <span class="keyword">null</span> || StringUtils.isEmptyOrWhitespaceOnly(canonicalTimezone)) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    canonicalTimezone = TimeUtil.getCanonicalTimezone(configuredTimeZoneOnServer, getExceptionInterceptor());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IllegalArgumentException iae) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> SQLError.createSQLException(iae.getMessage(), SQLError.SQL_STATE_GENERAL_ERROR, getExceptionInterceptor());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (canonicalTimezone != <span class="keyword">null</span> &amp;&amp; canonicalTimezone.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.serverTimezoneTZ = TimeZone.getTimeZone(canonicalTimezone);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            <span class="comment">// The Calendar class has the behavior of mapping unknown timezones to 'GMT' instead of throwing an exception, so we must check for this...</span></span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            <span class="keyword">if</span> (!canonicalTimezone.equalsIgnoreCase(<span class="string">"GMT"</span>) &amp;&amp; <span class="keyword">this</span>.serverTimezoneTZ.getID().equals(<span class="string">"GMT"</span>)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> SQLError.createSQLException(<span class="string">"No timezone mapping entry for '"</span> + canonicalTimezone + <span class="string">"'"</span>, SQLError.SQL_STATE_ILLEGAL_ARGUMENT,</span><br><span class="line">                        getExceptionInterceptor());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">this</span>.isServerTzUTC = !<span class="keyword">this</span>.serverTimezoneTZ.useDaylightTime() &amp;&amp; <span class="keyword">this</span>.serverTimezoneTZ.getRawOffset() == <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>最直接的方法是直接以字符串的方式直接存储国家和州代码，每个国家代码至少 3 个字节，州信息至少 2 个字节；</p>
+<p><strong>解决方法：以分片的形式存储定长大小的数据</strong></p>
+<p>实际存储的时候，并不存储实际的国家和州代码，而只存储其在 “表”（数组） 中的索引代表的字符，这样，只用两个字节就可以存储国家和州信息了（数组长度不会超过单个字节的十进制数字表示）。</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018210437144.png" alt="image-20201018210437144"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">(country, state)</span>:</span></span><br><span class="line">	cindex = bisect.bisect_left(COUNTRIES, country)</span><br><span class="line">	<span class="keyword">if</span> cindex &gt; len(COUNTRIES) <span class="keyword">or</span> COUNTRIES[cindex] != country:</span><br><span class="line">		cindex = <span class="number">-1</span></span><br><span class="line">	cindex += <span class="number">1</span></span><br><span class="line">	</span><br><span class="line">    sindex = <span class="number">-1</span></span><br><span class="line">	<span class="keyword">if</span> state <span class="keyword">and</span> country <span class="keyword">in</span> STATES:</span><br><span class="line">		states = STATES[country]</span><br><span class="line">		sindex = bisect.bisect_left(states, state)</span><br><span class="line">		<span class="keyword">if</span> sindex &gt; len(states) <span class="keyword">or</span> states[sindex] != state:</span><br><span class="line">			sindex = <span class="number">-1</span></span><br><span class="line">		sindex += <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> chr(cindex) + chr(sindex)</span><br></pre></td></tr></table></figure>
 
 
 
-
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Calendar.DST_OFFSET</span><br><span class="line">Calendar.DST_OFFSET</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 相关时区设置和查看命令</span></span><br><span class="line"></span><br><span class="line">SET GLOBAL time_zone = <span class="string">"+5:00"</span>;</span><br><span class="line"></span><br><span class="line">SELECT @@GLOBAL.time_zone, @@SESSION.time_zone;</span><br><span class="line"><span class="comment"># @@GLOBAL.time_zone	@@SESSION.time_zone</span></span><br><span class="line"><span class="comment"># SYSTEM	SYSTEM</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">show variables like <span class="string">'%time_zone%'</span>;</span><br><span class="line"><span class="comment"># Variable_name	Value</span></span><br><span class="line"><span class="comment"># system_time_zone	CST</span></span><br><span class="line"><span class="comment"># time_zone	SYSTEM</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>CST 是个坑，安装的 Mysql 查看系统时区，显示 <code>CST</code>， 其实是东八区 <code>UTC+8</code>, 可以通过改变会话时区查看 <code>TIMESTAMP</code> 列的值进行验证，但是在 Java 中，<code>CST</code> 指的就是 <code>Central Standard Time</code>， 是 <code>UTC-6</code>,  所以如果客户端，如 Java 程序默认的时区就是 <code>Asia/Shanghai (UTC+8)</code>, 不指定任何时区转换设置，操作和显示没有什么问题；Mysql 系统时区变量为 <code>CST</code>, Mysql Server 默认全局时区（System Time Zone - 全局 time_zone 变量） 为 <code>SYSTEM</code> , 继承自系统时区，会话时区默认（Session Time Zone - 局部 time_zone 变量）继承全局时区，最终其实就是 <code>UTC+8</code>。</p>
-<p>如果特意在 jdbc url 中指定 <code>serverTimezone=CST</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//localhost:3306/learning_db?useUnicode=true&amp;characterEncoding=utf8&amp;useLegacyDatetimeCode=true&amp;useTimezone=true&amp;serverTimezone=CST</span></span><br></pre></td></tr></table></figure>
-
-<p>Mysql 查询 <code>TIMESTAMP</code> 列时，将存储的 <code>UTC+0</code> 时间转换为默认的会话时区时间，默认的会话时区是 <code>UTC+8</code>, 在 Mysql 里显示的是 <code>SYSTEM</code>，继承的 <code>CST</code>(这里虽然是 CST, 其实是 UTC+8, 系统时区默认取机器的时区，通过 <code>date -R</code>, 显示 <code>+8:00</code>), 这时候又指定了  <code>serverTimezone=CST</code>, JDBC 获取的系统时区服务器变量 <code>system_time_zone</code>是 <code>CST</code>,  但不是同一个东西，Java 将这个指定的<code>CST</code>转换为时区对象时，转换的就是 <code>UTC-6</code>, 而在 Mysql 服务器一侧是 <code>UTC+8</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Java 中，如果是 CST  TimeZone.getTimeZone("CST"), offset=-21600000， 即 'UTC-6'</span></span><br><span class="line">sun.util.calendar.ZoneInfo[id=<span class="string">"CST"</span>,offset=-<span class="number">21600000</span>,dstSavings=<span class="number">3600000</span>,useDaylight=<span class="keyword">true</span>,transitions=<span class="number">235</span>,lastRule=java.util.SimpleTimeZone[id=CST,offset=-<span class="number">21600000</span>,dstSavings=<span class="number">3600000</span>,useDaylight=<span class="keyword">true</span>,startYear=<span class="number">0</span>,startMode=<span class="number">3</span>,startMonth=<span class="number">2</span>,startDay=<span class="number">8</span>,startDayOfWeek=<span class="number">1</span>,startTime=<span class="number">7200000</span>,startTimeMode=<span class="number">0</span>,endMode=<span class="number">3</span>,endMonth=<span class="number">10</span>,endDay=<span class="number">1</span>,endDayOfWeek=<span class="number">1</span>,endTime=<span class="number">7200000</span>,endTimeMode=<span class="number">0</span>]]</span><br></pre></td></tr></table></figure>
-
-<p>这时，反而会有问题，相当于是 <code>UTC-6</code>（指定的Mysql Server会话时区） 转换为 <code>UTC+8</code> (客户端默认时区)</p>
-<p>​                                        </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># JDBC 查询 TIMESTAMP 列的步骤</span></span><br><span class="line"></span><br><span class="line">1.</span><br><span class="line">默认的会话时区UTC+8</span><br><span class="line">2038-01-19 11:14:07</span><br><span class="line">Mysql服务器  ---------------------------------------------------------------------&gt; JDBC</span><br><span class="line"></span><br><span class="line"><span class="comment">### JDBC 拿到 TIMESTAMP 列的字节数组转为字符串是 ‘2038-01-19 11:14:07’， 所以第一步应该是这样的；而且改变全局 time_zone 变量，获取的字节数组也发送了变化</span></span><br><span class="line"><span class="comment">## SET GLOBAL time_zone = "+5:00";</span></span><br><span class="line"></span><br><span class="line">2.</span><br><span class="line">serverTimezone=CST	client默认时区=Asia/Shanghai</span><br><span class="line">2038-01-19 11:14:07（CST UTC-6）----&gt;  2038-01-20 13:14:07 (Asia/Shanghai UTC+8)</span><br><span class="line">JDBC------------------------------------------------------------------------------&gt; Java TimeStamp</span><br></pre></td></tr></table></figure>
-
-
-
-<p>所以如果真的存在不同客户端时区问题，必要时修改 Mysql 的系统时区为含义明确的时区表示，而不是 <code>CST</code>, 客户端在使用的时候也不用指定 <code>useLegacyDatetimeCode=true&amp;useTimezone=true&amp;serverTimezone=时区</code>， 使用新的 <code>useLegacyDatetimeCode=false</code> 获取时区的方式就可以了，这种会查询 Mysql Server 的时区变量，作为 Server 的时区，因为会话默认也是取的系统时区，所以是一致的，没有什么问题。这时候会将正确的时间转换为客户端时区的时间。</p>
-<p><code>TIMESTAMP</code> 操作真的是很麻烦了，必要时可以采用 <a href="https://www.liaoxuefeng.com/article/978494994163392" target="_blank" rel="noopener">廖雪峰-如何正确的处理时间</a> 中策略，存储成 <code>long</code> 型的时间偏移量就好多了，需要比较的话，直接比较的是整数，显示时，再指定特定时区，就可以了。 </p>
+<p>Redis 中 STRING 结构的值大小限制为 512 MB, 所有用户的信息存储在单个 STRING 的值中必然不可取， 通过进行分片，限制每个分片最多存储 2 百万个用户的位置信息，单个 Key 的值占用大概在 2 MB. 通过 <code>SETRANGE</code>, <code>GETRANGE</code> 命令就可以更新和获取单个用户的位置信息</p>
+<p>这里没有限制分片的个数，只限制了每个分片的大小，考虑的是用户 ID 都是有序的，通过 ID 和每个分片的大小，就可以计算每个 ID 所属的分片， 以及分片内的偏移量；为了知道当前一共由多少分片，就要存储当前的最大用户 ID.</p>
+<p>这样进行存储，要对这些信息进行聚合计算，比如统计所有用户的国家，州分布，就比较容易，遍历所有分片进行统计，当然由于每个分片 STRING 的值比较大，需要分批多次去读取，而不能直接去读取，会阻塞其它客户端</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211551176.png" alt="image-20201018211551176"></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20201018211628124.png" alt="image-20201018211628124"></p>
+<p>这里虽然使用的是多个字节存储的，但是某些情况下，<code>GETBIT</code>, <code>SETBIT</code> 命令来获取和设置单个二进制位可能更高效，更节省空间。存储 Boolean 型？</p>
+<p><strong>存储数据在 Redis 中的方式，会极大地影响所使用地内存。</strong></p>
 
                 
             </div>
@@ -305,10 +129,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Ubuntu%20%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">Ubuntu 安装配置</a></h2>
+                <h2><a class="post-title-link" href="/Linux/Terminology/">Terminology</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-08-09</span>
+                <span class="post-time">2020-09-19</span>
                 
                 <span class="post-category">
                     
@@ -319,23 +143,40 @@
             </div>
             <div class="post-content">
                 
-                    <p>Ubuntu 国内镜像下载</p>
-<p><a href="http://mirrors.163.com/ubuntu-releases/" target="_blank" rel="noopener">http://mirrors.163.com/ubuntu-releases/</a></p>
-<p>创建 USB 启动盘</p>
-<p><a href="https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview" target="_blank" rel="noopener">https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview</a></p>
-<p>USB 启动盘工具</p>
-<p><a href="https://rufus.ie/" target="_blank" rel="noopener">https://rufus.ie/</a></p>
-<p>安装教程：</p>
-<p><a href="https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive" target="_blank" rel="noopener">https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive</a></p>
-<p>设置教程：</p>
-<p><a href="https://cloud.tencent.com/developer/article/1626258?fromSource=gwzcw.1293314.1293314.1293314&cps_key=ad1dd5b36e1c498308f7302ab4cdabb7" target="_blank" rel="noopener">写给工程师的 Ubuntu 20.04 最佳配置指南</a></p>
-<p><a href="https://blog.csdn.net/jackghq/article/details/54974141" target="_blank" rel="noopener">开启 SSH</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 ssh-serve</span></span><br><span class="line">sudo apt-get install openssh-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置允许 root 登录</span></span><br><span class="line">sudo vi /etc/ssh/sshd_config</span><br><span class="line">  PermitRootLogin yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 ssh 密钥对</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制到目标机器</span></span><br><span class="line">ssh-copy-id user@domain/ip</span><br></pre></td></tr></table></figure>
+                    <p>symbolic links</p>
+<p>fork</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/WSL/">WSL</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-09-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Make-it-started-when-you-start-your-Windows"><a href="#Make-it-started-when-you-start-your-Windows" class="headerlink" title="Make it started when you start your Windows"></a>Make it started when you start your Windows</h2><p>wsl-ubuntun.vbs - 开机自启</p>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Set</span> ws = <span class="built_in">CreateObject</span>(<span class="string">"Wscript.Shell"</span>)</span><br><span class="line">ws.run <span class="string">"C:\Users\guo\AppData\Local\Microsoft\WindowsApps\ubuntu1804.exe run sudo /etc/init.wsl"</span>, vbhide</span><br></pre></td></tr></table></figure>
 
 
 
-<p>安装 Vim</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. </span></span><br><span class="line">sudo apt install vim</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 修改 /etc/vim/vimrc.tinyset compatible 设置成set nocompatible . 这是因为有时候系统会默认vim兼容vi，所以使用vi的命令。</span></span><br><span class="line">vi /etc/vim/vimrc.tinyset compatible</span><br><span class="line"><span class="built_in">set</span> nocompatible</span><br></pre></td></tr></table></figure>
+<p>/etc/init.wsl</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">/etc/init.d/ssh restart</span><br><span class="line">/etc/init.d/mysql restart</span><br><span class="line">/etc/init.d/cron restart</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+w <span class="string">"R"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找视频文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -ZP <span class="string">"\.(MP4|mkv|mov|mp4|wmv)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> video/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查找图片文件并移动，指定遍历最小深度为 2， 当前目录忽略</span></span><br><span class="line">find . -mindepth 2 -<span class="built_in">type</span> f | grep -P <span class="string">"\.(JPG|jpg|png|jpeg|gif|raw)$"</span> | awk <span class="string">'&#123; printf $0"\0" &#125;'</span> | xargs -I R -0 -n 1 sudo mv <span class="string">"R"</span> ./picture</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -344,100 +185,46 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Spring/Spring%20Resource/">Spring Resource</a></h2>
+                <h2><a class="post-title-link" href="/Java/Thread%20%E7%BA%BF%E7%A8%8B/">Thread 线程</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-08-01</span>
+                <span class="post-time">2020-09-01</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Spring/">Spring</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h3 id="Application-Context-构造器的-Resource-路径中的通配符"><a href="#Application-Context-构造器的-Resource-路径中的通配符" class="headerlink" title="Application Context 构造器的 Resource 路径中的通配符"></a>Application Context 构造器的 Resource 路径中的通配符</h3><blockquote>
-<p>注意事项：只能使用在 ApplicationContext 的构造器的字符串路径中，与 <code>Resource</code> 类型没有任何关系，一个 <code>Resource</code> 一次只能指定一个 resource 数据源，不能在构造一个实际的 <code>Resource</code> 时，路径中包含这些通配符。</p>
-<p> Note that this wildcarding is specific to the use of resource paths in application context constructors (or when you use the <code>PathMatcher</code> utility class hierarchy directly) and is resolved at construction time. It has nothing to do with the <code>Resource</code> type itself. You cannot use the <code>classpath*:</code> prefix to construct an actual <code>Resource</code>, as a resource points to just one resource at a time. </p>
-</blockquote>
-<h4 id="classpath-前缀"><a href="#classpath-前缀" class="headerlink" title="classpath* 前缀"></a><code>classpath*</code> 前缀</h4><p>在 ApplicationContext 的构造器中，指定 bean 定义的 xml 文件时，可以使用通配符 <code>classpath*</code> 前缀，如果在多个 classpath 目录下都存在相同名称的文件，且匹配路径中的文件名，首先会通过调用 <code>ClassLoader.getResources(…))</code> 来获取每个 classpath 下文件对应的 URL， 然后合并作为最终的上下文 bean 定义</p>
-<blockquote>
-<p>This special prefix specifies that all classpath resources that match the given name must be obtained (internally, this essentially happens through a call to ClassLoader.getResources(…)) and then merged to form the final application context definition.</p>
-<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-resourceloaderaware</a></p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * resources/test.xml</span></span><br><span class="line"><span class="comment">   * E:/DevelopmentKit/ClasspathOutofIdea/test.xml 指定为 classpath 中 （File -&gt; Project Structure -&gt; SDKS -&gt; classpath）</span></span><br><span class="line"><span class="comment">   * 上面的两个路径都为 classpath， 并且包含了同名的 bean 定义 xml 文件中，分别定义了 Date bean 和 Mp3Song bean</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resources</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ClassPathXmlApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath*:test.xml"</span>);</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">"beanDefinitionName = "</span> + beanDefinitionName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;URL&gt; resources1 = applicationContext.getClassLoader().getResources(<span class="string">"test.xml"</span>);</span><br><span class="line">        <span class="keyword">while</span> (resources1.hasMoreElements()) &#123;</span><br><span class="line">            URL url = resources1.nextElement();</span><br><span class="line">            System.out.println(<span class="string">"url = "</span> + url);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    <h1 id="Java-中的线程"><a href="#Java-中的线程" class="headerlink" title="Java 中的线程"></a>Java 中的线程</h1><h2 id="Thread-类与-Runnable-接口"><a href="#Thread-类与-Runnable-接口" class="headerlink" title="Thread 类与 Runnable 接口"></a>Thread 类与 Runnable 接口</h2><p>Thread 中部分方法：</p>
+<ul>
+<li>join()：调用 join() 方法的 Thread 对象结束以前，当前线程一直处于等待状态，不会继续向前运行；内部是通过循环判断该 Thread 对象的 isAlive 方法返回 true 时，调用该 Thread 对象的 wait() 方法，该方法是属于 Object 的方法，且是由当前线程进行调用的，因此当前线程会处于等待状态；当调用 join() 方法的 Thread 对象结束后，会调用 <em>notifyAll</em> 方法通知处于等待状态的线程</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">joinTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> finalI = i;</span><br><span class="line">        <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; System.out.println(finalI));</span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">                thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>结果：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">java.util.Date#0</span></span><br><span class="line"><span class="attr">beanDefinitionName</span> = <span class="string">com.something.learn.bean.Mp3Song#0</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/ClasspathOutofIdea/test.xml</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">file:/E:/DevelopmentKit/idea-workspace/java-workspace/spring_loader_bean/target/classes/test.xml</span></span><br></pre></td></tr></table></figure>
+<p>输出： 0，1，2，3，4，5，6，7，8，9</p>
+<ul>
+<li>setDaemon(): 线程的默认行为是，只要线程活着，进程就无法退出（普通的用户线程），守护线程不会阻止进程的退出；当应用程序的所有非守护线程均已经结束时，无论是否存在正在运行的守护线程，Java 程序将结束</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">daemonTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"true = "</span> + <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setName(<span class="string">"local-daemon-thread-20200204"</span>);</span><br><span class="line">    thread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">    thread.start();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只要主线程的打印执行完毕，不管守护线程有没有在执行，整个执行都将结束</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">"main thread = "</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="Ant-style-匹配表达式"><a href="#Ant-style-匹配表达式" class="headerlink" title="Ant-style 匹配表达式"></a>Ant-style 匹配表达式</h4><p>   (matched by using Spring’s <code>PathMatcher</code> utility) </p>
-<p>ant 风格的表达式也可以使用在 Application Context 的构造器路径中，如 <code>classpath:com/mycompany/**/service-context.xml</code>， 此时，会通过调用 <code>ClassLoader.getResource(…))</code>， 传入最后的非通配符片段，返回一个 <code>URL</code> 对象，如果是非 <code>jar:</code> 形式的 URL,  会从中获取 <code>java.io.File</code> 对象，通过遍历文件系统来解析通配符。</p>
-<h5 id="Ant-style的匹配原则"><a href="#Ant-style的匹配原则" class="headerlink" title="Ant-style的匹配原则"></a><strong>Ant-style的匹配原则</strong></h5><p>Apache Ant样式的路径有三种通配符匹配方法（在下面的表格中列出)</p>
-<table>
-<thead>
-<tr>
-<th>路径</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>?</td>
-<td>匹配任何单字符</td>
-</tr>
-<tr>
-<td>*</td>
-<td>匹配0或者任意数量的字符</td>
-</tr>
-<tr>
-<td>**</td>
-<td>匹配0或者更多的目录</td>
-</tr>
-</tbody></table>
-<p>Table Example Ant-Style Path Patterns</p>
-<table>
-<thead>
-<tr>
-<th>Path</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>/app/*.x</td>
-<td>匹配(Matches)所有在app路径下的.x文件</td>
-</tr>
-<tr>
-<td>/app/p?ttern</td>
-<td>匹配(Matches) /app/pattern 和 /app/pXttern 但是不包括/app/pttern</td>
-</tr>
-<tr>
-<td>/**/example</td>
-<td>匹配(Matches) /app/example/app/foo/example, 和 /example</td>
-</tr>
-<tr>
-<td>/app/**/dir/file.</td>
-<td>匹配(Matches) /app/dir/file.jsp, /app/foo/dir/file.html,/app/foo/bar/dir/file.pdf, 和 /app/dir/file.java</td>
-</tr>
-<tr>
-<td>/<em>*/</em>.jsp</td>
-<td>匹配(Matches)任何的.jsp 文件</td>
-</tr>
-</tbody></table>
-<p>可以结合 <code>classpath*</code> 和 ant-style 的表达式，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">classpath*:com&#x2F;mycompany&#x2F;**&#x2F;service-context.xml</span><br></pre></td></tr></table></figure>
+<ul>
+<li>setUncaughtExceptionHandler()：线程因异常而退出时，默认的行为是打印线程的名称，异常类型，异常消息、堆栈打印；可以设置一个未捕获异常的处理器</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionHandlerTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"illegal argument"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.setUncaughtExceptionHandler((t, e) -&gt; &#123;</span><br><span class="line">        System.out.printf(<span class="string">"thread id: %s, thread name: %s, exception: %s"</span>, t.getId(), t.getName(), e);</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p> 注意事项：</p>
-<p>Note that <code>classpath*:</code>, when combined with Ant-style patterns, only works reliably with at least one root directory before the pattern starts, unless the actual target files reside in the file system. This means that a pattern such as <code>classpath*:*.xml</code> might not retrieve files from the root of jar files but rather only from the root of expanded directories. </p>
-<p> <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx-ant-patterns-in-paths</a> </p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EnvironmentPostProcessor</span><br><span class="line">PathMatchingResourcePatternResolver</span><br><span class="line">ResourcePropertySource</span><br><span class="line">EncodedResource</span><br></pre></td></tr></table></figure>
 
+
+
+
+<p>多个 Thread 使用一个 Runnable 对象与每个 Thread 使用独立的 Runnable 对象的区别？</p>
 
                 
             </div>
@@ -445,223 +232,54 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Mysql/%E8%BF%9E%E6%8E%A5/">连接</a></h2>
+                <h2><a class="post-title-link" href="/Java/Mybatis/">Mybatis</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2020-08-01</span>
+                <span class="post-time">2020-09-01</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/Mysql/">Mysql</a>
+                    <a class="category" href="/categories/Java/">Java</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <h2 id="问题还原"><a href="#问题还原" class="headerlink" title="问题还原"></a>问题还原</h2><p>表结构及索引情况</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; desc user_info</span><br><span class="line"></span><br><span class="line">Field	Type	Null	Key	Default	Extra</span><br><span class="line">id	int(11)	NO	PRI	\N	auto_increment</span><br><span class="line">uid	varchar(64)	NO	MUL	\N	</span><br><span class="line">name	varchar(255)	YES		\N	</span><br><span class="line"></span><br><span class="line">&gt; desc user_scode </span><br><span class="line">Field	Type	Null	Key	Default	Extra</span><br><span class="line">id	int(11)	NO	PRI	\N	auto_increment</span><br><span class="line">uid	varchar(64)	NO	MUL	\N	</span><br><span class="line">score	float	YES		\N</span><br></pre></td></tr></table></figure>
-
-<p>表的大小和 user_score 表的数据</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_info</span><br><span class="line"> <span class="comment">-- 22000000</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_score </span><br><span class="line"> <span class="comment">-- 6</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">id</span>	uid			score</span><br><span class="line"><span class="number">9</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">10</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">11</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">12</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span></span><br><span class="line"><span class="number">14</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.254</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_score us <span class="keyword">join</span> user_info ui  <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.id = <span class="number">13</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">id	uid	score	id	uid	name</span><br><span class="line">13	899-99-9904	1.23	20419033	899-99-9904	Julissa Rolfson</span><br><span class="line"></span><br><span class="line">1 row retrieved starting from 1 in 9 s 63 ms (execution: 9 s 31 ms, fetching: 32 ms)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行计划</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	100	\N</span><br><span class="line">1	SIMPLE	ui	\N	ALL	\N	\N	\N	\N	21614208	100	Using where</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_info;</span><br><span class="line"></span><br><span class="line">Table	<span class="keyword">Create</span> <span class="keyword">Table</span></span><br><span class="line">user_info	<span class="string">"CREATE TABLE `user_info` (</span></span><br><span class="line"><span class="string">  `id` int(11) NOT NULL AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">  `uid` varchar(64) NOT NULL,</span></span><br><span class="line"><span class="string">  `name` varchar(255) DEFAULT NULL,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`),</span></span><br><span class="line"><span class="string">  KEY `index_uid` (`uid`) USING BTREE</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB AUTO_INCREMENT=22000001 DEFAULT CHARSET=utf8"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> user_score;</span><br><span class="line">Table	<span class="keyword">Create</span> <span class="keyword">Table</span></span><br><span class="line">user_score	<span class="string">"CREATE TABLE `user_score` (</span></span><br><span class="line"><span class="string">  `id` int(11) NOT NULL AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">  `uid` varchar(64) NOT NULL,</span></span><br><span class="line"><span class="string">  `score` float DEFAULT NULL,</span></span><br><span class="line"><span class="string">  PRIMARY KEY (`id`),</span></span><br><span class="line"><span class="string">  KEY `index_uid` (`uid`)</span></span><br><span class="line"><span class="string">) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200510120118147.png" alt="image-20200510120118147"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">'13'</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">'899-99-9904'</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">'1.23'</span> <span class="keyword">AS</span> <span class="string">`score`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_score`</span> <span class="string">`us`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_info`</span> <span class="string">`ui`</span> <span class="keyword">where</span> ((<span class="string">'899-99-9904'</span> = <span class="keyword">convert</span>(<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">using</span> utf8mb4)))</span><br></pre></td></tr></table></figure>
-
-
-
-<p>字符集不一致的问题导致索引失效.</p>
-<p>修改字符集：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> user_score <span class="keyword">CONVERT</span> <span class="keyword">TO</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_score us <span class="keyword">join</span> user_info ui  <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.id = <span class="number">13</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">id</span>	uid	score	<span class="keyword">id</span>	uid	<span class="keyword">name</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span>	<span class="number">20419033</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	Julissa Rolfson</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="keyword">row</span> retrieved <span class="keyword">starting</span> <span class="keyword">from</span> <span class="number">1</span> <span class="keyword">in</span> <span class="number">47</span> ms (execution: <span class="number">0</span> ms, fetching: <span class="number">47</span> ms)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>执行计划：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	100	\N</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br></pre></td></tr></table></figure>
-
-
-
-<ol>
-<li>如果存在 JOIN 连接等操作的表，在建表的时候就应该留心之前系统的规范是什么，建表的默认字符集或者规定的字符集是什么， 而不应该依靠于自己的喜好和认知去建立</li>
-<li>索引列参加计算会导致索引失效，所以非索引常量等值条件的查询，或者较复杂涉及连接的查询，都应该提前分析是否会使用索引，语句的效率，测试执行时间，查看执行计划，看看是否符合预期</li>
+                    <p>事务的隔离级别</p>
+<p>RowBounds， 所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。</p>
+<blockquote>
+<p>很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。</p>
+</blockquote>
+<p>默认情况下，只启用了本地的会话缓存，它仅仅对一个会话中的数据进行缓存。</p>
+<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。</p>
+<ul>
+<li>是否意味着，同一个session的相同多次查询，总是会从本地缓存中读取数据？如果有人直接修改了数据库，session感知不到？</li>
+<li>无论是本地的会话缓存，还是全局二级缓存，是否都存在上述情况？</li>
+</ul>
+<p><code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resultType</code></td>
+<td>从这条语句中返回的期望类型的类的完全限定名或别名。 ==注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身==。可以使用 resultType 或 resultMap，但不能同时使用。</td>
+</tr>
+</tbody></table>
+<p>@Param    参数    N/A    如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 RowBounds 参数）则先以 “param” 作前缀，再加上它们的参数位置作为参数别名。例如 #{param1}, #{param2}，这个是默认值。如果注解是 @Param(“person”)，那么参数就会被命名为 #{person}。</p>
+<p>需要试验一下，映射方法有多个参数</p>
+<h3 id="如何通过-Java-代码添加-Sql-映射文件"><a href="#如何通过-Java-代码添加-Sql-映射文件" class="headerlink" title="如何通过 Java 代码添加 Sql 映射文件"></a>如何通过 Java 代码添加 Sql 映射文件</h3><ol>
+<li>通过 configuration 对象添加了一个映射器类。映射器类是 Java 类，它们包含 SQL 映射语句的注解从而避免依赖 XML 文件。如果没有包含注解，并且存在一个同名的 XML 映射文件， Mybatis 会自动查找并加载它，BlogMapper.class 对应会加载 BlogMapper.xml</li>
 </ol>
-<p>原文地址： <a href="https://mp.weixin.qq.com/s/Cimeyo4cVQsF-MfHBsNgGg?1=a" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Cimeyo4cVQsF-MfHBsNgGg?1=a</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select * from  user_info ui straight_join user_score us  on ui.uid &#x3D; us.uid  where us.id &#x3D; 13</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[HY000][1003] <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`upd_time`</span> <span class="keyword">AS</span> <span class="string">`upd_time`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info`</span> <span class="string">`ui`</span> <span class="keyword">straight_join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score`</span> <span class="string">`us`</span> <span class="keyword">where</span> ((<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> = <span class="number">13</span>) <span class="keyword">and</span> (<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> = <span class="keyword">convert</span>(<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">using</span> utf8mb4)))</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>在字符集编码相同的情况下，强制使得 <code>user_info</code> 表作为驱动表的情况：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">straight_join</span> user_score us  <span class="keyword">on</span> ui.uid = us.uid  <span class="keyword">where</span> us.id = <span class="number">13</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ALL	index_uid	\N	\N	\N	21919807	100	\N</span><br><span class="line">1	SIMPLE	us	\N	const	PRIMARY,index_uid	PRIMARY	4	const	1	50	Using where</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h2><p>备注：使用的 Mysql版本为 5.7 ，参考的Mysql官方使用手册也是 5.7 的</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">version()</span>: <span class="string">5.7.29-0ubuntu0.18.04.1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Reference</span> <span class="string">Manual: MySQL 5.7 Reference Manual Including MySQL NDB Cluster 7.5 and NDB Cluster 7.6</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>外连接 Outer Joins 包含 <code>LEFT JOIN</code> 和 <code>RIGHT JOIN</code></p>
-<p>在外连接 <code>A LEFT JOIN B</code> 中将 B 表的筛选条件写在连接条件 （JOIN CONDITION, <code>on A.col = B.col</code>）和写在 WHERE 字句中的结果</p>
-<p>此例中，<code>user_info_temp</code> 表中有一条 <code>uid</code> 为 <code>&#39;899-99-9905&#39;</code> 的行，<code>user_score_temp</code> 中有两条 uid 为 <code>&#39;899-99-9905&#39;</code> 的数据</p>
-<h3 id="B-表的筛选条件写在连接条件中"><a href="#B-表的筛选条件写在连接条件中" class="headerlink" title="B 表的筛选条件写在连接条件中"></a>B 表的筛选条件写在连接条件中</h3><p><strong>sql 语句:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>  user_info_temp ui <span class="keyword">left</span> <span class="keyword">join</span> user_score_temp us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">and</span> us.uid = <span class="string">'899-99-9905'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行计划：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ALL	\N	\N	\N	\N	5	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using where</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 这里应该使用了 Indexed Nested Loop Join 连接算法, 会使用 B 表中连接字段的索引</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">id	uid	name	id	uid	score</span><br><span class="line">5042849	899-99-9926	Leif Streich V	\N	\N	\N</span><br><span class="line">8018366	899-99-9948	Hulda Rodriguez	\N	\N	\N</span><br><span class="line">20107227	899-99-9921	Sarita Kassulke IV	\N	\N	\N</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	12	899-99-9905	1.1</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	13	899-99-9905	1.23</span><br><span class="line">21439863	899-99-9926	Stuart Daugherty	\N	\N	\N</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="B-表的筛选条件写在-WHERE-字句中"><a href="#B-表的筛选条件写在-WHERE-字句中" class="headerlink" title="B 表的筛选条件写在 WHERE 字句中"></a>B 表的筛选条件写在 WHERE 字句中</h3><p><strong>sql 语句:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>  user_info_temp ui <span class="keyword">left</span> <span class="keyword">join</span> user_score_temp us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> us.uid = <span class="string">'899-99-9905'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行计划：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using index condition</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果：</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	uid	name	id	uid	score</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	12	899-99-9905	1.1</span><br><span class="line">20419033	899-99-9905	Julissa Rolfson	13	899-99-9905	1.23</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h3><p>出现不同结果的原因是，写在连接条件中，会作为连接前筛选 B 表的条件，B 表中满足条件的有两条, 再做外连接; 而写在 WHERE 字句中，是作为连接后的结果的筛选条件的, 只筛选出结果中 B 表的列满足条件的结果.</p>
-<p>Mysql 手册 - <strong>8.2.1.8 Outer Join Optimization</strong> 节中对外连接的步骤有如下描述：</p>
-<blockquote>
-<p>The LEFT JOIN condition is used to decide how to retrieve rows from table <em>B</em>. (In other words, any<br>condition in the WHERE clause is not used.)</p>
-</blockquote>
-<p>也就是说, 连接条件决定了如何从 B 表中进行检索数据, WHERE 子句中 B 的条件此时是不会使用的. </p>
-<p>还需要注意一点的是,  B 表的筛选条件写在 WHERE 字句中, 此时, Mysql 应该是将其转换为一个 <code>INNER JOIN</code> 了,  执行计划中的两个步骤都是用的索引, 而且在控制台中对应打印出了如下的结果:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[HY000][1003] <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`ui`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`us`</span> <span class="keyword">where</span> ((<span class="string">`learning_db`</span>.<span class="string">`us`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span>) <span class="keyword">and</span> (<span class="string">`learning_db`</span>.<span class="string">`ui`</span>.<span class="string">`uid`</span> = <span class="string">'899-99-9905'</span>))</span><br></pre></td></tr></table></figure>
-
-
-
-<p>其中并没有出现 <code>left join</code> , 而是被转换成了 <code>join</code>,  大概想下, 这时的外连接其实是等价于内连接的, 如果 B 的常量等值条件要满足, B 表对应的那一行必然和 A 表中的某一行关联的上, 不能关联上, 则都为 <code>NULL</code> (前提是 B 的条件列声明为 <code>NOT NULL</code>),  所以是等价于内连接的.  </p>
-<p><strong>因此, 在这种情况下, 写成内连接更能表达清楚本来的意图</strong>.</p>
-<p>Mysql 手册 - <strong>8.2.1.8 Outer Join Optimization</strong> 中的相关描述:</p>
-<blockquote>
-<p>For a LEFT JOIN, if the WHERE condition is always false for the generated NULL row, the LEFT JOIN<br>is changed to an inner join. </p>
-</blockquote>
-<p>如果 t2.column 为 null， t2.column2=5 这个条件总是 false</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t2 <span class="keyword">ON</span> (column1) <span class="keyword">WHERE</span> t2.column2=<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
-
-<p>因此，可以安全的等价为一个内连接：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1, t2 <span class="keyword">WHERE</span> t2.column2=<span class="number">5</span> <span class="keyword">AND</span> t1.column1=t2.column1;</span><br></pre></td></tr></table></figure>
-
-<p>在进行转换后，查询优化器（optimizer）就可以根据情况，做出一个较优的查询计划，比如，使用 <code>t2</code> 作为驱动表</p>
-<p><strong>不能进行转换的情况</strong></p>
-<p>所以如果 B 的条件列可以是 <code>NULL</code> （没有声明为 <code>NOT NUll</code>）,  而且条件为 <code>B.col is NULL</code> , 这时, 就不能等价于内连接了, 因为满足 <code>B.col is NULL</code> 的情况有两种, 一种是本来就没有关联上,  另一种是关联上了, 这一列的值本来就是 <code>NULL</code>,  就不满足 <code>WHERE condition is always false for the generated NULL row</code></p>
-<h3 id="外连接的简化"><a href="#外连接的简化" class="headerlink" title="外连接的简化"></a>外连接的简化</h3><ul>
-<li>解析阶段，右连接会被转换为只包含左连接</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(T1, ...) RIGHT JOIN (T2, ...) ON P(T1, ..., T2, ...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(T2, ...) LEFT JOIN (T1, ...) ON P(T1, ..., T2, ...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_info_temp a <span class="keyword">right</span> <span class="keyword">join</span> user_score_temp b <span class="keyword">on</span> a.uid = b.uid;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show warnings;</span><br><span class="line"></span><br><span class="line">| Note  | 1003 | <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`b`</span> <span class="keyword">left</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`a`</span> <span class="keyword">on</span>((<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span>)) <span class="keyword">where</span> <span class="number">1</span> |</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>所有 <code>T1 INNER JOIN T2 ON P(T1, T2)</code> 形式的内连接表达式，会被替换成，<code>T1,T2</code>,  <code>P(T1, T2)</code> 会作为 <code>WHERE</code> 条件进行结合</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> user_info_temp a <span class="keyword">join</span> user_score_temp b <span class="keyword">on</span> a.uid = b.uid;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show warnings; </span><br><span class="line"></span><br><span class="line">| Note  | 1003 | <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`name`</span> <span class="keyword">AS</span> <span class="string">`name`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`score`</span> <span class="keyword">AS</span> <span class="string">`score`</span> <span class="keyword">from</span> <span class="string">`learning_db`</span>.<span class="string">`user_info_temp`</span> <span class="string">`a`</span> <span class="keyword">join</span> <span class="string">`learning_db`</span>.<span class="string">`user_score_temp`</span> <span class="string">`b`</span> <span class="keyword">where</span> (<span class="string">`learning_db`</span>.<span class="string">`b`</span>.<span class="string">`uid`</span> = <span class="string">`learning_db`</span>.<span class="string">`a`</span>.<span class="string">`uid`</span>) |</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>利用外连接的转换，获得更优的执行计划</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> P1(T1,T2)</span><br><span class="line"><span class="keyword">WHERE</span> P(T1,T2) <span class="keyword">AND</span> R(T2)</span><br></pre></td></tr></table></figure>
-
-<p>  如果此时 <code>R(2)</code> 这个限制条件能够极大的减少 <code>T2</code> 表中匹配的行数，但是还时按照当前的执行顺序，先访问 <code>T1</code>,  再访问 <code>T2</code> 表，就可能会产生一个不够高效的执行计划</p>
-<p>  如果此时，能够将这个外连接转换为内连接，可能会有一个更高效的执行计划。</p>
-<p>  <strong>什么样的情况下，一个外连接可以被转换为一个内连接？</strong></p>
-<blockquote>
-<p>MySQL converts the query to a query with no outer join operation if the WHERE condition is null-rejected.</p>
-<p>A condition is said to be null-rejected for an outer join operation if it evaluates to FALSE or UNKNOWN for any NULL-complemented row<br>generated for the operation.</p>
-<p>如果对于外连接操作的补足NULL行（A LEFT JOIN B –&gt; B.COL IS ALL NULL), 这些条件总是 <code>FALSE</code> 或者 <code>UNKNOW</code> 的，这些条件就是 <code>null-rejected</code> 的</p>
-</blockquote>
-<p>  考虑这样一个简单的外连接：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">T1 LEFT JOIN T2 ON T1.A=T2.A</span><br><span class="line"></span><br><span class="line"><span class="comment">-- null-rejected conditions: false for `null` rows</span></span><br><span class="line">T2.B IS NOT NULL</span><br><span class="line">T2.B &gt; 3</span><br><span class="line">T2.C &lt;= T1.C</span><br><span class="line">T2.B &lt; 2 OR T2.C &gt; 1</span><br><span class="line"></span><br><span class="line"><span class="comment">-- not null-rejected conditions: mignt be true for `null` rows</span></span><br><span class="line">T2.B IS NULL</span><br><span class="line">T1.B &lt; 3 OR T2.B IS NOT NULL</span><br><span class="line">T1.B &lt; 3 OR T2.B &gt; 3</span><br></pre></td></tr></table></figure>
-
-<p>  <strong>通用的检查规则</strong></p>
-<ul>
-<li><p><code>A IS NOT NULL</code> A 是左连接内表的一个属性</p>
-</li>
-<li><p>一个谓词(predicate)条件，其中包含了对左连接内表的引用，并且当这个谓词的某一个参数为 NULL 时，谓词返回的值为 <code>UNKNOWN</code></p>
-<p>什么是谓词？谓词就是返回值为真值(<code>TRUE</code>, )的函数，如 <code>= &lt; &gt; &lt;&gt;</code>比较谓词，<code>LIKE</code>谓词，<code>BETWEEN</code> 谓词，<code>IS NULL, IS NOT NULL</code>, <code>IN</code>谓词，<code>EXISTS</code></p>
-</li>
-<li><p>AND 进行连接条件，包含了一个 null-rejected 的条件</p>
-</li>
-<li><p>OR 连接的条件，并且所有条件都是 null-rejected</p>
-</li>
-<li><p><em>示例*</em></p>
-</li>
-</ul>
-<ol>
-<li>简单转换</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- before converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T1.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- after converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T1.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(BlogMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li>连续触发</li>
+<li>也可以根据 mybatis 内部 configuration 对象如何解析对应的 Sql 映射文件来自己实现添加对应的 sql 映射文件，而不必通过配置文件的 mapper 标签来添加。</li>
 </ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- before converted</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T2.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- first convertion</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> T3 <span class="keyword">ON</span> T3.B=T2.B</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- equivalent to the query</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (T1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A), T3</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span> <span class="keyword">AND</span> T3.B=T2.B</span><br><span class="line"></span><br><span class="line"><span class="comment">--second convertion: T3.B=T2.B is null-rejected for embeeded outer join</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (T1 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> T2 <span class="keyword">ON</span> T2.A=T1.A), T3</span><br><span class="line"><span class="keyword">WHERE</span> T3.C &gt; <span class="number">0</span> <span class="keyword">AND</span> T3.B=T2.B</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="MySQL-Optimizer-查询优化器"><a href="#MySQL-Optimizer-查询优化器" class="headerlink" title="MySQL Optimizer 查询优化器"></a>MySQL Optimizer 查询优化器</h3><p><strong>会根据当前表的信息给出执行计划，所以类似的查询语句可能在不同的情况下执行计划不同：</strong></p>
-<p>user_info 表和 user_score 两张表， user_info 表有 2200 百万数据，表 user_score 有 6 条数据，通过 uid 字段可以关联，且两张表的 uid 字段都设置了索引：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_info</span><br><span class="line"> <span class="comment">-- 22000000</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span>  user_score </span><br><span class="line"> <span class="comment">-- 6</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">id</span>	uid			score</span><br><span class="line"><span class="number">9</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">10</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">11</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">12</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9905</span>	<span class="number">1.1</span></span><br><span class="line"><span class="number">13</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.23</span></span><br><span class="line"><span class="number">14</span>	<span class="number">899</span><span class="number">-99</span><span class="number">-9904</span>	<span class="number">1.254</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ol>
-<li>当连接的筛选条件为 <code>uid = &#39;899-99-9904&#39;</code> 时，user_score 表中有两条可以关联的上，执行计划：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">join</span> user_score us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> ui.uid = <span class="string">'899-99-9904'</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ref	index_uid	index_uid	194	const	2	100	Using index condition</span><br></pre></td></tr></table></figure>
-
-<p>   <strong>可以看出，此时给出的执行计划， 驱动表 ui, 被驱动表 us 都是索引查询，使用的应该是 <code>Indexed Nested Loop Join</code> 连接算法。</strong></p>
-<ol start="2">
-<li>当连接的筛选条件为 <code>uid = &#39;899-99-9905&#39;</code> 时，user_score 表中有四条可以关联的上，执行计划：</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span>  user_info ui <span class="keyword">join</span> user_score us <span class="keyword">on</span> us.uid = ui.uid <span class="keyword">where</span> ui.uid = <span class="string">'899-99-9905'</span>;</span><br><span class="line"></span><br><span class="line">id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra</span><br><span class="line">1	SIMPLE	ui	\N	ref	index_uid	index_uid	194	const	1	100	\N</span><br><span class="line">1	SIMPLE	us	\N	ALL	index_uid	\N	\N	\N	6	66.67	Using where; Using join buffer (Block Nested Loop)</span><br></pre></td></tr></table></figure>
-
-<p>   此时的执行计划， 连接算法使用的时 <code>Block Nested Loop Join</code> 连接算法 （参考 Mysql 使用手册 - <strong>8.2.1.6 Nested-Loop Join Algorithms</strong>），且 user_info 使用了索引；这时，会扫描 user_score  表一次，将 user_score 表中的每一条记录同 <code>Join Buffer</code> 连接缓冲区中的 user_info 表筛选出来的记录进行匹配，如果满足关联条件，返回。</p>
-<p>   猜想：此时，查询优化器可能是从 uid 的索引的情况来看，user_score  表中 <code>uid = &#39;899-99-9905&#39;</code> 的记录占据了整个表的大部分，而且表本身比较小，此时，做一次全表扫描的性能可能是会更好。</p>
-<p><strong>Mysql 查询优化器的工作是一个很复杂的工作流程、会考虑各种因素，参考表的统计信息，给出当前较优的执行计划。</strong></p>
-<p>Using filesort (JSON property: using_filesort)<br>MySQL must do an extra pass to find out how to retrieve the rows in sorted order. The sort is done<br>by going through all rows according to the join type and storing the sort key and pointer to the row for<br>all rows that match the WHERE clause. The keys then are sorted and the rows are retrieved in sorted<br>order. See Section 8.2.1.14, “ORDER BY Optimization”.</p>
 
                 
             </div>
@@ -703,7 +321,7 @@
             &copy;
             
             
-            2022
+            2023
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

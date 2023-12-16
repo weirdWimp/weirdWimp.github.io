@@ -84,10 +84,10 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E8%84%9A%E6%9C%AC/backup/">backup</a></h2>
+                <h2><a class="post-title-link" href="/Linux/cURL%E6%89%B9%E9%87%8F%E8%AF%B7%E6%B1%82/">cURL批量请求</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2022-08-21</span>
+                <span class="post-time">2023-12-16</span>
                 
                 <span class="post-category">
                     
@@ -98,36 +98,188 @@
             </div>
             <div class="post-content">
                 
-                    <h3 id="使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><a href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份" class="headerlink" title="使用 WSL 进行 Windows 下不同磁盘之间的文件备份"></a>使用 WSL 进行 Windows 下不同磁盘之间的文件备份</h3><p>modified.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">sourceDir=<span class="variable">$1</span></span><br><span class="line">find <span class="variable">$1</span> -<span class="built_in">type</span> f -mmin -60 | \</span><br><span class="line">awk \</span><br><span class="line"><span class="string">'BEGIN &#123; "date \"+%F %T\""| getline; print $0 &#125; \</span></span><br><span class="line"><span class="string">&#123; print "modified:"$0 &#125; \</span></span><br><span class="line"><span class="string">END &#123; print "\n\n"&#125;'</span></span><br></pre></td></tr></table></figure>
+                    <h1 id="cURL-批量请求"><a href="#cURL-批量请求" class="headerlink" title="cURL 批量请求"></a>cURL 批量请求</h1><p>req_params 文件中每一行都是一个 JSON 字符串，表示每次请求的请求体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;a&quot;:&quot;b&quot;, &quot;c&quot;:&quot;&#123;\&quot;d\&quot;:\&quot;f\&quot;&#125;&quot;&#125;</span><br><span class="line">&#123;&quot;a&quot;:&quot;b&quot;, &quot;c&quot;:&quot;&#123;\&quot;d\&quot;:\&quot;f\&quot;&#125;&quot;&#125;</span><br><span class="line">&#123;&quot;a&quot;:&quot;b&quot;, &quot;c&quot;:&quot;&#123;\&quot;d\&quot;:\&quot;f\&quot;&#125;&quot;&#125;</span><br><span class="line">&#123;&quot;a&quot;:&quot;b&quot;, &quot;c&quot;:&quot;&#123;\&quot;d\&quot;:\&quot;f\&quot;&#125;&quot;&#125;</span><br><span class="line">&#123;&quot;a&quot;:&quot;b&quot;, &quot;c&quot;:&quot;&#123;\&quot;d\&quot;:\&quot;f\&quot;&#125;&quot;&#125;</span><br><span class="line">&#123;&quot;a&quot;:&quot;b&quot;, &quot;c&quot;:&quot;&#123;\&quot;d\&quot;:\&quot;f\&quot;&#125;&quot;&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>backup.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># copy source to target</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># system(cmdrm);</span></span><br><span class="line">baseDir=<span class="string">"/mnt/e/SoftConfigBackup"</span></span><br><span class="line">awk -F<span class="string">"="</span> <span class="string">'!/^\s*#/  \</span></span><br><span class="line"><span class="string">&#123; origDir=$1; \</span></span><br><span class="line"><span class="string">cmd0=bd"/modified.sh "$1" &gt;&gt; "bd"/modified.log"; \</span></span><br><span class="line"><span class="string">system(cmd0); \</span></span><br><span class="line"><span class="string">sub("^.*/", "", origDir); \</span></span><br><span class="line"><span class="string">cmdrm="rm -rf "$2"/"origDir; \</span></span><br><span class="line"><span class="string">cmd1="mkdir -p "$2; \</span></span><br><span class="line"><span class="string">cmd2="cp -r " $1 " " $2; \</span></span><br><span class="line"><span class="string">system(cmd1); \</span></span><br><span class="line"><span class="string">system(cmd2) &#125;'</span> \</span><br><span class="line">    bd=<span class="variable">$baseDir</span> <span class="string">"<span class="variable">$baseDir</span>/backupToNewDisk.properties"</span></span><br><span class="line"></span><br><span class="line">date &gt;&gt;<span class="variable">$baseDir</span>/date.txt</span><br></pre></td></tr></table></figure>
+<p>现在需要针对每个请求体进行调用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重点在于 read 的参数 -r， 表示 raw 模式，不把输入的反斜杠字符解释为转义字符</span></span><br><span class="line"><span class="comment"># 如果不指定该参数，每行中的 \ 会被认为是转义字符，表示对后一个字符的转义，就不是一个合法的 JSON</span></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> -r line; <span class="keyword">do</span> </span><br><span class="line">	curl -H <span class="string">'Content-Type: application/json'</span> -d <span class="string">"<span class="variable">$line</span>"</span> http://192.168.31.224:8080/curl/<span class="built_in">print</span></span><br><span class="line"><span class="keyword">done</span> &lt; req_params</span><br></pre></td></tr></table></figure>
 
 
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line">*/60 * * * * /mnt/e/SoftConfigBackup/backup.sh</span><br></pre></td></tr></table></figure>
+<p><a href="https://wangdoc.com/bash/read" target="_blank" rel="noopener">read 命令 - Bash 脚本教程 - 网道 (wangdoc.com)</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E7%84%A6%E8%99%91%E7%97%87/%E7%84%A6%E8%99%91%E7%97%87%E5%8E%86%E7%A8%8B/">焦虑症历程</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2022-11-20</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E7%84%A6%E8%99%91%E7%97%87/">焦虑症</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="就医情况"><a href="#就医情况" class="headerlink" title="就医情况"></a><strong>就医情况</strong></h2><table>
+<thead>
+<tr>
+<th>时间</th>
+<th>描述</th>
+<th>检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2021-10-01 19:56</td>
+<td>心悸，心跳特别快，全身麻，感觉要死了</td>
+<td>急救120 心电图，肌钙蛋白，静脉血，CT 胸部平扫，心脏彩超</td>
+</tr>
+<tr>
+<td>2021-10-28 10:31</td>
+<td>胸闷，心脏不舒服</td>
+<td>门诊 心血管内科 心电图，肌钙蛋白，静脉血，CT 胸部平扫</td>
+</tr>
+<tr>
+<td>2022-01-03 09:40</td>
+<td>头痛</td>
+<td>门诊 神经内科 CT 头部平扫，脑涨落，抑郁自评（轻度焦虑自评）</td>
+</tr>
+<tr>
+<td>2022-02-03 20:46</td>
+<td>心脏不舒服，胸闷</td>
+<td>急诊 心电图，肌钙蛋白，静脉血，CT 胸部平扫</td>
+</tr>
+<tr>
+<td>2022-03-14 21:00</td>
+<td>心脏不舒服，痛，难受</td>
+<td>急诊 心电图，肌钙蛋白，静脉血，<strong>CT 冠状动脉造影</strong></td>
+</tr>
+<tr>
+<td>2022-06-10 08:59</td>
+<td>心脏不舒服，痛，难受</td>
+<td>急诊 心电图，肌钙蛋白，静脉血，CT 胸部平扫</td>
+</tr>
+<tr>
+<td>2022-06-10 10:00</td>
+<td>复诊</td>
+<td>门诊 心血管内科</td>
+</tr>
+<tr>
+<td>2022-07-07 14:00</td>
+<td>复诊</td>
+<td>门诊 心血管内科</td>
+</tr>
+<tr>
+<td>2022-09~2022-11</td>
+<td>咽喉异物</td>
+<td>消化内科：萎缩性胃炎； 耳鼻喉科: 咽喉炎，滤泡增生，声带沟</td>
+</tr>
+<tr>
+<td>2022-11-17</td>
+<td>隔一段时间发烧，持续发热感，头轻微痛，<br>疲乏感，<br>闷闷不乐，对任何事情提不起兴趣，偶尔脾气暴躁</td>
+<td>感染科: 血细胞分析（CBC+DIFF），全血超敏C反应蛋白，<br>HIVAb, 甲状腺激素常规，肝功，肾功</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="焦虑症服药历史"><a href="#焦虑症服药历史" class="headerlink" title="焦虑症服药历史"></a><strong>焦虑症服药历史</strong></h2><ol>
+<li>2021 年: 黛力新，疏肝解郁胶囊 不到1个月</li>
+<li>2022 年 6 月至 7 月:  疏肝解郁胶囊 2 个月</li>
+</ol>
+<h2 id="其它病史及服药史"><a href="#其它病史及服药史" class="headerlink" title="其它病史及服药史"></a><strong>其它病史及服药史</strong></h2><p>4年前，临界高血压住院检查，后续一直服药，复代文</p>
+<p>129.3 </p>
+<p>77.5</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/xxd%E5%91%BD%E4%BB%A4/">xxd命令</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2022-11-12</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="xxd-命令"><a href="#xxd-命令" class="headerlink" title="xxd 命令"></a>xxd 命令</h1><p><code>xxd</code> 用来对指定的文件或来自标准输入的数据进行<strong>十六进制转储</strong>，也可以将将十六进制转换为原始的二进制格式，允许以邮件安全的 ASCII 表示传输二进制数据，<code>base64</code> 其实也可以达到相同的目的。也可以用来进行二进制文件 patching</p>
+<h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><p>如果没有指定输入文件或输出文件，或者指定为 <code>-</code> ，使用标准输入或标准输出</p>
+<ul>
+<li><p><code>-a | -autoskip</code> 开启自动跳过，以 <code>*</code> 代替空行（nul-lines），默认关闭</p>
+</li>
+<li><p><code>-b | -bits</code> 切换到二进制位模式，而不是十六进制, <code>-r</code>, <code>-p</code>,<code>-i</code> 下不生效 </p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101 01101100 01101100 01101111           hello</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-c cols | -cols cols</code> 输出的每行包含 cols 个字节，默认是 16 个 (-i: 12, -ps: 30, -b: 6).最大 256</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"hello"</span> | xxd -b -c 2</span><br><span class="line"></span><br><span class="line">00000000: 01101000 01100101  he</span><br><span class="line">00000002: 01101100 01101100  ll</span><br><span class="line">00000004: 01101111           o</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-E | -EBCDIC</code> ASCII 表示切换为 EBCDIC（国际）编码 meaningless in combinations with -r, -p or -i</p>
+</li>
+<li><p><code>-g bytes | -groupsize bytes</code> 每 bytes 个字节，添加一个空格进行分隔分组</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 1</span><br><span class="line">00000000: 68 65 6c 6c 6f 0a                                hello.</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -g 2</span><br><span class="line">00000000: 6865 6c6c 6f0a                           hello.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-p | -ps | -postscript | -plain</code>  以连续连续十六进制样式输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span>  <span class="string">"hello"</span> | xxd -p</span><br><span class="line">68656c6c6f0a</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-r | -revert</code> 将十六进制转为二进制。如果不是写到 stdout, xxd 在不截断的情况下将其写入输出文件。使用 <code>-r -p</code> 读取连续的十六进制输出（不包含行号信息，没有特定的列布局）</p>
+</li>
+<li><p><code>-seek offset</code></p>
+<p>When used after <em>-r</em>: revert with &lt;<em>offset</em>&gt; added to file positions found in hexdump.</p>
+</li>
+<li><p><code>-s [+][-]seek</code> </p>
+<p>start at &lt;<em>seek</em>&gt; bytes abs. (or rel.) infile offset. <em>+</em> indicates that the seek is relative to the current stdin file position (meaningless when not reading from stdin). <em>-</em> indicates that the seek should be that many characters from the end of the input (or if combined with <em>+</em>: before the current stdin file position). Without -s option, xxd starts at the current file position.</p>
+<p>跳过多少字节</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">xxd text</span><br><span class="line">00000000: 6865 6c6c 6f0a 4f6e 2054 7565 7364 6179  hello.On Tuesday</span><br><span class="line">00000010: 2c20 7468 6520 4c69 6e75 7820 5379 7374  , the Linux Syst</span><br><span class="line">00000020: 656d 0a41 646d 696e 6973 7472 6174 6f72  em.Administrator</span><br><span class="line">00000030: 2773 2067 726f 7570 206d 6565 7469 6e67  <span class="string">'s group meeting</span></span><br><span class="line"><span class="string">00000040: 2077 696c 6c20 6265 2068 656c 642e 5379   will be held.Sy</span></span><br><span class="line"><span class="string">00000050: 7374 656d 0a41 646d 696e 6973 7472 6174  stem.Administrat</span></span><br><span class="line"><span class="string">00000060: 6f72 2041 6c6c 2053 7973 7465 6d20 4164  or All System Ad</span></span><br><span class="line"><span class="string">00000070: 6d69 6e69 7374 7261 746f 7273 2073 686f  ministrators sho</span></span><br><span class="line"><span class="string">00000080: 756c 6420 6174 7465 6e64 2e20 5379 7374  uld attend. Syst</span></span><br><span class="line"><span class="string">00000090: 656d 0a41 646d 696e 6973 7472 6174 6f72  em.Administrator</span></span><br><span class="line"><span class="string">000000a0: 2054 6861 6e6b 2079 6f75 2066 6f72 2079   Thank you for y</span></span><br><span class="line"><span class="string">000000b0: 6f75 7220 6174 7465 6e64 616e 6365 2e0a  our attendance..</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># xxd 每行默认 16 个字节，0x30 也就是 48 个字节，刚好是前 3 行</span></span><br><span class="line"><span class="string">xxd -s 0x30 text</span></span><br><span class="line"><span class="string">00000030: 2773 2067 726f 7570 206d 6565 7469 6e67  '</span>s group meeting</span><br><span class="line">00000040: 2077 696c 6c20 6265 2068 656c 642e 5379   will be held.Sy</span><br><span class="line">00000050: 7374 656d 0a41 646d 696e 6973 7472 6174  stem.Administrat</span><br><span class="line">00000060: 6f72 2041 6c6c 2053 7973 7465 6d20 4164  or All System Ad</span><br><span class="line">00000070: 6d69 6e69 7374 7261 746f 7273 2073 686f  ministrators sho</span><br><span class="line">00000080: 756c 6420 6174 7465 6e64 2e20 5379 7374  uld attend. Syst</span><br><span class="line">00000090: 656d 0a41 646d 696e 6973 7472 6174 6f72  em.Administrator</span><br><span class="line">000000a0: 2054 6861 6e6b 2079 6f75 2066 6f72 2079   Thank you <span class="keyword">for</span> y</span><br><span class="line">000000b0: 6f75 7220 6174 7465 6e64 616e 6365 2e0a  our attendance..</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-l len | -len len</code> 只打印出 len 个字节</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xxd -l 5 text</span><br><span class="line">00000000: 6865 6c6c 6f                             hello</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="文件目录大小排序"><a href="#文件目录大小排序" class="headerlink" title="文件目录大小排序"></a>文件目录大小排序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前目录下，根据文件或目录的大小进行降序排序, 需要有对应目录的权限</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set current directory as default directory</span></span><br><span class="line">dir=<span class="variable">$&#123;1:-$(pwd)&#125;</span></span><br><span class="line">dir=$(<span class="built_in">echo</span> <span class="variable">$dir</span> | sed -E <span class="string">'s/\/$//g'</span>)</span><br><span class="line"></span><br><span class="line">IFSOld=<span class="variable">$IFS</span></span><br><span class="line">IFS=$<span class="string">'\n'</span></span><br><span class="line">rs=<span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(ls <span class="string">"<span class="variable">$&#123;dir&#125;</span>"</span>); <span class="keyword">do</span></span><br><span class="line">    fpath=<span class="string">"<span class="variable">$&#123;dir&#125;</span>/<span class="variable">$i</span>"</span></span><br><span class="line">    <span class="keyword">if</span> [ -f <span class="string">"<span class="variable">$fpath</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        size=$(du -B 1G <span class="string">"<span class="variable">$fpath</span>"</span> | cut -f1)</span><br><span class="line">        rs=<span class="variable">$rs</span><span class="string">"\n[f]\x1c<span class="variable">$&#123;size&#125;</span>\x1c<span class="variable">$fpath</span>"</span></span><br><span class="line">    <span class="keyword">elif</span> [ -d <span class="string">"<span class="variable">$fpath</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        size=$(du -B 1G -c <span class="string">"<span class="variable">$fpath</span>"</span> | grep total | cut -f1)</span><br><span class="line">        rs=<span class="variable">$rs</span><span class="string">"\n[d]\x1c<span class="variable">$&#123;size&#125;</span>\x1c<span class="variable">$fpath</span>"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"block size = 1GB"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nFLG Block Path"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"-----------------------------------------------"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="variable">$rs</span> | sort -t $<span class="string">'\x1c'</span> -n -r -k2 | tr $<span class="string">'\x1c'</span> <span class="string">' '</span></span><br><span class="line">IFS=<span class="variable">$IFSOld</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>-u</code> 使用大写的十六进制字母，默认是小写的</p>
+</li>
+<li></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a 65537 byte file with all bytes 0x00, except for the last one which is 'A' (hex 0x41).</span></span><br><span class="line">% <span class="built_in">echo</span> <span class="string">"010000: 41"</span> | xxd -r &gt; file</span><br></pre></td></tr></table></figure>
 
 
 
-<p>it also works</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sep=$(<span class="built_in">echo</span> -n -e <span class="string">'\x1c'</span>); <span class="built_in">echo</span> -e <span class="string">'2\x1cB\n1\x1cD'</span> | sort -t <span class="variable">$sep</span> -n -k1</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /dev/null &gt; testfile</span><br><span class="line"><span class="comment"># 由于/dev/null文件不含有任何内容，通常用它来快速清除现有文件中的数据，而不用先删除文件再重新创建</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>重定向</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ IFS=<span class="string">','</span>; <span class="keyword">while</span> <span class="built_in">read</span> name age; <span class="keyword">do</span> cat &gt;&gt; p.sql &lt;&lt; EOF</span><br><span class="line">&gt; insert into table (name, age) values (<span class="string">'$name'</span>, <span class="string">'$age'</span>);</span><br><span class="line">&gt; EOF</span><br><span class="line">&gt; <span class="keyword">done</span> &lt; a.csv</span><br><span class="line"></span><br><span class="line">$ cat p.sql</span><br><span class="line">insert into table (name, age) values (<span class="string">'Jason'</span>, <span class="string">'24'</span>);</span><br><span class="line">insert into table (name, age) values (<span class="string">'Guo'</span>, <span class="string">'29'</span>);</span><br><span class="line"></span><br><span class="line">$ cat a.csv</span><br><span class="line">Jason,24</span><br><span class="line">Guo,29</span><br></pre></td></tr></table></figure>
-
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.commandlinux.com/man-page/man1/xxd.1.html" target="_blank" rel="noopener">XXD</a></p>
 
                 
             </div>
@@ -138,7 +290,7 @@
                 <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2022-08-21</span>
+                <span class="post-time">2022-09-04</span>
                 
                 <span class="post-category">
                     
@@ -149,136 +301,20 @@
             </div>
             <div class="post-content">
                 
-                    <p>对一个字符串按每x位进行分割</p>
+                    <p><strong>对一个字符串按每x位进行分割</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每8位进行分割，表达式所匹配的含义是：匹配一个位置，左边有字符，右边包含的字符总数是8的倍数</span></span><br><span class="line">(?&lt;=\w)(?=(\w&#123;8&#125;)+\b)</span><br></pre></td></tr></table></figure>
 
 
 
-
-
-<p>4 123  4K</p>
-<p>1 456 786 </p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/Bash%E8%84%9A%E6%9C%AC%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">Bash脚本基本语法</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-08-20</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IFS=$<span class="string">'\n'</span></span><br></pre></td></tr></table></figure>
+<p><strong>使用 perl 来进行替换</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置位置，并不匹配一个具体的字符，锚点</span></span><br><span class="line"><span class="built_in">echo</span> 12345678 | perl -p -n -e <span class="string">'s/(?&lt;=\d)(?=(\d&#123;3&#125;)+$)/,/g'</span> <span class="comment"># 表达式的 $ 是必须的，匹配文本的结束位置 </span></span><br><span class="line">12,345,678</span><br></pre></td></tr></table></figure>
 
 
 
+<p><strong>使用 sed 进行替换</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用捕获型括号</span></span><br><span class="line"><span class="comment"># :start 定义标签，执行替换命令</span></span><br><span class="line"><span class="comment"># t 表示 test，如果替换命令成功执行，则跳转至对应的标签执行，否则结束</span></span><br><span class="line">$ <span class="built_in">echo</span> 12345678 | sed <span class="string">'&#123;</span></span><br><span class="line"><span class="string">:start</span></span><br><span class="line"><span class="string">s/\(.*[0-9]\)\([0-9]\&#123;3\&#125;\)/\1,\2/  # &#123;&#125; () 需要使用 \ 进行转移表达其特殊含义，这点和一般使用的表达式引擎是有区别的</span></span><br><span class="line"><span class="string">t start</span></span><br><span class="line"><span class="string">&#125;'</span></span><br><span class="line">12,345,678</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要理解的一点是，匹配替换是一个循环的过程，直到测试至文本的末尾 （.*[0-9]） 一开始会匹配 '12345678', .* 匹配 '1234567', [0-9] 匹配 '8', 发现后面还需要匹配 3 个数字，于是进行回溯（面包屑），发现 (.*[0-9]) 匹配 '12345' 时，后面刚好有 3 个数字，能够匹配，所以本次匹配成功，所以第一次替换后的结果为 '12345,678'; 第二次替换后的结果为 '12,345,678'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 s 命令的 p 进行验证 （-n 关闭了默认的打印）</span></span><br><span class="line">$ <span class="built_in">echo</span> 12345678 | sed -n  <span class="string">'&#123;</span></span><br><span class="line"><span class="string">:start</span></span><br><span class="line"><span class="string">s/\(.*[0-9]\)\([0-9]\&#123;3\&#125;\)/\1,\2/p</span></span><br><span class="line"><span class="string">t start</span></span><br><span class="line"><span class="string">&#125;'</span></span><br><span class="line">12345,678</span><br><span class="line">12,345,678</span><br></pre></td></tr></table></figure>
 
 
-<h3 id="array-sh"><a href="#array-sh" class="headerlink" title="array.sh"></a>array.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">names=(<span class="string">"Jason Chen"</span> <span class="string">"Bell"</span> <span class="string">"Alice"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print all array members</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;names[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line">newNames=(<span class="string">"<span class="variable">$&#123;names[@]&#125;</span>"</span> <span class="string">"Jason Guo"</span>)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;newNames[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">days=([0]=Sun [1]=Mon [2]=Tue [3]=Wed [4]=Thu [5]=Fri [6]=Sta)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"days: <span class="variable">$&#123;#days[@]&#125;</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"value(index at 0): <span class="variable">$&#123;days[0]&#125;</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"value's length at index 0: <span class="variable">$&#123;days[0]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## return indexes</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$&#123;!days[@]&#125;</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"index: <span class="variable">$i</span>, value: <span class="variable">$&#123;days[$i]&#125;</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## extract array members: $&#123;array[@]:position:length&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;days[@]:1:3&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## append to array</span></span><br><span class="line">days+=(<span class="string">"Unk"</span> Unk<span class="string">""</span>)</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;days[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## del a member from array</span></span><br><span class="line"><span class="built_in">unset</span> days[7]</span><br><span class="line">days[8]=<span class="string">''</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"after remove index[7,8]: <span class="variable">$&#123;days[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## empty array</span></span><br><span class="line"><span class="built_in">unset</span> days</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"after empty array: <span class="variable">$&#123;days[@]&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"your input will be added to array:"</span></span><br><span class="line"><span class="built_in">read</span> -a dice</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;dice[@]&#125;</span>"</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">declare</span> -A colors</span><br><span class="line">colors[<span class="string">"red"</span>]=<span class="string">"#ff0000"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;colors["red"]&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="bashEnv-sh"><a href="#bashEnv-sh" class="headerlink" title="bashEnv.sh"></a>bashEnv.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">func1</span></span>() &#123;</span><br><span class="line">  <span class="comment">## 打印函数调用栈 FUNCNAME 返回一个数组，0号元素是当前调用的函数</span></span><br><span class="line">  <span class="comment">## 1 号元素是调用当前函数的函数，以此类推</span></span><br><span class="line">  <span class="built_in">echo</span> -e <span class="string">"\nfunction call stack:"</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"FUNCNAME[0]: <span class="variable">$&#123;FUNCNAME[0]&#125;</span>"</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"FUNCNAME[1]: <span class="variable">$&#123;FUNCNAME[1]&#125;</span>"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"This is <span class="variable">$&#123;LINENO&#125;</span>th line in this script file"</span></span><br><span class="line">func1</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="custom-env-sh"><a href="#custom-env-sh" class="headerlink" title="custom_env.sh"></a>custom_env.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="built_in">export</span> CUST_ENV4=guo</span><br><span class="line">CUST_ENV5=peng</span><br><span class="line">CUST_ENV6=hui</span><br><span class="line"></span><br><span class="line">(<span class="built_in">echo</span> <span class="variable">$CUST_ENV4</span>)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="hello-sh"><a href="#hello-sh" class="headerlink" title="hello.sh"></a>hello.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">hello=<span class="string">"hello world"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$hello</span>, Tang!"</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="if-sh"><a href="#if-sh" class="headerlink" title="if.sh"></a>if.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"plz input your answer:"</span></span><br><span class="line"><span class="built_in">read</span> ans</span><br><span class="line"></span><br><span class="line"><span class="comment">### String condition test</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$ans</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"you input nothing!"</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$ans</span>"</span> = <span class="string">"yes"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Yeah!!!!!!!!"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">"<span class="variable">$ans</span>"</span> = <span class="string">"no"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Sorry to hear that!!!!!!!"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">"<span class="variable">$ans</span>"</span> = <span class="string">"maybe"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"You have make up your mind .-."</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"unknow answer"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"plz input a num:"</span></span><br><span class="line"><span class="built_in">read</span> INT</span><br><span class="line"></span><br><span class="line"><span class="comment">### [[ ]] supports regex</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$INT</span>"</span> =~ ^-?[0-9]+$ ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"yeah, you input a number, good boy!"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"your input is not a number!"</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### integer condition</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$INT</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"zero"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$INT</span> -gt 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"great than zero"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"less than zero"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3%2)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3%2)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3%3)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3%3)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3 &gt; 2)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3 &gt; 2)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3 &lt; 2)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3 &lt; 2)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">'if ((3 == 3)) result='</span></span><br><span class="line"><span class="keyword">if</span> ((3 == 3)); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">"true"</span>; <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">"false"</span>; <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## command1 || command2; if command1 is false, then run command2</span></span><br><span class="line">[ -d dir ] || mkdir dir</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="loop-sh"><a href="#loop-sh" class="headerlink" title="loop.sh"></a>loop.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## loop test</span></span><br><span class="line"></span><br><span class="line">number=1</span><br><span class="line"><span class="keyword">while</span> [ <span class="string">"<span class="variable">$number</span>"</span> -le 10 ]; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$number</span> hello"</span></span><br><span class="line">        number=$((number+1))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> *.sh; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"shell file: <span class="variable">$i</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## break continue</span></span><br><span class="line"><span class="keyword">for</span> (( i=0; i&lt;5; i=i+1 )); <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$i</span> -eq 3 ]; <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="string">"break statement"</span></span><br><span class="line">                <span class="built_in">break</span></span><br><span class="line">                <span class="comment"># continue</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="month-sh"><a href="#month-sh" class="headerlink" title="month.sh"></a>month.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#echo "input month number:"</span></span><br><span class="line"><span class="comment">#read monthNum</span></span><br><span class="line"></span><br><span class="line">monthNum=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$monthNum</span>"</span> =~ ^(1[0-2]|0?[1-9])$ ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -n <span class="string">"you input <span class="variable">$monthNum</span>, and it is: "</span></span><br><span class="line">        <span class="keyword">case</span> <span class="variable">$monthNum</span> <span class="keyword">in</span></span><br><span class="line">        1 | 01) <span class="built_in">echo</span> <span class="string">"Jan"</span> ;;</span><br><span class="line">        2 | 02) <span class="built_in">echo</span> <span class="string">"Feb"</span> ;;</span><br><span class="line">        3 | 03) <span class="built_in">echo</span> <span class="string">"Mar"</span> ;;</span><br><span class="line">        4 | 04) <span class="built_in">echo</span> <span class="string">"Apr"</span> ;;</span><br><span class="line">        5 | 05) <span class="built_in">echo</span> <span class="string">"May"</span> ;;</span><br><span class="line">        6 | 06) <span class="built_in">echo</span> <span class="string">"Jun"</span> ;;</span><br><span class="line">        7 | 07) <span class="built_in">echo</span> <span class="string">"Jul"</span> ;;</span><br><span class="line">        8 | 08) <span class="built_in">echo</span> <span class="string">"Aug"</span> ;;</span><br><span class="line">        9 | 09) <span class="built_in">echo</span> <span class="string">"Sep"</span> ;;</span><br><span class="line">        10) <span class="built_in">echo</span> <span class="string">"Oct"</span> ;;</span><br><span class="line">        11) <span class="built_in">echo</span> <span class="string">"Nov"</span> ;;</span><br><span class="line">        12) <span class="built_in">echo</span> <span class="string">"Dec"</span> ;;</span><br><span class="line">        <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="parameter-parse-sh"><a href="#parameter-parse-sh" class="headerlink" title="parameter-parse.sh"></a>parameter-parse.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">$(<span class="built_in">echo</span> <span class="string">'command'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PWD</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前脚本中没有定义该变量，但如果调用脚本的父shell定义了该变量，并使用 source 执行，则可以打印</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nvariable defined in parent shell: <span class="variable">$CUST_ENV1</span>\n"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> 时间: $(date <span class="string">'+%F %T'</span>)</span><br><span class="line"><span class="built_in">echo</span> 带有option的参数列表: <span class="variable">$@</span></span><br><span class="line"><span class="built_in">echo</span> 带有option的参数个数: <span class="variable">$#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">'sn:'</span> OPT; <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">case</span> <span class="string">"<span class="variable">$OPT</span>"</span> <span class="keyword">in</span></span><br><span class="line">        s)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"silent output enabled"</span></span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        n)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"output number: <span class="variable">$OPTARG</span>"</span></span><br><span class="line">        ;;</span><br><span class="line">        ?)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"avaliable options: [-s] [-n number]"</span> &gt;&amp;2 <span class="comment">## standard error</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">        ;;</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">shift</span> <span class="string">"<span class="variable">$(($OPTIND - 1)</span>)"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"option 选项处理完成，处理剩余主参数列表: <span class="variable">$@</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## for 循环遍历参数列表</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nfor 循环便利参数列表"</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$@</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> 参数：<span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nshift 遍历参数列表：<span class="variable">$@</span>"</span></span><br><span class="line"><span class="comment">## shift n 移除脚本当前n个参数, 没有指定默认为1；</span></span><br><span class="line"><span class="keyword">while</span> [ <span class="string">"<span class="variable">$1</span>"</span> != <span class="string">""</span> ]; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> 参数个数：<span class="variable">$#</span></span><br><span class="line">  <span class="built_in">echo</span> 参数：<span class="variable">$1</span></span><br><span class="line">  <span class="built_in">shift</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="readFile-sh"><a href="#readFile-sh" class="headerlink" title="readFile.sh"></a>readFile.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"请指定文件路径"</span></span><br><span class="line">  <span class="built_in">exit</span> 2</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">"<span class="variable">$@</span>"</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">"\nfile: <span class="variable">$i</span>"</span></span><br><span class="line">    num=1</span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">"<span class="variable">$((num++)</span>)\t<span class="variable">$line</span>"</span></span><br><span class="line">    <span class="keyword">done</span> &lt; <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="readInput-sh"><a href="#readInput-sh" class="headerlink" title="readInput.sh"></a>readInput.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">"输入您的用户名 &gt; "</span></span><br><span class="line"><span class="built_in">read</span> user</span><br><span class="line"><span class="built_in">read</span> -s -p <span class="string">"请输入密码 &gt; "</span> passwd1</span><br><span class="line"><span class="built_in">echo</span></span><br><span class="line"><span class="built_in">read</span> -s -p <span class="string">"请确认密码 &gt; "</span> passwd2</span><br><span class="line"><span class="built_in">echo</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$passwd1</span>"</span> == <span class="string">"<span class="variable">$passwd2</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"注册成功, 用户名: '<span class="variable">$user</span>', 密码: '<span class="variable">$passwd1</span>'"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"密码输入不一致: '<span class="variable">$passwd1</span>', '<span class="variable">$passwd2</span>'"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="select-sh"><a href="#select-sh" class="headerlink" title="select.sh"></a>select.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"select the seq number to choose(use ctrl+c to quit)"</span></span><br><span class="line"></span><br><span class="line">select gender <span class="keyword">in</span> male female other</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        <span class="keyword">case</span> <span class="variable">$gender</span> <span class="keyword">in</span></span><br><span class="line">                <span class="string">"male"</span>)   <span class="built_in">echo</span> <span class="string">"Hi man"</span> ;;</span><br><span class="line">                <span class="string">"female"</span>) <span class="built_in">echo</span> <span class="string">"Hi girl"</span> ;;</span><br><span class="line">                <span class="string">"other"</span>)  <span class="built_in">echo</span> <span class="string">"Hi there"</span> ;;</span><br><span class="line">                *)        <span class="built_in">echo</span> <span class="string">"Unknow seq"</span> ;;</span><br><span class="line">        <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="setShellDisallowNoUnset-sh"><a href="#setShellDisallowNoUnset-sh" class="headerlink" title="setShellDisallowNoUnset.sh"></a>setShellDisallowNoUnset.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set -o nounset: none set variable will case exit</span></span><br><span class="line"><span class="built_in">set</span> -u</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$a</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hi"</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="setShellExitOnError-sh"><a href="#setShellExitOnError-sh" class="headerlink" title="setShellExitOnError.sh"></a>setShellExitOnError.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遇到错误退出可以使用 command1 || exit 1, 如果 commands 1 执行失败，就执行 exit 1</span></span><br><span class="line"><span class="comment"># ls *.exe || exit 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 -e 设置， set -o errexit</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果不存在 dll文件，不会终止，只要管道最后的命令执行成功</span></span><br><span class="line"><span class="comment"># 为了避免这种情况，可以使用 set -eo pipefail</span></span><br><span class="line">ls *.dll | <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果不存在 exe文件，错误终止</span></span><br><span class="line">ls *.exe</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hi there"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set +e 可以关闭该设置</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="setShellallowTrace-sh"><a href="#setShellallowTrace-sh" class="headerlink" title="setShellallowTrace.sh"></a>setShellallowTrace.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set -o xtrace</span></span><br><span class="line"><span class="built_in">set</span> -x</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$PWD</span>"</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="temp-sh"><a href="#temp-sh" class="headerlink" title="temp.sh"></a>temp.sh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 脚本退出时，删除创建的临时文件</span></span><br><span class="line"><span class="built_in">trap</span> <span class="string">'rm -f "$tmpFile"'</span> EXIT</span><br><span class="line"></span><br><span class="line">tmpFile=$(mktemp) || <span class="built_in">exit</span> 1</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"temporary file created successfully: <span class="variable">$tmpFile</span>"</span></span><br></pre></td></tr></table></figure>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86%20LVM/">逻辑卷管理 LVM</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-08-13</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="基本的分区管理"><a href="#基本的分区管理" class="headerlink" title="基本的分区管理"></a>基本的分区管理</h2><p>Linux 用户通过路径 <code>/xx</code>  访问文件或者目录，其实通过 Linux 提供的虚拟目录进行访问，不同的文件存储设备的分区会挂载在虚拟目录下，或者是将远程的文件系统 (如 NFS) 目录挂载到虚拟目录下，进行本地访问。对本地文件存储设备首先需要进行分区，来容纳文件系统，来对文件进行访问和管理。</p>
-<p>所以如果在安装硬盘后，如果需要进行使用前，需要进行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建分区 (fdsik 命令) --&gt; 创建文件系统 (不同的文件系统命令，如 mkfs.ex4 ) --&gt; 挂载到虚拟目录下的某个挂载点 (mount 命令)</span><br></pre></td></tr></table></figure>
-
-<p>创建分区分为主分区或扩展分区，因为扩展分区的个数由限制，所以通过扩展分区可以创建更多的逻辑分区， 目前还有此限制吗？</p>
-<p>通过 <code>mount</code> 命令进行挂载或查看当前挂载列表，也可以通过 <code>cat /etc/fstab</code> 查看启动挂载列表，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/fstab</span><br><span class="line">none /proc proc defaults 0 0</span><br><span class="line">/dev/root / ext4 defaults 1 1</span><br><span class="line">/dev/vg1/volume_1 /volume1 btrfs auto_reclaim_space,ssd,synoacl,relatime,nodev 0 0</span><br><span class="line">/dev/vg2/volume_2 /volume2 btrfs auto_reclaim_space,ssd,synoacl,relatime,nodev 0 0</span><br></pre></td></tr></table></figure>
-
-
-
-<p>查看分区表以及某个分区的信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$ sudo fdisk &#x2F;dev&#x2F;sda</span><br><span class="line"></span><br><span class="line">Welcome to fdisk (util-linux 2.34).</span><br><span class="line">Changes will remain in memory only, until you decide to write them.</span><br><span class="line">Be careful before using the write command.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Command (m for help): p</span><br><span class="line">Disk &#x2F;dev&#x2F;sda: 111.81 GiB, 120034123776 bytes, 234441648 sectors</span><br><span class="line">Disk model: Samsung SSD 850</span><br><span class="line">Units: sectors of 1 * 512 &#x3D; 512 bytes</span><br><span class="line">Sector size (logical&#x2F;physical): 512 bytes &#x2F; 512 bytes</span><br><span class="line">I&#x2F;O size (minimum&#x2F;optimal): 512 bytes &#x2F; 512 bytes</span><br><span class="line">Disklabel type: gpt</span><br><span class="line">Disk identifier: 3D330146-295F-494F-97D4-XXXXXXXXXXXX</span><br><span class="line"></span><br><span class="line">Device       Start       End   Sectors   Size Type</span><br><span class="line">&#x2F;dev&#x2F;sda1     2048   1050623   1048576   512M EFI System</span><br><span class="line">&#x2F;dev&#x2F;sda2  1050624 234440703 233390080 111.3G Linux filesystem</span><br><span class="line"></span><br><span class="line">Command (m for help): i</span><br><span class="line">Partition number (1,2, default 2): 2</span><br><span class="line"></span><br><span class="line">         Device: &#x2F;dev&#x2F;sda2</span><br><span class="line">          Start: 1050624</span><br><span class="line">            End: 234440703</span><br><span class="line">        Sectors: 233390080</span><br><span class="line">           Size: 111.3G</span><br><span class="line">           Type: Linux filesystem</span><br><span class="line">      Type-UUID: 0FC63DAF-8483-4772-8E79-XXXXXXXXXXXX</span><br><span class="line">           UUID: 266FD3F0-CC07-4AE9-8C0A-XXXXXXXXXXXX</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="逻辑卷管理-LVM"><a href="#逻辑卷管理-LVM" class="headerlink" title="逻辑卷管理 LVM"></a>逻辑卷管理 LVM</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">物理卷 PV --&gt; 卷组 VG --&gt; 逻辑卷 LV</span><br></pre></td></tr></table></figure>
-
-<p>逻辑卷管理基本关系</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">|		逻辑卷1	    |     逻辑卷2				 |</span><br><span class="line">--------------------------------------------------</span><br><span class="line">|					卷组		                    |</span><br><span class="line">--------------------------------------------------			</span><br><span class="line">物理卷1	物理卷2	   物理卷3	  物理卷4		物理卷5</span><br><span class="line">--------------------------------------------------</span><br><span class="line"> 分区1     分区2		 分区1     分区2		分区1		未使用</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">      硬盘1				   硬盘2					硬盘3											</span><br><span class="line">------------------------------------------------------------</span><br></pre></td></tr></table></figure>
-
-<p>文件系统是基于逻辑卷的，可以使用不同的存储设备对逻辑卷进行扩容</p>
-<p>如我这台机器上就使用了 LVM 来管理磁盘，下面展示了卷组 <code>vg2</code> 是基于那些物理卷的 ( 在这里是 <code>/dev/md3</code> )，以及在该卷组上创建的逻辑卷 (<code>volume_2</code>)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vgdisplay -v  vg2</span><br><span class="line">Password:</span><br><span class="line">    Using volume group(s) on <span class="built_in">command</span> line.</span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg2</span><br><span class="line">  System ID</span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  3</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                2</span><br><span class="line">  Open LV               1</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               3.63 TiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              951243</span><br><span class="line">  Alloc PE / Size       951043 / 3.63 TiB</span><br><span class="line">  Free  PE / Size       200 / 800.00 MiB</span><br><span class="line">  VG UUID               </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  --- Logical volume ---</span><br><span class="line">  LV Path                /dev/vg2/volume_2</span><br><span class="line">  LV Name                volume_2</span><br><span class="line">  VG Name                vg2</span><br><span class="line">  LV UUID                </span><br><span class="line">  LV Write Access        <span class="built_in">read</span>/write</span><br><span class="line">  LV Creation host, time ,</span><br><span class="line">  LV Status              available</span><br><span class="line">  <span class="comment"># open                 1</span></span><br><span class="line">  LV Size                3.63 TiB</span><br><span class="line">  Current LE             951040</span><br><span class="line">  Segments               1</span><br><span class="line">  Allocation             inherit</span><br><span class="line">  Read ahead sectors     auto</span><br><span class="line">  - currently <span class="built_in">set</span> to     4096</span><br><span class="line">  Block device           249:1</span><br><span class="line"></span><br><span class="line">  --- Physical volumes ---</span><br><span class="line">  PV Name               /dev/md3</span><br><span class="line">  PV UUID               </span><br><span class="line">  PV Status             allocatable</span><br><span class="line">  Total PE / Free PE    951243 / 200</span><br></pre></td></tr></table></figure>
-
-
-
-<p>逻辑卷挂载信息：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mount | grep vg2</span><br><span class="line">/dev/mapper/vg2-volume_2 on /volume2 <span class="built_in">type</span> btrfs (...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/fstab | grep vg2</span><br><span class="line">/dev/vg2/volume_2 /volume2 btrfs (...)</span><br></pre></td></tr></table></figure>
 
 
                 
@@ -287,27 +323,110 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hbase/Hbase%20%E6%9C%AF%E8%AF%AD%E4%B8%8E%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">Hbase 术语与基本概念</a></h2>
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2022-07-24</span>
+                <span class="post-time">2022-09-04</span>
                 
                 <span class="post-category">
                     
-                    <a class="category" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
                     
                 </span>
                 
             </div>
             <div class="post-content">
                 
-                    <p>端口设置 本地端口</p>
-<p>Write-Ahead LOG HLog/WAL 预写式日志</p>
-<p>MemStore 内存写入缓存区</p>
-<p>BlockCache 读缓存</p>
-<p>每台服务器维护一个 WAL 记录发生的变化, 这台服务器上的所有表和它们的列族共享这个 WAL</p>
-<p>每个列族有一个 MemStore</p>
-<p>BlockCache 保存从 HFile 里读入内存的频繁访问数据，避免硬盘读，每个列族有一个 BlockCache</p>
+                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
+
+
+
+<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符串；查找和替换，字符串的更新</p>
+<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
+<li><p>集成式 （integrated）</p>
+<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
+</li>
+<li><p>程序式 (procedural)</p>
+<p>函数式</p>
+</li>
+<li><p>面向对象式 (object-oriented)</p>
+<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
+</li>
+</ul>
+<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
+<thead>
+<tr>
+<th>表示</th>
+<th>Unicode code point</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LF</td>
+<td>U+000A</td>
+<td>ASCII 换行符</td>
+</tr>
+<tr>
+<td>VT</td>
+<td>U+000B</td>
+<td>ASCII 垂直制表符</td>
+</tr>
+<tr>
+<td>FF</td>
+<td>U+000C</td>
+<td>ASCII 进纸符</td>
+</tr>
+<tr>
+<td>CR</td>
+<td>U+000D</td>
+<td>ASCII 回车</td>
+</tr>
+<tr>
+<td>CR/LF</td>
+<td>U+000D U+000A</td>
+<td>ASCII 回车/换行</td>
+</tr>
+<tr>
+<td>NEL</td>
+<td>U+0085</td>
+<td>Unicode 换行</td>
+</tr>
+<tr>
+<td>LS</td>
+<td>U+2028</td>
+<td>Unicode 行分隔符</td>
+</tr>
+<tr>
+<td>PS</td>
+<td>U+2029</td>
+<td>Unicode 段分隔符</td>
+</tr>
+</tbody></table>
+<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
+<thead>
+<tr>
+<th>字母</th>
+<th>模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>不区分大小写的匹配模式</td>
+</tr>
+<tr>
+<td>x</td>
+<td>宽松排列和注释模式</td>
+</tr>
+<tr>
+<td>s</td>
+<td>点号通配模式（单行模式）</td>
+</tr>
+<tr>
+<td>m</td>
+<td>增强的行锚点模式（多行模式）</td>
+</tr>
+</tbody></table>
 
                 
             </div>
@@ -344,7 +463,7 @@
             &copy;
             
             
-            2022
+            2023
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>
