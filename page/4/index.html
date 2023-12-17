@@ -84,79 +84,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E9%AB%98%E7%BA%A7%E6%96%87%E6%9C%AC%E5%91%BD%E4%BB%A4/">高级文本命令</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-07-16</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h1 id="高级文本命令"><a href="#高级文本命令" class="headerlink" title="高级文本命令"></a>高级文本命令</h1><h3 id="1-sed-命令"><a href="#1-sed-命令" class="headerlink" title="1 sed  命令"></a>1 sed  命令</h3><h5 id="synopsis-基本用法"><a href="#synopsis-基本用法" class="headerlink" title="synopsis - 基本用法"></a><strong>synopsis - 基本用法</strong></h5><p>sed [OPTION]… {script-only-if-no-other-script} [input-file]..</p>
-<h5 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h5><p><a href="https://www.cnblogs.com/theCambrian/p/3606214.html" target="_blank" rel="noopener">博客园  sed 的工作原理</a></p>
-<p><code>man sed</code></p>
-<h5 id="option"><a href="#option" class="headerlink" title="option"></a><strong>option</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># suppress automatic printing of pattern space</span></span><br><span class="line"><span class="comment"># 关闭 pattern space 的自动打印，如果 command 中已经指定了 p, 可能就需要指定该选项</span></span><br><span class="line">-n, --quiet, --silent</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="script-command"><a href="#script-command" class="headerlink" title="script command"></a><strong>script command</strong></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">d      <span class="comment"># Delete pattern space.  Start next cycle.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Copy 即覆盖， append 即追加</span></span><br><span class="line">h H    <span class="comment"># Copy/append pattern space to hold space.</span></span><br><span class="line">g G    <span class="comment"># Copy/append hold space to pattern space.</span></span><br><span class="line">x      <span class="comment"># Exchange the contents of the hold and pattern spaces.</span></span><br><span class="line"></span><br><span class="line">n N    <span class="comment"># Read/append the next line of input into the pattern space.</span></span><br><span class="line">p      <span class="comment"># Print the current pattern space.</span></span><br><span class="line">P      <span class="comment"># Print up to the first embedded newline of the current pattern space.</span></span><br><span class="line"></span><br><span class="line">w filename <span class="comment"># Write the current pattern space to filename.</span></span><br><span class="line">W filename <span class="comment"># Write the first line of the current pattern space to filename.  This is a GNU extension.</span></span><br></pre></td></tr></table></figure>
-<h5 id="examples"><a href="#examples" class="headerlink" title="examples"></a><strong>examples</strong></h5><ul>
-<li>逆序打印文件行，等同于 <code>tac</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一行，只将 pattern space 中的内容 copy 到 hold space，再删除 pattern space，下一轮循环</span></span><br><span class="line"><span class="comment"># 接下来，每一行，将 hold space 的内容 append 到 pattern space，再删除 pattern space，下一轮循环</span></span><br><span class="line">sed <span class="string">'1&#123;h;d&#125;;G;h;$!d'</span> seq.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sed <span class="string">'1!G;h;$!d'</span> t.txt</span><br><span class="line"><span class="comment"># 1!G —— 只有第一行不执行G命令，将hold space中的内容append回到pattern space</span></span><br><span class="line"><span class="comment"># h —— 第一行都执行h命令，将pattern space中的内容拷贝到hold space中</span></span><br><span class="line"><span class="comment"># $!d —— 除了最后一行不执行d命令，其它行都执行d命令，删除当前行</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>指定要处理的行</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印第一行，1 指定第一行</span></span><br><span class="line">sed  -n <span class="string">'1p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印除了第一行的所有行</span></span><br><span class="line">sed -n <span class="string">'1!p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印奇数行，如第 1 行，第 3 行，第 5 行...， 语义为，从第一行开始，每隔 2 行打印</span></span><br><span class="line">sed -n <span class="string">'1~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印偶数行, 语义为每隔 2 行，打印</span></span><br><span class="line">sed -n <span class="string">'0~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，以及后续连续的 5 行</span></span><br><span class="line">sed -n <span class="string">'1,+5p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印第一行，直到第一次遇到行号是 2 的倍数的行，打印</span></span><br><span class="line">sed -n <span class="string">'1,~2p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印最后一行</span></span><br><span class="line">sed -n <span class="string">'$p'</span> seq.txt </span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印</span></span><br><span class="line">sed -n <span class="string">'/regex/p'</span> seq.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># &amp; 代表匹配的内容</span></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | xargs -n 1 | sed <span class="string">"s/[a-z]/[&amp;]/g"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p>sed表达式通常用单引号来引用。不过也可以使用双引号。 shell会在调用sed前先扩展双引<br>号中的内容。如果想在sed表达式中使用变量，双引号就能派上用场了。</p>
-</blockquote>
-<h4 id="2-cut"><a href="#2-cut" class="headerlink" title="2 cut"></a>2 cut</h4><p>synopsis - 基本用法</p>
-<p>cut OPTION  [FILE]</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-d, --delimiter		<span class="comment"># 指定列分隔符</span></span><br><span class="line">-f, --fields		<span class="comment"># 制定要打印的列（不包含列分隔符的行同样会被打印，除非指定 -s）</span></span><br><span class="line">--complement		<span class="comment"># 打印指定之外的列、字符或字节（相当于取反）</span></span><br><span class="line">-output-delimiter	<span class="comment"># 指定打印时的列分隔符</span></span><br><span class="line">-z 					<span class="comment"># 行分隔符为 NUL， cut 是对一行进行切割的</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cut -d <span class="string">","</span> f 2,5 file		<span class="comment"># 打印第2列，第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 file		<span class="comment"># 打印第2列到第5列</span></span><br><span class="line">cut -d <span class="string">","</span> f 2-5 --complement file	<span class="comment"># 打印除了2-5列的其他列</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 制定打印第几个字节、字符、列（区间）</span></span><br><span class="line"><span class="comment"># N-M 从第N个字节、字符或字段开始到行尾</span></span><br><span class="line"><span class="comment"># N-  从第N个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"><span class="comment"># -M  从第1个字节、字符或字段开始到第M个（包括第M个在内）字节、字符或字段</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> &#123;a..z&#125; | cut -d <span class="string">" "</span> -f-4</span><br><span class="line"><span class="comment"># result: a b c d</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"4 3\x001 2"</span> | cut -z -d <span class="string">" "</span> --output-delimiter <span class="string">"#"</span> -f1,2</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="3-awk"><a href="#3-awk" class="headerlink" title="3 awk"></a>3 awk</h4><p>awk BEGIN{} PATTERN {} END{}</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk 的 pattern</span></span><br><span class="line">$ awk <span class="string">'NR &lt; 5'</span> <span class="comment"># 行号小于5的行</span></span><br><span class="line">$ awk <span class="string">'NR==1,NR==4'</span> <span class="comment"># 行号在1到5之间的行</span></span><br><span class="line">$ awk <span class="string">'/linux/'</span> <span class="comment"># 包含模式为linux的行（可以用正则表达式来指定模式）</span></span><br><span class="line">$ awk <span class="string">'!/linux/'</span> <span class="comment"># 不包含模式为linux的行</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F":" 'BEGIN&#123;OFS="#"&#125; &#123;print $1,$2&#125;'</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># awk可以调用命令并读取输出。把命令放入引号中，然后利用管道将命令输出传入getline：</span></span><br><span class="line">awk <span class="string">'BEGIN &#123;FS=":"&#125; &#123; "grep root /etc/passwd" | getline; \</span></span><br><span class="line"><span class="string">print $1,$6 &#125;'</span></span><br><span class="line"></span><br><span class="line">root /root</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">awk <span class="string">'/import.+/ &#123; print "echo "$0"|grep -o com"|"bash" &#125;'</span> import</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="4-tr"><a href="#4-tr" class="headerlink" title="4 tr"></a>4 tr</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> alnum：字母和数字。</span><br><span class="line"> alpha：字母。</span><br><span class="line"> cntrl：控制（非打印）字符。</span><br><span class="line"> digit：数字。</span><br><span class="line"> graph：图形字符。</span><br><span class="line"> lower：小写字母。</span><br><span class="line"> <span class="built_in">print</span>：可打印字符。</span><br><span class="line"> punct：标点符号。</span><br><span class="line"> space：空白字符。</span><br><span class="line"> upper：大写字母。</span><br><span class="line"> xdigit：十六进制字符。</span><br></pre></td></tr></table></figure>
-
-
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Vim%20Editiong%20Basics/">Vim Editiong Basics</a></h2>
             </div>
             <div class="post-meta">
@@ -373,169 +300,6 @@
     
         <article class="post-abstract">
             <div class="post-title">
-                <h2><a class="post-title-link" href="/%E7%84%A6%E8%99%91%E7%97%87/%E7%84%A6%E8%99%91%E7%97%87%E7%9A%84%E5%BA%B7%E5%A4%8D/">焦虑症的康复</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-03-02</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E7%84%A6%E8%99%91%E7%97%87/">焦虑症</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="焦虑症的康复"><a href="#焦虑症的康复" class="headerlink" title="焦虑症的康复"></a>焦虑症的康复</h2><h3 id="克服广场恐惧"><a href="#克服广场恐惧" class="headerlink" title="克服广场恐惧"></a>克服广场恐惧</h3><ul>
-<li><p>分解步骤</p>
-</li>
-<li><p>想象脱敏</p>
-</li>
-<li><p>现实生活脱敏</p>
-</li>
-<li><p>增强自我以时，建立自信，勇于表达自己内心的想法，对于不想要的可以说 ”不“，以鉴定得自我接纳和自我价值观去抗衡内心的批评家</p>
-</li>
-</ul>
-<h3 id="生理"><a href="#生理" class="headerlink" title="生理"></a>生理</h3><ul>
-<li>呼吸练习</li>
-<li>深层次的放松练习 肌肉练习、想象、冥想</li>
-<li>定期有氧运动</li>
-<li>良好的饮食习惯</li>
-</ul>
-<h3 id="行为"><a href="#行为" class="headerlink" title="行为"></a>行为</h3><ul>
-<li>应对技巧，一开始就防止恐惧反应</li>
-<li>分解步骤想象脱敏和生活脱敏</li>
-</ul>
-<h3 id="情感"><a href="#情感" class="headerlink" title="情感"></a>情感</h3><ul>
-<li>学会确定并表达自己的感受</li>
-</ul>
-<h3 id="心理"><a href="#心理" class="headerlink" title="心理"></a>心理</h3><ul>
-<li><p>克服消极的自我对话、克服错误信念</p>
-<p>思考自己过去的错误信念，如  ”我不能犯错误“ ”我得让所有人都开心“， 对生活要采取更加轻松、自在的态度</p>
-</li>
-</ul>
-<h3 id="人际关系"><a href="#人际关系" class="headerlink" title="人际关系"></a>人际关系</h3><ul>
-<li>更加自信的人际交往</li>
-</ul>
-<h3 id="自我"><a href="#自我" class="headerlink" title="自我"></a>自我</h3><ul>
-<li>构建自尊<ul>
-<li>改变自己的外形</li>
-<li>克服心中的批评</li>
-<li>与自己的”内在小孩“建立练习</li>
-</ul>
-</li>
-</ul>
-<h3 id="存在主义的和精神的"><a href="#存在主义的和精神的" class="headerlink" title="存在主义的和精神的"></a>存在主义的和精神的</h3><h3 id="康复所需的条件"><a href="#康复所需的条件" class="headerlink" title="康复所需的条件"></a>康复所需的条件</h3><p>承担责任 - You are responsile for yourself. But it doesnt mean that you have to edure it by all yourself.</p>
-<p>动机 - 能否克服拒绝康复带来的 ”无意义收益“</p>
-<p>遵循计划不动摇</p>
-<p>愿意承担风险</p>
-<p>明确目标</p>
-<h2 id="加重焦虑的人格类型"><a href="#加重焦虑的人格类型" class="headerlink" title="加重焦虑的人格类型"></a>加重焦虑的人格类型</h2><h3 id="完美主义"><a href="#完美主义" class="headerlink" title="完美主义"></a>完美主义</h3><p>你是出于完美主义的思维，即我应该，我必须，我不得不的想法来强迫自己来努力，还是出于自发得愿望和爱好 ?</p>
-<ul>
-<li><p>错误信息: 个人价值取决于个人成就</p>
-<p>个人价值是客观存在的，不以别人的说辞而转移。生活中，动物或植物的价值从来都是因为它们的客观存在。无论外部成就如何，都改变不了你内在的价值。试着使用 “学会如何去爱与增加自己的智慧” 来作为标准来评价自己</p>
-</li>
-<li><p>完美主义思维</p>
-<ul>
-<li><p>应该或必须的思维模式</p>
-</li>
-<li><p>全或无的思维模式</p>
-</li>
-<li><p>概括话的思维模式</p>
-<table>
-<thead>
-<tr>
-<th>思维模式</th>
-<th>反驳</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>我应该有能力把这事做好</td>
-<td>我会尽力而为</td>
-</tr>
-<tr>
-<td>我绝不能犯错</td>
-<td>人孰无过</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>这是彻头彻尾的错误</td>
-<td>这并不全是错误的，某些方面还是可以的，只是另一方面需要多加关注</td>
-</tr>
-<tr>
-<td>我完全做不到</td>
-<td>如果我一小步一小步地做，我就可以完成任务</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>我总是把事情搞砸</td>
-<td>说我总是把事情搞砸并不是事实。但我在这件事情上我是需要重新审视一下，并且进行必要的修正</td>
-</tr>
-<tr>
-<td>我决不可能完成这事</td>
-<td>如果我一步一步来，并且坚持努力的话，慢慢地我会达到我的目标</td>
-</tr>
-</tbody></table>
-</li>
-<li><p>不再夸大微小错误的严重性</p>
-<p>不再因为微小的错误，而过分的苛责自己，任何的成功都离不开挫折与失败，这些微笑的错误并不会造成什么深远的影响，学会放过自己</p>
-</li>
-<li><p>注意力集中在积极的方面</p>
-<p>不要低估已经取得的任何成就，在你思考或对自己陈述已经发生的事情，尽可能少地使用但是来否定某些事情的积极方面</p>
-</li>
-<li><p>把重点放在现实目标上，培养过程取向的态度</p>
-<p>定下不切实际，无法完成的目标没有什么意义，反而会给自己造成过大的压力，甚至迫于压力而无法做出有效的行动。有效实际的目标可能无法一下就确定，需要根据客观条件进行调整；你参与生活中的每一件事情，不需要总是要达成一个什么样的成就，进行运动，并不是要打败时间冠军，站在世界的顶峰，单纯的只是为了享受其过程就可以了。“旅行的过程比终点更重要” “停下脚本，闻闻玫瑰的芬芳”</p>
-</li>
-<li><p>为生活增添愉悦和乐趣</p>
-<p>不需要为了外在的目标而牺牲自己的天性需求，而造成一种呆板和克己的倾向，最终会扼杀生命的活力和创造力。不要太严肃了，为生活添加一些乐趣，从自己喜欢的事情着手，让自己放松，高兴一点</p>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="自我对话与消极思维反驳"><a href="#自我对话与消极思维反驳" class="headerlink" title="自我对话与消极思维反驳"></a>自我对话与消极思维反驳</h2><p>需要不断的使用积极的对话，思维方式来替换潜意识中错误的，消极的信念，认识。</p>
-<h3 id="积极自我对话"><a href="#积极自我对话" class="headerlink" title="积极自我对话"></a>积极自我对话</h3><p>对自己的提问: 胸前区，心脏难受这么长时间，而且去医院检查这么多次，肺部CT, 心电图，心脏彩超都做了，没有问题，这是会有恶疾的表现吗？所以肯定不是，对吧，那就是焦虑症引起的，那么既然是焦虑症，就应该认识到它的无害性，不需要对其产生极大的恐惧。况且你的难受程度可能并没有你想象的那么强烈，还在你的控制中</p>
-<p>我不必明天就完全康复，毕竟这些症状是你长时期的坏情绪，错误的信念导致的，所以给它一点时间</p>
-<p>那又能怎么样，我能处理</p>
-<p>就算很焦虑，我也可以做到</p>
-<p>这也许很让人害怕，但是我能忍受一定程度的焦虑，我也知道它会过去的</p>
-<p>我现在这样挺好的</p>
-<p>我有能力，我也有吸引力</p>
-<p>我是个很特别的，富有创造性的人</p>
-<p>我和其他人一样应该拥有美好的生活</p>
-<p>我接纳自己，也相信自己</p>
-<p>我值得其他人的尊重</p>
-<p>我能继续一步一步地前进</p>
-<p>我清楚已经取得的成就，也会继续努力</p>
-<p>要改变永远不迟</p>
-<p>我更愿意说杯子是半满的而不是半空的</p>
-<p>犯错误是可以接受的</p>
-<p>生命过于短暂，没必要太过较真</p>
-<p>我不需要总是能够从容处理这一切</p>
-<p>我的需要和感受同其他人的同样重要</p>
-<p>我不希望在我生命的尽头回顾我这一生时，发出这样的感叹：我为什么总是那么严肃？</p>
-<p>无论你们觉得我行不行都好，我就是行</p>
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
                 <h2><a class="post-title-link" href="/Redis/Redis%20Cluster/">Redis Cluster</a></h2>
             </div>
             <div class="post-meta">
@@ -582,6 +346,111 @@
 <p>请注意，Z1 能够发送到 B 的写入量有一个最大窗口：如果分区的多数方已经有足够的时间来选举一个副本作为主节点，那么少数方的每个主节点都将停止接受写入。</p>
 <p>这个时间量是Redis Cluster一个非常重要的配置指令，称为节点超时。</p>
 <p>节点超时后，主节点被视为出现故障，并且可以由其副本之一替换。类似地，在节点超时过后，主节点无法感知大多数其他主节点，它会进入错误状态并停止接受写入。</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Redis/Redis%20%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">Redis 的持久化</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-11-21</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h1 id="Redis-数据持久化"><a href="#Redis-数据持久化" class="headerlink" title="Redis 数据持久化"></a>Redis 数据持久化</h1><p>Redis 中，有两种方式将数据持久化到磁盘。一种称之为<strong>快照</strong> (Spapshotting), 将某一时刻存在数据写道磁盘。另外一种称之为<strong>AOF 仅追加文件</strong> (append-only file), 它是将到来的所有写命令写到磁盘上。这两种方式可以一起使用，也可以单独使用，或者不适用持久化。</p>
+<p>选择配置数据持久话的原因还是为了在 Redis，Redis 所在的主机硬件等发生故障时进行恢复，可以将持久化的文件在远程主机进行备份，故障时进行恢复。而且，如果 Redis 中的数据时大数据集上的聚合分析结果，没有备份，重新计算的代价可能时无法接受的。</p>
+<h2 id="通过快照将数据持久化到磁盘"><a href="#通过快照将数据持久化到磁盘" class="headerlink" title="通过快照将数据持久化到磁盘"></a>通过快照将数据持久化到磁盘</h2><p>在 Redis 中，可以通过创建一个快照，创建一个内部中数据的某个时刻的副本，这些副本可以被备份，复制到其它服务器，创建一个 Redis 服务器的副本，或者留着待以后重启使用。</p>
+<h3 id="基本的配置选项"><a href="#基本的配置选项" class="headerlink" title="基本的配置选项"></a><strong>基本的配置选项</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">save 60 1000 <span class="comment"># 创建快照的频率。如果自上一次创建快照后的 60s 内有 1000 此写，就开启新的快照</span></span><br><span class="line">stop-writes-on-bgsave-error no <span class="comment"># 当创建快照时，发生异常是否暂停所有的写命令</span></span><br><span class="line">rdbcompression yes   <span class="comment"># 是否进行压缩</span></span><br><span class="line">dbfilename dump.rdb  <span class="comment"># 快照文件名</span></span><br><span class="line"></span><br><span class="line">dir ./ <span class="comment"># 快照文件保存的目录</span></span><br></pre></td></tr></table></figure>
+
+<p>自上一次快照完成后，直到下一次快照开始执行，这个期间，如果 Redis 崩溃，系统或硬件故障，期间的写数据就会丢失。</p>
+<h3 id="五种初始化快照的方法"><a href="#五种初始化快照的方法" class="headerlink" title="五种初始化快照的方法"></a>五种初始化快照的方法</h3><ol>
+<li><p>任何的 Redis 客户端都可以通过调用 <code>BGSAVE</code> 命令来初始化快照（创建快照）。在所有支持 <code>BGSAVE</code>  的平台上，Redis 会进行进程的 <strong><em>fork</em></strong>, 子进程会将快照写到磁盘，而父进程仍然可以用于响应来自客户端的命令。</p>
+<blockquote>
+<p>当一个进程 fork 时，底层的操作系统会创建该进程的一个副本。在 Unix 和类 Unix 的系统上，复制进程会被优化：最开始，子进程和父进程时共享所有内存的。当父进程或子进程开始写内存，内存将不再共享。</p>
+</blockquote>
+</li>
+<li><p>Redis 的客户端可以通过调用 <code>SAVE</code> 命令来初始化快照，这将导致 <strong>Redis 停止对任何命令的响应</strong>，直到快照完成。不经常使用，但是如果对于该这种等待 ok 或者没有足够的内存执行 <code>BGSAVE</code> 操作，可以使用。</p>
+</li>
+<li><p>如果 Redis 配置了 <code>save</code> 选项，如 <code>save 60 10000</code>， 如果自上一次快照成功后的 60s 内，已经有 10000 个写操作，那么 Redis 会自动触发一个 <code>BGSAVE</code> 操作。可以配置多个 <code>save</code> 行，任意一条规则满足，就会触发 <code>BGSAVE</code> 操作。</p>
+</li>
+<li><p>当 Redis 接受到 <code>SHUTDOWN</code> 终止命令时，或者接受到标准的 <code>TERM</code> 信号，Redis 会执行 <code>SAVE</code> 操作，阻塞任何客户端执行任何命令，然后再终止。</p>
+</li>
+<li><p>当一个 Redis 服务器连接到另一个 Reids 服务器，并且发起了 <code>SYNC</code> 同步命令开始复制（replication）, Master Redis 服务器将会开始一个 <code>BGSAVE</code> 操作，如果当前没有一个正在进行中的 <code>BGSAVE</code> 操作或者最近完成了。</p>
+</li>
+</ol>
+<h2 id="只追加写文件持久化-Append-only-file-persistence"><a href="#只追加写文件持久化-Append-only-file-persistence" class="headerlink" title="只追加写文件持久化 (Append-only file persistence)"></a>只追加写文件持久化 (Append-only file persistence)</h2><p>只追加写文件通过将修改写到文件的末尾，保存了数据发生修改时的记录。这样，任何人都有可以通过从头到尾，重放 (replay) 只追加写日志文件就可以恢复整个数据集。可以通过设置配置项 <code>appendonly yes</code> 开启。</p>
+<h3 id="文件同步"><a href="#文件同步" class="headerlink" title="文件同步"></a>文件同步</h3><p>当写文件到磁盘上时，至少发生了三件事：首先是写缓存，当调用 <code>file.write()</code> 或其它语言中等价的命令时会执行该操作。当数据存在缓冲区中时，操作系统可以将这些数据再未来的某个时刻写到磁盘。可以通过调用 <code>file.flush()</code>, 要求操作系统将数据写到磁盘上，但这只是发给操作系统的一个请求，并不会立即执行。由于数据实际时不在磁盘上的直到操作系统将它写到磁盘上，我们可以告诉操作系统<strong>同步</strong>文件到磁盘上，这将导致阻塞 (block)，直到同步完成。当同步完成时，我们可以确定数据此时是在磁盘上的，并且如果系统故障，可以稍后读取进行恢复。</p>
+<h4 id="appendfsync-always"><a href="#appendfsync-always" class="headerlink" title="appendfsync always"></a><code>appendfsync always</code></h4><p>如果设置了 <code>appendfsync always</code>, Redis 的每次写将会导致一个磁盘的写过程，如果 Reid 崩溃了，这可以极大地减少数据丢失。然而，因为每次都有写磁盘这个过程，整体的性能会受限于此磁盘的性能。</p>
+<h4 id="appendfsync-eversec"><a href="#appendfsync-eversec" class="headerlink" title="appendfsync eversec"></a><code>appendfsync eversec</code></h4><p>作为保持数据安全和保持高写入性能之间的合理折衷，我们还可以设置 appendfsync everysec。 此配置将每秒同步一次仅追加日志文件。 对于大多数常见用途，与不使用任何类型的持久性相比，我们可能不会发现每秒同步到磁盘的显着性能损失。 通过每秒同步到磁盘，如果系统崩溃，我们最多可能会丢失一秒钟已在 Redis 中写入或更新的数据。 此外，在磁盘无法跟上正在发生的写入量的情况下，Redis 会优雅地减速以适应驱动器的最大写入速率。</p>
+<h4 id="appendfsync-no"><a href="#appendfsync-no" class="headerlink" title="appendfsync no"></a><code>appendfsync no</code></h4><p>Redis 并不会显示地执行任何文件同步，而是将这一切交给操作系统。这种情况下应该没有性能损失，但如果系统以某种方式崩溃，我们将丢失未知和不可预测的数据量。 如果我们使用的硬盘驱动器对于我们的写入负载来说不够快，Redis 会运行良好，直到将数据写入磁盘的缓冲区被填满，此时 Redis 会因为被阻止写入而变得非常慢。 通常不鼓励使用此配置选项。</p>
+<h3 id="重写-压缩-AOF"><a href="#重写-压缩-AOF" class="headerlink" title="重写/压缩 AOF"></a>重写/压缩 AOF</h3><p>AOF 看起来比较完美，即能将数据损失降低到 1s，又可以最小化数据持久化到磁盘上地时间。但是问题是，Redis 的每次写命令，都会生成一条日志记录，随着时间的推移，AOF 日志文件的大小会不断增长，可能会导致磁盘空间耗尽。但更常见的问题是，在 Redis 重启时，由于需要按顺序执行 AOF 中的每条命令，处理较大的文件，需要花费更长的时间</p>
+<p>此时可以使用 <code>BGREWRITEAOF</code>, 它会通过移除冗余的命令，来尽可能地使得 AOF 变得更小一点。和 <code>BGSAVE</code> 命令一样，这个命令也会执行一次 fork 过程，由子进程完成 AOF 的重写，所以关于 fork 的时间，内存使用的问题，同样也适用于 <code>BGREWRITEAOF</code>。而且更糟的时，当 AOF 被重写，操作系统需要删除几十 G 的 AOF 文件时，会使的操作系统中断几秒。</p>
+<p>当启用 AOF , 并且满足以下两个配置项时，Redis 会启动一次 <code>BGREWRITEAOF</code>， 如果 AOF 重写的频率过高，可以适当增加 <code>auto-aof-rewritepercentage</code>， 但是可能会导致 Redis 启动需要花费更多的时间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当 AOF 至少比 Redis 上次完成重写时的 AOF 大 100% 时</span></span><br><span class="line">auto-aof-rewritepercentage 100</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当 AOF 的大小至少为 64m 字节时</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="复制-Replication"><a href="#复制-Replication" class="headerlink" title="复制 Replication"></a>复制 Replication</h2>
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/Redis/Redis%20Transaction/">Redis Transaction</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-11-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="基础-Redis-事务"><a href="#基础-Redis-事务" class="headerlink" title="基础 Redis 事务"></a>基础 Redis 事务</h2><p>有时，需要在同一时间操作多个数据结构，这就需要进行多次 Redis 命令调用。虽然存在一些命令能够在 key 之间移动元素，但是并没有一个命令能够在不同类型的 key 之间移动元素（例外就是通过 <code>ZUNIONSTORE</code> 敏玲 复制一个 <code>SET</code> 到 <code>ZSET</code>）。对于涉及多个 key 的操作（无论是相同类型还是不同类型），Redis 提供了 5 个命令对多个 key 进行操作，且不需要中断：<code>WATCH</code>,  <code>MULTI</code>,<code>EXEC</code>, <code>UNWATCH</code>, <code>DISCARD</code>.</p>
+<p><strong>Redis 最简单的事务就是使用 <code>MULTI</code> 和 <code>EXEC</code> 命令</strong>, 基础事务就意味着这两种命令提供了一种方式，<strong>使得一个客户端执行多个命令 A, B, C 时，不会被其它客户端打断</strong>，意思就是如果没有这种事务保证，A, B, C 命令一条一条执行时，执行完 A 命令，有可能其它客户端执行了 D 命令，然后这个客户端才去执行 B, A, B, C 的执行被打断了。这与关系数据库的事务时不同的，关系数据库的事务可以部分执行，然后回滚或是提交。在 Redis 中，作为 MULTI/EXEC 事务中一部分的每一个命令都是一个接一个执行的，直到所有命令全部完成，然后其它客户端才能执行它们的命令.</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20211117203044176.png" alt="image-20211117203044176"></p>
+<p>要在 Redis 中之执行一个事务的步骤:</p>
+<ol>
+<li>首先调用 <code>MULTI</code> 命令</li>
+<li>跟随一系列要执行的其它命令, Redis 会将该连接到来的这些命令存在队列中</li>
+<li>执行 <code>EXEC</code> 命令, Redis 会顺序地执行 2 步骤中地所有命令,并且不会被中断</li>
+</ol>
+<p>语义上, Redis 的 Python 客户端库使用一种称之为管道 <code>popeline</code> 的方式处理这种事务,在一个连接对象上调用 <code>pipeline()</code> 方法会创建一个事务,使用正确的话, 会自动将一系列命令列封装在 <code>MULTI</code> 和 <code>EXEC</code>命令之间, 于此同时, Python 的客户端也会将要发送的命令存储起来,直到真正要送的时候, 才发送这些命令. 这能够减少 Redis 服务器与客户端的网络通信次数, 能够提高命令的执行效率, 提高性能.</p>
+<p>如何验证 ? 可以通过多线程验证, 每个线程都是先对某个计数器 key 加 1, 再减 1, 非事务的情况下, 一个线程的 +1 和 -1 操作可能被其它 线程的 +1 和 -1 操作打断; 如果使用了 Redis 事务, 则不会出现这种情况。</p>
+<p>其它客户端也是如此 ?</p>
+<p> 使用事务的好处和坏处是什么？</p>
+<h2 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h2><p><code>MULTI/EXEC</code> 这种基础事务的问题在于，如果没有执行 <code>EXEC</code> 命令，那么之前的任何命令都不会被执行， 这意味着不能利用中间一些读操作的结果来在程序中及时做出决策。</p>
+<p><code>WATCH</code> 命令结合 <code>MULTI</code> 和 <code>EXEC</code> 命令， 以及 <code>UNWATCH</code> 和 <code>DISCARD</code> 命令，当通过 <code>WATCH</code> 命令关注 (watch) 键时，在执行 <code>EXEC</code> 操作前的任意时刻，这些键被其它客户端替换、更新或删除，那么这时尝试执行 <code>EXEC</code> 会失败，并返回错误信息。通过使用 <code>WATCH</code>, <code>MULTI/EXEC</code>, 以及 <code>UNWATCH/DISCARD</code> 命令可以确保在做一些重要的操作时，数据不会被修改。</p>
+<p><strong>UNWATCH/DISCARD 的区别</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">WATCH</span><br><span class="line">|</span><br><span class="line">|-----&gt; UNWATCH (reset the connection)</span><br><span class="line">|</span><br><span class="line">MULTI</span><br><span class="line">|</span><br><span class="line">|-----&gt; DISCARD (reset the connection: cancel the WATCH and clear out any queued commands)</span><br><span class="line">|</span><br><span class="line">EXEC</span><br></pre></td></tr></table></figure>
+
+<p>如果通过 <code>WATCH</code> 命令关注了一些 key， 然后通过 <code>MULTI</code> 命令开启了一个事务，并跟随了一组命令，这时可以通过 <code>DISCARD</code> 命令取消关注，并清除任何缓存的命令。</p>
+<p><strong>客户端1操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get guoph2</span><br><span class="line"><span class="string">"2"</span></span><br><span class="line">127.0.0.1:6379&gt; watch guoph2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> guoph2 3</span><br><span class="line">QUEUED</span><br><span class="line"><span class="comment"># 在客户端2进行 set 后，执行 exec，本次事务执行失败，争产执行会返回 OK</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端2操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get guoph2</span><br><span class="line"><span class="string">"2"</span></span><br><span class="line"><span class="comment"># 在客户端1操作 watch，multi,set命令后，对 key 的值进行更新</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> guoph2 1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结合 <code>WATCH</code> 与 <code>MULTI/EXEC</code> 命令，就可以在关注的键被其它客户端修改时得到通知，可以再次进行重试。</p>
+<h3 id="为什么-Redis-不实现典型的锁机制"><a href="#为什么-Redis-不实现典型的锁机制" class="headerlink" title="为什么 Redis 不实现典型的锁机制"></a>为什么 Redis 不实现典型的锁机制</h3><p>当处于写数据的目的而访问数据时，即 SQL 中的 SELECT FOR UPDATE, 关系型数据库会对要访问的行进行加锁，直到一个事务通过 <code>COMMIT</code> 或者 <code>ROLLBACK</code>完成事务的处理. 如果其它客户端尝试对相同的行，access data for writing 时，其它客户端会被阻塞直到第一个事务完成。这种形式的锁在实际中应用的很好（特别是所有的关系型数据库都实现了它），但是可能会导致客户端等待获取锁而长时间等到锁。</p>
+<p>由于这种可能存在的长时间等待，并且 Redis 的设计就是较少客户端的等待时间，Redis 在 <code>WATCH</code>期间并不会锁数据，相反，Redis 会通知客户端，如果其它客户端先修改了数据，这也被称之为乐观锁 (optimistic locking). 关系型数据库执行的锁可以被视作悲观锁 (pessimistic). 乐观锁同样也应用广泛，因为客户端从来不等待第一个锁的持有者释放锁，它只是在不断地进行重试。</p>
 
                 
             </div>
