@@ -84,6 +84,186 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/Vim%20%E4%BB%8B%E7%BB%8D/">Vim 介绍</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2023-12-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="Vim-的基本使用"><a href="#Vim-的基本使用" class="headerlink" title="Vim 的基本使用"></a>Vim 的基本使用</h2><p>内容取自 byte-of-vim， 查看原文，请参考文末链接.</p>
+<h3 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h3><p>Vim 是一个用于写作的计算机程序（computer program），提供一系列特性帮助你更好地进行写作。 可以用来编写购物清单，写书，或者是程序代码。</p>
+<h3 id="为什么选择-Vim"><a href="#为什么选择-Vim" class="headerlink" title="为什么选择 Vim"></a>为什么选择 Vim</h3><h4 id="简单"><a href="#简单" class="headerlink" title="简单"></a>简单</h4><ul>
+<li>极简主义界面，帮助你集中注意力</li>
+<li>少许的核心概念</li>
+</ul>
+<h4 id="高效"><a href="#高效" class="headerlink" title="高效"></a>高效</h4><blockquote>
+<p>There is no great writing, only great rewriting.</p>
+<p>​                                                        ——Louis Brandeis</p>
+</blockquote>
+<p>与纯文本或富文本编辑器对比，Vim 可以使得复杂大量频繁的修改该变得更容易，更快，更好。Minimal effort. Maximal effect.</p>
+<h3 id="Vim-能干什么？"><a href="#Vim-能干什么？" class="headerlink" title="Vim 能干什么？"></a>Vim 能干什么？</h3><p><strong>说了这么多漂亮话，Vim 到底强在哪里？</strong></p>
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><table>
+<thead>
+<tr>
+<th>编辑</th>
+<th>Vim 中的操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>如何将光标向下移动 7 行</td>
+<td>Press 7j</td>
+</tr>
+<tr>
+<td>删除一个单词</td>
+<td>Press dw</td>
+</tr>
+<tr>
+<td>搜索文档中光标所在的单词</td>
+<td>Press *</td>
+</tr>
+<tr>
+<td>在 50-100 行进行查找并替换</td>
+<td>Run :50,100s/old/new/g (s = substitute, c = confirmation )</td>
+</tr>
+<tr>
+<td>如果光标所在的单词是一个文件，如何打开</td>
+<td>gf (g = goto, f = file)</td>
+</tr>
+<tr>
+<td>如果每行只有前N个字符是有用的？</td>
+<td>ctrl-v  –&gt; y (copy)</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<p><strong>所以，你被说服了吗？</strong></p>
+<p>我们为什么学习 Vim ?</p>
+<h4 id="Vim-图形化界面版本"><a href="#Vim-图形化界面版本" class="headerlink" title="Vim 图形化界面版本"></a>Vim 图形化界面版本</h4><p><strong>Windows</strong></p>
+<p><strong>Mac OS X</strong></p>
+<p><strong>Linux/BSD</strong></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901204140178.png" alt="image-20200901204140178"></p>
+<p>​                                                                    Windos 下的 Vim</p>
+<h4 id="终端版本"><a href="#终端版本" class="headerlink" title="终端版本"></a>终端版本</h4><p><strong>Windows</strong></p>
+<p><strong>Mac OS X</strong></p>
+<p><strong>Linux/BSD</strong></p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901204402296.png" alt="image-20200901204402296"></p>
+<h3 id="最重要的概念-模式"><a href="#最重要的概念-模式" class="headerlink" title="最重要的概念 - 模式"></a>最重要的概念 - 模式</h3><p>Vim 中的模式也许是最令刚接触 Vim 的人最疑惑的部分，为什么打开不能直接输入文字？该怎么样保存并退出 Vim？据说 Stack Overflow 上关于如何退出 Vim 的问题，其点击量已有上百万次了</p>
+<p>Vim 中不同的模式就像是电视机中的正常模式和 DVD 模式，每种模式都有其特定的功能。模式使得功能区得以划分，使得事情变得尽可能简单。Vim 的目标之一就是使用键盘就可以完成所有工作，而不需要借助鼠标。</p>
+<h4 id="Normal-Mode-正常模式-命令行模式"><a href="#Normal-Mode-正常模式-命令行模式" class="headerlink" title="Normal Mode (正常模式/命令行模式)"></a>Normal Mode (正常模式/命令行模式)</h4><p><strong>A mode for running commands</strong></p>
+<p>Vim 启动的默认模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Vim command :echo</span></span><br><span class="line">:<span class="built_in">echo</span> <span class="string">"Hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Vim command :help takes us to the table of contents of the reference manual</span></span><br><span class="line">:<span class="built_in">help</span> usr_toc</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Insert-Mode-插入模式-编辑模式"><a href="#Insert-Mode-插入模式-编辑模式" class="headerlink" title="Insert Mode (插入模式/编辑模式)"></a>Insert Mode (插入模式/编辑模式)</h4><p><strong>A mode for writing text</strong></p>
+<p>打开 Vim，命令行模式下运行 <code>:e temp.txt</code>,  按下 <code>i</code>, 进入编辑模式，输入文本；</p>
+<p>按下 <code>&lt;ESC&gt;</code>, 切换回命令行模式，运行 <code>:w</code> 命令保存</p>
+<p><strong>使用命令进行更方便的移动光标</strong></p>
+<p>除了  <code>i</code> 之外，你还可以 </p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>insert text just before the cursor</td>
+</tr>
+<tr>
+<td>I</td>
+<td>insert text at the start of the line</td>
+</tr>
+<tr>
+<td>a</td>
+<td>append text just after the cursor</td>
+</tr>
+<tr>
+<td>A</td>
+<td>append text at the end of the line</td>
+</tr>
+</tbody></table>
+<p>光标移动，并切换为 Insert Mode</p>
+<p><strong>其他常用操作命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>o</td>
+<td>open a new line below</td>
+</tr>
+<tr>
+<td>O</td>
+<td>open a new line above</td>
+</tr>
+<tr>
+<td>s</td>
+<td>substitute character</td>
+</tr>
+<tr>
+<td>S</td>
+<td>substitutes the whole line</td>
+</tr>
+<tr>
+<td>r</td>
+<td>replace the current character</td>
+</tr>
+<tr>
+<td>R</td>
+<td>replace continuous characters</td>
+</tr>
+</tbody></table>
+<p>编辑完文本，切换回 Normal Mode, 是一个良好的习惯，完成文档的初始编写时，最好切换为 Normal Mode。</p>
+<p>这两种模式的切换时如此的简单，按下 <code>i</code> 即可进入编辑模式， <code>&lt;ESC&gt;</code> 即可切换为命令行模式，图形化界面看似提供了很多菜单选项，可是如果上百个命令，以及这些命令的组合，图形化界面是难以做到的。</p>
+<p>一旦你理解了 Vim 的模式 （哲学）， 你就不会觉得好难用，好奇怪，是吧？</p>
+<h4 id="Visual-mode"><a href="#Visual-mode" class="headerlink" title="Visual mode"></a>Visual mode</h4><p>假如想要选中一连串的单词（words），并将它们完全替换为新的文本， 该如何做呢？你可不想按住删除键全部删除，再重新添加新的文本吧？Visual Mode 就将发挥它的作用。</p>
+<p>Normal Mode 下，按下 <code>v</code> 或则 <code>V</code> 进入 Visual Mode</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>desc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v</td>
+<td>Visual Mode, character basis</td>
+</tr>
+<tr>
+<td>V</td>
+<td>Visual Mode, line basis</td>
+</tr>
+</tbody></table>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901215958686.png" alt="image-20200901215958686"></p>
+<p>​                                                relation between the difference modes</p>
+<h3 id="Graphical-cheat-sheet"><a href="#Graphical-cheat-sheet" class="headerlink" title="Graphical cheat sheet"></a>Graphical cheat sheet</h3><p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20200901221532521.png" alt="image-20200901221532521"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>理解模式是如何工作的，以及如何进行模式的切换是成为一个 <strong>Vimmer</strong> 的关键，当然， Vim 也只是众多编辑器中的一种 （如 Vim 于 Emacs 之争），如何选择，取决于你的个人习惯和偏好，工欲善其事必先利其器，Vim 也只是提供了一种选择，这个看似古老的软件依然在庞大的程序员群体中占有一席之地，继续发光发热。</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] <a href="https://github.com/swaroopch/byte-of-vim" target="_blank" rel="noopener">A Byte of Vim</a></p>
+<p>[2] <a href="https://initialcommit.com/blog/7-versatile-vim-commands" target="_blank" rel="noopener">7 versatile Vim commands that are easy to memorize</a></p>
+<p>[3] <a href="https://github.com/wsdjeg/vim-galore-zh_cn" target="_blank" rel="noopener">Vim Galore</a></p>
+<p>[4] <a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html" target="_blank" rel="noopener">Graphical vi-vim Cheat Sheet and Tutorial</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/cURL%E6%89%B9%E9%87%8F%E8%AF%B7%E6%B1%82/">cURL批量请求</a></h2>
             </div>
             <div class="post-meta">
@@ -321,117 +501,6 @@
 
 
 
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-09-04</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
-
-
-
-<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符串；查找和替换，字符串的更新</p>
-<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
-<li><p>集成式 （integrated）</p>
-<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
-</li>
-<li><p>程序式 (procedural)</p>
-<p>函数式</p>
-</li>
-<li><p>面向对象式 (object-oriented)</p>
-<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
-</li>
-</ul>
-<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
-<thead>
-<tr>
-<th>表示</th>
-<th>Unicode code point</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LF</td>
-<td>U+000A</td>
-<td>ASCII 换行符</td>
-</tr>
-<tr>
-<td>VT</td>
-<td>U+000B</td>
-<td>ASCII 垂直制表符</td>
-</tr>
-<tr>
-<td>FF</td>
-<td>U+000C</td>
-<td>ASCII 进纸符</td>
-</tr>
-<tr>
-<td>CR</td>
-<td>U+000D</td>
-<td>ASCII 回车</td>
-</tr>
-<tr>
-<td>CR/LF</td>
-<td>U+000D U+000A</td>
-<td>ASCII 回车/换行</td>
-</tr>
-<tr>
-<td>NEL</td>
-<td>U+0085</td>
-<td>Unicode 换行</td>
-</tr>
-<tr>
-<td>LS</td>
-<td>U+2028</td>
-<td>Unicode 行分隔符</td>
-</tr>
-<tr>
-<td>PS</td>
-<td>U+2029</td>
-<td>Unicode 段分隔符</td>
-</tr>
-</tbody></table>
-<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
-<thead>
-<tr>
-<th>字母</th>
-<th>模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>不区分大小写的匹配模式</td>
-</tr>
-<tr>
-<td>x</td>
-<td>宽松排列和注释模式</td>
-</tr>
-<tr>
-<td>s</td>
-<td>点号通配模式（单行模式）</td>
-</tr>
-<tr>
-<td>m</td>
-<td>增强的行锚点模式（多行模式）</td>
-</tr>
-</tbody></table>
 
                 
             </div>

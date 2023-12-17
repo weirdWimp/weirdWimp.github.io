@@ -84,6 +84,117 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2022-09-04</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
+
+
+
+<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符串；查找和替换，字符串的更新</p>
+<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
+<li><p>集成式 （integrated）</p>
+<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
+</li>
+<li><p>程序式 (procedural)</p>
+<p>函数式</p>
+</li>
+<li><p>面向对象式 (object-oriented)</p>
+<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
+</li>
+</ul>
+<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
+<thead>
+<tr>
+<th>表示</th>
+<th>Unicode code point</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LF</td>
+<td>U+000A</td>
+<td>ASCII 换行符</td>
+</tr>
+<tr>
+<td>VT</td>
+<td>U+000B</td>
+<td>ASCII 垂直制表符</td>
+</tr>
+<tr>
+<td>FF</td>
+<td>U+000C</td>
+<td>ASCII 进纸符</td>
+</tr>
+<tr>
+<td>CR</td>
+<td>U+000D</td>
+<td>ASCII 回车</td>
+</tr>
+<tr>
+<td>CR/LF</td>
+<td>U+000D U+000A</td>
+<td>ASCII 回车/换行</td>
+</tr>
+<tr>
+<td>NEL</td>
+<td>U+0085</td>
+<td>Unicode 换行</td>
+</tr>
+<tr>
+<td>LS</td>
+<td>U+2028</td>
+<td>Unicode 行分隔符</td>
+</tr>
+<tr>
+<td>PS</td>
+<td>U+2029</td>
+<td>Unicode 段分隔符</td>
+</tr>
+</tbody></table>
+<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
+<thead>
+<tr>
+<th>字母</th>
+<th>模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>不区分大小写的匹配模式</td>
+</tr>
+<tr>
+<td>x</td>
+<td>宽松排列和注释模式</td>
+</tr>
+<tr>
+<td>s</td>
+<td>点号通配模式（单行模式）</td>
+</tr>
+<tr>
+<td>m</td>
+<td>增强的行锚点模式（多行模式）</td>
+</tr>
+</tbody></table>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Sed%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%8B%E5%86%8C/">Sed 命令行手册</a></h2>
             </div>
             <div class="post-meta">
@@ -197,57 +308,6 @@
             <div class="post-content">
                 
                     <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PathMatchingResourcePatternResolver resourceResolver = <span class="keyword">new</span> PathMatchingResourcePatternResolver();</span><br><span class="line"></span><br><span class="line">Resource[] rss = resourceResolver.getResources(<span class="string">"classpath*/errorcode/errorCode*.properties"</span>);</span><br><span class="line"></span><br><span class="line">PropertiesFactoryBean codeTab = <span class="keyword">new</span> PropertiesFactoryBean();</span><br><span class="line">codeTab.setLocations(rss);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> codeTab;</span><br></pre></td></tr></table></figure>
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/%E8%84%9A%E6%9C%AC/backup/">backup</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-08-21</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h3 id="使用-WSL-进行-Windows-下不同磁盘之间的文件备份"><a href="#使用-WSL-进行-Windows-下不同磁盘之间的文件备份" class="headerlink" title="使用 WSL 进行 Windows 下不同磁盘之间的文件备份"></a>使用 WSL 进行 Windows 下不同磁盘之间的文件备份</h3><p>modified.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">sourceDir=<span class="variable">$1</span></span><br><span class="line">find <span class="variable">$1</span> -<span class="built_in">type</span> f -mmin -60 | \</span><br><span class="line">awk \</span><br><span class="line"><span class="string">'BEGIN &#123; "date \"+%F %T\""| getline; print $0 &#125; \</span></span><br><span class="line"><span class="string">&#123; print "modified:"$0 &#125; \</span></span><br><span class="line"><span class="string">END &#123; print "\n\n"&#125;'</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>backup.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># copy source to target</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># system(cmdrm);</span></span><br><span class="line">baseDir=<span class="string">"/mnt/e/SoftConfigBackup"</span></span><br><span class="line">awk -F<span class="string">"="</span> <span class="string">'!/^\s*#/  \</span></span><br><span class="line"><span class="string">&#123; origDir=$1; \</span></span><br><span class="line"><span class="string">cmd0=bd"/modified.sh "$1" &gt;&gt; "bd"/modified.log"; \</span></span><br><span class="line"><span class="string">system(cmd0); \</span></span><br><span class="line"><span class="string">sub("^.*/", "", origDir); \</span></span><br><span class="line"><span class="string">cmdrm="rm -rf "$2"/"origDir; \</span></span><br><span class="line"><span class="string">cmd1="mkdir -p "$2; \</span></span><br><span class="line"><span class="string">cmd2="cp -r " $1 " " $2; \</span></span><br><span class="line"><span class="string">system(cmd1); \</span></span><br><span class="line"><span class="string">system(cmd2) &#125;'</span> \</span><br><span class="line">    bd=<span class="variable">$baseDir</span> <span class="string">"<span class="variable">$baseDir</span>/backupToNewDisk.properties"</span></span><br><span class="line"></span><br><span class="line">date &gt;&gt;<span class="variable">$baseDir</span>/date.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line">*/60 * * * * /mnt/e/SoftConfigBackup/backup.sh</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="文件目录大小排序"><a href="#文件目录大小排序" class="headerlink" title="文件目录大小排序"></a>文件目录大小排序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前目录下，根据文件或目录的大小进行降序排序, 需要有对应目录的权限</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set current directory as default directory</span></span><br><span class="line">dir=<span class="variable">$&#123;1:-$(pwd)&#125;</span></span><br><span class="line">dir=$(<span class="built_in">echo</span> <span class="variable">$dir</span> | sed -E <span class="string">'s/\/$//g'</span>)</span><br><span class="line"></span><br><span class="line">IFSOld=<span class="variable">$IFS</span></span><br><span class="line">IFS=$<span class="string">'\n'</span></span><br><span class="line">rs=<span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(ls <span class="string">"<span class="variable">$&#123;dir&#125;</span>"</span>); <span class="keyword">do</span></span><br><span class="line">    fpath=<span class="string">"<span class="variable">$&#123;dir&#125;</span>/<span class="variable">$i</span>"</span></span><br><span class="line">    <span class="keyword">if</span> [ -f <span class="string">"<span class="variable">$fpath</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        size=$(du -B 1G <span class="string">"<span class="variable">$fpath</span>"</span> | cut -f1)</span><br><span class="line">        rs=<span class="variable">$rs</span><span class="string">"\n[f]\x1c<span class="variable">$&#123;size&#125;</span>\x1c<span class="variable">$fpath</span>"</span></span><br><span class="line">    <span class="keyword">elif</span> [ -d <span class="string">"<span class="variable">$fpath</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        size=$(du -B 1G -c <span class="string">"<span class="variable">$fpath</span>"</span> | grep total | cut -f1)</span><br><span class="line">        rs=<span class="variable">$rs</span><span class="string">"\n[d]\x1c<span class="variable">$&#123;size&#125;</span>\x1c<span class="variable">$fpath</span>"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"block size = 1GB"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nFLG Block Path"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"-----------------------------------------------"</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="variable">$rs</span> | sort -t $<span class="string">'\x1c'</span> -n -r -k2 | tr $<span class="string">'\x1c'</span> <span class="string">' '</span></span><br><span class="line">IFS=<span class="variable">$IFSOld</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>it also works</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sep=$(<span class="built_in">echo</span> -n -e <span class="string">'\x1c'</span>); <span class="built_in">echo</span> -e <span class="string">'2\x1cB\n1\x1cD'</span> | sort -t <span class="variable">$sep</span> -n -k1</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /dev/null &gt; testfile</span><br><span class="line"><span class="comment"># 由于/dev/null文件不含有任何内容，通常用它来快速清除现有文件中的数据，而不用先删除文件再重新创建</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>重定向</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ IFS=<span class="string">','</span>; <span class="keyword">while</span> <span class="built_in">read</span> name age; <span class="keyword">do</span> cat &gt;&gt; p.sql &lt;&lt; EOF</span><br><span class="line">&gt; insert into table (name, age) values (<span class="string">'$name'</span>, <span class="string">'$age'</span>);</span><br><span class="line">&gt; EOF</span><br><span class="line">&gt; <span class="keyword">done</span> &lt; a.csv</span><br><span class="line"></span><br><span class="line">$ cat p.sql</span><br><span class="line">insert into table (name, age) values (<span class="string">'Jason'</span>, <span class="string">'24'</span>);</span><br><span class="line">insert into table (name, age) values (<span class="string">'Guo'</span>, <span class="string">'29'</span>);</span><br><span class="line"></span><br><span class="line">$ cat a.csv</span><br><span class="line">Jason,24</span><br><span class="line">Guo,29</span><br></pre></td></tr></table></figure>
 
 
                 
