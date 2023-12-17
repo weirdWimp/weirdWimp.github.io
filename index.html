@@ -87,7 +87,7 @@
                 <h2><a class="post-title-link" href="/Linux/cURL%E6%89%B9%E9%87%8F%E8%AF%B7%E6%B1%82/">cURL批量请求</a></h2>
             </div>
             <div class="post-meta">
-                <span class="post-time">2023-12-16</span>
+                <span class="post-time">2023-12-17</span>
                 
                 <span class="post-category">
                     
@@ -105,6 +105,11 @@
 
 <p>现在需要针对每个请求体进行调用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重点在于 read 的参数 -r， 表示 raw 模式，不把输入的反斜杠字符解释为转义字符</span></span><br><span class="line"><span class="comment"># 如果不指定该参数，每行中的 \ 会被认为是转义字符，表示对后一个字符的转义，就不是一个合法的 JSON</span></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> -r line; <span class="keyword">do</span> </span><br><span class="line">	curl -H <span class="string">'Content-Type: application/json'</span> -d <span class="string">"<span class="variable">$line</span>"</span> http://192.168.31.224:8080/curl/<span class="built_in">print</span></span><br><span class="line"><span class="keyword">done</span> &lt; req_params</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 here document 进行请求参数的填充</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> ph; <span class="keyword">do</span></span><br><span class="line">input=$(cat &lt;&lt; EOF</span><br><span class="line">&#123;<span class="string">"phone"</span>:<span class="string">"<span class="variable">$&#123;ph&#125;</span>"</span>&#125;</span><br><span class="line">EOF</span><br><span class="line">)</span><br><span class="line">curl -H <span class="string">'Content-Type: application/json'</span> -d <span class="string">"<span class="variable">$&#123;input&#125;</span>"</span> http://192.168.31.224:8080/curl/<span class="built_in">print</span></span><br><span class="line"><span class="built_in">echo</span></span><br><span class="line"><span class="keyword">done</span> &lt; phone</span><br></pre></td></tr></table></figure>
 
 
 
