@@ -84,6 +84,30 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Java/%E5%B9%B6%E5%8F%91/Map/">Map</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-06-06</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Java/">Java</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>Map</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">   </span><br><span class="line">  <span class="comment">// 返回与 key 之前关联的值, 如果 key 存在，返回与 key 关联的 value</span></span><br><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">putIfAbsent</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       V v = get(key);</span><br><span class="line">       <span class="keyword">if</span> (v == <span class="keyword">null</span>) &#123;</span><br><span class="line">           v = put(key, value);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> v;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回与 key 关联的当前值（要么是已经存在的，或者是 mappingFunction 函数计算得到的新值）, 如果 mappingFunction 计算的新值为 		null，该方法也返回 null</span></span><br><span class="line">   <span class="function"><span class="keyword">default</span> V <span class="title">computeIfAbsent</span><span class="params">(K key,</span></span></span><br><span class="line"><span class="function"><span class="params">           Function&lt;? <span class="keyword">super</span> K, ? extends V&gt; mappingFunction)</span> </span>&#123;</span><br><span class="line">       Objects.requireNonNull(mappingFunction);</span><br><span class="line">       V v;</span><br><span class="line">       <span class="keyword">if</span> ((v = get(key)) == <span class="keyword">null</span>) &#123;</span><br><span class="line">           V newValue;</span><br><span class="line">           <span class="keyword">if</span> ((newValue = mappingFunction.apply(key)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">               put(key, newValue);</span><br><span class="line">               <span class="keyword">return</span> newValue;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> v;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Unsplash%20%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC/">Unsplash 图片下载脚本</a></h2>
             </div>
             <div class="post-meta">
@@ -343,28 +367,6 @@
             </div>
         </article>
     
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/JOSE/">JOSE</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-05-18</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p>Jose JSON 对象的加密与签名</p>
-
-                
-            </div>
-        </article>
-    
 </div>
 <div class="paginator">
     
@@ -401,7 +403,7 @@
             &copy;
             
             
-            2023
+            2024
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

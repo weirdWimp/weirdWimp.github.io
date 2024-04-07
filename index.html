@@ -84,6 +84,70 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/%E6%97%B6%E9%97%B4%E4%B8%8E%E7%AA%97%E5%8F%A3/">时间与窗口</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2024-04-07</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>时间与窗口的验证</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> flink.demo.time</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.<span class="type">Duration</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.eventtime.&#123;<span class="type">SerializableTimestampAssigner</span>, <span class="type">WatermarkStrategy</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.scala._</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.<span class="type">CheckpointingMode</span></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.environment.<span class="type">CheckpointConfig</span>.<span class="type">ExternalizedCheckpointCleanup</span></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.scala.<span class="type">StreamExecutionEnvironment</span></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.windowing.assigners.<span class="type">TumblingEventTimeWindows</span></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.windowing.time.<span class="type">Time</span></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.util.<span class="type">Collector</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @author guo</span></span><br><span class="line"><span class="comment"> * @date 2022/11/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">FlinkTimeJob</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> env = <span class="type">StreamExecutionEnvironment</span>.getExecutionEnvironment</span><br><span class="line">    env.setParallelism(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    env.enableCheckpointing(<span class="number">600</span> * <span class="number">1000</span>, <span class="type">CheckpointingMode</span>.<span class="type">EXACTLY_ONCE</span>)</span><br><span class="line">    env.getCheckpointConfig.setMinPauseBetweenCheckpoints(<span class="number">500</span>)</span><br><span class="line">    env.getCheckpointConfig.setCheckpointTimeout(<span class="number">60000</span>)</span><br><span class="line">    env.getCheckpointConfig.setMaxConcurrentCheckpoints(<span class="number">1</span>)</span><br><span class="line">    env.getCheckpointConfig.setExternalizedCheckpointCleanup(<span class="type">ExternalizedCheckpointCleanup</span>.<span class="type">RETAIN_ON_CANCELLATION</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 水印周期</span></span><br><span class="line">    env.getConfig.setAutoWatermarkInterval(<span class="number">2000</span>)</span><br><span class="line"></span><br><span class="line">    env.socketTextStream(<span class="string">"localhost"</span>, <span class="number">9192</span>, '\n')</span><br><span class="line">      .map(str =&gt; &#123;</span><br><span class="line">        <span class="keyword">val</span> keyAndTimestamp = str.split(<span class="string">","</span>)</span><br><span class="line">        <span class="type">Tuple2</span>(keyAndTimestamp(<span class="number">0</span>), keyAndTimestamp(<span class="number">1</span>).toLong)</span><br><span class="line">      &#125;)</span><br><span class="line">      .assignTimestampsAndWatermarks(</span><br><span class="line">        <span class="type">WatermarkStrategy</span>.forGenerator[(<span class="type">String</span>, <span class="type">Long</span>)](_ =&gt; <span class="keyword">new</span> <span class="type">BoundedOutOfOrdernessWatermarksWithLog</span>(<span class="type">Duration</span>.ofSeconds(<span class="number">10</span>)))</span><br><span class="line">          .withTimestampAssigner(<span class="keyword">new</span> <span class="type">SerializableTimestampAssigner</span>[(<span class="type">String</span>, <span class="type">Long</span>)] &#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">extractTimestamp</span></span>(element: (<span class="type">String</span>, <span class="type">Long</span>), recordTimestamp: <span class="type">Long</span>): <span class="type">Long</span> = element._2</span><br><span class="line">          &#125;)</span><br><span class="line">      )</span><br><span class="line">      .keyBy(_._1)</span><br><span class="line">      .window(<span class="type">TumblingEventTimeWindows</span>.of(<span class="type">Time</span>.seconds(<span class="number">3</span>)))</span><br><span class="line">      <span class="comment">//  .windowAll(TumblingEventTimeWindows.of(Time.seconds(3)))</span></span><br><span class="line">      <span class="comment">//   .allowedLateness(Time.seconds(2)) // 允许数据迟到, 只要当前 water_mark &lt; window_end_time + lateness, 迟到的数据还是可以出发已经执行过窗口的处理</span></span><br><span class="line">      .apply((key, window, iterable, collector: <span class="type">Collector</span>[<span class="type">String</span>]) =&gt; &#123;</span><br><span class="line">        <span class="keyword">val</span> start = window.getStart</span><br><span class="line">        <span class="keyword">val</span> end = window.getEnd</span><br><span class="line">        <span class="keyword">val</span> windowElementConcat = iterable.mkString(<span class="string">","</span>)</span><br><span class="line">        <span class="keyword">val</span> res = <span class="string">s"key: <span class="subst">$key</span>, Window: [<span class="subst">$start</span>, <span class="subst">$end</span>), [<span class="subst">$&#123;DateTimeUtil.toDateTime(start)&#125;</span>, <span class="subst">$&#123;DateTimeUtil.toDateTime(end)&#125;</span>), window elements: <span class="subst">$windowElementConcat</span>"</span></span><br><span class="line">        collector.collect(res)</span><br><span class="line">      &#125;)</span><br><span class="line">      .print()</span><br><span class="line"></span><br><span class="line">    env.execute(<span class="string">"flink demo"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> flink.demo.time;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.eventtime.<span class="type">Watermark</span>;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.eventtime.<span class="type">WatermarkGenerator</span>;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.eventtime.<span class="type">WatermarkOutput</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.<span class="type">Duration</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> static org.apache.flink.util.<span class="type">Preconditions</span>.checkArgument;</span><br><span class="line"><span class="keyword">import</span> static org.apache.flink.util.<span class="type">Preconditions</span>.checkNotNull;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @author guo</span></span><br><span class="line"><span class="comment"> * @date 2024/4/4</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">BoundedOutOfOrdernessWatermarksWithLog&lt;T&gt;</span> <span class="title">implements</span> <span class="title">WatermarkGenerator&lt;T&gt;</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The maximum timestamp encountered so far.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> long maxTimestamp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The maximum out-of-orderness that this watermark generator assumes.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> long outOfOrdernessMillis;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Creates a new watermark generator with the given out-of-orderness bound.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @param maxOutOfOrderness The bound for the out-of-orderness of the event timestamps.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    public <span class="type">BoundedOutOfOrdernessWatermarksWithLog</span>(<span class="type">Duration</span> maxOutOfOrderness) &#123;</span><br><span class="line">        checkNotNull(maxOutOfOrderness, <span class="string">"maxOutOfOrderness"</span>);</span><br><span class="line">        checkArgument(!maxOutOfOrderness.isNegative(), <span class="string">"maxOutOfOrderness cannot be negative"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.outOfOrdernessMillis = maxOutOfOrderness.toMillis();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// start so that our lowest watermark would be Long.MIN_VALUE.</span></span><br><span class="line">        <span class="keyword">this</span>.maxTimestamp = <span class="type">Long</span>.<span class="type">MIN_VALUE</span> + outOfOrdernessMillis + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    public void onEvent(<span class="type">T</span> event, long eventTimestamp, <span class="type">WatermarkOutput</span> output) &#123;</span><br><span class="line">        maxTimestamp = <span class="type">Math</span>.max(maxTimestamp, eventTimestamp);</span><br><span class="line"></span><br><span class="line">        <span class="type">System</span>.err.println(<span class="string">"onEvent: eventTimestamp:"</span> + <span class="type">DateTimeUtil</span>.toDateTimeStr(eventTimestamp)</span><br><span class="line">                + <span class="string">", maxTimestamp:"</span> + <span class="type">DateTimeUtil</span>.toDateTimeStr(maxTimestamp));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    public void onPeriodicEmit(<span class="type">WatermarkOutput</span> output) &#123;</span><br><span class="line">        output.emitWatermark(<span class="keyword">new</span> <span class="type">Watermark</span>(maxTimestamp - outOfOrdernessMillis - <span class="number">1</span>));</span><br><span class="line">        <span class="type">System</span>.err.println(<span class="string">"emit watermark:"</span> + <span class="type">DateTimeUtil</span>.toDateTimeStr(maxTimestamp - outOfOrdernessMillis - <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> flink.demo.time</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.format.<span class="type">DateTimeFormatter</span></span><br><span class="line"><span class="keyword">import</span> java.time.&#123;<span class="type">Instant</span>, <span class="type">ZoneId</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @author guo</span></span><br><span class="line"><span class="comment"> * @date 2024/4/4</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">DateTimeUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">toDateTime</span></span>(ts: <span class="type">Long</span>): <span class="type">String</span> = &#123;</span><br><span class="line">    <span class="type">Instant</span>.ofEpochMilli(ts).atZone(<span class="type">ZoneId</span>.systemDefault()).toLocalDateTime.format(<span class="type">DateTimeFormatter</span>.ofPattern(<span class="string">"yyyy-MM-dd HH:mm:ss.SSS"</span>))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">toDateTimeStr</span></span>(ts: <span class="type">Long</span>): <span class="type">String</span> = &#123;</span><br><span class="line">    ts + <span class="string">" &lt;=&gt; "</span> + <span class="type">Instant</span>.ofEpochMilli(ts).atZone(<span class="type">ZoneId</span>.systemDefault()).toLocalDateTime.format(<span class="type">DateTimeFormatter</span>.ofPattern(<span class="string">"yyyy-MM-dd HH:mm:ss.SSS"</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
+                <h2><a class="post-title-link" href="/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hbase/%E4%BF%9D%E6%8C%81%E4%B8%8E%20Redis%20%E7%9B%B8%E5%90%8C%E7%9A%84%20TTL%20%E6%93%8D%E4%BD%9C/">保持与 Redis 相同的 TTL 操作</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2024-04-07</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <p>保持与 Redis 相同的 TTL 操作</p>
+<p>Redis 中没有 Hbase 中时间版本的概念与机制，也可以认为只有当前版本，并且 TTL 是针对整个 Key 的，而 Hbase 的 TTL 可以基于列族或者单元设定，不是基于整个行键的，如果我们将 Redis 中的数据迁移到 Hbase 中，对应的 TTL 就是一个问题，原来基于 Redis 机制的应用中使用也是一个问题，所以为了保持旧的应用兼容（在不对原有应用做大量重构测试的情况下，只在 API 层面兼容修改），只能手动针对 Hbase 的单元的 TTL 进行设置。</p>
+<p>假设现在 API 层面，需要将原有的 Redis  访问替换为 Hbase 的访问，需要做一些 API 层面的映射。首先抛开所使用的底层缓存方案，将缓存抽象：每个缓存数据都属于一张表，这张表中缓存的是某个特定领域，特定应用的数据，访问时，需要指定表名，有两种基本的结构（和 Redis 保持一致） Key-Value, Key-HashKey-Value， 这样就可以为开发人员提供一个抽象层的 API, 开发人员并不需要特别关注底层缓存的方案，如果后面更换缓存方案，可以提供 API 层的兼容。</p>
+<p>Hbase 中单元有时间版本的概念（VERSIONS）, 一般设置 1 就够了，还有最小版本（MIN_VERSIONS）,  可以设置为 0， 保证早于 TTL 的时间版本的数据不会返回。如果我们多次对一个单元进行写，即使设置了最大版本为 1， 如果最近的版本因为 TTL 过期，之前的版本没有过期，而且因为没有合并，没有被删除，还是会被查询出来，这显示对于原来使用 Redis 的应用来说，是不可接受的，所以只能在设置 TTL 时，手动删除之前的版本，而且， TTL 一般来说只是影响数据保存的时间长短，我们是为了清理数据设置的 TTL, 所以这个操作可以异步来进行。即使某次操作失败了，也可以等待下一次的操作进行设置。</p>
+<p>这是一个同步的测试，使用 checkAndMutate 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> test.bigdata</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.&#123;Duration, Instant, LocalDateTime, ZoneId&#125;</span><br><span class="line"><span class="keyword">import</span> java.util</span><br><span class="line"><span class="keyword">import</span> java.util.Date</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.&#123;CellUtil, HBaseConfiguration, TableName&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.&#123;ConnectionFactory, Delete, Get, Put, RowMutations, Table&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes.toBytes</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> guo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022/7/24</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">object HbaseExpireTest &#123;</span><br><span class="line"></span><br><span class="line">  <span class="function">def <span class="title">main</span><span class="params">(args: Array[String])</span>: Unit </span>= &#123;</span><br><span class="line">    val configuration = HBaseConfiguration.create()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hbase pseudo distributed cluster on nas docker</span></span><br><span class="line">    configuration.set(<span class="string">"hbase.zookeeper.quorum"</span>, <span class="string">"harisekhon-hbase1"</span>)</span><br><span class="line">    configuration.set(<span class="string">"hbase.zookeeper.property.clientPort"</span>, <span class="string">"2181"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> connection = ConnectionFactory.createConnection(configuration)</span><br><span class="line">    <span class="keyword">var</span> table: Table = connection.getTable(TableName.valueOf(<span class="string">"Test:user"</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      connection = ConnectionFactory.createConnection(configuration)</span><br><span class="line">      table = connection.getTable(TableName.valueOf(<span class="string">"Test:user"</span>))</span><br><span class="line">      val rowKey = toBytes(<span class="string">"r14"</span>)</span><br><span class="line">      val family = toBytes(<span class="string">"info"</span>)</span><br><span class="line">      val qualifier = toBytes(<span class="string">"name"</span>)</span><br><span class="line">      val value = toBytes(<span class="string">"hello world"</span>)</span><br><span class="line">      val ttl = Duration.ofMinutes(<span class="number">10</span>).toMillis</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 先不设置 TTL, 直接 Put</span></span><br><span class="line">      val put = <span class="keyword">new</span> Put(rowKey).addColumn(family, qualifier, value)</span><br><span class="line">      table.put(put)</span><br><span class="line"></span><br><span class="line">      val get = <span class="keyword">new</span> Get(rowKey).addColumn(family, qualifier)</span><br><span class="line">      println(<span class="string">"after first set:"</span> + Bytes.toString(table.get(get).getValue(family, qualifier)))</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 设置 TTL, 先检查值是否相等，再进行原子操作: 删除，新增并设置 TTL</span></span><br><span class="line">      <span class="comment">// 如果不相等，说明其它实例可能修改了单元的值，所以此次不再设置，等待其它实例设置即可</span></span><br><span class="line">      val time = <span class="keyword">new</span> Date().getTime</span><br><span class="line">      val firstDel = <span class="keyword">new</span> Delete(rowKey, time).addColumns(family, qualifier)</span><br><span class="line">      val secondPut = <span class="keyword">new</span> Put(rowKey, time + <span class="number">100</span>).addColumn(family, qualifier, value).setTTL(ttl)</span><br><span class="line">      val delAndPut = RowMutations.of(util.Arrays.asList(firstDel, secondPut))</span><br><span class="line"></span><br><span class="line">      val bool = table.checkAndMutate(rowKey, family)</span><br><span class="line">        .qualifier(qualifier)</span><br><span class="line">        .ifEquals(value)</span><br><span class="line">        .thenMutate(delAndPut)</span><br><span class="line">      println(<span class="string">"check and execute result:"</span> + bool)</span><br><span class="line"></span><br><span class="line">      val limitMinutes = <span class="number">5</span></span><br><span class="line">      val end = LocalDateTime.now().plusMinutes(limitMinutes)</span><br><span class="line">      <span class="keyword">while</span> (LocalDateTime.now().isBefore(end)) &#123;</span><br><span class="line">        val get = <span class="keyword">new</span> Get(rowKey).addColumn(family, qualifier).readAllVersions</span><br><span class="line">        val cells = table.get(get).rawCells()</span><br><span class="line">        <span class="keyword">if</span> (cells != <span class="keyword">null</span> &amp;&amp; cells.nonEmpty) &#123;</span><br><span class="line">          <span class="keyword">for</span> (cell &lt;- cells) &#123;</span><br><span class="line">            val timestamp = cell.getTimestamp</span><br><span class="line">            val family = Bytes.toString(CellUtil.cloneFamily(cell))</span><br><span class="line">            val qualifier = Bytes.toString(CellUtil.cloneQualifier(cell))</span><br><span class="line">            val value = Bytes.toString(CellUtil.cloneValue(cell))</span><br><span class="line">            val row = Bytes.toString(CellUtil.cloneRow(cell))</span><br><span class="line">            println(s<span class="string">"$&#123;LocalDateTime.now()&#125; row:$row, family: $family, qualifier:$qualifier, timestamp:$timestamp, value:$value, $&#123;Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime&#125;"</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          println(<span class="string">"cells null or empty"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      table.close()</span><br><span class="line">      connection.close()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/Vim%20%E4%BB%8B%E7%BB%8D/">Vim 介绍</a></h2>
             </div>
             <div class="post-meta">
@@ -378,153 +442,6 @@
             </div>
         </article>
     
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%B8%B8%E7%94%A8%E6%9B%BF%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F/">常用替换表达式</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-09-04</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><strong>对一个字符串按每x位进行分割</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每8位进行分割，表达式所匹配的含义是：匹配一个位置，左边有字符，右边包含的字符总数是8的倍数</span></span><br><span class="line">(?&lt;=\w)(?=(\w&#123;8&#125;)+\b)</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>使用 perl 来进行替换</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置位置，并不匹配一个具体的字符，锚点</span></span><br><span class="line"><span class="built_in">echo</span> 12345678 | perl -p -n -e <span class="string">'s/(?&lt;=\d)(?=(\d&#123;3&#125;)+$)/,/g'</span> <span class="comment"># 表达式的 $ 是必须的，匹配文本的结束位置 </span></span><br><span class="line">12,345,678</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>使用 sed 进行替换</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用捕获型括号</span></span><br><span class="line"><span class="comment"># :start 定义标签，执行替换命令</span></span><br><span class="line"><span class="comment"># t 表示 test，如果替换命令成功执行，则跳转至对应的标签执行，否则结束</span></span><br><span class="line">$ <span class="built_in">echo</span> 12345678 | sed <span class="string">'&#123;</span></span><br><span class="line"><span class="string">:start</span></span><br><span class="line"><span class="string">s/\(.*[0-9]\)\([0-9]\&#123;3\&#125;\)/\1,\2/  # &#123;&#125; () 需要使用 \ 进行转移表达其特殊含义，这点和一般使用的表达式引擎是有区别的</span></span><br><span class="line"><span class="string">t start</span></span><br><span class="line"><span class="string">&#125;'</span></span><br><span class="line">12,345,678</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要理解的一点是，匹配替换是一个循环的过程，直到测试至文本的末尾 （.*[0-9]） 一开始会匹配 '12345678', .* 匹配 '1234567', [0-9] 匹配 '8', 发现后面还需要匹配 3 个数字，于是进行回溯（面包屑），发现 (.*[0-9]) 匹配 '12345' 时，后面刚好有 3 个数字，能够匹配，所以本次匹配成功，所以第一次替换后的结果为 '12345,678'; 第二次替换后的结果为 '12,345,678'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 s 命令的 p 进行验证 （-n 关闭了默认的打印）</span></span><br><span class="line">$ <span class="built_in">echo</span> 12345678 | sed -n  <span class="string">'&#123;</span></span><br><span class="line"><span class="string">:start</span></span><br><span class="line"><span class="string">s/\(.*[0-9]\)\([0-9]\&#123;3\&#125;\)/\1,\2/p</span></span><br><span class="line"><span class="string">t start</span></span><br><span class="line"><span class="string">&#125;'</span></span><br><span class="line">12345,678</span><br><span class="line">12,345,678</span><br></pre></td></tr></table></figure>
-
-
-
-
-                
-            </div>
-        </article>
-    
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B5%81%E6%B4%BE%E4%B8%8E%E5%85%83%E5%AD%97%E7%AC%A6/">正则表达式的流派与元字符</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2022-09-04</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="正则表达式的流派与元字符"><a href="#正则表达式的流派与元字符" class="headerlink" title="正则表达式的流派与元字符"></a>正则表达式的流派与元字符</h2><p>不同的正则表达式工具，背后的引擎可能是不同的，相同的正则表达式可能在不同的工具中会获得不同的结果（不同的正则表达式也可能获得相同的结果），所以要注意这种语义的差异，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># perl regex pattern result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -P '(jul|july)'</span></span><br><span class="line">july</span><br><span class="line"></span><br><span class="line"><span class="comment"># egrep result</span></span><br><span class="line">root@desktop-guo:~<span class="comment"># echo -e 'july' | grep -z -E '(jul|july)'</span></span><br><span class="line">july</span><br></pre></td></tr></table></figure>
-
-
-
-<p>正则表达式的更有意义的操作：检查某个正表达式是否能够匹配某个字符串；查找和替换，字符串的更新</p>
-<h3 id="程序设计语言处理正则表达式的方式"><a href="#程序设计语言处理正则表达式的方式" class="headerlink" title="程序设计语言处理正则表达式的方式"></a>程序设计语言处理正则表达式的方式</h3><ul>
-<li><p>集成式 （integrated）</p>
-<p>正则表达式是内嵌在语言中的，属于语言的低级语法，如 Perl， 其他两种，不是内建的操作符来处理，由普通的函数接受普通的字符串，将他们作为正则表达式进行处理</p>
-</li>
-<li><p>程序式 (procedural)</p>
-<p>函数式</p>
-</li>
-<li><p>面向对象式 (object-oriented)</p>
-<p>通过构造函数及方法，如 Java 通过构造 Pattern、Matcher 对象来实现，当然也提供了函数式的静态方法来使用正则表达式</p>
-</li>
-</ul>
-<h3 id="Unicode-中的行终结符"><a href="#Unicode-中的行终结符" class="headerlink" title="Unicode 中的行终结符"></a>Unicode 中的行终结符</h3><table>
-<thead>
-<tr>
-<th>表示</th>
-<th>Unicode code point</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LF</td>
-<td>U+000A</td>
-<td>ASCII 换行符</td>
-</tr>
-<tr>
-<td>VT</td>
-<td>U+000B</td>
-<td>ASCII 垂直制表符</td>
-</tr>
-<tr>
-<td>FF</td>
-<td>U+000C</td>
-<td>ASCII 进纸符</td>
-</tr>
-<tr>
-<td>CR</td>
-<td>U+000D</td>
-<td>ASCII 回车</td>
-</tr>
-<tr>
-<td>CR/LF</td>
-<td>U+000D U+000A</td>
-<td>ASCII 回车/换行</td>
-</tr>
-<tr>
-<td>NEL</td>
-<td>U+0085</td>
-<td>Unicode 换行</td>
-</tr>
-<tr>
-<td>LS</td>
-<td>U+2028</td>
-<td>Unicode 行分隔符</td>
-</tr>
-<tr>
-<td>PS</td>
-<td>U+2029</td>
-<td>Unicode 段分隔符</td>
-</tr>
-</tbody></table>
-<h3 id="常见模式修饰符字母"><a href="#常见模式修饰符字母" class="headerlink" title="常见模式修饰符字母"></a>常见模式修饰符字母</h3><table>
-<thead>
-<tr>
-<th>字母</th>
-<th>模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>i</td>
-<td>不区分大小写的匹配模式</td>
-</tr>
-<tr>
-<td>x</td>
-<td>宽松排列和注释模式</td>
-</tr>
-<tr>
-<td>s</td>
-<td>点号通配模式（单行模式）</td>
-</tr>
-<tr>
-<td>m</td>
-<td>增强的行锚点模式（多行模式）</td>
-</tr>
-</tbody></table>
-
-                
-            </div>
-        </article>
-    
 </div>
 <div class="paginator">
     
@@ -556,7 +473,7 @@
             &copy;
             
             
-            2023
+            2024
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

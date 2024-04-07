@@ -84,6 +84,31 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Linux/%E5%AE%89%E8%A3%85MacOS/">安装MacOS</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2020-07-05</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Linux/">Linux</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># （此命令用来设置禁用 hyper-v)</span></span><br><span class="line">bcdedit /<span class="built_in">set</span> hypervisorlaunchtype off </span><br><span class="line"></span><br><span class="line"><span class="comment">#【 如果想再次启用 hyper-v 的话，请运行此命令。】</span></span><br><span class="line">bcdedit /<span class="built_in">set</span> hypervisorlaunchtype auto</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://jingyan.baidu.com/article/215817f7e68fb81eda14230f.html" target="_blank" rel="noopener">Win 8/8.1 下virtualbox无法开启虚拟化解决方法</a></p>
+<p>Push-button installer of macOS on VirtualBox <a href="https://github.com/myspaghetti/macos-virtualbox" target="_blank" rel="noopener"> macos-virtualbox</a></p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/ANSI%20Color/">ANSI Color</a></h2>
             </div>
             <div class="post-meta">
@@ -208,72 +233,6 @@
             </div>
         </article>
     
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Java/Maven/">Maven</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2020-05-31</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Java/">Java</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <p><strong>groupId</strong>     此元素指示创建项目的组织或组的唯一标识符。 groupId是项目的关键标识符之一，通常基于组织的完全限定域名。 例如，org.apache.maven.plugins 是所有Maven插件的指定groupId。</p>
-<p>${basedir} represents the directory containing <code>pom.xml</code></p>
-<p><a href="http://repo.maven.apache.org/maven2" target="_blank" rel="noopener">http://repo.maven.apache.org/maven2</a></p>
-<p>Note that you can use the <executions> element to gain more control over the order of particular goals.</p>
-<p><strong>Project Inheritance - 项目继承</strong></p>
-<p>Introduce your own parent POMs by specifying the parent element in the POM</p>
-<p>子模块会继承父项目的配置项</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.mycompany.app<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-app<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">relativePath</span>&gt;</span>../parent/pom.xml<span class="tag">&lt;/<span class="name">relativePath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-module<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>备注：</p>
-<ul>
-<li><p>子模块未指定 <code>groupId</code> 和 <code>vsersion</code>, 将会从父 POM 中继承</p>
-</li>
-<li><p>如果父项目没有安装在 repository 中或者父项目与子模块的目录层级不是下面这种：</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line"> |-- my-module</span><br><span class="line"> |   `-- pom.xml          <span class="comment"># 子模块的POM</span></span><br><span class="line"> `-- pom.xml              <span class="comment"># 父POM</span></span><br></pre></td></tr></table></figure>
-
-<p>  那么就需要通过 <code>relativePath</code> 标签指定父 POM 的路径，相对路径，相对于子模块的 POM 的路径</p>
-<p><strong>Project Aggregation - 项目聚合（集成）</strong></p>
-<p>Instead of specifying the parent POM from the module, it specifies the modules from the parent POM</p>
-<p>父项目中知道自己有哪些子模块，在父项目中调用了 Maven 命令， 这些 Maven 命令也会在子模块中执行。</p>
-<ul>
-<li>在父 POM 中指定 <code>packaging</code> 的值为 “pom”</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在父 POM 中指定子模块(子PMO)的目录 -<strong>相对路径</strong>，相对于父 POM 的路径</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>my-module<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>../my-module<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><em>Dependency mediation</em></p>
-<p>这将确定在遇到多个版本作为依赖项时将选择哪个版本的工件。 Maven选择“最接近的定义”。 也就是说，它在依赖树中使用与项目最接近的依赖项版本。 您可以通过在项目的POM中明确声明它来保证版本。 请注意，如果两个依赖项版本在依赖关系树中处于相同深度，则第一个声明将获胜。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate \</span><br><span class="line">-DgroupId=com.mycompany.app \ </span><br><span class="line">-DartifactId=my-app \</span><br><span class="line">-DarchetypeArtifactId=maven-archetype-quickstart \</span><br><span class="line">-DarchetypeVersion=1.4 \</span><br><span class="line">-DinteractiveMode=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>URI is not registered (Settings | Languages &amp; Frameworks | Schemas and DTDs)</p>
-<p>assembly 3.1 和 2.5 的版本竟然会之执行不一样，</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--禁止传递依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">useTransitiveDependencies</span>&gt;</span>true<span class="tag">&lt;/<span class="name">useTransitiveDependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>3.1 版本， useTransitiveDependencies 设置为 true， scope 为 provided 的依赖不会拉进来？</p>
-
-                
-            </div>
-        </article>
-    
 </div>
 <div class="paginator">
     
@@ -310,7 +269,7 @@
             &copy;
             
             
-            2023
+            2024
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>

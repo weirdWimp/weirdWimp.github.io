@@ -84,6 +84,57 @@
     
         <article class="post-abstract">
             <div class="post-title">
+                <h2><a class="post-title-link" href="/Redis/Redis%20Transaction/">Redis Transaction</a></h2>
+            </div>
+            <div class="post-meta">
+                <span class="post-time">2021-11-17</span>
+                
+                <span class="post-category">
+                    
+                    <a class="category" href="/categories/Redis/">Redis</a>
+                    
+                </span>
+                
+            </div>
+            <div class="post-content">
+                
+                    <h2 id="基础-Redis-事务"><a href="#基础-Redis-事务" class="headerlink" title="基础 Redis 事务"></a>基础 Redis 事务</h2><p>有时，需要在同一时间操作多个数据结构，这就需要进行多次 Redis 命令调用。虽然存在一些命令能够在 key 之间移动元素，但是并没有一个命令能够在不同类型的 key 之间移动元素（例外就是通过 <code>ZUNIONSTORE</code> 敏玲 复制一个 <code>SET</code> 到 <code>ZSET</code>）。对于涉及多个 key 的操作（无论是相同类型还是不同类型），Redis 提供了 5 个命令对多个 key 进行操作，且不需要中断：<code>WATCH</code>,  <code>MULTI</code>,<code>EXEC</code>, <code>UNWATCH</code>, <code>DISCARD</code>.</p>
+<p><strong>Redis 最简单的事务就是使用 <code>MULTI</code> 和 <code>EXEC</code> 命令</strong>, 基础事务就意味着这两种命令提供了一种方式，<strong>使得一个客户端执行多个命令 A, B, C 时，不会被其它客户端打断</strong>，意思就是如果没有这种事务保证，A, B, C 命令一条一条执行时，执行完 A 命令，有可能其它客户端执行了 D 命令，然后这个客户端才去执行 B, A, B, C 的执行被打断了。这与关系数据库的事务时不同的，关系数据库的事务可以部分执行，然后回滚或是提交。在 Redis 中，作为 MULTI/EXEC 事务中一部分的每一个命令都是一个接一个执行的，直到所有命令全部完成，然后其它客户端才能执行它们的命令.</p>
+<p><img src="https://raw.githubusercontent.com/weirdWimp/blog-store/main/img/image-20211117203044176.png" alt="image-20211117203044176"></p>
+<p>要在 Redis 中之执行一个事务的步骤:</p>
+<ol>
+<li>首先调用 <code>MULTI</code> 命令</li>
+<li>跟随一系列要执行的其它命令, Redis 会将该连接到来的这些命令存在队列中</li>
+<li>执行 <code>EXEC</code> 命令, Redis 会顺序地执行 2 步骤中地所有命令,并且不会被中断</li>
+</ol>
+<p>语义上, Redis 的 Python 客户端库使用一种称之为管道 <code>popeline</code> 的方式处理这种事务,在一个连接对象上调用 <code>pipeline()</code> 方法会创建一个事务,使用正确的话, 会自动将一系列命令列封装在 <code>MULTI</code> 和 <code>EXEC</code>命令之间, 于此同时, Python 的客户端也会将要发送的命令存储起来,直到真正要送的时候, 才发送这些命令. 这能够减少 Redis 服务器与客户端的网络通信次数, 能够提高命令的执行效率, 提高性能.</p>
+<p>如何验证 ? 可以通过多线程验证, 每个线程都是先对某个计数器 key 加 1, 再减 1, 非事务的情况下, 一个线程的 +1 和 -1 操作可能被其它 线程的 +1 和 -1 操作打断; 如果使用了 Redis 事务, 则不会出现这种情况。</p>
+<p>其它客户端也是如此 ?</p>
+<p> 使用事务的好处和坏处是什么？</p>
+<h2 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h2><p><code>MULTI/EXEC</code> 这种基础事务的问题在于，如果没有执行 <code>EXEC</code> 命令，那么之前的任何命令都不会被执行， 这意味着不能利用中间一些读操作的结果来在程序中及时做出决策。</p>
+<p><code>WATCH</code> 命令结合 <code>MULTI</code> 和 <code>EXEC</code> 命令， 以及 <code>UNWATCH</code> 和 <code>DISCARD</code> 命令，当通过 <code>WATCH</code> 命令关注 (watch) 键时，在执行 <code>EXEC</code> 操作前的任意时刻，这些键被其它客户端替换、更新或删除，那么这时尝试执行 <code>EXEC</code> 会失败，并返回错误信息。通过使用 <code>WATCH</code>, <code>MULTI/EXEC</code>, 以及 <code>UNWATCH/DISCARD</code> 命令可以确保在做一些重要的操作时，数据不会被修改。</p>
+<p><strong>UNWATCH/DISCARD 的区别</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">WATCH</span><br><span class="line">|</span><br><span class="line">|-----&gt; UNWATCH (reset the connection)</span><br><span class="line">|</span><br><span class="line">MULTI</span><br><span class="line">|</span><br><span class="line">|-----&gt; DISCARD (reset the connection: cancel the WATCH and clear out any queued commands)</span><br><span class="line">|</span><br><span class="line">EXEC</span><br></pre></td></tr></table></figure>
+
+<p>如果通过 <code>WATCH</code> 命令关注了一些 key， 然后通过 <code>MULTI</code> 命令开启了一个事务，并跟随了一组命令，这时可以通过 <code>DISCARD</code> 命令取消关注，并清除任何缓存的命令。</p>
+<p><strong>客户端1操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get guoph2</span><br><span class="line"><span class="string">"2"</span></span><br><span class="line">127.0.0.1:6379&gt; watch guoph2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> guoph2 3</span><br><span class="line">QUEUED</span><br><span class="line"><span class="comment"># 在客户端2进行 set 后，执行 exec，本次事务执行失败，争产执行会返回 OK</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端2操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get guoph2</span><br><span class="line"><span class="string">"2"</span></span><br><span class="line"><span class="comment"># 在客户端1操作 watch，multi,set命令后，对 key 的值进行更新</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> guoph2 1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结合 <code>WATCH</code> 与 <code>MULTI/EXEC</code> 命令，就可以在关注的键被其它客户端修改时得到通知，可以再次进行重试。</p>
+<h3 id="为什么-Redis-不实现典型的锁机制"><a href="#为什么-Redis-不实现典型的锁机制" class="headerlink" title="为什么 Redis 不实现典型的锁机制"></a>为什么 Redis 不实现典型的锁机制</h3><p>当处于写数据的目的而访问数据时，即 SQL 中的 SELECT FOR UPDATE, 关系型数据库会对要访问的行进行加锁，直到一个事务通过 <code>COMMIT</code> 或者 <code>ROLLBACK</code>完成事务的处理. 如果其它客户端尝试对相同的行，access data for writing 时，其它客户端会被阻塞直到第一个事务完成。这种形式的锁在实际中应用的很好（特别是所有的关系型数据库都实现了它），但是可能会导致客户端等待获取锁而长时间等到锁。</p>
+<p>由于这种可能存在的长时间等待，并且 Redis 的设计就是较少客户端的等待时间，Redis 在 <code>WATCH</code>期间并不会锁数据，相反，Redis 会通知客户端，如果其它客户端先修改了数据，这也被称之为乐观锁 (optimistic locking). 关系型数据库执行的锁可以被视作悲观锁 (pessimistic). 乐观锁同样也应用广泛，因为客户端从来不等待第一个锁的持有者释放锁，它只是在不断地进行重试。</p>
+
+                
+            </div>
+        </article>
+    
+        <article class="post-abstract">
+            <div class="post-title">
                 <h2><a class="post-title-link" href="/Linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/">网络相关</a></h2>
             </div>
             <div class="post-meta">
@@ -311,69 +362,6 @@
             </div>
         </article>
     
-        <article class="post-abstract">
-            <div class="post-title">
-                <h2><a class="post-title-link" href="/Linux/cURL%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E9%94%99%E8%AF%AF%E6%80%BB%E7%BB%93/">cURL命令使用错误总结</a></h2>
-            </div>
-            <div class="post-meta">
-                <span class="post-time">2021-09-11</span>
-                
-                <span class="post-category">
-                    
-                    <a class="category" href="/categories/Linux/">Linux</a>
-                    
-                </span>
-                
-            </div>
-            <div class="post-content">
-                
-                    <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>原本，是想写一个脚本来从 <a href="unsplash.com">Unsplash</a> 下载图片，通过 <code>apt install axel</code> 安装了 <code>axel</code> 来进行下载（相对较快）；使用 <code>jq</code> 来对返回的  json 进行解析，获取下载地址，为了测试命令的有效性，将返回的 json 结果存放在文件中 unsplash.json 中 ：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    <span class="string">"links"</span>: &#123;</span><br><span class="line">      <span class="attr">"self"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"html"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk"</span>,</span><br><span class="line">      <span class="attr">"download"</span>: <span class="string">"https://unsplash.com/photos/3AzS4zAYaXk/download"</span>,</span><br><span class="line">      <span class="attr">"download_location"</span>: <span class="string">"https://api.unsplash.com/photos/3AzS4zAYaXk/download"</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>调用 <code>jq</code> 命令解析，并将 <code>download</code> 的值作为 <code>axel</code> 的命令行参数：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 axel -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console：</span></span><br><span class="line">axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Initializing download: https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">Could not parse URL.</span><br></pre></td></tr></table></figure>
-
-<p>标准输出或者错误显示不能解析 URL,  查看这个 URL 没有问题，直接执行 <code>axel -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code>  也没有出现异常。 由于没有显示具体的 URL 异常在哪里，换用 <code>cUrl</code> 来执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -o 2.jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">## console:</span></span><br><span class="line">curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</span><br><span class="line">curl: (3) [globbing] bad range <span class="keyword">in</span> column 3</span><br></pre></td></tr></table></figure>
-
-<p>同样，请求失败，同样直接执行 <code>curl -o 2.jpg https://unsplash.com/photos/3AzS4zAYaXk/download</code> 也能够成功，显然通过 <code>jq</code> 输出，再通过管道符和 <code>xargs</code> 输出的 url 不正常，但是直接看有没有什么特殊的字符，期间，尝试将 <code>jq</code> 解析的结果保存成变量，url 中添加变量，如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o 2.jpg <span class="variable">$varUrl</span></span><br></pre></td></tr></table></figure>
-
-<p>同样执行失败，百思不得其解 :laughing: .</p>
-<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>智商不够，百度来凑，无果，打开 StackOverFlow， 搜索  <code>bad range in column</code> ，从一个类似的问题中找到了线索或者说答案。</p>
-<p>原文 <a href="https://stackoverflow.com/questions/43926914/strange-characters-appearing-in-bash-variable-expansion" target="_blank" rel="noopener">strange-characters-appearing-in-bash-variable-expansion)</a> 中描述的问题是通过 <code>grep</code> 命令 filter json 中的值，并将其作为变量，在 curl 的 url 中引用该变量：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod_in_question=$(curl -u uname:password -k very.cluster.com/api/v1/namespaces/default/pods/ | grep -i '"name": "myapp-' | cut -d '"' -f 4)</span><br><span class="line"></span><br><span class="line">curl -g -u uname:password -k -X DELETE "very.cluster.com/api/v1/namespaces/default/pods/$&#123;pod_in_question&#125;"</span><br></pre></td></tr></table></figure>
-
-<p>结果，请求 url 中出现一些特殊的转义字符，原因是使用的 bash 环境， <code>grep</code> 命令默认使用 <code>--colour=always</code> , 使得过滤的结果中出现了颜色的转义序列 <a href="http://ascii-table.com/ansi-escape-sequences.php" target="_blank" rel="noopener"> ANSI escape sequences</a>, 支持这些转义序列的终端的这些字符不可见，使用 <code>hexdump -C</code> 可以查看，因此针对原文的问题解决方案就是 <code>grep --colour=never</code>. </p>
-<p>再回到我的问题，使用 hexdump 打印：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | hexdump -C</span><br><span class="line"></span><br><span class="line">00000000  1b 5b 30 3b 33 32 6d 22  68 74 74 70 73 3a 2f 2f  |.[0;32m<span class="string">"https://|</span></span><br><span class="line"><span class="string">00000010  75 6e 73 70 6c 61 73 68  2e 63 6f 6d 2f 70 68 6f  |unsplash.com/pho|</span></span><br><span class="line"><span class="string">00000020  74 6f 73 2f 33 41 7a 53  34 7a 41 59 61 58 6b 2f  |tos/3AzS4zAYaXk/|</span></span><br><span class="line"><span class="string">00000030  64 6f 77 6e 6c 6f 61 64  22 1b 5b 30 6d 0a        |download"</span>.[0m.|</span><br><span class="line">0000003e</span><br></pre></td></tr></table></figure>
-
-<p>明显可以看到 url 的首尾出现了特殊的颜色转义字符，32 是绿色的色彩码. 显然, 是由于 <code>jq -C</code> 的选项造成的结果, 去掉或者指定 <code>-M</code> (monochrome (don’t colorize JSON)), 问题解决了.</p>
-<p>stackoverflow 中的问题还有一个答案, 给出了如何找出 <code>cUrl</code> 使用中出现问题如何定位的思路:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jq -C .[].links.download unsplash.json | xargs -t -n 1 curl -g --libcurl /tmp/libcurl -o 2.jpg	</span><br><span class="line"></span><br><span class="line">cat /tmp/libcurl</span><br><span class="line"></span><br><span class="line"> curl_easy_setopt(hnd, CURLOPT_URL, <span class="string">"\033[0;32mhttps://unsplash.com/photos/3AzS4zAYaXk/download\033[0m"</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
-<li><p>引用 stackoverflow  给出使用 <code>cURL</code> 的最佳实践:</p>
-<p><strong>The best practise for URL syntax in <code>cURL</code>:</strong></p>
-<ul>
-<li>If Variable Expansion is required:<ul>
-<li>Apply the <code>-g</code> switch to disable potential globbing done by <code>cURL</code></li>
-</ul>
-</li>
-<li><strong>Otherwise:</strong><ul>
-<li>Use <code>$variable</code> as part of a “quoted” url string, instead of <code>${variable}</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>使用 <code>grep</code>, <code>jq</code> 以及管道符 <code>|</code> 应该注意颜色转义序列, 为了使脚本通用, 必要时在所有可能会产生此类问题的命令中关闭颜色输出</p>
-</li>
-</ol>
-
-                
-            </div>
-        </article>
-    
 </div>
 <div class="paginator">
     
@@ -410,7 +398,7 @@
             &copy;
             
             
-            2023
+            2024
             &nbsp;<i class="iconfont icon-heart"></i>&nbsp;
             <a target="_blank" href="https://github.com/iJinxin"></a>
         </p>
